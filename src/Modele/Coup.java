@@ -11,4 +11,13 @@ package Modele;
  */
 public abstract class Coup {
     Point destination;
+    int joueur;
+    
+    public Point destination(){
+        return destination;
+    }
+    
+    public int joueur(){
+        return joueur;
+    }
 }

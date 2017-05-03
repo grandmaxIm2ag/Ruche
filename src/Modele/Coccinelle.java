@@ -11,12 +11,12 @@ package Modele;
  */
 public class Coccinelle extends Insecte{
 
-    public Coccinelle(double x, double y, double larg, double haut) {
-        super(x, y, larg, haut);
+    public Coccinelle(double x, double y, double larg, double haut, int j) {
+        super(x, y, larg, haut,j);
     }
 
     @Override
-    public Coup[] deplacementValide(Case[] plateau) {
+    public Coup[] deplacementValide(Case[][] plateau) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
@@ -28,6 +28,11 @@ public class Coccinelle extends Insecte{
     @Override
     public boolean accept(Visiteur v) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public Insecte clone() {
+        return new Coccinelle(pos.x(), pos.y(), l, h, joueur);
     }
     
 }
