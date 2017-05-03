@@ -6,10 +6,12 @@
 package Joueurs;
 
 import Modele.Arbitre;
+import Modele.Case;
 import Modele.Coup;
 import Modele.Depot;
 import Modele.Deplacement;
 import Modele.Point;
+import java.util.ArrayList;
 import java.util.Properties;
 import java.util.Random;
 import ruche.Reglage;
@@ -64,7 +66,7 @@ public class Ordinateur extends Joueur{
             case -2:
                 return coup_ALEATOIRE_MAUVAIS();
             case -1:
-                return coup_ALEATOIRE();
+                return coup_ALEATOIRE(a);
             /*
             case 0:
                 return...;
@@ -137,11 +139,29 @@ public class Ordinateur extends Joueur{
     }*/
     
 
-    public Coup coup_ALEATOIRE(){
+    public Coup coup_ALEATOIRE(Arbitre a){
         //choix du type d'insecte joué
         int choix=r.nextInt(nbPieces);
-        int type=choixParSommesCumulees(choix,tabPieces);
+        int typeChoisi=choixParSommesCumulees(choix,tabPieces);
+        Case [][] mat=a.plateau().matrice;
+        int i=0;
+        int insectesTrouves=0;
+        ArrayList<Coup[]> l=new ArrayList<>();
         
+        while(i<mat.length && insectesTrouves!=tabPieces[typeChoisi]){
+            int j=0;
+            while(j<mat[0].length && insectesTrouves!=tabPieces[typeChoisi]){
+                if(mat[i][j].tete().type()==typeChoisi){
+                    insectesTrouves=insectesTrouves+1;
+                    l.add(mat[i][j].tete().deplacementValide(mat[0]));//////////////////////////////////////////////////////////
+                    ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                    ////////////////////////////////////////////////////////////////////////////////////////////////////////////quand la méthode sera corrigée dans tous
+                    ////////////////////////////////////////////////////////////////////////////////////////////////////////////les insectes remplacer mat[0] par mat                
+                }               
+                j=j+1;
+            }
+            i=i+1;
+        }
         //remplir un tableau avec tous les coups possibles pour les insectes 
         return null;
     }
