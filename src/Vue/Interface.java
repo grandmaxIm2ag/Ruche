@@ -69,7 +69,7 @@ public class Interface extends Application{
 
 
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        stage.setTitle("Gauffre empoisonnee");
+        stage.setTitle("Ruche");
         if (fullScreen) {
             s = new Scene(root);
             stage.setFullScreen(true);
@@ -94,7 +94,6 @@ public class Interface extends Application{
         paneTop.setAlignment(Pos.CENTER);
         root.setTop(paneTop);
         
-        //goMenu();
         stage.setScene(s);
         goMenu();
         stage.show();
@@ -108,7 +107,43 @@ public class Interface extends Application{
     }
     
     public static void goPartie(){
+        root.setLeft(new Pane());
+        root.setBottom(new Pane());
+        Canvas c = new Canvas (500, 500);
+        StackPane stack = new StackPane(c);
+        stack.setAlignment(Pos.TOP_CENTER);
+        GraphicsContext gc;
+        gc = c.getGraphicsContext2D();
+        gc.setFill(Color.WHITESMOKE);
+        gc.fillRect(0, 0, 500, 500);
+        gc.strokeRect(0, 0, 500, 500);
+        gc.setFill(Color.BLUE);
+        gc.setFont(Font.font("Tahoma", FontWeight.NORMAL, 33));
+        gc.fillText("Ceci est le terrain de jeu", 50, 250);
+        root.setCenter(stack);
+        VBox box = new VBox();
+        box.setAlignment(Pos.TOP_CENTER);
+        box.setPadding(new Insets(20,10,20,10));
+        box.setSpacing(20);
+        root.setRight(box);
+        Button btPrec = new Button("Précédent");
+        Button btSuiv = new Button("Suivant");
+        Button btSave = new Button ("Sauvegarder");
+        Button btMenu = new Button("Menu principal");
+        btPrec.setMaxWidth(150);
+        btSuiv.setMaxWidth(150);
+        btSave.setMaxWidth(150);
+        btMenu.setMaxWidth(150);
+        btMenu.setOnAction(new EventHandler<ActionEvent>() {
         
+            @Override
+            public void handle(ActionEvent event) {
+                goMenu();
+            }
+        });
+        
+        box.getChildren().addAll(btPrec, btSuiv, btSave, btMenu);
+
     }
     
     public static void goMenu(){
@@ -117,7 +152,7 @@ public class Interface extends Application{
         root.setBottom(new Pane());
         
         GridPane grid = new GridPane();
-        grid.setHgap(55);
+        grid.setHgap(10);
         grid.setVgap(20);
         StackPane stack = new StackPane();
         VBox box = new VBox();
@@ -125,16 +160,59 @@ public class Interface extends Application{
         stack.setAlignment(Pos.CENTER);
         grid.setAlignment(Pos.CENTER);
         
-        //Text tMenu = new Text("Menu");
-        //tMenu.setFont(Font.font("Tahoma", FontWeight.NORMAL, 20));
-        Button nouv = new Button("Nouvelle partie");
-        Button charg = new Button("Charger partie");
-        nouv.setMaxWidth(150);
-        charg.setMaxWidth(150);
+        Button btNouveau = new Button("Nouvelle partie");
+        Button btCharger = new Button("Charger partie");
+        Button btConfig = new Button("Configuration");
+        Button btQuit = new Button("Quiter");
+
+        btQuit.setOnAction(new EventHandler<ActionEvent>() {
+
+            @Override
+            public void handle(ActionEvent event) {
+                System.exit(0);
+            }
+        });
+        
+        btNouveau.setOnAction(new EventHandler<ActionEvent>() {
+            
+            @Override
+            public void handle (ActionEvent event) {
+                goPartie();
+            }
+        });
+        
+        
+        btNouveau.setMaxWidth(150);
+        btCharger.setMaxWidth(150);
+        btConfig.setMaxWidth(150);
         box.setAlignment(Pos.TOP_CENTER);
         box.setSpacing(30);
-        grid.add(nouv, 0, 0);
-        grid.add(charg, 0, 1);
+        
+        ChoiceBox cbDifficulte = new ChoiceBox(FXCollections.observableArrayList("Facile", "Normal", "Difficile"));
+        ChoiceBox cbMode = new ChoiceBox(FXCollections.observableArrayList("Contre IA", "Contre Humain"));
+        ChoiceBox cbSave = new ChoiceBox(FXCollections.observableArrayList("Jean contre pierre", "Jean contre IA", "Jean contre IA(2)"));
+        
+        cbDifficulte.setMaxWidth(150);
+        cbMode.setMaxWidth(150);
+        cbSave.setMaxWidth(150);
+        cbDifficulte.getSelectionModel().selectFirst();
+        cbMode.getSelectionModel().selectFirst();
+        cbSave.getSelectionModel().selectFirst();
+        
+        Label lDifficulte = new Label("Difficulté :");
+        Label lMode = new Label("Mode :");
+        Label lSave = new Label("Sauvegarde :");
+        
+        grid.add(btNouveau, 0, 0);
+        grid.add(btCharger, 0, 1);
+        grid.add(btConfig, 0, 2);
+        grid.add(lDifficulte, 3, 0);
+        grid.add(cbDifficulte, 4, 0);
+        grid.add(lMode, 7, 0);
+        grid.add(cbMode, 8, 0);
+        grid.add(lSave, 3, 1);
+        grid.add(cbSave, 4, 1);
+        
         
         
         Canvas c = new Canvas(200, 100);
@@ -151,11 +229,7 @@ public class Interface extends Application{
         gc.fillText("Menu", 75, 60);
         
         
-        box.getChildren().addAll(c, grid);
-        //grid.add ();
-        //g.add(new Label("Menu"), 1,1);
-        //g.add(nouv, 1,2);
-        //g.add(charg, 1,3);
+        box.getChildren().addAll(c, grid, btQuit);
         
     }
     
