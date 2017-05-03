@@ -10,8 +10,8 @@ package Modele;
  * @author grandmax
  */
 public abstract class Insecte extends Composant{
-    public final static int SCAR = 0;
-    public final static int REINE = 1;
+    public final static int SCAR = 1;
+    public final static int REINE = 0;
     public final static int SAUT = 2;
     public final static int FOUR = 3;
     public final static int ARAI = 4;;
