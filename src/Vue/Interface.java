@@ -25,8 +25,10 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
+import javafx.scene.control.Separator;
 import javafx.scene.input.*;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.TilePane;
@@ -84,13 +86,12 @@ public class Interface extends Application{
         paneTop.setPadding(new Insets(20,20,20,20));
         gc.setFill(Color.ORANGE);
         gc.setStroke(Color.WHEAT);
-        double [] xPoints = {100, 150, 150, 100, 50, 50};
-        double [] yPoints = {0, 33, 66, 100, 66, 33};
-        gc.fillPolygon(xPoints, yPoints, 6);
-        gc.strokePolygon(xPoints, yPoints, 6);
+        double [][] coords = hex_corner(100, 50, 50);
+        gc.fillPolygon(coords[0], coords[1], 6);
+        gc.strokePolygon(coords[0], coords[1], 6);
         gc.setFill(Color.ORANGERED);
         gc.setFont(Font.font("Tahoma", FontWeight.NORMAL, 33));
-        gc.fillText("Hive", 75, 60);
+        gc.fillText("Hive", 70, 60);
         paneTop.setAlignment(Pos.CENTER);
         root.setTop(paneTop);
         
@@ -106,7 +107,7 @@ public class Interface extends Application{
         
     }
     
-    public static void goPartie(){
+    public  void goPartie(){
         root.setLeft(new Pane());
         root.setBottom(new Pane());
         Canvas c = new Canvas (500, 500);
@@ -146,7 +147,7 @@ public class Interface extends Application{
 
     }
     
-    public static void goMenu(){
+    public void goMenu(){
         root.setRight(new Pane());
         root.setLeft(new Pane());
         root.setBottom(new Pane());
@@ -163,7 +164,7 @@ public class Interface extends Application{
         Button btNouveau = new Button("Nouvelle partie");
         Button btCharger = new Button("Charger partie");
         Button btConfig = new Button("Configuration");
-        Button btQuit = new Button("Quiter");
+        Button btQuit = new Button("Quitter");
 
         btQuit.setOnAction(new EventHandler<ActionEvent>() {
 
@@ -178,6 +179,14 @@ public class Interface extends Application{
             @Override
             public void handle (ActionEvent event) {
                 goPartie();
+            }
+        });
+        
+        btConfig.setOnAction(new EventHandler<ActionEvent>() {
+            
+            @Override
+            public void handle(ActionEvent event) {
+                goConfig();
             }
         });
         
@@ -220,22 +229,102 @@ public class Interface extends Application{
         gc = c.getGraphicsContext2D();
         gc.setFill(Color.ORANGE);
         gc.setStroke(Color.WHEAT);
-        double [] xPoints = {100, 125, 125, 100, 75, 75};
-        double [] yPoints = {25, 38, 62, 75, 62, 38};
-        gc.fillPolygon(xPoints, yPoints, 6);
-        gc.strokePolygon(xPoints, yPoints, 6);
+        double [][] coords = hex_corner(100, 50, 25);
+        gc.fillPolygon(coords[0], coords[1], 6);
+        gc.strokePolygon(coords[0], coords[1], 6);
         gc.setFill(Color.ORANGERED);
         gc.setFont(Font.font("Tahoma", FontWeight.NORMAL, 33));
-        gc.fillText("Menu", 75, 60);
-        
+        gc.fillText("Menu", coords[0][3], coords[1][2]-1);
         
         box.getChildren().addAll(c, grid, btQuit);
         
     }
     
-    public static void goFin(String gagnant){
+    /*
+    function hex_corner(center, size, i):
+    var angle_deg = 60 * i   + 30
+    var angle_rad = PI / 180 * angle_deg
+    return Point(center.x + size * cos(angle_rad),
+                 center.y + size * sin(angle_rad))
+    */
+    
+    public double[][] hex_corner (double x, double y, double rayon) {
+        double [][] coords = new double[2][6];
+        double angle_deg;
+        double angle_rad;
+        for (int i = 0; i < 6; i++) {
+            angle_deg = 60*i + 30;
+            angle_rad = Math.PI / 180 * angle_deg;
+            coords[0][i] = x + rayon * Math.cos(angle_rad);
+            coords[1][i] = y + rayon * Math.sin(angle_rad);
+        }
+        return coords;
+    }
+    
+    public void goFin(String gagnant){
+        
+    }
+    
+    public void goConfig () {
+        VBox box = new VBox();
+        box.setAlignment(Pos.TOP_CENTER);
+        box.setSpacing(30);
+        root.setCenter(box);
+        
+        Canvas c = new Canvas(200, 100);
+        GraphicsContext gc;
+        gc = c.getGraphicsContext2D();
+        gc.setFill(Color.ORANGE);
+        gc.setStroke(Color.WHEAT);
+        double [][] coords = hex_corner(100, 50, 25);
+        gc.fillPolygon(coords[0], coords[1], 6);
+        gc.strokePolygon(coords[0], coords[1], 6);
+        gc.setFill(Color.ORANGERED);
+        gc.setFont(Font.font("Tahoma", FontWeight.NORMAL, 33));
+        gc.fillText("Config", coords[0][3], coords[1][2]-1);
+        
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(20);
+        grid.setAlignment(Pos.CENTER);
+        
+        Button b1 = new Button("un bouton");
+        Button b2 = new Button("un autre bouton");
+        b1.setMaxWidth(150);
+        b2.setMaxWidth(150);
+        Label l = new Label("un truc");
+        Label l2 = new Label("un autre truc");
+        Label l3 = new Label("encore un truc");
+        Label l4 = new Label("etc");
+
+        grid.add(b1, 0, 0);
+        grid.add(l, 4, 0);
+        grid.add(l2, 8, 0);
+        grid.add(b2, 0, 1);
+        grid.add(l3, 4, 1);
+        grid.add(l4, 8, 1);
+        
+        HBox bottom = new HBox();
+        bottom.setAlignment(Pos.BASELINE_RIGHT);
+        bottom.setSpacing(10);
+        bottom.setPadding(new Insets(20, 20, 20, 20));
+        
+        Button btValider = new Button("Valider");
+        Button btRetour = new Button("Retour");
+        btValider.setMaxWidth(120);
+        btRetour.setMaxWidth(120);
+        btRetour.setOnAction(new EventHandler<ActionEvent>() {
+            
+            @Override
+            public void handle(ActionEvent event) {
+                goMenu();
+            }
+        });
         
         
+        bottom.getChildren().addAll(btValider, btRetour);
+        
+        box.getChildren().addAll(c, grid, bottom);
     }
     
     public static void infoPartie(Joueur j1, Joueur j2, int nbManche, int joueur){
