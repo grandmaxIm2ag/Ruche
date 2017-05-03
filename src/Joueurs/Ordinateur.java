@@ -6,6 +6,7 @@
 package Joueurs;
 
 import Modele.Arbitre;
+import Modele.Coup;
 
 /**
  *
@@ -22,8 +23,9 @@ public class Ordinateur extends Joueur{
         difficulte = d;
     }
     
-    public void coup(Arbitre a){
+    public Coup coup(Arbitre a){
        
+        return null;
     }
     
 }

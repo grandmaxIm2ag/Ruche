@@ -1,0 +1,27 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
+package Modele;
+
+/**
+ *
+ * @author grandmax
+ */
+public class Depot extends Coup {
+    int type;
+    
+    public Depot(int t, Point d){
+        type = t;
+        destination = d;
+    }
+    
+    public int type(){
+        return type;
+    }
+    public Point destination(){
+        return destination;
+    }
+    
+}

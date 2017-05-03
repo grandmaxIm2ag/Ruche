@@ -16,7 +16,7 @@ public class Araignee extends Insecte{
     }
 
     @Override
-    public Point[] deplacementValide(Case[] plateau) {
+    public Coup[] deplacementValide(Case[] plateau) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

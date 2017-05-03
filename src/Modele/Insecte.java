@@ -14,9 +14,13 @@ public abstract class Insecte extends Composant{
     public final static int REINE = 1;
     public final static int SAUT = 2;
     public final static int FOUR = 3;
-    public final static int ARAI = 4;
+    public final static int ARAI = 4;;
+    public final static int COCC = 5;
+    public final static int MOUS = 6;
+    public final static int CLOP = 7;
     
     int type;
+    int joueur;
     
     public Insecte(double x, double y, double larg, double haut) {
         super(x, y, larg, haut);
@@ -29,7 +33,7 @@ public abstract class Insecte extends Composant{
         return null;
     }
     
-    public abstract Point[] deplacementValide(Case[] plateau);
+    public abstract Coup[] deplacementValide(Case[] plateau);
     
     
 }

@@ -15,6 +15,7 @@ public class Plateau extends Composant {
     Case[][] matrice;
     int xMin, yMin;
     Properties prop;
+    Point[] reines;
 
     public Plateau(double x, double y, double larg, double haut, Properties p) {
         super(x, y, larg, haut);
@@ -26,24 +27,25 @@ public class Plateau extends Composant {
         matrice[(int)(l-1)][(int)(l-1)].deposePion(e);
     }
     
-    public boolean deposePionValide(int type, Point p){
+    public boolean deposePionValide(Depot d){
         
         return false;
     }
-    public boolean deplacePionValide(Insecte src, Insecte dest, int direction){
+    public boolean deplacePionValide(Deplacement d){
         
         return false;
     }
-    public boolean deplacePion(Insecte src, Insecte dest, int direction){
+    public boolean deplacePion(Deplacement d){
         
         return false;
     }
-    public boolean deposePion(int type, Point p){
+    public boolean deposePion(Depot d){
         
         return false;
     }
-    
-    
+    public boolean estEncerclee(int j){
+        return false;
+    }
     @Override
     public boolean equals(Object o) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.

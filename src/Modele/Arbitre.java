@@ -33,6 +33,8 @@ public class Arbitre {
     String[] types;
     String[] plateaux;
     
+    int[] nbCoup;
+    
     public Arbitre(Properties p){
         prop = p;
     }
@@ -48,19 +50,19 @@ public class Arbitre {
         return joueurs[i];
     }
     
-    public boolean deposePionValide(int type, Point p){
+    public boolean deposePionValide(Depot d){
         
         return false;
     }
-    public boolean deplacePionValide(Insecte src, Insecte dest, int direction){
+    public boolean deplacePionValide(Deplacement d){
         
         return false;
     }
-    public boolean deplacePion(Insecte src, Insecte dest, int direction){
+    public boolean deplacePion(Deplacement d){
         
         return false;
     }
-    public boolean deposePion(int type, Point p){
+    public boolean deposePion(Depot d){
         
         return false;
     }

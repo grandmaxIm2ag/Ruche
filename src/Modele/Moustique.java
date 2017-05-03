@@ -9,9 +9,9 @@ package Modele;
  *
  * @author grandmax
  */
-public class Sauterelle extends Insecte{
+public class Moustique extends Insecte{
 
-    public Sauterelle(double x, double y, double larg, double haut) {
+    public Moustique(double x, double y, double larg, double haut) {
         super(x, y, larg, haut);
     }
 
