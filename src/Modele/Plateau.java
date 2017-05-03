@@ -18,7 +18,7 @@ import java.util.TreeMap;
  * @author grandmax
  */
 public class Plateau extends Composant {
-    Case[][] matrice;
+    public Case[][] matrice;
     int xMin, yMin;
     Properties prop;
     Point[] reines;

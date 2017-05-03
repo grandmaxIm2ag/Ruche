@@ -5,14 +5,16 @@
  */
 package Joueurs;
 
+import java.util.Properties;
+
 /**
  *
  * @author grandmax
  */
 public class Humain extends Joueur{
 
-    public Humain(boolean m) {
-        super(m);
+    public Humain(boolean m, Properties p) {
+        super(m, p);
     }
     
 }
