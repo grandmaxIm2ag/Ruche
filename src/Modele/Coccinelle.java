@@ -5,6 +5,11 @@
  */
 package Modele;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Stack;
+
 /**
  *
  * @author grandmax
@@ -17,7 +22,56 @@ public class Coccinelle extends Insecte{
 
     @Override
     public Coup[] deplacementValide(Case[][] plateau) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Point p = pos.clone();
+        Stack<Point> aVisiter = new Stack();
+        List<Point> marquer = new ArrayList();
+        
+        List<Coup> co = monter(plateau);
+        Iterator<Coup> it = co.iterator();
+        while(it.hasNext()){
+            Point po = it.next().destination();
+            if(!marquer.contains(po)){
+                marquer.add(po);
+                aVisiter.push(po);
+           }
+        }
+        
+        Stack<Point> tmp = new Stack();
+        while(!aVisiter.isEmpty()){
+            Point tmp2 = aVisiter.pop();
+                pos.fixe(p.x(), p.y());
+                co = monter(plateau);
+                it = co.iterator();
+                while(it.hasNext()){
+                    Point po = it.next().destination();
+                    if(!marquer.contains(po)){
+                        marquer.add(po);
+                        tmp.push(po);
+                    }
+                }
+        }
+        aVisiter = tmp;
+        tmp.clear();
+        while(!aVisiter.isEmpty()){
+            Point tmp2 = aVisiter.pop();
+                pos.fixe(p.x(), p.y());
+                co = descendre(plateau);
+                it = co.iterator();
+                while(it.hasNext()){
+                    Point po = it.next().destination();
+                    if(!marquer.contains(po)){
+                        marquer.add(po);
+                        tmp.push(po);
+                    }
+                }
+        }
+        
+        pos.fixe(p.x(), p.y());
+        
+        Coup[] coups = new Coup[aVisiter.size()];
+        for(int i=0; i<coups.length; i++)
+            coups[i] = new Deplacement(joueur, pos, aVisiter.pop());
+        return coups;
     }
 
     @Override
@@ -27,7 +81,7 @@ public class Coccinelle extends Insecte{
 
     @Override
     public boolean accept(Visiteur v) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return v.visite(this);
     }
 
     @Override
