@@ -270,6 +270,7 @@ public class Plateau extends Composant {
     
     
     public Case[][] matrice(){
+        //
         return matrice;
     }
 }
