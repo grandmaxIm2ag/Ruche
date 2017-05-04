@@ -12,7 +12,8 @@ package Modele;
 public class Depot extends Coup {
     int type;
     
-    public Depot(int t, Point d){
+    public Depot(int j, int t, Point d){
+        super(j);
         type = t;
         destination = d;
     }

@@ -5,6 +5,10 @@
  */
 package Modele;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 /**
  *
  * @author grandmax
@@ -17,7 +21,41 @@ public class Moustique extends Insecte{
 
     @Override
     public Coup[] deplacementValide(Case[][] plateau) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        boolean enHaut;
+        Case ca = plateau[(int)pos.x()][(int)pos.y()].clone();
+        ca.retirePion();
+        enHaut = ca.utilise();
+        List<Coup> c = new ArrayList();
+        
+        if(enHaut){
+            Scarabee scar = new Scarabee(pos.x(), pos.y(), l, h, joueur);
+            return scar.deplacementValide(plateau);
+        }else{
+            List<Case> voisins = new ArrayList();
+            for(int i=(int)pos.x()-1; i<=(int)pos.x()+1;i++)
+                for(int j=(int)pos.y()-1; j<=(int)pos.y()+1;i++)
+                    if(!((i==(int)pos.x()-1 && j==(int)pos.y()-1) || (i==(int)pos.x()+1 && j==(int)pos.y()+1) ))
+                        if(!pos.equals(plateau[i][j].position()) && plateau[i][j].utilise()){
+                            voisins.add(plateau[i][j]);
+                        }
+        
+            Iterator<Case> v = voisins.iterator();
+            while(v.hasNext()){
+                Case tmp = v.next().clone();
+                tmp.tete().position().fixe(pos.x(), pos.y());
+                Coup[] co = tmp.tete().deplacementValide(plateau);
+                for(int i=0; i<co.length; i++)
+                    c.add(co[i]);
+            }
+        
+        
+            Coup [] coups = new Coup[c.size()];
+            Iterator<Coup> it = c.iterator();
+            for(int i=0; i<coups.length && it.hasNext(); i++){
+                coups[i]=it.next();
+            }
+            return coups;
+        }
     }
 
     @Override
@@ -27,7 +65,7 @@ public class Moustique extends Insecte{
 
     @Override
     public boolean accept(Visiteur v) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return v.visite(this);
     }
 
     @Override

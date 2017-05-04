@@ -119,7 +119,7 @@ public class Ordinateur extends Joueur{
             //TODO: choix placement
             //TODO: choix placement
             //TODO: choix placement
-            return new Depot(t,new Point(0,0));
+            return new Depot(0,t,new Point(0,0));
     }
     
     public Deplacement[] deplacementsPossibles_MAUVAIS(){

@@ -6,6 +6,10 @@
 package ruche;
 
 //http://www.redblobgames.com/grids/hexagons/
+
+import Modele.Arbitre;
+import Vue.Interface;
+
 /**
  *
  * @author grandmax
@@ -17,6 +21,8 @@ public class Ruche {
      */
     public static void main(String[] args) {
         // TODO code application logic here
+        Interface it = new Interface();
+        it.creer(args, null);
     }
     
 }

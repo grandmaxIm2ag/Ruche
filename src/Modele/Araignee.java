@@ -25,6 +25,7 @@ public class Araignee extends Insecte{
         Point p = pos.clone();
         Stack<Point> aVisiter = new Stack();
         List<Point> marquer = new ArrayList();
+        marquer.add(p);
         
         List<Coup> co = glisser(plateau);
         Iterator<Coup> it = co.iterator();
@@ -58,7 +59,7 @@ public class Araignee extends Insecte{
         
         Coup[] coups = new Coup[aVisiter.size()];
         for(int i=0; i<coups.length; i++)
-            coups[i] = new Deplacement(pos, aVisiter.pop(), joueur);
+            coups[i] = new Deplacement(joueur, pos, aVisiter.pop());
         return coups;
     }
 
@@ -69,7 +70,7 @@ public class Araignee extends Insecte{
 
     @Override
     public boolean accept(Visiteur v) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return v.visite(this);
     }
 
     @Override

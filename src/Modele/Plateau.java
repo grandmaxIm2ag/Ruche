@@ -2,6 +2,7 @@
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
+   https://fr.boardgamearena.com/ 
  */
 package Modele;
 
@@ -215,5 +216,60 @@ public class Plateau extends Composant {
            } 
         });
         return !b;
+    }
+    
+    public Coup[] deplacementPossible(){
+        List<Coup[]> tab = new ArrayList();
+        List<Coup> c = new ArrayList();
+        Iterator<Point> u = utilises.iterator();
+        while(u.hasNext()){
+            Point tmp = u.next();
+            tab.add(matrice[(int)tmp.x()][(int)tmp.x()].tete().deplacementValide(this.clone().matrice()));
+        }
+        Iterator<Coup[]> t = tab.iterator();
+        while(t.hasNext()){
+            Coup[] tmp = t.next();
+            for(int k=0; k<tmp.length; k++){
+                if(tmp[k] instanceof Deplacement){
+                    Deplacement d = (Deplacement) tmp[k];
+                    Plateau p = clone();
+                    p.matrice[(int)d.source.x()][(int)d.source.y()].retirePion();
+                    p.majGraphe(d.source());
+                    boolean b = p.estConnexe(); 
+                    if(b){
+                        c.add(d);
+                    }
+                }
+            }
+        }
+        Coup[] coups = new Coup[c.size()];
+        Iterator<Coup> it = c.iterator();
+        int i=0; 
+        while(it.hasNext() && i<coups.length)
+            coups[i++]=it.next();
+        return coups;
+    }
+    
+    public Coup[] depotPossible(int joueur, int t){
+        List<Coup> c = new ArrayList();
+        for(int i=0; i<matrice.length; i++)
+            for(int j=0; j<matrice[i].length; j++){
+                Depot d = new Depot(joueur, t, matrice[i][j].position());
+                if(deposePionValide(d)){
+                    c.add(d);
+                }
+            }
+        Coup[] coups = new Coup[c.size()];
+        Iterator<Coup> it = c.iterator();
+        int i=0; 
+        while(it.hasNext() && i<coups.length)
+            coups[i++]=it.next();
+        return coups;
+    }
+    
+    
+    
+    public Case[][] matrice(){
+        return matrice;
     }
 }
