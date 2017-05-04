@@ -33,7 +33,7 @@ public class Sauterelle extends Insecte{
                             int diffy = j - ((int)pos.y());
                             while(ca.utilise())
                                 ca=plateau[(int)ca.position().x()+diffx][(int)ca.position().y()+diffy];
-                            c.add(new Deplacement(pos, ca.position(), joueur));
+                            c.add(new Deplacement(joueur, pos, ca.position()));
                         }
                     }
         

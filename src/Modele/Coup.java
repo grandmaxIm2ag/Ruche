@@ -13,6 +13,9 @@ public abstract class Coup {
     Point destination;
     int joueur;
     
+    public Coup(int j){
+        joueur = j;
+    }
     public Point destination(){
         return destination;
     }

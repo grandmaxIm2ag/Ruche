@@ -12,10 +12,10 @@ package Modele;
 public class Deplacement extends Coup{
     Point source;
     
-    public Deplacement(Point s, Point d, int j){
+    public Deplacement(int j,  Point s, Point d){
+        super(j);
         source = s;
         destination = d;
-        joueur = j;
     }
     
     public Point source(){

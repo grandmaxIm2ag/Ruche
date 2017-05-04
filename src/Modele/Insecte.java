@@ -70,29 +70,29 @@ public abstract class Insecte extends Composant{
                             case -1:
                                 if(diffy==0){
                                     if( plateau[(int)pos.x()][(int)pos.y()-1].utilise() ^ plateau[(int)pos.x()-1][(int)pos.y()+1].utilise() )
-                                        c.add(new Deplacement(pos, new Point(i,j), joueur));
+                                        c.add(new Deplacement(joueur, pos, new Point(i,j)));
                                 }else{
                                     if(plateau[(int)pos.x()-1][(int)pos.y()].utilise() ^ plateau[(int)pos.x()][(int)pos.y()+1].utilise() )
-                                        c.add(new Deplacement(pos, new Point(i,j), joueur));
+                                        c.add(new Deplacement(joueur, pos, new Point(i,j)));
                                 }
                                 break;
                             case 0:
                                 if (diffy==-1){
                                     if(plateau[(int)pos.x()+1][(int)pos.y()-1].utilise() ^ plateau[(int)pos.x()-1][(int)pos.y()].utilise() )
-                                        c.add(new Deplacement(pos, new Point(i,j), joueur));
+                                        c.add(new Deplacement(joueur, pos, new Point(i,j)));
                                 }
                                 else{
                                     if(plateau[(int)pos.x()+1][(int)pos.y()].utilise() ^ plateau[(int)pos.x()-1][(int)pos.y()+1].utilise() )
-                                        c.add(new Deplacement(pos, new Point(i,j), joueur));
+                                        c.add(new Deplacement(joueur, pos, new Point(i,j)));
                                 }
                                 break;
                             case 1:
                                 if(diffy==-1){
                                      if( plateau[(int)pos.x()][(int)pos.y()-1].utilise() ^ plateau[(int)pos.x()+1][(int)pos.y()].utilise() )
-                                        c.add(new Deplacement(pos, new Point(i,j), joueur));
+                                        c.add(new Deplacement(joueur, pos, new Point(i,j)));
                                 }else{
                                      if( plateau[(int)pos.x()+1][(int)pos.y()-1].utilise() ^ plateau[(int)pos.x()][(int)pos.y()+1].utilise() )
-                                        c.add(new Deplacement(pos, new Point(i,j), joueur));
+                                        c.add(new Deplacement(joueur, pos, new Point(i,j)));
                                 }
                                 break;
                             default:
@@ -112,7 +112,7 @@ public abstract class Insecte extends Composant{
                 if(!((i==(int)pos.x()-1 && j==(int)pos.y()-1) || (i==(int)pos.x()+1 && j==(int)pos.y()+1) ))
                     if(!pos.equals(plateau[i][j].position()))
                         if(plateau[i][j].utilise())
-                            c.add(new Deplacement(pos, new Point(i,j), joueur));
+                            c.add(new Deplacement(joueur, pos, new Point(i,j)));
         return c;
     }
     public List<Coup> descendre(Case[][] plateau){
@@ -122,7 +122,7 @@ public abstract class Insecte extends Composant{
                 if(!((i==(int)pos.x()-1 && j==(int)pos.y()-1) || (i==(int)pos.x()+1 && j==(int)pos.y()+1) ))
                     if(!pos.equals(plateau[i][j].position()))
                         if(plateau[i][j].utilise())
-                            c.add(new Deplacement(pos, new Point(i,j), joueur));
+                            c.add(new Deplacement(joueur, pos, new Point(i,j)));
         return c;
     }
 }

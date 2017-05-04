@@ -39,7 +39,7 @@ public class Cloporte extends Insecte{
             Case tmp = v.next();
             Iterator<Point> d = depot.iterator();
             while(d.hasNext()){
-                c.add(new Deplacement(tmp.position(), d.next(), tmp.tete().joueur()));
+                c.add(new Deplacement(tmp.tete().joueur(), tmp.position(), d.next()));
             }
         }
                 

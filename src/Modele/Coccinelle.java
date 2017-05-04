@@ -70,7 +70,7 @@ public class Coccinelle extends Insecte{
         
         Coup[] coups = new Coup[aVisiter.size()];
         for(int i=0; i<coups.length; i++)
-            coups[i] = new Deplacement(pos, aVisiter.pop(), joueur);
+            coups[i] = new Deplacement(joueur, pos, aVisiter.pop());
         return coups;
     }
 
