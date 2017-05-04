@@ -5,14 +5,18 @@
  */
 package Modele;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 /**
  *
  * @author grandmax
  */
 public class Reine extends Insecte{
 
-    public Reine(double x, double y, double larg, double haut) {
-        super(x, y, larg, haut);
+    public Reine(double x, double y, double larg, double haut, int j) {
+        super(x, y, larg, haut,j);
     }
 
     @Override
@@ -22,12 +26,23 @@ public class Reine extends Insecte{
 
     @Override
     public boolean accept(Visiteur v) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return v.visite(this);
     }
 
     @Override
-    public Coup[] deplacementValide(Case[] plateau) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Coup[] deplacementValide(Case[][] plateau) {
+        List<Coup> c = glisser(plateau);
+        Coup[] coups = new Coup[c.size()];
+        Iterator<Coup> it = c.iterator();
+        int i=0;
+        while(it.hasNext() && i<coups.length)
+            coups[i++]=it.next();
+        return coups;
+    }
+
+    @Override
+    public Insecte clone() {
+        return new Reine(pos.x(), pos.y(), l, h, joueur);
     }
     
 }

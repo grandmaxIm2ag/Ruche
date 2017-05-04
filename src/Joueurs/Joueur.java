@@ -5,6 +5,8 @@
  */
 package Joueurs;
 
+import java.util.Properties;
+
 /**
  *
  * @author grandmax
@@ -13,9 +15,11 @@ public abstract class Joueur {
     String nom;
     int[] pions;
     boolean main;
+    Properties prop;
     
-    public Joueur(boolean m){
+    public Joueur(boolean m, Properties p){
         main=m;
+        prop=p;
     }
     
     public void setMain(){

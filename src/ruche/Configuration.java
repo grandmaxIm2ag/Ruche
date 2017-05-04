@@ -27,20 +27,15 @@ public class Configuration {
         try {
             p.load(in);
         } catch (IOException e) {
-            erreur(e, "Ressources/Reglages/defaut.cfg");
+            erreur(e, "Reglages/defaut.cfg");
         }
     }
 
     public static Properties proprietes() {
-        try{
-            Properties p;
-            InputStream in = new FileInputStream("Ressources/Reglages/defaut.cfg");
-            Properties defaut = new Properties();
-            chargerProprietes(defaut, in);
-            return defaut;
-        }catch(FileNotFoundException e){
-            System.out.println("coucou");
-            return null;
-        }
-}
+        Properties p;
+    InputStream in = ClassLoader.getSystemClassLoader().getResourceAsStream("Reglages/defaut.cfg");
+        Properties defaut = new Properties();
+        chargerProprietes(defaut, in);
+        return defaut;
+    }
 }

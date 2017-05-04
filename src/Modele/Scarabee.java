@@ -5,19 +5,42 @@
  */
 package Modele;
 
+import java.util.Iterator;
+import java.util.List;
+
 /**
  *
  * @author grandmax
  */
 public class Scarabee extends Insecte{
 
-    public Scarabee(double x, double y, double larg, double haut) {
-        super(x, y, larg, haut);
+    public Scarabee(double x, double y, double larg, double haut, int j) {
+        super(x, y, larg, haut,j);
     }
 
     @Override
-    public Coup[] deplacementValide(Case[] plateau) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public Coup[] deplacementValide(Case[][] plateau) {
+        boolean enHaut;
+        List<Coup> c;
+                
+        Case ca = plateau[(int)pos.x()][(int)pos.y()].clone();
+        ca.retirePion();
+        enHaut = ca.utilise();
+        
+        if(enHaut){
+            c = monter(plateau);
+            c.addAll(descendre(plateau));
+        }else{
+            c = monter(plateau);
+            c.addAll(glisser(plateau));
+        }
+        
+        Coup[] coups = new Coup[c.size()];
+        Iterator<Coup> it = c.iterator();
+        int i=0; 
+        while(it.hasNext() && i<coups.length)
+            coups[i++]=it.next();
+        return coups;
     }
 
     @Override
@@ -27,7 +50,13 @@ public class Scarabee extends Insecte{
 
     @Override
     public boolean accept(Visiteur v) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return v.visite(this);
     }
+
+    @Override
+    public Insecte clone() {
+        return new Scarabee(pos.x(), pos.y(), l, h, joueur);
+    }
+    
     
 }

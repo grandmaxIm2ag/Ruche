@@ -24,7 +24,7 @@ public class Point {
         this.y = y;
     }
     
-    public void fixe(int x, int y){
+    public void fixe(double x, double y){
         this.x = x; this.y = y;
     }
     
@@ -45,5 +45,16 @@ public class Point {
     
     public String toString(){
         return "("+x+","+y+")";
+    }
+    
+    @Override
+    public int hashCode()
+    {
+        return toString().hashCode();
+    }
+    
+    public Point clone(){
+        Point nouv = new Point(x(), y());
+        return nouv;
     }
 }

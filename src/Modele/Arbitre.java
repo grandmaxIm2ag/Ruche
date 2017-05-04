@@ -51,20 +51,16 @@ public class Arbitre {
     }
     
     public boolean deposePionValide(Depot d){
-        
-        return false;
+        return plateau.deposePionValide(d);
     }
     public boolean deplacePionValide(Deplacement d){
-        
-        return false;
+        return plateau.deplacePionValide(d);
     }
-    public boolean deplacePion(Deplacement d){
-        
-        return false;
+    public void deplacePion(Deplacement d){
+        plateau.deplacePion(d);
     }
-    public boolean deposePion(Depot d){
-        
-        return false;
+    public void deposePion(Depot d){
+        plateau.deposePion(d);
     }
     
     public void nouvellePartie(){

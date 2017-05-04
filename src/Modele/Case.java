@@ -32,20 +32,51 @@ public class Case extends Composant{
         return !insectes.isEmpty();
     }
     public void deposePion(Insecte e){
-        
+        insectes.push(e);
+    }
+    public Insecte retirePion(){
+        return insectes.pop();
     }
     public Insecte tete(){
-        return null;
+        return insectes.peek();
+    }
+    public Stack insectes(){
+        return insectes;
     }
     
     @Override
     public boolean equals(Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if(o instanceof Case){
+            Case c = (Case)o;
+            return (c.position().equals(pos) && l==c.l() && h==c.h() && c.insectes().equals(insectes)) ;
+        }
+        return false;
     }
 
     @Override
     public boolean accept(Visiteur v) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        boolean b = v.visite(this);
+        if(utilise())
+            b |= v.visite(tete());
+        return b;
+    }
+    
+    public Case clone(){
+        Case nouv = new Case(pos.x(), pos.y(), l, h);
+        
+        if(utilise()){
+            Stack<Insecte> tmp = new Stack();
+            while(utilise())
+                tmp.push(retirePion());
+            
+            while(!tmp.isEmpty()){
+                Insecte e = tmp.pop();
+                deposePion(e);
+                nouv.deposePion(e.clone());
+            }
+        }
+        
+        return nouv;
     }
     
 }
