@@ -8,6 +8,7 @@ package Modele;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -21,7 +22,11 @@ public class Reine extends Insecte{
 
     @Override
     public boolean equals(Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if(o instanceof Reine){
+            Reine a = (Reine)o;
+            return (a.position().equals(pos) && a.l()==l && a.h()==h);
+        }
+        return false;
     }
 
     @Override
@@ -30,7 +35,7 @@ public class Reine extends Insecte{
     }
 
     @Override
-    public Coup[] deplacementValide(Case[][] plateau) {
+    public Coup[] deplacementValide(Map<Point, Case> plateau) {
         List<Coup> c = glisser(plateau);
         Coup[] coups = new Coup[c.size()];
         Iterator<Coup> it = c.iterator();

@@ -16,7 +16,6 @@ public class Reglage {
     static Properties prop;
 
     public static void init(Properties p) {
-        System.err.println("Partie en "+p.getProperty("nbManche"));
         prop = p;
     }
     

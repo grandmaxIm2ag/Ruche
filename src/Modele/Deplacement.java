@@ -21,4 +21,12 @@ public class Deplacement extends Coup{
     public Point source(){
         return source;
     }
+    
+    public boolean equals(Object o){
+        if(o instanceof Deplacement){
+            Deplacement d = (Deplacement) o;
+            return (d.source().equals(source) && d.destination().equals(destination) && d.joueur()==joueur);
+        }
+        return true;
+    }
 }

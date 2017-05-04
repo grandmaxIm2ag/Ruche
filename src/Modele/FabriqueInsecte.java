@@ -35,5 +35,9 @@ public class FabriqueInsecte {
                 return null;
         }
     }
+
+    public static Insecte creer(int i, int i0, int i1, Point position) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
 }

@@ -8,6 +8,7 @@ package Modele;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Stack;
 
 /**
@@ -21,7 +22,7 @@ public class Araignee extends Insecte{
     }
 
     @Override
-    public Coup[] deplacementValide(Case[][] plateau) {
+    public Coup[] deplacementValide(Map plateau) {
         Point p = pos.clone();
         Stack<Point> aVisiter = new Stack();
         List<Point> marquer = new ArrayList();
@@ -65,7 +66,11 @@ public class Araignee extends Insecte{
 
     @Override
     public boolean equals(Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if(o instanceof Araignee){
+            Araignee a = (Araignee)o;
+            return (a.position().equals(pos) && a.l()==l && a.h()==h);
+        }
+        return false;
     }
 
     @Override
