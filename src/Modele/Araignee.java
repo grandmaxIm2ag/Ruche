@@ -22,7 +22,7 @@ public class Araignee extends Insecte{
     }
 
     @Override
-    public Coup[] deplacementValide(Map plateau) {
+    public Coup[] deplacementValide(Map<Point, Case> plateau) {
         Point p = pos.clone();
         Stack<Point> aVisiter = new Stack();
         List<Point> marquer = new ArrayList();
