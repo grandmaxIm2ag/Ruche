@@ -12,6 +12,7 @@ import Modele.Depot;
 import Modele.Deplacement;
 import Modele.Point;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Properties;
 import java.util.Random;
 import ruche.Reglage;
@@ -153,17 +154,36 @@ public class Ordinateur extends Joueur{
             while(j<mat[0].length && insectesTrouves!=tabPieces[typeChoisi]){
                 if(mat[i][j].tete().type()==typeChoisi){
                     insectesTrouves=insectesTrouves+1;
-                    l.add(mat[i][j].tete().deplacementValide(mat[0]));//////////////////////////////////////////////////////////
-                    ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                    ////////////////////////////////////////////////////////////////////////////////////////////////////////////quand la méthode sera corrigée dans tous
-                    ////////////////////////////////////////////////////////////////////////////////////////////////////////////les insectes remplacer mat[0] par mat                
+                    Coup[] t;
+                    if( (t=mat[i][j].tete().deplacementValide(mat))!=null){
+                        l.add(t);
+                        //////////////////////////////////////////////////////////
+                        ////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                        ////////////////////////////////////////////////////////////////////////////////////////////////////////////quand la méthode sera corrigée dans tous
+                        ////////////////////////////////////////////////////////////////////////////////////////////////////////////les insectes remplacer mat[0] par mat 
+                    }
                 }               
                 j=j+1;
             }
             i=i+1;
         }
-        //remplir un tableau avec tous les coups possibles pour les insectes 
+        if(!l.isEmpty()){
+            //choisi le coup
+            //nb de coup possibles
+            int taille;
+            Iterator<Coup[]> it =l.iterator();
+            taille=nbCoupPossiblesTotaux(it);
+            
+        }else{
+            return coup_ALEATOIRE(a);//relance si pas de coup possible
+        }
         return null;
+    }
+    
+    public int nbCoupPossiblesTotaux(Iterator<Coup[]> it){
+        int taille=0;
+        
+        return taille;
     }
     
     public int choixParSommesCumulees(int choix, int[] pieces){
