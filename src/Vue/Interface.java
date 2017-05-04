@@ -113,6 +113,8 @@ public class Interface extends Application{
         Canvas c = new Canvas (500, 500);
         StackPane stack = new StackPane(c);
         stack.setAlignment(Pos.TOP_CENTER);
+        c.widthProperty().bind(stack.maxWidthProperty());
+        c.heightProperty().bind(stack.maxHeightProperty());
         GraphicsContext gc;
         gc = c.getGraphicsContext2D();
         gc.setFill(Color.WHITESMOKE);
@@ -164,6 +166,7 @@ public class Interface extends Application{
         Button btNouveau = new Button("Nouvelle partie");
         Button btCharger = new Button("Charger partie");
         Button btConfig = new Button("Configuration");
+        Button btCredits = new Button("Credits");
         Button btQuit = new Button("Quitter");
 
         btQuit.setOnAction(new EventHandler<ActionEvent>() {
@@ -190,10 +193,18 @@ public class Interface extends Application{
             }
         });
         
+        btCredits.setOnAction(new EventHandler<ActionEvent>() {
+            
+            @Override
+            public void handle(ActionEvent event) {
+                goCredits();
+            }
+        });
         
         btNouveau.setMaxWidth(150);
         btCharger.setMaxWidth(150);
         btConfig.setMaxWidth(150);
+        btCredits.setMaxWidth(150);
         box.setAlignment(Pos.TOP_CENTER);
         box.setSpacing(30);
         
@@ -221,32 +232,16 @@ public class Interface extends Application{
         grid.add(cbMode, 8, 0);
         grid.add(lSave, 3, 1);
         grid.add(cbSave, 4, 1);
+        grid.add(btCredits, 0, 3);
         
         
         
-        Canvas c = new Canvas(200, 100);
-        GraphicsContext gc;
-        gc = c.getGraphicsContext2D();
-        gc.setFill(Color.ORANGE);
-        gc.setStroke(Color.WHEAT);
-        double [][] coords = hex_corner(100, 50, 25);
-        gc.fillPolygon(coords[0], coords[1], 6);
-        gc.strokePolygon(coords[0], coords[1], 6);
-        gc.setFill(Color.ORANGERED);
-        gc.setFont(Font.font("Tahoma", FontWeight.NORMAL, 33));
-        gc.fillText("Menu", coords[0][3], coords[1][2]-1);
+        Canvas c = titreSect("Menu");
         
         box.getChildren().addAll(c, grid, btQuit);
         
     }
     
-    /*
-    function hex_corner(center, size, i):
-    var angle_deg = 60 * i   + 30
-    var angle_rad = PI / 180 * angle_deg
-    return Point(center.x + size * cos(angle_rad),
-                 center.y + size * sin(angle_rad))
-    */
     
     public double[][] hex_corner (double x, double y, double rayon) {
         double [][] coords = new double[2][6];
@@ -271,17 +266,7 @@ public class Interface extends Application{
         box.setSpacing(30);
         root.setCenter(box);
         
-        Canvas c = new Canvas(200, 100);
-        GraphicsContext gc;
-        gc = c.getGraphicsContext2D();
-        gc.setFill(Color.ORANGE);
-        gc.setStroke(Color.WHEAT);
-        double [][] coords = hex_corner(100, 50, 25);
-        gc.fillPolygon(coords[0], coords[1], 6);
-        gc.strokePolygon(coords[0], coords[1], 6);
-        gc.setFill(Color.ORANGERED);
-        gc.setFont(Font.font("Tahoma", FontWeight.NORMAL, 33));
-        gc.fillText("Config", coords[0][3], coords[1][2]-1);
+        Canvas c = titreSect("Config");
         
         GridPane grid = new GridPane();
         grid.setHgap(10);
@@ -326,6 +311,71 @@ public class Interface extends Application{
         
         box.getChildren().addAll(c, grid, bottom);
     }
+    
+    public Canvas titreSect (String name) {
+        Canvas c = new Canvas(200, 100);
+        GraphicsContext gc;
+        gc = c.getGraphicsContext2D();
+        gc.setFill(Color.ORANGE);
+        gc.setStroke(Color.WHEAT);
+        double [][] coords = hex_corner(100, 50, 25);
+        gc.fillPolygon(coords[0], coords[1], 6);
+        gc.strokePolygon(coords[0], coords[1], 6);
+        gc.setFill(Color.ORANGERED);
+        gc.setFont(Font.font("Tahoma", FontWeight.NORMAL, 33));
+        gc.fillText(name, coords[0][3], coords[1][2]-1);
+        return c;
+    }
+    
+    public void goCredits () {
+        VBox box = new VBox();
+        box.setSpacing(30);
+        box.setPadding(new Insets(20,10,20,10));
+        box.setAlignment(Pos.TOP_CENTER);
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(20);
+        grid.setAlignment(Pos.TOP_CENTER);
+        Canvas c = titreSect("Credits");
+        
+        Label lMoteur = new Label("Moteur");
+        Label lIA = new Label("IA");
+        Label lIHM = new Label("IHM");
+        Label lMax = new Label("Maxence Grand");
+        Label lNarek = new Label("Narek Davtyan");
+        Label lAme = new Label ("Amelina Douard");
+        Label lLies = new Label ("Lies Hadjadj");
+        Label lLu = new Label("Lucie Muller");
+        Label lEnzo = new Label("Enzo Brignon");
+        
+        Button bRetour = new Button("Retour");
+        
+        bRetour.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                goMenu();
+            }
+        });
+        
+        grid.add(lMoteur, 1, 0);
+        grid.add(lMax, 0, 1);
+        grid.add(lNarek, 2, 1);
+        grid.add(lIA, 1, 2);
+        grid.add(lAme, 0, 3);
+        grid.add(lLies, 2, 3);
+        grid.add(lIHM, 1, 4);
+        grid.add(lEnzo, 0, 5);
+        grid.add(lLu, 2, 5);
+        
+        box.getChildren().addAll(c, grid, bRetour);
+        
+        root.setCenter(box);
+        root.setRight(new Pane());
+        root.setLeft(new Pane());
+        root.setBottom(new Pane());
+        
+    }
+    
     
     public static void infoPartie(Joueur j1, Joueur j2, int nbManche, int joueur){
         
