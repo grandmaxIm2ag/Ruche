@@ -7,6 +7,7 @@ package Modele;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -19,11 +20,11 @@ public class Scarabee extends Insecte{
     }
 
     @Override
-    public Coup[] deplacementValide(Case[][] plateau) {
+    public Coup[] deplacementValide(Map<Point, Case> plateau) {
         boolean enHaut;
         List<Coup> c;
                 
-        Case ca = plateau[(int)pos.x()][(int)pos.y()].clone();
+        Case ca = plateau.get(pos).clone();
         ca.retirePion();
         enHaut = ca.utilise();
         
@@ -45,7 +46,11 @@ public class Scarabee extends Insecte{
 
     @Override
     public boolean equals(Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if(o instanceof Scarabee){
+            Scarabee a = (Scarabee)o;
+            return (a.position().equals(pos) && a.l()==l && a.h()==h);
+        }
+        return false;
     }
 
     @Override
