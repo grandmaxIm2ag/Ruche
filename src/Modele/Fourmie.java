@@ -46,8 +46,9 @@ public class Fourmie extends Insecte{
         Iterator<Coup> it = co.iterator();
         while(it.hasNext()){
             Point po = it.next().destination();
-            System.out.println(po);
+            //System.out.println(po);
             if(!marquer.contains(po)){
+                System.out.println(po);
                 marquer.add(po);
                 aVisiter.push(po);
            }
@@ -64,8 +65,9 @@ public class Fourmie extends Insecte{
                 it = co.iterator();
                 while(it.hasNext()){
                     Point po = it.next().destination();
-                    //System.out.println(po);
+                    ///System.out.println(po);
                     if(!marquer.contains(po)){
+                        System.out.println(po);
                         insert = true;
                         marquer.add(po);
                         tmp.push(po);
@@ -81,9 +83,9 @@ public class Fourmie extends Insecte{
         pos.fixe(p.x(), p.y());
         
         System.out.println(aVisiter.size());
-        Coup[] coups = new Coup[aVisiter.size()];
+        Coup[] coups = new Coup[marquer.size()];
         for(int i=0; i<coups.length; i++)
-            coups[i] = new Deplacement(joueur, pos, aVisiter.pop());
+            coups[i] = new Deplacement(joueur, pos, marquer.get(i));
         return coups;
     }
 
