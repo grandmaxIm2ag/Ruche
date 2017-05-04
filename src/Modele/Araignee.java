@@ -25,6 +25,7 @@ public class Araignee extends Insecte{
         Point p = pos.clone();
         Stack<Point> aVisiter = new Stack();
         List<Point> marquer = new ArrayList();
+        marquer.add(p);
         
         List<Coup> co = glisser(plateau);
         Iterator<Coup> it = co.iterator();
@@ -69,7 +70,7 @@ public class Araignee extends Insecte{
 
     @Override
     public boolean accept(Visiteur v) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        return v.visite(this);
     }
 
     @Override
