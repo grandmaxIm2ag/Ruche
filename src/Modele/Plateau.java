@@ -39,7 +39,12 @@ public class Plateau extends Composant {
     public void premierPion(Insecte e){
         matrice[(int)(l-1)][(int)(l-1)].deposePion(e);
     }
-    
+     public boolean premierPionValide(Depot d){
+        if(d.destination().x < -1 || d.destination().y < -1 || d.destination().x > 1 || d.destination().y > 1 || (d.destination().x == -1 && d.destination().y == -1 )
+                || (d.destination().x == 1 && d.destination().y == 1 ))
+            return false;
+        return true;
+    }
     public boolean deposePionValide(Depot d){
         boolean b = !matrice[(int)d.destination.x()][(int)d.destination.y()].utilise();
         if(b)
@@ -270,7 +275,6 @@ public class Plateau extends Composant {
     
     
     public Case[][] matrice(){
-        //
         return matrice;
     }
 }
