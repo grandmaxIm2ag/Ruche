@@ -98,5 +98,11 @@ public class Araignee extends Insecte{
     public Insecte clone() {
         return new Araignee(pos.x(), pos.y(), l, h, joueur);
     }
+
+    @Override
+    public int type() {
+        return ARAI;
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
 }

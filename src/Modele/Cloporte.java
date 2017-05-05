@@ -27,7 +27,7 @@ public class Cloporte extends Insecte{
         List<Case> voisins = new ArrayList();
         List<Point> depot = new ArrayList();
         for(int i=(int)pos.x()-1; i<=(int)pos.x()+1;i++)
-            for(int j=(int)pos.y()-1; j<=(int)pos.y()+1;i++)
+            for(int j=(int)pos.y()-1; j<=(int)pos.y()+1;j++)
                 if(!((i==(int)pos.x()-1 && j==(int)pos.y()-1) || (i==(int)pos.x()+1 && j==(int)pos.y()+1) ))
                     if(!pos.equals(new Point(i,j))){
                         if(plateau.get(new Point(i,j))!=null)
@@ -69,6 +69,12 @@ public class Cloporte extends Insecte{
     @Override
     public Insecte clone() {
         return new Cloporte(pos.x(), pos.y(), l, h, joueur);
+    }
+
+    @Override
+    public int type() {
+        return CLOP;
+       // throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }

@@ -49,5 +49,11 @@ public class Reine extends Insecte{
     public Insecte clone() {
         return new Reine(pos.x(), pos.y(), l, h, joueur);
     }
+
+    @Override
+    public int type() {
+        return REINE;
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
 }

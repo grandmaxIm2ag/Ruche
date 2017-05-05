@@ -37,7 +37,6 @@ public class Sauterelle extends Insecte{
                                 p = new Point(ca.position().x()+diffx, ca.position().y()+diffy);
                                 ca=plateau.get(p);
                             }
-                                
                             c.add(new Deplacement(joueur, pos, p));
                         }
                     }
@@ -67,6 +66,12 @@ public class Sauterelle extends Insecte{
     @Override
     public Insecte clone() {
         return new Sauterelle(pos.x(), pos.y(), l, h, joueur);
+    }
+
+    @Override
+    public int type() {
+        return SAUT;
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }

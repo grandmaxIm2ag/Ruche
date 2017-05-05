@@ -62,6 +62,12 @@ public class Scarabee extends Insecte{
     public Insecte clone() {
         return new Scarabee(pos.x(), pos.y(), l, h, joueur);
     }
+
+    @Override
+    public int type() {
+        return SCAR;
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
     
 }

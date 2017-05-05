@@ -22,8 +22,8 @@ public abstract class Insecte extends Composant{
     public final static int COCC = 5;
     public final static int MOUS = 6;
     public final static int CLOP = 7;
+    public final static int NB_TYPE = 8;
     
-    int type;
     int joueur;
     
     public Insecte(double x, double y, double larg, double haut, int j) {
@@ -31,9 +31,7 @@ public abstract class Insecte extends Composant{
         joueur = j;
     }
 
-    public int type(){
-        return type;
-    }
+    
     public double[] vecteur(){
         double[] vecteur = new double[12];
         double cote = l/2;
@@ -48,6 +46,8 @@ public abstract class Insecte extends Composant{
         }        
         return vecteur;
     }
+    
+    public abstract int type();
     
     public abstract Coup[] deplacementValide(Map<Point, Case> plateau);
     
@@ -145,5 +145,10 @@ public abstract class Insecte extends Composant{
                         if(plateau.get(new Point(i,j))==null)
                             c.add(new Deplacement(joueur, new Point(pos.x(), pos.y()), new Point(i,j)));
         return c;
+    }
+    
+    @Override
+    public String toString(){
+        return "["+type()+":"+joueur()+":"+pos+"]";
     }
 }

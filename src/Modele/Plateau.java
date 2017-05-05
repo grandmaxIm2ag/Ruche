@@ -23,7 +23,6 @@ public class Plateau extends Composant {
     int xMin, yMin, xMax, yMax;
     Properties prop;
     Point[] reines;
-
     List<Point> utilises;
     Map<Point, List<Point>> voisins;
     
@@ -34,6 +33,7 @@ public class Plateau extends Composant {
         
         voisins = new HashMap();
         utilises = new ArrayList();
+        
     }
     
     public void premierPion(Insecte e){
@@ -192,7 +192,11 @@ public class Plateau extends Composant {
     }
     @Override
     public boolean equals(Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if(o instanceof Plateau){
+            Plateau pl = (Plateau) o;
+            return matrice.equals(pl.matrice);
+        }
+        return false;
     }
 
     @Override
@@ -231,7 +235,24 @@ public class Plateau extends Composant {
 }
     @Override
     public String toString(){
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String str = "";
+        for(int i=0; i<reines.length; i++)
+            str+=reines[i]+"\n";
+        
+        str+="plateau"+"\n";
+        for(Map.Entry<Point,Case> entry : matrice.entrySet()) {
+            str+=entry.getKey()+"|"+entry.getValue()+"\n";
+        }
+        str+="graphe"+"\n";
+        for(Map.Entry<Point,List<Point>> entry2 : voisins.entrySet()) {
+            Iterator<Point> it = entry2.getValue().iterator();
+            String tmp = it.next().toString();
+            while(it.hasNext()){
+                tmp+=":"+it.next();
+            }
+            str+=entry2.getKey()+":"+tmp;
+        }
+        return str;
     }
 
     public boolean aucunCoup(int joueur){

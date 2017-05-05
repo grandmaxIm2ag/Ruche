@@ -39,7 +39,6 @@ public class Fourmie extends Insecte{
     public Coup[] deplacementValide(Map<Point, Case> plateau) {
         
         Point p = pos.clone();
-        System.out.println("FOURMIE : "+p);
         Case c = plateau.get(p);
         c.retirePion();
         if(c.utilise())
@@ -108,6 +107,14 @@ public class Fourmie extends Insecte{
     @Override
     public Insecte clone() {
         return new Fourmie(pos.x(), pos.y(), l, h, joueur);
+    }
+    
+    
+
+    @Override
+    public int type() {
+       return FOUR;
+//throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }

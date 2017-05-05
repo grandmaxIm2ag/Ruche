@@ -78,4 +78,21 @@ public class Case extends Composant{
         return nouv;
     }
     
+    
+    @Override
+    public String toString(){
+        String str = pos.toString();
+        if(utilise()){
+            Stack<Insecte> tmp = new Stack();
+            while(utilise())
+                tmp.push(retirePion());
+            
+            while(!tmp.isEmpty()){
+                Insecte e = tmp.pop();
+                deposePion(e);
+                str+=":"+e;
+            }
+        }
+        return str;
+    }
 }

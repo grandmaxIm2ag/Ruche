@@ -13,7 +13,7 @@ import Modele.FabriqueInsecte;
 import Modele.Insecte;
 import Modele.Point;
 import Modele.Sauterelle;
-import static TestModel.TestAraignee.appartient;
+import static TestModel.TestMoustique.appartient;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.Test;
@@ -87,10 +87,38 @@ public class TestSauterelle {
             assertTrue(appartient(d2, d[i]));
     }
     
+     void deplacement3(){
+        Map<Point, Case> plateau = new HashMap();
+        f.position().fixe(1,2);
+        Case c = new Case(f.position().x(), f.position().y(), Reglage.lis("lCase"), Reglage.lis("hCase"));
+        c.deposePion(f);
+        plateau.put(c.position(), c);
+        Case c1 = new Case(1, 3, Reglage.lis("lCase"), Reglage.lis("hCase"));
+        c1.deposePion(FabriqueInsecte.creer(Insecte.SAUT, 0, new Point(1,3)));
+        plateau.put(c1.position(), c1);
+        Case c2 = new Case(2, 1, Reglage.lis("lCase"), Reglage.lis("hCase"));
+        c2.deposePion(FabriqueInsecte.creer(Insecte.SAUT, 0, new Point(2,1)));
+        plateau.put(c2.position(), c2);
+        Case c3 = new Case(1, 1, Reglage.lis("lCase"), Reglage.lis("hCase"));
+        c3.deposePion(FabriqueInsecte.creer(Insecte.SAUT, 0, new Point(1,1)));
+        plateau.put(c3.position(), c3);
+        
+        
+        Coup[] d = {
+            new Deplacement(0, f.position(), new Point(1,4)),
+            new Deplacement(0, f.position(), new Point(3,0)),
+            new Deplacement(0, f.position(), new Point(1,0))
+        };
+        Coup[] d2 = f.deplacementValide(plateau);
+        assertEquals( d.length, d2.length);
+        for(int i=0; i<d2.length; i++)
+            assertTrue(appartient(d2, d[i]));
+    }
     @Test
     public void test(){
         base();
-        deplacement1();
-        deplacement2();
+        //deplacement1();
+        //deplacement2();
+        deplacement3();
     }
 }

@@ -22,8 +22,7 @@ public class MainTest {
         Reglage.init(prop);
     }
     
-    @Test
-    public void test(){
+    void insecte(){
         TestCase tc = new TestCase();
         tc.test();
         TestFourmie tf = new TestFourmie();
@@ -40,6 +39,12 @@ public class MainTest {
         tco.test();
         TestMoustique tm = new TestMoustique();
         tm.test();
+        TestCloporte cloporte = new TestCloporte();
+        cloporte.test();
+    }
+    @Test
+    public void test(){
+        insecte();
     }
     
 }

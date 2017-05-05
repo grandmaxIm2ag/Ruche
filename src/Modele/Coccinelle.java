@@ -102,5 +102,11 @@ public class Coccinelle extends Insecte{
     public Insecte clone() {
         return new Coccinelle(pos.x(), pos.y(), l, h, joueur);
     }
+
+    @Override
+    public int type() {
+        return COCC;
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
 }
