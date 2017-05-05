@@ -198,9 +198,9 @@ public class Plateau extends Composant {
     @Override
     public boolean accept(Visiteur v) {
         boolean b=v.visite(this);
-        for(Map.Entry<Point,Case> entry : matrice.entrySet()) {
-            v.visite(entry.getValue());
-        }
+        //for(Map.Entry<Point,Case> entry : matrice.entrySet()) {
+        //    v.visite(entry.getValue());
+        //}
             
         return b;
     }

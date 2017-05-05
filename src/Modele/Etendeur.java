@@ -18,6 +18,7 @@ public class Etendeur {
     }
     public void fixeComposant(Composant c){
        x = (c.position().x()-diffX)*factX;
+       y = (c.position().y()-diffY)*factY;
     }
     public void fixeVecteur(double[] v){
         

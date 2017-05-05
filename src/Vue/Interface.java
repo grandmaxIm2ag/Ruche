@@ -75,7 +75,7 @@ public class Interface extends Application{
     static Arbitre arbitre;
     static BorderPane root;
     static Scene s;
-    final static boolean fullScreen = false;
+    final static boolean fullScreen = true;
         
     @Override
     public void start(Stage stage) throws Exception {
@@ -122,10 +122,11 @@ public class Interface extends Application{
         //root.setLeft(new Pane());
         root.setBottom(new Pane());
         Canvas c = new Canvas (500, 500);
-        StackPane stack = new StackPane(c);
+        //StackPane stack = new StackPane(c);
+        Pane stack = new Pane(c);
         root.setCenter(stack);
-        stack.setAlignment(Pos.TOP_CENTER);
-        
+        //stack.setAlignment(Pos.TOP_CENTER);
+        /*
         createBee(c, 250, 250, 50);
         createBeetle(c, 350, 250, 50);
         createGrasshopper(c, 450, 250, 50);
@@ -134,8 +135,12 @@ public class Interface extends Application{
         createAnt(c, 300, 350, 50);
         createMoskito(c, 400, 350, 50);
         createWoodlouse(c, 300, 150, 50);
-        
+        */
         root.setCenter(stack);
+        
+        c.widthProperty().bind(stack.widthProperty());
+        c.heightProperty().bind(stack.heightProperty().subtract(50));
+        
         VBox box = new VBox();
         box.setAlignment(Pos.TOP_CENTER);
         box.setPadding(new Insets(20,10,20,10));
@@ -157,9 +162,6 @@ public class Interface extends Application{
             }
         });
         
-        //HBox bPion = new HBox();
-        //bPion.setSpacing(20);
-        //bPion.setPadding(new Insets(20,10,20,10));
         GridPane bPion = new GridPane();
         bPion.setHgap(10);
         Separator sep = new Separator();
@@ -167,10 +169,12 @@ public class Interface extends Application{
         bPion.add(pionTableau(), 0, 0);
         bPion.add(sep, 1, 0);
         bPion.add(pionTableau(), 2, 0);
-        //bPion.getChildren().addAll(pionTableau(), sep, pionTableau());
         root.setRight(bPion);
         
         box.getChildren().addAll(btPrec, btSuiv, btSave, btMenu);
+        
+        Animation anim = new Animation(arbitre, c);
+        anim.start();
 
     }
     

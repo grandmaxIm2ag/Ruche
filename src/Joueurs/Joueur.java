@@ -5,6 +5,7 @@
  */
 package Joueurs;
 
+import Modele.Insecte;
 import java.util.Properties;
 
 /**
@@ -19,12 +20,20 @@ public abstract class Joueur {
     
     public Joueur(boolean m, Properties p){
         main=m;
-        prop=p;
+        //prop=p;
+        pions = new int[8];
+        for (int i = Insecte.REINE; i <= Insecte.CLOP; i++)
+            pions[i] = 0;
     }
     
     public void setMain(){
         main = !main;
     }
+    
+    public void addPion (int type, int qte) {
+        pions[type] += qte;
+    }
+    
     public String nom(){
         return nom;
     }

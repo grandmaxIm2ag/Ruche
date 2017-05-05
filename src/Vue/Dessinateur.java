@@ -6,8 +6,10 @@
 package Vue;
 
 import Modele.Araignee;
+import Modele.Arbitre;
 import Modele.Cloporte;
 import Modele.Coccinelle;
+import Modele.Etendeur;
 import Modele.Fourmie;
 import Modele.Moustique;
 import Modele.Plateau;
@@ -29,14 +31,23 @@ import javafx.scene.paint.Color;
 public class Dessinateur extends Visiteur{
     
     static Canvas c;
+    Etendeur etendeur;
+    Arbitre arbitre;
+    GraphicsContext gc;
     
-    Dessinateur (Canvas c) {
+    Dessinateur (Canvas c, Arbitre a) {
         this.c = c;
+        etendeur = new Etendeur();
+        arbitre = a;
+        gc = c.getGraphicsContext2D();
     }
     
     @Override 
     public boolean visite (Plateau p) {
-        
+        etendeur.fixeEchelle(c.getWidth()/arbitre.plateau().l(), c.getHeight()/arbitre.plateau().h(), 0, 0);
+        gc.clearRect(0, 0, c.getWidth(), c.getHeight());
+        gc.strokeRect(0, 0, c.getWidth(), c.getHeight());
+        System.out.println(c.getWidth());
         return false;
     }
     
