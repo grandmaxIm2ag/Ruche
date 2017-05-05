@@ -10,6 +10,7 @@ import Modele.Cloporte;
 import Modele.Coccinelle;
 import Modele.Fourmie;
 import Modele.Moustique;
+import Modele.Plateau;
 import Modele.Reine;
 import Modele.Sauterelle;
 import Modele.Scarabee;
@@ -31,6 +32,12 @@ public class Dessinateur extends Visiteur{
     
     Dessinateur (Canvas c) {
         this.c = c;
+    }
+    
+    @Override 
+    public boolean visite (Plateau p) {
+        
+        return false;
     }
     
     @Override
