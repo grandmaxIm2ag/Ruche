@@ -75,7 +75,7 @@ public class Interface extends Application{
     static Arbitre arbitre;
     static BorderPane root;
     static Scene s;
-    final static boolean fullScreen = true;
+    final static boolean fullScreen = false;
         
     @Override
     public void start(Stage stage) throws Exception {

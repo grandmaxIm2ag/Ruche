@@ -17,26 +17,32 @@ public class Etendeur {
         factX = fx; factY = fy; diffX=dx; diffY=dy;
     }
     public void fixeComposant(Composant c){
-       x = (c.position().x()-diffX)*factX;
-       y = (c.position().y()-diffY)*factY;
+       x = (c.position().x()+diffX);//*factX;
+       y = (c.position().y()+diffY);//*factY;
+       h = c.h()*50;
     }
     public void fixeVecteur(double[] v){
         
     }
     
     public double x(){
-        return 0;
+        return x;
     }
     public double y(){
-        return 0;
+        return y;
     }
     public double l(){
-        return 0;
+        return l;
     }
     public double h(){
-        return 0;
+        return h;
     }
     public double[] vecteur(){
         return null;
+    }
+    
+    public String toString () {
+        return "factX : " + factX + " factY : " + factY + " diffX : " + diffX + " diffY : " + diffY + "\n[" + x + ";" + y + "]\nl = " + l + " h = " + h;
+        
     }
 }

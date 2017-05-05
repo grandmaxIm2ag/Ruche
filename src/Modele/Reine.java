@@ -5,6 +5,7 @@
  */
 package Modele;
 
+import Vue.Interface;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -16,8 +17,10 @@ import java.util.Map;
  */
 public class Reine extends Insecte{
 
-    public Reine(double x, double y, double larg, double haut, int j) {
-        super(x, y, larg, haut,j);
+    public Reine(double x, double y, /*double larg,*/ double haut, int j) {
+        //super(x, y, larg, haut,j);
+        super(x, y, Interface.pythagorelol(haut), haut, j);
+
     }
 
     @Override
@@ -47,7 +50,7 @@ public class Reine extends Insecte{
 
     @Override
     public Insecte clone() {
-        return new Reine(pos.x(), pos.y(), l, h, joueur);
+        return new Reine(pos.x(), pos.y(), /*l,*/ h, joueur);
     }
     
 }

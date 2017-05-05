@@ -25,6 +25,7 @@ public class TestArbitre extends Arbitre {
             joueurs[0].addPion(i, 10);
         for (int i = Insecte.REINE; i <= Insecte.COCC; i++)
             joueurs[1].addPion(i, 10);
+        plateau.premierPion(new Reine(0,0,1,0));
     }
     
 }
