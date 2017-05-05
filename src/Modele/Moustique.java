@@ -32,18 +32,64 @@ public class Moustique extends Insecte{
             Scarabee scar = new Scarabee(pos.x(), pos.y(), l, h, joueur);
             return scar.deplacementValide(plateau);
         }else{
-            List<Case> voisins = new ArrayList();
+            List<Case> voisins = new ArrayList();           
+//            for(int j=(int)pos.y(); j<=(int)pos.y()+1;j++)
+//                if(!pos.equals(new Point((int)pos.x()-1,j)) && plateau.get(new Point((int)pos.x()-1,j))!=null)
+//                    voisins.add(plateau.get(new Point((int)pos.x()-1,j)));
+//            System.out.println("MOU*******");
+//
+//                for(int j=(int)pos.y()-1; j<=(int)pos.y()+1;j++){
+//                    System.out.println("MOU*******"+pos + "**" + pos.x() + "**" + j);
+//                    
+//                        if(!pos.equals(new Point(pos.x(),j)) && plateau.get(new Point(pos.x(),j))!=null){
+//
+//                                voisins.add(plateau.get(new Point(pos.x(),j)));
+//                                //System.out.println("MOU*******"+pos);
+//
+//
+//                            //System.out.println("MOU*******"+pos);
+//                            //2 fois
+//                        }
+//                }
+//            System.out.println("MOU*******");
+//            for(int j=(int)pos.y()-1; j<=(int)pos.y();j++)
+//                if(!pos.equals(new Point((int)pos.x()+1,j)) && plateau.get(new Point((int)pos.x()+1,j))!=null)
+//                    voisins.add(plateau.get(new Point((int)pos.x()+1,j)));
             for(int i=(int)pos.x()-1; i<=(int)pos.x()+1;i++)
-                for(int j=(int)pos.y()-1; j<=(int)pos.y()+1;i++)
+                for(int j=(int)pos.y()-1; j<=(int)pos.y()+1;j++){
+                    System.out.println("MOU*******"+pos + "**" + i + "**" + j);
                     if(!((i==(int)pos.x()-1 && j==(int)pos.y()-1) || (i==(int)pos.x()+1 && j==(int)pos.y()+1) ))
-                        if(!pos.equals(new Point(i,j)) && plateau.get(new Point(i,j))!=null ){
-                            voisins.add(plateau.get(new Point(i,j)));
+                        if(!pos.equals(new Point(i,j)) && plateau.get(new Point(i,j))!=null){
+                            //if(!voisins.contains(plateau.get(new Point(i,j)))){
+                                voisins.add(plateau.get(new Point(i,j)));
+                                System.out.println("MOU***COUNT*"+ "**" + i + "**" + j);
+                            //}
+
+                            //System.out.println("MOU*******"+pos);
+                            //2 fois
                         }
-        
+                }
+            Iterator<Case> w = voisins.iterator();
+            while(w.hasNext()){
+                Case tmp = w.next().clone();
+                //System.out.println((tmp==null));
+                //tmp.tete().position().fixe(pos.x(), pos.y());
+                System.out.println("MOUSTI"+tmp);
+                //System.out.println((plateau.get(pos)==null));
+                //Coup[] co = tmp.tete().deplacementValide(plateau);
+                //for(int i=0; i<co.length; i++)
+                //    c.add(co[i]);
+            }
+            
+            
+            
             Iterator<Case> v = voisins.iterator();
             while(v.hasNext()){
                 Case tmp = v.next().clone();
+                //System.out.println((tmp==null));
                 tmp.tete().position().fixe(pos.x(), pos.y());
+                System.out.println("MOUSTIQUE"+pos);
+                //System.out.println((plateau.get(pos)==null));
                 Coup[] co = tmp.tete().deplacementValide(plateau);
                 for(int i=0; i<co.length; i++)
                     c.add(co[i]);
@@ -55,6 +101,10 @@ public class Moustique extends Insecte{
             for(int i=0; i<coups.length && it.hasNext(); i++){
                 coups[i]=it.next();
             }
+//        System.out.println("****************************");
+//        for(int i=0; i<coups.length; i++)
+//            System.out.println(coups[i].destination);
+//        System.out.println("****************************");
             return coups;
         }
     }
@@ -77,5 +127,4 @@ public class Moustique extends Insecte{
     public Insecte clone() {
        return new Moustique(pos.x(), pos.y(), l, h, joueur);
     }
-    
 }

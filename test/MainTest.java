@@ -38,6 +38,8 @@ public class MainTest {
         tsc.test();
         TestCoccinelle tco = new TestCoccinelle();
         tco.test();
+        TestMoustique tm = new TestMoustique();
+        tm.test();
     }
     
 }

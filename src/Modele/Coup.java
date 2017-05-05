@@ -10,7 +10,7 @@ package Modele;
  * @author grandmax
  */
 public abstract class Coup {
-    Point destination;
+    public Point destination;
     int joueur;
     
     public Coup(int j){
