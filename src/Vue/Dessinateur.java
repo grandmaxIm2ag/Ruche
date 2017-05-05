@@ -6,16 +6,24 @@
 package Vue;
 
 import Modele.Araignee;
+import Modele.Arbitre;
+import Modele.Case;
 import Modele.Cloporte;
 import Modele.Coccinelle;
+import Modele.Etendeur;
 import Modele.Fourmie;
 import Modele.Moustique;
+import Modele.Plateau;
+import Modele.Point;
 import Modele.Reine;
 import Modele.Sauterelle;
 import Modele.Scarabee;
 import Modele.Visiteur;
 import static Vue.Interface.hex_corner;
 import java.io.InputStream;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -28,16 +36,49 @@ import javafx.scene.paint.Color;
 public class Dessinateur extends Visiteur{
     
     static Canvas c;
+    Etendeur etendeur;
+    Arbitre arbitre;
+    GraphicsContext gc;
     
-    Dessinateur (Canvas c) {
+    Dessinateur (Canvas c, Arbitre a) {
         this.c = c;
+        etendeur = new Etendeur();
+        arbitre = a;
+        gc = c.getGraphicsContext2D();
+    }
+    
+    @Override 
+    public boolean visite (Plateau p) {
+        //etendeur.fixeEchelle(c.getWidth()/arbitre.plateau().l(), c.getHeight()/arbitre.plateau().h(), c.getWidth()/2, c.getHeight()/2);
+        etendeur.fixeEchelle(c, arbitre);
+        gc.clearRect(0, 0, c.getWidth(), c.getHeight());
+        gc.strokeRect(0, 0, c.getWidth(), c.getHeight());
+        System.out.println(c.getWidth());
+        for(Map.Entry<Point, Case> entry : p.matrice().entrySet()){
+            Point po = entry.getKey();
+            Case ca = entry.getValue();
+            ca.accept(this);
+        }
+        
+        return false;
     }
     
     @Override
+    public boolean visite (Case c) {
+        //System.out.println(etendeur);
+        etendeur.fixeComposant(c);
+        System.out.println(etendeur);
+        double [][] coords = Interface.hex_corner(etendeur.x(), etendeur.y(), etendeur.h()/2);
+        gc.strokePolygon(coords[0], coords[1], 6);
+        c.tete().accept(this);
+        return false;
+    }
+    
+    
+    @Override
     public boolean visite (Reine i) {
-        GraphicsContext gc;
-        gc = c.getGraphicsContext2D();
-        double [][] coords = Interface.hex_corner(i.position().x(),i.position().y(), i.h());
+        etendeur.fixeComposant(i);
+        double [][] coords = Interface.hex_corner(etendeur.x(), etendeur.y(), etendeur.h()/2);
         Color couleur = Color.WHITE;
         if (i.joueur() == 0)
             couleur = Color.GREEN;
@@ -47,15 +88,13 @@ public class Dessinateur extends Visiteur{
         gc.fillPolygon(coords[0], coords[1], 6);
         InputStream image = null;
         image =  ClassLoader.getSystemClassLoader().getResourceAsStream("Images/bee.png");
-        Image img = new Image(image,(i.h()*1.75),(i.h()*1.75),true, true);
-        gc.drawImage(img,i.position().x()-(img.getWidth()/2), i.position().y()-(img.getHeight()/2));
+        Image img = new Image(image,((etendeur.h()/2)*1.75),((etendeur.h()/2)*1.75),true, true);
+        gc.drawImage(img,etendeur.x()-(img.getWidth()/2), etendeur.y()-(img.getHeight()/2));
         return false;
     }
     
     @Override
     public boolean visite (Scarabee i) {
-        GraphicsContext gc;
-        gc = c.getGraphicsContext2D();
         double [][] coords = Interface.hex_corner(i.position().x(),i.position().y(), i.h());
         Color couleur = Color.WHITE;
         if (i.joueur() == 0)
@@ -73,8 +112,6 @@ public class Dessinateur extends Visiteur{
     
     @Override
     public boolean visite (Coccinelle i) {
-        GraphicsContext gc;
-        gc = c.getGraphicsContext2D();
         double [][] coords = Interface.hex_corner(i.position().x(),i.position().y(), i.h());
         Color couleur = Color.WHITE;
         if (i.joueur() == 0)
@@ -92,8 +129,6 @@ public class Dessinateur extends Visiteur{
     
     @Override
     public boolean visite (Moustique i) {
-        GraphicsContext gc;
-        gc = c.getGraphicsContext2D();
         double [][] coords = Interface.hex_corner(i.position().x(),i.position().y(), i.h());
         Color couleur = Color.WHITE;
         if (i.joueur() == 0)
@@ -111,8 +146,6 @@ public class Dessinateur extends Visiteur{
     
     @Override
     public boolean visite (Cloporte i) {
-        GraphicsContext gc;
-        gc = c.getGraphicsContext2D();
         double [][] coords = Interface.hex_corner(i.position().x(),i.position().y(), i.h());
         Color couleur = Color.WHITE;
         if (i.joueur() == 0)
@@ -130,8 +163,6 @@ public class Dessinateur extends Visiteur{
     
     @Override
     public boolean visite (Fourmie i) {
-        GraphicsContext gc;
-        gc = c.getGraphicsContext2D();
         double [][] coords = Interface.hex_corner(i.position().x(),i.position().y(), i.h());
         Color couleur = Color.WHITE;
         if (i.joueur() == 0)
@@ -149,8 +180,6 @@ public class Dessinateur extends Visiteur{
     
     @Override
     public boolean visite (Araignee i) {
-        GraphicsContext gc;
-        gc = c.getGraphicsContext2D();
         double [][] coords = Interface.hex_corner(i.position().x(),i.position().y(), i.h());
         Color couleur = Color.WHITE;
         if (i.joueur() == 0)
@@ -168,8 +197,6 @@ public class Dessinateur extends Visiteur{
     
     @Override
     public boolean visite (Sauterelle i) {
-        GraphicsContext gc;
-        gc = c.getGraphicsContext2D();
         double [][] coords = Interface.hex_corner(i.position().x(),i.position().y(), i.h());
         Color couleur = Color.WHITE;
         if (i.joueur() == 0)

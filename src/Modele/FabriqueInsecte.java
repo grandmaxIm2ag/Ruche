@@ -18,7 +18,7 @@ public class FabriqueInsecte {
             case Insecte.SCAR:
                 return new Scarabee(pos.x(), pos.y(), (int)Reglage.lis("lInsecte"), (int)Reglage.lis("hInsecte"), joueur);
             case Insecte.REINE:
-                return new Reine(pos.x(), pos.y(), (int)Reglage.lis("lInsecte"), (int)Reglage.lis("hInsecte"), joueur);
+                return new Reine(pos.x(), pos.y(), /*(int)Reglage.lis("lInsecte"),*/ (int)Reglage.lis("hInsecte"), joueur);
             case Insecte.FOUR:
                 return new Fourmie(pos.x(), pos.y(), (int)Reglage.lis("lInsecte"), (int)Reglage.lis("hInsecte"), joueur);
             case Insecte.CLOP:

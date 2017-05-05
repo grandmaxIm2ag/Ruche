@@ -86,5 +86,10 @@ public class Arbitre {
     public void aide(){
         
     }
+
+    public void accept(Visiteur dessinateur) {
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        plateau.accept(dessinateur);
+    }
     
 }

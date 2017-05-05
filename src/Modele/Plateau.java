@@ -41,6 +41,25 @@ public class Plateau extends Composant {
         c.deposePion(e);
         matrice.put(new Point(0,0), c);
     }
+    
+    // Cette fonction est là pour tester hein
+    public void addPion () {
+        Case c = new Case(1,0,1,1);
+        c.deposePion(new Reine(1,0,1,1));
+        matrice.put(new Point(1,0), c);
+        c = new Case(0,1,1,1);
+        c.deposePion(new Reine(0,1,1,1));
+        matrice.put(new Point(0,1), c);c = new Case(0,1,1,1);
+        c.deposePion(new Reine(1,1,1,1));
+        matrice.put(new Point(1,1), c);c = new Case(0,1,1,1);
+        c.deposePion(new Reine(1,1,1,1));
+        matrice.put(new Point(-1,2), c);c = new Case(0,1,1,1);
+        c.deposePion(new Reine(-1,2,1,1));
+        matrice.put(new Point(-1,2), c);
+        xMax = 1;
+        yMax = 2;
+    }
+    
      public boolean premierPionValide(Depot d){
         if(d.destination().x < -1 || d.destination().y < -1 || d.destination().x > 1 || d.destination().y > 1 || (d.destination().x == -1 && d.destination().y == -1 )
                 || (d.destination().x == 1 && d.destination().y == 1 ))
@@ -202,9 +221,9 @@ public class Plateau extends Composant {
     @Override
     public boolean accept(Visiteur v) {
         boolean b=v.visite(this);
-        for(Map.Entry<Point,Case> entry : matrice.entrySet()) {
-            v.visite(entry.getValue());
-        }
+        //for(Map.Entry<Point,Case> entry : matrice.entrySet()) {
+        //    v.visite(entry.getValue());
+        //}
             
         return b;
     }
