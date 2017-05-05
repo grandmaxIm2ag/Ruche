@@ -12,7 +12,6 @@ import java.util.Stack;
  * @author grandmax
  */
 public class Case extends Composant{
-    Point pos;
     Stack<Insecte> insectes;
     
     public final static int EST = 0;

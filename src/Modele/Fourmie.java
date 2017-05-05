@@ -8,6 +8,7 @@ package Modele;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Stack;
 
 /**
@@ -22,7 +23,11 @@ public class Fourmie extends Insecte{
 
     @Override
     public boolean equals(Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if(o instanceof Fourmie){
+            Fourmie a = (Fourmie)o;
+            return (a.position().equals(pos) && a.l()==l && a.h()==h);
+        }
+        return false;
     }
 
     @Override
@@ -31,7 +36,7 @@ public class Fourmie extends Insecte{
     }
 
     @Override
-    public Coup[] deplacementValide(Case[][] plateau) {
+    public Coup[] deplacementValide(Map<Point, Case> plateau) {
         Point p = pos.clone();
         Stack<Point> aVisiter = new Stack();
         List<Point> marquer = new ArrayList();
@@ -41,39 +46,46 @@ public class Fourmie extends Insecte{
         Iterator<Coup> it = co.iterator();
         while(it.hasNext()){
             Point po = it.next().destination();
+            //System.out.println(po);
             if(!marquer.contains(po)){
+                System.out.println(po);
                 marquer.add(po);
                 aVisiter.push(po);
            }
         }
-        boolean insert = true;
+        boolean insert = !aVisiter.isEmpty();
+        System.out.println("Valeur insert : "+insert);
         while(insert){
             insert = false;
             Stack<Point> tmp = new Stack();
             while(!aVisiter.isEmpty()){
                 Point tmp2 = aVisiter.pop();
-                pos.fixe(p.x(), p.y());
+                pos.fixe(tmp2.x(), tmp2.y());
                 co = glisser(plateau);
                 it = co.iterator();
                 while(it.hasNext()){
                     Point po = it.next().destination();
+                    ///System.out.println(po);
                     if(!marquer.contains(po)){
+                        System.out.println(po);
                         insert = true;
                         marquer.add(po);
                         tmp.push(po);
                     }
                 }
             }
-            aVisiter = tmp;
+            while(!tmp.isEmpty())
+                aVisiter.push(tmp.pop());
             
         }
         
         
         pos.fixe(p.x(), p.y());
         
-        Coup[] coups = new Coup[aVisiter.size()];
+        System.out.println(aVisiter.size());
+        Coup[] coups = new Coup[marquer.size()];
         for(int i=0; i<coups.length; i++)
-            coups[i] = new Deplacement(joueur, pos, aVisiter.pop());
+            coups[i] = new Deplacement(joueur, pos, marquer.get(i));
         return coups;
     }
 

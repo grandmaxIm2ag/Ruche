@@ -12,12 +12,12 @@ package Modele;
 public class Etendeur {
     double factX, factY, diffX, diffY;
     double[] vecteur=null;
-    double l,y;
+    double l,y, x, h;
     public void fixeEchelle(double fx, double fy, double dx, double dy){
         factX = fx; factY = fy; diffX=dx; diffY=dy;
     }
     public void fixeComposant(Composant c){
-       
+       x = (c.position().x()-diffX)*factX;
     }
     public void fixeVecteur(double[] v){
         
