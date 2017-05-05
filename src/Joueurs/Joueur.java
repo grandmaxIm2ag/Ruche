@@ -16,8 +16,10 @@ public abstract class Joueur {
     int[] pions;
     boolean main;
     Properties prop;
+    int numJoueur;
     
-    public Joueur(boolean m, Properties p){
+    public Joueur(boolean m, Properties p, int joueur){
+        this.numJoueur=joueur;
         main=m;
         prop=p;
     }

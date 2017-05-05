@@ -24,8 +24,8 @@ import ruche.Reglage;
 public class Ordinateur extends Joueur{
     int difficulte;
     
-    public final static int FACILE_ALEATOIRE_MAUVAIS=-2;
-    public final static int ALEATOIRE_LONG=-1;
+    /*public final static int FACILE_ALEATOIRE_MAUVAIS=-2;
+    public final static int ALEATOIRE_LONG=-1;*/
     
     public final static int FACILE_ALEATOIRE=0;
     public final static int MOYEN=1;
@@ -38,8 +38,8 @@ public class Ordinateur extends Joueur{
     public int[] tabPieces;
     public int nbPieces;
     
-    public Ordinateur(boolean m, int d, Properties p) {
-        super(m, p);
+    public Ordinateur(boolean m, int d, Properties p, int j) {
+        super(m, p, j);
         difficulte = d;
         if(difficulte==0||difficulte==-1){
             r= new Random(GRAINE);
@@ -60,7 +60,64 @@ public class Ordinateur extends Joueur{
         }
         
     }
+    public Coup coup(Arbitre a){
+        //Coup=Dépot ou Déplacement
+        switch(difficulte){
+            case FACILE_ALEATOIRE:
+                return coupALEATOIRE_3(a);
+            case 1:
+                return null;
+            case 2:
+                return null;   
+            default:        
+                return null;
+        }
+    }
+
+    public Coup coupALEATOIRE_3(Arbitre a){
+        ArrayList<Coup[]> l=new ArrayList<>();
+        //Déplacements
+        Coup[] t;
+        if( (t=a.plateau().deplacementPossible())!=null){////////////////////////////////prendre numéro joueur
+            l.add(t);
+        }
+        //Dépots
+        //pour tout type de pièces
+        int type;
+        for(type=0;type<pions.length;type=type+1){
+            if(pions[type]!=0){
+                l.add(a.plateau().depotPossible(this.numJoueur,type));
+            }
+        }
+        //choisi le coup:choix aléatoire avec nb de coup possibles
+        int taille;
+        Iterator<Coup[]> it =l.iterator();
+        taille=nbCoupPossiblesTotaux(it);
+        int choix2= r.nextInt(taille);
+        
+        it=l.iterator();
+        int tmp=0;
+        while(it.hasNext()){
+            Coup[] c=it.next();
+            if(c.length<=tmp){
+                return c[choix2-tmp];
+            }else{
+                tmp=tmp+c.length-1;
+            }
+        
+        }        
+        return null;
+    }
     
+    public int nbCoupPossiblesTotaux(Iterator<Coup[]> it){
+        int taille=0;
+        while(it.hasNext()){
+            taille=taille+it.next().length;
+        }
+        return taille;
+    }
+    
+}//fin de la classe
     /*
     public Coup coup(Arbitre a){
         //Coup=Dépot ou Déplacement
@@ -69,16 +126,6 @@ public class Ordinateur extends Joueur{
                 return coup_ALEATOIRE_MAUVAIS();
             case -1:
                 return coup_ALEATOIRE_LONG(a);
-    */
-            /*
-            case 0:
-                return...;
-            case 1:
-                return ...;
-            case 2:
-                return ...;
-            */
-    /*
             default:        
                 return null;
         }
@@ -214,5 +261,3 @@ public class Ordinateur extends Joueur{
         }
         return dispo;
     }*/
-    
-}
