@@ -5,21 +5,36 @@
  */
 package Modele;
 
+import Vue.Interface;
+import javafx.scene.canvas.Canvas;
+
 /**
  *
  * @author grandmax
  */
 public class Etendeur {
-    double factX, factY, diffX, diffY;
+    double factX, factY, diffX, diffY, r;
     double[] vecteur=null;
     double l,y, x, h;
-    public void fixeEchelle(double fx, double fy, double dx, double dy){
-        factX = fx; factY = fy; diffX=dx; diffY=dy;
+    
+    
+    public void fixeEchelle(Canvas c, Arbitre a){
+        //diffX = c.getWidth()/2;
+        //diffY = c.getHeight()/2;
+        int Xmoy = ((a.plateau().xMax + a.plateau().xMin)/2);
+        int Ymoy = ((a.plateau().yMax + a.plateau().yMin)/2);
+        int X = Math.abs(a.plateau().xMin) + Math.abs(a.plateau().xMax)+1;
+        int Y = Math.abs(a.plateau().yMax) + Math.abs(a.plateau().yMin)+1;
+        r = (c.getWidth()/(X+2)) < (c.getHeight()/(Y+2)) ? (c.getWidth()/(X+2)) : (c.getHeight()/(Y+2));
+        diffX = c.getWidth()/2 - (Xmoy+Ymoy-(Xmoy+Ymoy==0 ? 0 : 1))*Interface.pythagorelol(r);
+        diffY = c.getHeight()/2-(1.5*r)*Ymoy;
     }
     public void fixeComposant(Composant c){
-       x = (c.position().x()+diffX);//*factX;
-       y = (c.position().y()+diffY);//*factY;
-       h = c.h()*50;
+       //x = (c.position().x()*factX+diffX);
+       //y = (c.position().y()*factY+diffY);//*factY;
+       x = c.position().x()*2*Interface.pythagorelol(r) + c.position().y()*Interface.pythagorelol(r) + diffX;
+       y = c.position().y()*1.5*r + diffY;
+       h = r;
     }
     public void fixeVecteur(double[] v){
         

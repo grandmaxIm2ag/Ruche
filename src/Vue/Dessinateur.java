@@ -49,7 +49,8 @@ public class Dessinateur extends Visiteur{
     
     @Override 
     public boolean visite (Plateau p) {
-        etendeur.fixeEchelle(c.getWidth()/arbitre.plateau().l(), c.getHeight()/arbitre.plateau().h(), c.getWidth()/2, c.getHeight()/2);
+        //etendeur.fixeEchelle(c.getWidth()/arbitre.plateau().l(), c.getHeight()/arbitre.plateau().h(), c.getWidth()/2, c.getHeight()/2);
+        etendeur.fixeEchelle(c, arbitre);
         gc.clearRect(0, 0, c.getWidth(), c.getHeight());
         gc.strokeRect(0, 0, c.getWidth(), c.getHeight());
         System.out.println(c.getWidth());
