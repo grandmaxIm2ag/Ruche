@@ -77,9 +77,12 @@ Araignee f;
             new Deplacement(0, f.position(), new Point(0,3))
         };
         Coup[] d2 = f.deplacementValide(plateau);
+        
         assertEquals( d.length, d2.length);
-        for(int i=0; i<d.length; i++)
+        for(int i=0; i<d.length; i++){
             assertTrue(appartient(d, d2[i]));
+        }
+            
     }
     
     void deplacement3(){
@@ -133,7 +136,6 @@ Araignee f;
         base();
         deplacement1();
         deplacement2();
-        
         deplacement3();
     }    
 }

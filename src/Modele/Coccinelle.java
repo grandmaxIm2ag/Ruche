@@ -32,57 +32,55 @@ public class Coccinelle extends Insecte{
         else
             plateau.remove(p);
         
-        Stack<Point> aVisiter = new Stack();
-        List<Point> marquer = new ArrayList();
-        marquer.add(p);
+        Stack<Deplacement> aVisiter = new Stack();
+        //List<Point> marquer = new ArrayList();
+        //marquer.add(p);
         List<Coup> co = monter(plateau);
         Iterator<Coup> it = co.iterator();
         while(it.hasNext()){
-            Point po = it.next().destination();
-            if(!marquer.contains(po)){
-                
-                marquer.add(po);
-                aVisiter.push(po);
-           }
+            aVisiter.push((Deplacement) it.next());
         }
         
-        Stack<Point> tmp = new Stack();
+        Stack<Deplacement> tmp = new Stack();
         while(!aVisiter.isEmpty()){
-            Point tmp2 = aVisiter.pop();
-                pos.fixe(tmp2.x(), tmp2.y());
-                co = monter(plateau);
-                it = co.iterator();
-                while(it.hasNext()){
-                    Point po = it.next().destination();
-                    marquer.add(po);
-                    tmp.push(po);
+            Deplacement coup = aVisiter.pop();
+            Point tmp2 = coup.destination();
+            pos.fixe(tmp2.x(), tmp2.y());
+            co = monter(plateau);
+            it = co.iterator();
+            while(it.hasNext()){
+                Point po = it.next().destination();
+                if(!coup.aDejaVisite(po)){
+                    Deplacement clone = coup.clone();
+                    clone.add(po);
+                    tmp.push(clone);
                 }
+            }
         }
         
         while(!tmp.isEmpty())
             aVisiter.push(tmp.pop());
         while(!aVisiter.isEmpty()){
-            Point tmp2 = aVisiter.pop();
-                pos.fixe(tmp2.x(), tmp2.y());
-                co = descendre(plateau);
-                it = co.iterator();
-                System.out.println(co.size());
-                while(it.hasNext()){
-                    Point po = it.next().destination();
-                    
-                    if(!marquer.contains(po)){
-                        System.out.println(po);
-                        marquer.add(po);
-                        tmp.push(po);
-                    }
+            Deplacement coup = aVisiter.pop();
+            Point tmp2 = coup.destination();
+            pos.fixe(tmp2.x(), tmp2.y());
+            co = descendre(plateau);
+            it = co.iterator();
+            while(it.hasNext()){
+                Point po = it.next().destination();
+                if(!coup.aDejaVisite(po)){
+                    Deplacement clone = coup.clone();
+                    clone.add(po);
+                    tmp.push(clone);
                 }
+            }
         }
         
         pos.fixe(p.x(), p.y());
         
         Coup[] coups = new Coup[tmp.size()];
         for(int i=0; i<coups.length; i++)
-            coups[i] = new Deplacement(joueur, pos, tmp.pop());
+            coups[i] = tmp.pop();
         return coups;
     }
 

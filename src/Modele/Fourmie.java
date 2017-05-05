@@ -47,26 +47,29 @@ public class Fourmie extends Insecte{
         else
             plateau.remove(p);
         
-        Stack<Point> aVisiter = new Stack();
+        Stack<Deplacement> aVisiter = new Stack();
         List<Point> marquer = new ArrayList();
+        List<Deplacement> visite = new ArrayList();
         marquer.add(p);
         
         List<Coup> co = glisser(plateau);
         Iterator<Coup> it = co.iterator();
         while(it.hasNext()){
-            Point po = it.next().destination();
-            if(!marquer.contains(po)){
-                marquer.add(po);
-                aVisiter.push(po);
-           }
+            
+            Coup po = it.next();
+            marquer.add(po.destination());
+            visite.add((Deplacement) po);
+            aVisiter.push((Deplacement) po);
+           
         }
         
         boolean insert = !aVisiter.isEmpty();
         while(insert){
             insert = false;
-            Stack<Point> tmp = new Stack();
+            Stack<Deplacement> tmp = new Stack();
             while(!aVisiter.isEmpty()){
-                Point tmp2 = aVisiter.pop();
+                Deplacement tmp1 = aVisiter.pop();
+                Point tmp2 = tmp1.destination();
                 pos.fixe(tmp2.x(), tmp2.y());
                 co = glisser(plateau);
                 it = co.iterator();
@@ -74,8 +77,11 @@ public class Fourmie extends Insecte{
                     Point po = it.next().destination();
                     if(!marquer.contains(po)){
                         insert = true;
+                        Deplacement clone = tmp1.clone();
                         marquer.add(po);
-                        tmp.push(po);
+                        clone.add(po);
+                        visite.add(clone);
+                        tmp.push(clone);
                     }
                 }
             }
@@ -88,9 +94,9 @@ public class Fourmie extends Insecte{
         pos.fixe(p.x(), p.y());
         
         marquer.remove(p);//
-        Coup[] coups = new Coup[marquer.size()];
+        Coup[] coups = new Coup[visite.size()];
         for(int i=0; i<coups.length; i++){
-             coups[i] = new Deplacement(joueur, pos, marquer.get(i));
+             coups[i] = visite.get(i);
         }
            
         return coups;

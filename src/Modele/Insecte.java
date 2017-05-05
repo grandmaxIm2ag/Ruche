@@ -84,10 +84,10 @@ public abstract class Insecte extends Composant{
                             case -1:
                                 if(diffy==0){
                                     if( plateau.get( new Point(pos.x(), pos.y()-1))==null ^ plateau.get( new Point(pos.x()-1, pos.y()+1))==null )
-                                        c.add(new Deplacement(joueur, pos, new Point(i,j)));
+                                        c.add(new Deplacement(joueur, new Point(pos.x(), pos.y()), new Point(i,j)));
                                 }else{
                                     if(plateau.get( new Point(pos.x()-1, pos.y()))==null ^ plateau.get( new Point(pos.x(), pos.y()+1))==null )
-                                        c.add(new Deplacement(joueur, pos, new Point(i,j)));
+                                        c.add(new Deplacement(joueur, new Point(pos.x(), pos.y()), new Point(i,j)));
                                 }
                                 break;
                             case 0:
@@ -99,21 +99,21 @@ public abstract class Insecte extends Composant{
                                     System.out.println(plateau[(int)pos.x()+1][(int)pos.y()-1].utilise() ^ plateau[(int)pos.x()-1][(int)pos.y()].utilise() );
                                     */if(plateau.get( new Point(pos.x()+1, pos.y()-1))==null ^ plateau.get( new Point(pos.x()-1, pos.y()))==null ){
                                         //System.out.println("coucou");
-                                        c.add(new Deplacement(joueur, pos, new Point(i,j)));
+                                        c.add(new Deplacement(joueur, new Point(pos.x(), pos.y()), new Point(i,j)));
                                     }
                                 }
                                 else{
                                     if(plateau.get( new Point(pos.x()+1, pos.y()))==null ^ plateau.get( new Point(pos.x()-1, pos.y()+1))==null )
-                                        c.add(new Deplacement(joueur, pos, new Point(i,j)));
+                                        c.add(new Deplacement(joueur, new Point(pos.x(), pos.y()), new Point(i,j)));
                                 }
                                 break;
                             case 1:
                                 if(diffy==-1){
                                      if( plateau.get( new Point(pos.x(), pos.y()-1))==null ^ plateau.get( new Point(pos.x()+1, pos.y()))==null )
-                                        c.add(new Deplacement(joueur, pos, new Point(i,j)));
+                                        c.add(new Deplacement(joueur, new Point(pos.x(), pos.y()), new Point(i,j)));
                                 }else{
                                      if( plateau.get( new Point(pos.x()+1, pos.y()-1))==null ^ plateau.get( new Point(pos.x(), pos.y()+1))==null)
-                                        c.add(new Deplacement(joueur, pos, new Point(i,j)));
+                                        c.add(new Deplacement(joueur, new Point(pos.x(), pos.y()), new Point(i,j)));
                                 }
                                 break;
                             default:
@@ -133,7 +133,7 @@ public abstract class Insecte extends Composant{
                 if(!((i==(int)pos.x()-1 && j==(int)pos.y()-1) || (i==(int)pos.x()+1 && j==(int)pos.y()+1) ))
                     if(!pos.equals(new Point(i,j)))
                         if(plateau.get(new Point(i,j))!=null)
-                            c.add(new Deplacement(joueur, pos, new Point(i,j)));
+                            c.add(new Deplacement(joueur, new Point(pos.x(), pos.y()), new Point(i,j)));
         return c;
     }
     public List<Coup> descendre(Map<Point, Case> plateau){
@@ -143,7 +143,7 @@ public abstract class Insecte extends Composant{
                 if(!((i==(int)pos.x()-1 && j==(int)pos.y()-1) || (i==(int)pos.x()+1 && j==(int)pos.y()+1) ))
                     if(!pos.equals(new Point(i,j)))
                         if(plateau.get(new Point(i,j))==null)
-                            c.add(new Deplacement(joueur, pos, new Point(i,j)));
+                            c.add(new Deplacement(joueur, new Point(pos.x(), pos.y()), new Point(i,j)));
         return c;
     }
 }

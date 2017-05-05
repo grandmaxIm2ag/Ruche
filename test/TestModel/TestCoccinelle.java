@@ -59,13 +59,14 @@ public class TestCoccinelle {
         plateau.put(c2.position(), c2);
         
         Coup[] d = {
-            new Deplacement(0, f.position(), new Point(2,1)),
-            new Deplacement(0, f.position(), new Point(4,1)),
-            new Deplacement(0, f.position(), new Point(3,0)),
-            new Deplacement(0, f.position(), new Point(2,1)),
-            new Deplacement(0, f.position(), new Point(4,2)),
-            new Deplacement(0, f.position(), new Point(3,3)),
-            new Deplacement(0, f.position(), new Point(2,3))
+            new Deplacement(0,"(2.0,2.0)->(3.0,1.0)->(3.0,2.0)->(4.0,2.0)"),
+            new Deplacement(0, "(2.0,2.0)->(3.0,1.0)->(3.0,2.0)->(4.0,1.0)"),
+            new Deplacement(0, "(2.0,2.0)->(3.0,1.0)->(3.0,2.0)->(3.0,3.0)"),
+            new Deplacement(0, "(2.0,2.0)->(3.0,1.0)->(3.0,2.0)->(2.0,3.0)"),
+            new Deplacement(0, "(2.0,2.0)->(3.0,2.0)->(3.0,1.0)->(4.0,1.0)"),
+            new Deplacement(0, "(2.0,2.0)->(3.0,2.0)->(3.0,1.0)->(4.0,0.0)"),
+            new Deplacement(0, "(2.0,2.0)->(3.0,2.0)->(3.0,1.0)->(3.0,0.0)"),
+            new Deplacement(0, "(2.0,2.0)->(3.0,2.0)->(3.0,1.0)->(2.0,1.0)")
         };
         Coup[] d2 = f.deplacementValide(plateau);
         assertEquals( d.length, d2.length);
