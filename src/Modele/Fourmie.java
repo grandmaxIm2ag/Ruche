@@ -39,7 +39,7 @@ public class Fourmie extends Insecte{
     public Coup[] deplacementValide(Map<Point, Case> plateau) {
         
         Point p = pos.clone();
-        
+        System.out.println("FOURMIE : "+p);
         Case c = plateau.get(p);
         c.retirePion();
         if(c.utilise())
@@ -92,7 +92,10 @@ public class Fourmie extends Insecte{
         for(int i=0; i<coups.length; i++){
              coups[i] = new Deplacement(joueur, pos, marquer.get(i));
         }
-           
+        
+        c.deposePion(this);
+        plateau.put(p, c);
+            
         return coups;
     }
 
