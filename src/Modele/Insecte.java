@@ -74,11 +74,12 @@ public abstract class Insecte extends Composant{
         for(int i=(int)pos.x()-1; i<=(int)pos.x()+1;i++)
             for(int j=(int)pos.y()-1; j<=(int)pos.y()+1 ;j++){
                 if(!((i==(int)pos.x()-1 && j==(int)pos.y()-1) || (i==(int)pos.x()+1 && j==(int)pos.y()+1) ))
-                    if(!pos.equals(new Point(i,j))&& plateau.get(new Point(i,j))==null){
+                    if(!pos.equals(new Point(i,j)) && plateau.get(new Point(i,j))==null){
                         //int x1, y1, x2, y2;
                         int diffx = i - ((int)pos.x());
                         int diffy = j - ((int)pos.y());
-                    
+                        
+                        
                         switch(diffx){
                             case -1:
                                 if(diffy==0){
@@ -91,9 +92,9 @@ public abstract class Insecte extends Composant{
                                 break;
                             case 0:
                                 if (diffy==-1){
-                                    /*
-                                    System.out.println(i+" "+j+" "+pos);
-                                    System.out.println(plateau[(int)pos.x()+1][(int)pos.y()-1].utilise());
+                                    
+                                    
+                                    /*System.out.println(plateau[(int)pos.x()+1][(int)pos.y()-1].utilise());
                                     System.out.println(plateau[(int)pos.x()-1][(int)pos.y()].utilise());
                                     System.out.println(plateau[(int)pos.x()+1][(int)pos.y()-1].utilise() ^ plateau[(int)pos.x()-1][(int)pos.y()].utilise() );
                                     */if(plateau.get( new Point(pos.x()+1, pos.y()-1))==null ^ plateau.get( new Point(pos.x()-1, pos.y()))==null ){

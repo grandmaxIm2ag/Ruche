@@ -24,6 +24,15 @@ public class Araignee extends Insecte{
     @Override
     public Coup[] deplacementValide(Map<Point, Case> plateau) {
         Point p = pos.clone();
+        
+        Case c = plateau.get(p);
+        c.retirePion();
+        if(c.utilise())
+            plateau.put(p, c);
+        else
+            plateau.remove(p);
+        
+        
         Stack<Point> aVisiter = new Stack();
         List<Point> marquer = new ArrayList();
         marquer.add(p);
@@ -42,7 +51,7 @@ public class Araignee extends Insecte{
             Stack<Point> tmp = new Stack();
             while(!aVisiter.isEmpty()){
                 Point tmp2 = aVisiter.pop();
-                pos.fixe(p.x(), p.y());
+                pos.fixe(tmp2.x(), tmp2.y());
                 co = glisser(plateau);
                 it = co.iterator();
                 while(it.hasNext()){

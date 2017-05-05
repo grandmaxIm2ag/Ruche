@@ -37,7 +37,16 @@ public class Fourmie extends Insecte{
 
     @Override
     public Coup[] deplacementValide(Map<Point, Case> plateau) {
+        
         Point p = pos.clone();
+        
+        Case c = plateau.get(p);
+        c.retirePion();
+        if(c.utilise())
+            plateau.put(p, c);
+        else
+            plateau.remove(p);
+        
         Stack<Point> aVisiter = new Stack();
         List<Point> marquer = new ArrayList();
         marquer.add(p);
@@ -46,15 +55,13 @@ public class Fourmie extends Insecte{
         Iterator<Coup> it = co.iterator();
         while(it.hasNext()){
             Point po = it.next().destination();
-            //System.out.println(po);
             if(!marquer.contains(po)){
-                System.out.println(po);
                 marquer.add(po);
                 aVisiter.push(po);
            }
         }
+        
         boolean insert = !aVisiter.isEmpty();
-        System.out.println("Valeur insert : "+insert);
         while(insert){
             insert = false;
             Stack<Point> tmp = new Stack();
@@ -65,9 +72,7 @@ public class Fourmie extends Insecte{
                 it = co.iterator();
                 while(it.hasNext()){
                     Point po = it.next().destination();
-                    ///System.out.println(po);
                     if(!marquer.contains(po)){
-                        System.out.println(po);
                         insert = true;
                         marquer.add(po);
                         tmp.push(po);
@@ -82,10 +87,12 @@ public class Fourmie extends Insecte{
         
         pos.fixe(p.x(), p.y());
         
-        System.out.println(aVisiter.size());
+        marquer.remove(p);//
         Coup[] coups = new Coup[marquer.size()];
-        for(int i=0; i<coups.length; i++)
-            coups[i] = new Deplacement(joueur, pos, marquer.get(i));
+        for(int i=0; i<coups.length; i++){
+             coups[i] = new Deplacement(joueur, pos, marquer.get(i));
+        }
+           
         return coups;
     }
 

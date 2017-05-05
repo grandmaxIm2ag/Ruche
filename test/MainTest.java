@@ -28,6 +28,10 @@ public class MainTest {
         tc.test();
         TestFourmie tf = new TestFourmie();
         tf.test();
+        TestReine tr = new TestReine();
+        tr.test();
+        TestAraignee ta = new TestAraignee();
+        ta.test();
     }
     
 }
