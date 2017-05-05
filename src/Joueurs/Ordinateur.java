@@ -38,9 +38,9 @@ public class Ordinateur extends Joueur{
     public int[] tabPieces;
     public int nbPieces;
     
-    public Ordinateur(boolean m, int d, Properties p, int j) {
-        super(m, p, j);
-        difficulte = d;
+    public Ordinateur(boolean m, int diff, Properties p, int joueur) {
+        super(m, p, joueur);
+        difficulte = diff;
         if(difficulte==0||difficulte==-1){
             r= new Random(GRAINE);
         }
