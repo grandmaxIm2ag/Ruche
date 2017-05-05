@@ -24,14 +24,23 @@ public class Coccinelle extends Insecte{
     @Override
     public Coup[] deplacementValide(Map<Point, Case> plateau) {
         Point p = pos.clone();
+        
+        Case c = plateau.get(p);
+        c.retirePion();
+        if(c.utilise())
+            plateau.put(p, c);
+        else
+            plateau.remove(p);
+        
         Stack<Point> aVisiter = new Stack();
         List<Point> marquer = new ArrayList();
-        
+        marquer.add(p);
         List<Coup> co = monter(plateau);
         Iterator<Coup> it = co.iterator();
         while(it.hasNext()){
             Point po = it.next().destination();
             if(!marquer.contains(po)){
+                
                 marquer.add(po);
                 aVisiter.push(po);
            }
@@ -40,27 +49,29 @@ public class Coccinelle extends Insecte{
         Stack<Point> tmp = new Stack();
         while(!aVisiter.isEmpty()){
             Point tmp2 = aVisiter.pop();
-                pos.fixe(p.x(), p.y());
+                pos.fixe(tmp2.x(), tmp2.y());
                 co = monter(plateau);
                 it = co.iterator();
                 while(it.hasNext()){
                     Point po = it.next().destination();
-                    if(!marquer.contains(po)){
-                        marquer.add(po);
-                        tmp.push(po);
-                    }
+                    marquer.add(po);
+                    tmp.push(po);
                 }
         }
-        aVisiter = tmp;
-        tmp.clear();
+        
+        while(!tmp.isEmpty())
+            aVisiter.push(tmp.pop());
         while(!aVisiter.isEmpty()){
             Point tmp2 = aVisiter.pop();
-                pos.fixe(p.x(), p.y());
+                pos.fixe(tmp2.x(), tmp2.y());
                 co = descendre(plateau);
                 it = co.iterator();
+                System.out.println(co.size());
                 while(it.hasNext()){
                     Point po = it.next().destination();
+                    
                     if(!marquer.contains(po)){
+                        System.out.println(po);
                         marquer.add(po);
                         tmp.push(po);
                     }
@@ -69,9 +80,9 @@ public class Coccinelle extends Insecte{
         
         pos.fixe(p.x(), p.y());
         
-        Coup[] coups = new Coup[aVisiter.size()];
+        Coup[] coups = new Coup[tmp.size()];
         for(int i=0; i<coups.length; i++)
-            coups[i] = new Deplacement(joueur, pos, aVisiter.pop());
+            coups[i] = new Deplacement(joueur, pos, tmp.pop());
         return coups;
     }
 

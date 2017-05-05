@@ -28,12 +28,10 @@ public class Sauterelle extends Insecte{
             for(int j=(int)pos.y()-1; j<=(int)pos.y()+1;j++)
                 if(!((i==(int)pos.x()-1 && j==(int)pos.y()-1) || (i==(int)pos.x()+1 && j==(int)pos.y()+1) ))
                     if(!pos.equals(new Point(i,j))){
-                        System.out.println(i+" "+j);
                         Case ca = plateau.get(new Point(i,j)) ;
                         if(ca!=null){
                             int diffx = i - ((int)pos.x());
                             int diffy = j - ((int)pos.y());
-                            System.out.println(ca.position());
                             Point p = new Point(ca.position().x()+diffx, ca.position().y()+diffy);
                             while(ca!=null){
                                 p = new Point(ca.position().x()+diffx, ca.position().y()+diffy);

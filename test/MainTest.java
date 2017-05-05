@@ -36,6 +36,8 @@ public class MainTest {
         tsa.test();
         TestScarabee tsc = new TestScarabee();
         tsc.test();
+        TestCoccinelle tco = new TestCoccinelle();
+        tco.test();
     }
     
 }
