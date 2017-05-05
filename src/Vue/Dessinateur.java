@@ -53,12 +53,7 @@ public class Dessinateur extends Visiteur{
         etendeur.fixeEchelle(c, arbitre);
         gc.clearRect(0, 0, c.getWidth(), c.getHeight());
         gc.strokeRect(0, 0, c.getWidth(), c.getHeight());
-        System.out.println(c.getWidth());
-        for(Map.Entry<Point, Case> entry : p.matrice().entrySet()){
-            Point po = entry.getKey();
-            Case ca = entry.getValue();
-            ca.accept(this);
-        }
+        
         
         return false;
     }
