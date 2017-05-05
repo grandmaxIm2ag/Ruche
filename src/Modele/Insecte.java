@@ -18,7 +18,7 @@ public abstract class Insecte extends Composant{
     public final static int REINE = 0;
     public final static int SAUT = 2;
     public final static int FOUR = 3;
-    public final static int ARAI = 4;;
+    public final static int ARAI = 4;
     public final static int COCC = 5;
     public final static int MOUS = 6;
     public final static int CLOP = 7;

@@ -32,6 +32,10 @@ public class MainTest {
         tr.test();
         TestAraignee ta = new TestAraignee();
         ta.test();
+        TestSauterelle tsa = new TestSauterelle();
+        tsa.test();
+        TestScarabee tsc = new TestScarabee();
+        tsc.test();
     }
     
 }
