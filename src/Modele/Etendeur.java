@@ -6,6 +6,7 @@
 package Modele;
 
 import Vue.Interface;
+import java.util.Map;
 import javafx.scene.canvas.Canvas;
 
 /**
@@ -19,21 +20,18 @@ public class Etendeur {
     
     
     public void fixeEchelle(Canvas c, Arbitre a){
-        //diffX = c.getWidth()/2;
-        //diffY = c.getHeight()/2;
-        int Xmoy = ((a.plateau().xMax + a.plateau().xMin)/2);
-        int Ymoy = ((a.plateau().yMax + a.plateau().yMin)/2);
-        int X = Math.abs(a.plateau().xMin) + Math.abs(a.plateau().xMax)+1;
-        int Y = Math.abs(a.plateau().yMax) + Math.abs(a.plateau().yMin)+1;
-        r = (c.getWidth()/(X+2)) < (c.getHeight()/(Y+2)) ? (c.getWidth()/(X+2)) : (c.getHeight()/(Y+2));
-        diffX = c.getWidth()/2 - (Xmoy+Ymoy-(Xmoy+Ymoy==0 ? 0 : 1))*Interface.pythagorelol(r);
-        diffY = c.getHeight()/2-(1.5*r)*Ymoy;
+        double A = 0, B = 0;
+        for(Map.Entry<Point, Case> entry : a.plateau().matrice().entrySet()){
+            A = A < (entry.getKey().x+entry.getKey().y*0.5) ? (entry.getKey().x+entry.getKey().y*0.5) : A;
+            B = B < entry.getKey().x*0.5+entry.getKey().y ? entry.getKey().x*0.5+entry.getKey().y : B;
+        }
+        r = (c.getWidth()/(A+2)) < (c.getHeight()/(B+2)) ? (c.getWidth()/(A+2)) : (c.getHeight()/(B+2));
+        diffX = (c.getWidth()/(A+2)) < (c.getHeight()/(B+2)) ? c.getWidth()/(A+2) + c.getWidth()/(A+2)*Interface.pythagorelol(0.125) : c.getHeight()/(B+2) + 0.5*(c.getWidth()-c.getHeight()) + c.getWidth()/(B+2)*Interface.pythagorelol(0.125);
+        diffY = (c.getWidth()/(A+2)) < (c.getHeight()/(B+2)) ? c.getWidth()/(A+2) + 0.5*(c.getHeight()-c.getWidth())  : c.getHeight()/(B+2);
     }
     public void fixeComposant(Composant c){
-       //x = (c.position().x()*factX+diffX);
-       //y = (c.position().y()*factY+diffY);//*factY;
-       x = c.position().x()*2*Interface.pythagorelol(r) + c.position().y()*Interface.pythagorelol(r) + diffX;
-       y = c.position().y()*1.5*r + diffY;
+       x = c.position().x()*Interface.pythagorelol(r) + c.position().y()*Interface.pythagorelol(r/2) + diffX;
+       y = c.position().y()*0.75*r + diffY;
        h = r;
     }
     public void fixeVecteur(double[] v){
@@ -57,7 +55,7 @@ public class Etendeur {
     }
     
     public String toString () {
-        return "factX : " + factX + " factY : " + factY + " diffX : " + diffX + " diffY : " + diffY + "\n[" + x + ";" + y + "]\nl = " + l + " h = " + h;
+        return "factX : " + factX + " factY : " + factY + " diffX : " + diffX + " diffY : " + diffY + "\n[" + x + ";" + y + "]\nl = " + l + " h = " + h + " r : " + r;
         
     }
 }

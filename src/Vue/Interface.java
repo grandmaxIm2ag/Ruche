@@ -182,6 +182,10 @@ public class Interface extends Application{
         return Math.sqrt(Math.pow(a, 2) - Math.pow(a/2, 2));
     }
     
+    public static double pymoins1 (double a) {
+    return Math.cos(Math.PI/180*30)/a;
+}
+    
     public static Canvas pionTableau() {
         Canvas c = new Canvas(75,375);
         GraphicsContext gc = c.getGraphicsContext2D();
