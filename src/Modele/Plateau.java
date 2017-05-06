@@ -72,12 +72,15 @@ public class Plateau extends Composant {
     }
     public boolean deposePionValide(Depot d){
         boolean b = (matrice.get(d.destination())==null);
+        //System.out.println(matrice.get(d.destination()).utilise());
         if(b)
             for(int i=(int)d.destination().x()-1 ; i<= (int)d.destination().x()+1 && b; i++ )
                  for(  int j= (int)d.destination().y()-1 ; j<= (int)d.destination().y()+1 && b; j++ )
                     if(!((i==(int)pos.x()-1 && j==(int)pos.y()-1) || (i==(int)pos.x()+1 && j==(int)pos.y()+1) ))
-                        if(matrice.get(new Point(i,j))!=null)
+                        if(matrice.get(new Point(i,j))!=null){
+                            System.out.println(i+" "+j);
                             b&=(d.joueur()==matrice.get(new Point(i,j)).tete().joueur());
+                        }
         return b ;
     }
     public boolean deplacePionValide(Deplacement d){
@@ -106,13 +109,17 @@ public class Plateau extends Composant {
     public void deplacePion(Deplacement d){
         Case c = matrice.get(d.source());
         Insecte e = c.retirePion();
-        Case c2 = matrice.get(d.destination());
+        Case c2 = new Case(d.destination().x(), d.destination.y(), Reglage.lis("lCase"), Reglage.lis("hCase"));
         c2.deposePion(e);
         matrice.put(d.destination(), c2);
         if(c.utilise())
             matrice.put(d.source(), c);
-        else
-            matrice.remove(c);
+        else{
+            voisins.remove(c.position());
+            utilises.remove(c.position());
+            matrice.remove(c.position());
+        }
+            
                 
         majGraphe(d);
     }
@@ -133,14 +140,15 @@ public class Plateau extends Composant {
     }
     
     public void majGraphe(Deplacement d){
-        if(matrice.get(d.source())==null){
-           List<Point> v = voisins.get(d.source());
-           Iterator<Point> it = v.iterator();
+        if(voisins.get(d.source())==null){
+           Iterator<Point> it = utilises.iterator();
            while(it.hasNext()){
-               Point tmp = it.next();
-               List<Point> v2 = voisins.get(tmp);
-               v2.remove(d.source());
-               voisins.put(tmp,v2);
+                Point tmp = it.next();
+                if(!tmp.equals(d.source())){
+                    List<Point> v2 = voisins.get(tmp);
+                    v2.remove(d.source());
+                    voisins.put(tmp,v2);
+                }
            }
            voisins.remove(d.source());
            utilises.remove(d.source());
@@ -151,15 +159,16 @@ public class Plateau extends Composant {
             for(int i=(int)d.destination().x()-1 ; i<= (int)d.destination().x()+1; i++ )
                 for(  int j= (int)d.destination().y()-1 ; j<= (int)d.destination().y()+1; j++ ){
                     if(!((i==(int)pos.x()-1 && j==(int)pos.y()-1) || (i==(int)pos.x()+1 && j==(int)pos.y()+1) ))
-                        if(matrice.get(new Point(i,j))!=null){
+                        if(voisins.get(new Point(i,j))!=null){
                             v.add(new Point(i,j));
                         }
                 }
+            
             voisins.put(d.destination(), v);
             Iterator<Point> it = v.iterator();
             while(it.hasNext()){
                 Point tmp = it.next();
-                List<Point> v2 = voisins.get(tmp);
+                List<Point> v2 = cloneList(voisins.get(tmp));
                 v2.add(d.destination());
                 voisins.put(tmp, v2);
             }
@@ -173,7 +182,7 @@ public class Plateau extends Composant {
                 if(!((i==(int)pos.x()-1 && j==(int)pos.y()-1) || (i==(int)pos.x()+1 && j==(int)pos.y()+1) ))
                     if(voisins.get(new Point(i,j))!=null)
                         p.add(new Point(i,j));
-        voisins.put(d.destination(), p); //A finir
+        voisins.put(d.destination(), p);
         Iterator<Point> it = p.iterator();
         while(it.hasNext()){
             Point tmp = it.next();
@@ -220,8 +229,8 @@ public class Plateau extends Composant {
         return b;
     }
     public boolean voisin(Point p1, Point p2, List<Point> k){
-         if(k.isEmpty()){
-             return voisins.get(p1).contains(p2);
+        if(k.isEmpty()){
+            return voisins.get(p1).contains(p2);
          }else{
             Point t = k.get(0);
             k.remove(t);
@@ -395,7 +404,6 @@ public class Plateau extends Composant {
             coups[i++]=it.next();
         return coups;
     }
-    
     
     
     public Map<Point, Case> matrice(){

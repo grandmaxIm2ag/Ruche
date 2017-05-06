@@ -6,6 +6,7 @@
 package TestModel;
 
 import Modele.Arbitre;
+import Modele.Deplacement;
 import Modele.Depot;
 import Modele.FabriqueInsecte;
 import Modele.Insecte;
@@ -74,10 +75,17 @@ public class TestPlateau {
     void testCoupDeplacement(){
         p = new Plateau(0,0,0,0, prop);
         Point orig = new Point(0,0);
-        p.deposePionValide(new Depot(Arbitre.J2, Insecte.REINE, new Point(orig.x(), orig.y())));
-        p.deposePionValide(new Depot(Arbitre.J2, Insecte.FOUR, new Point(orig.x()-1, orig.y())));
+        p.deposePion(new Depot(Arbitre.J2, Insecte.REINE, new Point(orig.x(), orig.y())));
+        p.deposePion(new Depot(Arbitre.J2, Insecte.FOUR, new Point(orig.x()-1, orig.y())));
         
         assertTrue(p.estConnexe());
+        assertFalse(p.deplacePionValide(new Deplacement(Arbitre.J2, new Point(orig.x()-1, orig.y()), new Point(orig.x()-1, orig.y()))));
+        assertTrue(p.deplacePionValide(new Deplacement(Arbitre.J2, new Point(orig.x()-1, orig.y()), new Point(orig.x(), orig.y()-1))));
+    
+        p.deplacePion(new Deplacement(Arbitre.J2, new Point(orig.x()-1, orig.y()), new Point(orig.x(), orig.y()-1)));
+        assertTrue(p.estConnexe());
+        assertTrue(p.deposePionValide(new Depot(Arbitre.J2, Insecte.FOUR, new Point(orig.x()-1, orig.y()))));
+        assertFalse(p.deposePionValide(new Depot(Arbitre.J2, Insecte.FOUR, new Point(orig.x(), orig.y()-1))));
     }
     @Test
     public void test() {
