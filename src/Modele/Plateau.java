@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.TreeMap;
+import ruche.Reglage;
 
 /**
  *
@@ -33,6 +34,7 @@ public class Plateau extends Composant {
         
         voisins = new HashMap();
         utilises = new ArrayList();
+        reines = new Point[2];
         
     }
     
@@ -40,6 +42,8 @@ public class Plateau extends Composant {
         Case c = new Case(0,0, 1, 1);
         c.deposePion(e);
         matrice.put(new Point(0,0), c);
+        utilises.add(new Point(0,0));
+        voisins.put(new Point(0,0), new ArrayList());
     }
     
     // Cette fonction est là pour tester hein
@@ -60,7 +64,7 @@ public class Plateau extends Composant {
         yMax = 2;
     }
     
-     public boolean premierPionValide(Depot d){
+    public boolean premierPionValide(Depot d){
         if(d.destination().x < -1 || d.destination().y < -1 || d.destination().x > 1 || d.destination().y > 1 || (d.destination().x == -1 && d.destination().y == -1 )
                 || (d.destination().x == 1 && d.destination().y == 1 ))
             return false;
@@ -162,12 +166,30 @@ public class Plateau extends Composant {
             utilises.add(d.destination());
         }
     }
+    public void majGraphe(Depot d){
+        List<Point> p = new ArrayList();
+        for(int i=(int)d.destination().x()-1 ; i<= (int)d.destination().x()+1; i++ )
+            for(  int j= (int)d.destination().y()-1 ; j<= (int)d.destination().y()+1; j++ )
+                if(!((i==(int)pos.x()-1 && j==(int)pos.y()-1) || (i==(int)pos.x()+1 && j==(int)pos.y()+1) ))
+                    if(voisins.get(new Point(i,j))!=null)
+                        p.add(new Point(i,j));
+        voisins.put(d.destination(), p); //A finir
+        Iterator<Point> it = p.iterator();
+        while(it.hasNext()){
+            Point tmp = it.next();
+            List<Point> tmp2 = voisins.get(tmp);
+            tmp2.add(d.destination());
+            voisins.put(tmp, tmp2);
+        }
+    }
+    
     public void deposePion(Depot d){
-        Case c2 = matrice.get(d.destination());
-        c2.deposePion(FabriqueInsecte.creer(d.type(), d.joueur(), c2.position()));
+        Case c2 = new Case(d.destination().x(), d.destination.y(), Reglage.lis("lCase"), Reglage.lis("hCase"));
+        c2.deposePion(FabriqueInsecte.creer(d.type(), d.joueur(), d.destination()));
         matrice.put(d.destination(), c2);
         utilises.add(d.destination());
-        voisins.put(d.destination(), new ArrayList()); //A finir
+        
+        majGraphe(d);
     }
     public boolean estEncerclee(int j){
         boolean b = true;
@@ -201,7 +223,8 @@ public class Plateau extends Composant {
          if(k.isEmpty()){
              return voisins.get(p1).contains(p2);
          }else{
-             Point t = k.get(0);
+            Point t = k.get(0);
+            k.remove(t);
             boolean b1 = voisin(p1,t,cloneList(k));
             boolean b2 = voisin(t,p2,cloneList(k));
             boolean b3 = voisin(p1,p2,cloneList(k));
@@ -232,8 +255,10 @@ public class Plateau extends Composant {
         Plateau nouv = new Plateau(pos.x(), pos.y(), l, h, prop);
         
         for(int i=0; i<reines.length; i++){
-            nouv.reines[i]= new Point(0,0);
-            nouv.reines[i].fixe(reines[i].x(), reines[i].y());
+            if(reines[i]!=null){
+                nouv.reines[i]= new Point(0,0);
+                nouv.reines[i].fixe(reines[i].x(), reines[i].y());
+            }
         }
         
         for(Map.Entry<Point,Case> entry : matrice.entrySet()) {
@@ -283,13 +308,14 @@ public class Plateau extends Composant {
         return !b;
     }
     
-    public Coup[] deplacementPossible(){
+    public Coup[] deplacementPossible(int j){
         List<Coup[]> tab = new ArrayList();
         List<Coup> c = new ArrayList();
         Iterator<Point> u = utilises.iterator();
         while(u.hasNext()){
             Point tmp = u.next();
-            tab.add(matrice.get(tmp).tete().deplacementValide(this.clone().matrice()));
+            if(matrice.get(tmp).tete().joueur()==j)
+                tab.add(matrice.get(tmp).tete().deplacementValide(this.clone().matrice()));
         }
         Iterator<Coup[]> t = tab.iterator();
         while(t.hasNext()){
@@ -311,6 +337,40 @@ public class Plateau extends Composant {
                 }
             }
         }
+        Coup[] coups = new Coup[c.size()];
+        Iterator<Coup> it = c.iterator();
+        int i=0; 
+        while(it.hasNext() && i<coups.length)
+            coups[i++]=it.next();
+        return coups;
+    }
+    
+    public Coup[] deplacementPossible(Insecte e){
+        List<Coup[]> tab = new ArrayList();
+        List<Coup> c = new ArrayList();
+        
+        if(matrice.get(e.position()) == null || !e.equals(matrice.get(e.position())))
+            return null;
+        
+        Coup[] cp = matrice.get(e.position()).tete().deplacementValide(this.clone().matrice());
+        
+        for(int k=0; k<cp.length; k++){
+            if(cp[k] instanceof Deplacement){
+                Deplacement d = (Deplacement) cp[k];
+                Plateau p = clone();
+                Case ca = p.matrice.get(d.source());
+                ca.retirePion();
+                if(ca.utilise())
+                    p.matrice.put(d.source, ca);
+                else
+                    p.matrice.remove(d.source());
+               boolean b = p.estConnexe(); 
+               if(b){
+                    c.add(d);
+                }
+            }
+        }
+        
         Coup[] coups = new Coup[c.size()];
         Iterator<Coup> it = c.iterator();
         int i=0; 

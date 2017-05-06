@@ -16,9 +16,9 @@ import ruche.Reglage;
  * @author grandmax
  */
 public class MainTest {
-    
+    Properties prop;
     public MainTest() {
-        Properties prop = Configuration.proprietes();
+        prop = Configuration.proprietes();
         Reglage.init(prop);
     }
     
@@ -45,6 +45,12 @@ public class MainTest {
     @Test
     public void test(){
         insecte();
+        TestCase tc = new TestCase();
+        tc.test();
+        TestFabrique tf = new TestFabrique();
+        tf.test();
+        TestPlateau tp = new TestPlateau(prop);
+        tp.test();
     }
     
 }

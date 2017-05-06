@@ -34,6 +34,7 @@ Araignee f;
     void base(){
         assertEquals(f, f.clone());
         assertEquals(f.position(), new Point(2,1));
+        assertEquals(f.toString(), "["+Insecte.ARAI+":0:"+f.position()+"]");
     }
     
     

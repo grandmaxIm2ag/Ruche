@@ -34,6 +34,7 @@ public class TestCoccinelle {
     void base(){
         assertEquals(f, f.clone());
         assertEquals(f.position(), new Point(2,2));
+        assertEquals(f.toString(), "["+Insecte.COCC+":0:"+f.position()+"]");
     }
     
     void deplacement1(){

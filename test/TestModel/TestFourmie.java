@@ -29,6 +29,7 @@ public class TestFourmie {
     void base(){
         assertEquals(f, f.clone());
         assertEquals(f.position(), new Point(2,2));
+        assertEquals(f.toString(), "["+Insecte.FOUR+":0:"+f.position()+"]");
     }
     
     

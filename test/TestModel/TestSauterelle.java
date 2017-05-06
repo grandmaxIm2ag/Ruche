@@ -34,6 +34,7 @@ public class TestSauterelle {
     void base(){
         assertEquals(f, f.clone());
         assertEquals(f.position(), new Point(2,1));
+        assertEquals(f.toString(), "["+Insecte.SAUT+":0:"+f.position()+"]");
     }
     
     
