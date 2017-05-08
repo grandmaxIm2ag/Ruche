@@ -36,8 +36,9 @@ public class FabriqueInsecte {
         }
     }
 
-    public static Insecte creer(int i, int i0, int i1, Point position) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public static Insecte creer(String s) {
+        String[] str = s.split("/");
+        return creer(Integer.parseInt(str[0].substring(0)), Integer.parseInt(str[1]), new Point(str[2].substring(0, str[2].length()-1)));
     }
     
 }

@@ -37,20 +37,19 @@ public class Dessinateur extends Visiteur{
     
     static Canvas c;
     Etendeur etendeur;
-    Arbitre arbitre;
+    //Arbitre arbitre;
     GraphicsContext gc;
     
-    Dessinateur (Canvas c, Arbitre a) {
+    Dessinateur (Canvas c) {
         this.c = c;
         etendeur = new Etendeur();
-        arbitre = a;
         gc = c.getGraphicsContext2D();
     }
     
     @Override 
     public boolean visite (Plateau p) {
         //etendeur.fixeEchelle(c.getWidth()/arbitre.plateau().l(), c.getHeight()/arbitre.plateau().h(), c.getWidth()/2, c.getHeight()/2);
-        etendeur.fixeEchelle(c, arbitre);
+        etendeur.fixeEchelle(c, p);
         gc.clearRect(0, 0, c.getWidth(), c.getHeight());
         gc.strokeRect(0, 0, c.getWidth(), c.getHeight());
         

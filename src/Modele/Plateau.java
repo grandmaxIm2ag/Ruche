@@ -38,6 +38,9 @@ public class Plateau extends Composant {
         
     }
     
+    public void setReine(int idx, Point p){
+        reines[idx] = p;
+    }
     public void premierPion(Insecte e){
         Case c = new Case(0,0, 1, 1);
         c.deposePion(e);
@@ -282,15 +285,18 @@ public class Plateau extends Composant {
         return nouv;
     }
     public static List<Point> cloneList(List<Point> list) {
-    List<Point> clone = new ArrayList<Point>(list.size());
-    for (Point item : list) clone.add(item.clone());
+    List<Point> clone = new ArrayList<>(list.size());
+    list.forEach((item) -> {
+        clone.add(item.clone());
+        });
     return clone;
 }
     @Override
     public String toString(){
         String str = "";
-        for(int i=0; i<reines.length; i++)
-            str+=reines[i]+"\n";
+        for (Point reine : reines) {
+            str += reine + "\n";
+        }
         
         str+="plateau"+"\n";
         for(Map.Entry<Point,Case> entry : matrice.entrySet()) {
@@ -405,6 +411,21 @@ public class Plateau extends Composant {
         return coups;
     }
     
+    public void retirerPion(Point pos){
+        Case c = matrice.get(pos);
+        c.retirePion();
+        if(!c.utilise()){
+            matrice.remove(c.position());
+            voisins.remove(c.position());
+            utilises.remove(c.position());
+        }else{
+            matrice.put(pos, c);
+        }
+    }
+    
+    public Point reine(int idx){
+        return reines[idx];
+    }
     
     public Map<Point, Case> matrice(){
         return matrice;

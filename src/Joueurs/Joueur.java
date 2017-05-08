@@ -14,16 +14,16 @@ import java.util.Properties;
  */
 public abstract class Joueur {
     String nom;
-    int[] pions;
+    int[] tabPieces;
+    int nbPieces;
     boolean main;
     Properties prop;
     
-    public Joueur(boolean m, Properties p){
+    public Joueur(boolean m, Properties p, int[] tabP, int nbP){
         main=m;
-        //prop=p;
-        pions = new int[8];
-        for (int i = Insecte.REINE; i <= Insecte.CLOP; i++)
-            pions[i] = 0;
+        prop=p;
+        tabPieces=tabP;
+        nbPieces=nbP;
     }
     
     public void setMain(){
@@ -31,14 +31,28 @@ public abstract class Joueur {
     }
     
     public void addPion (int type, int qte) {
-        pions[type] += qte;
+        tabPieces[type] += qte;
     }
     
     public String nom(){
         return nom;
     }
     public int[] pions(){
-        return pions;
+        return tabPieces;
+    }
+    public int pion(int idx){
+        return tabPieces[idx];
+    }
+    
+    @Override
+    public String toString(){
+        String res = nom+"=";
+        
+        res+=tabPieces[0];
+        for(int i=1; i<tabPieces.length; i++)
+            res += ":"+tabPieces[i];
+        
+        return res;
     }
     
 }

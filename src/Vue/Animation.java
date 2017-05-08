@@ -24,7 +24,7 @@ public class Animation extends AnimationTimer{
     Animation (Arbitre a, Canvas c) {
         arbitre = a;
         can = c;
-        dessinateur = new Dessinateur (c, new TestArbitre());
+        dessinateur = new Dessinateur (c);
     }
     
     @Override

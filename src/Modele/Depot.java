@@ -21,8 +21,13 @@ public class Depot extends Coup {
     public int type(){
         return type;
     }
+    @Override
     public Point destination(){
         return destination;
     }
     
+    @Override
+    public String toString(){
+        return type+":"+destination;
+    }
 }

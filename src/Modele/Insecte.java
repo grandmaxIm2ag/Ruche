@@ -149,6 +149,6 @@ public abstract class Insecte extends Composant{
     
     @Override
     public String toString(){
-        return "["+type()+":"+joueur()+":"+pos+"]";
+        return "["+type()+"/"+joueur()+"/"+pos+"]";
     }
 }

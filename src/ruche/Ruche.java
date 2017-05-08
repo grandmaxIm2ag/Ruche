@@ -10,6 +10,7 @@ package ruche;
 import Modele.Arbitre;
 import Modele.TestArbitre;
 import Vue.Interface;
+import java.util.Properties;
 
 /**
  *
@@ -22,8 +23,9 @@ public class Ruche {
      */
     public static void main(String[] args) {
         // TODO code application logic here
+        Properties p = Configuration.proprietes();
         Interface it = new Interface();
-        it.creer(args, new TestArbitre());
+        it.creer(args, new TestArbitre(p));
     }
     
 }

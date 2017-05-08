@@ -19,9 +19,9 @@ public class Etendeur {
     double l,y, x, h;
     
     
-    public void fixeEchelle(Canvas c, Arbitre a){
+    public void fixeEchelle(Canvas c, Plateau a){
         double A = 0, B = 0;
-        for(Map.Entry<Point, Case> entry : a.plateau().matrice().entrySet()){
+        for(Map.Entry<Point, Case> entry : a.matrice().entrySet()){
             A = A < (entry.getKey().x+entry.getKey().y*0.5) ? (entry.getKey().x+entry.getKey().y*0.5) : A;
             B = B < entry.getKey().x*0.5+entry.getKey().y ? entry.getKey().x*0.5+entry.getKey().y : B;
         }
