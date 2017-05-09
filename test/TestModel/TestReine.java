@@ -34,7 +34,7 @@ public class TestReine {
     void base(){
         assertEquals(f, f.clone());
         assertEquals(f.position(), new Point(2,2));
-        assertEquals(f.toString(), "["+Insecte.REINE+":0:"+f.position()+"]");
+        assertEquals(f.toString(), "["+Insecte.REINE+"/0/"+f.position()+"]");
     }
     
     

@@ -63,6 +63,7 @@ public class Arbitre {
         
         chargeur = new Chargeur();
         
+        
         nbCoup = new int[2];
         nbCoup[0]=0; nbCoup[1]=0;
     }
@@ -90,7 +91,6 @@ public class Arbitre {
                 joueurs[J2] = new Ordinateur(true,difficulte, prop, tabPieces, (int)Reglage.lis("nbPiece"));
                 break;
         }
-        
     }
     
     public Plateau plateau(){
@@ -122,18 +122,39 @@ public class Arbitre {
             System.err.println("Coup Inconnu");
     }
     public void joue(Deplacement d){
-        if(deplacePionValide(d)){
-            deplacePion(d);
+        if(plateau().reine(jCourant)!=null){
+            if(deplacePionValide(d)){
+                deplacePion(d);
+                nbCoup[jCourant]++;
+                prochainJoueur();
+                refaire.clear();
+                historique.add(d);
+            }else{
+                System.err.println("Deplacement impossible");
+            }
+        }else{
+            System.err.println("Déplacement impossible tant que la reine n'a pas été déposée");
+        }
+    }
+    public void joue(Depot d){
+        if(nbCoup[jCourant]==0 && jCourant == J1){
+            plateau.premierPion(FabriqueInsecte.creer(d.type(), jCourant, new Point(0,0)));
             nbCoup[jCourant]++;
             prochainJoueur();
             refaire.clear();
             historique.add(d);
-        }else{
-            System.err.println("Deplacement impossible");
-        }
-    }
-    public void joue(Depot d){
-        if(deposePionValide(d) && joueurs[jCourant].pion(d.type())>0){
+        }else if(nbCoup[jCourant]==0 && jCourant == J2){
+            if(plateau.premierPionValide(d)){
+                deposePion(d);
+                nbCoup[jCourant]++;
+                prochainJoueur();
+                refaire.clear();
+                historique.add(d);
+            }else{
+                System.err.println("Depot impossible");
+            }
+        }else if(deposePionValide(d) && joueurs[jCourant].pion(d.type())>0){
+            
             if((plateau.reine(jCourant)==null && (d.type()!=Insecte.REINE || nbCoup[jCourant]<3))||plateau.reine(jCourant)!=null){
                 deposePion(d);
                 nbCoup[jCourant]++;
@@ -181,9 +202,30 @@ public class Arbitre {
         
     }
     
-    public Plateau charger(String plateau){
+    public void charger(String plateau){
         
-        return null;
+        chargeur.init(prop, plateau);
+        this.plateau = chargeur.charger();
+        type = chargeur.type();
+        difficulte = chargeur.difficulte();
+        init();
+        historique = chargeur.historique();
+        refaire = chargeur.refaire();
+        
+        String[] str = chargeur.joueur();
+        joueurs[J1].nom = str[J1].split("=")[0];
+        String[] str2 = str[J1].split("=")[1].split(":");
+        int[] tab = new int[str2.length-1];
+        for(int i=1; i<str2.length; i++)
+            tab[i-1]=Integer.parseInt(str2[i]);
+        joueurs[J1].setPieces(tab);
+        joueurs[J2].nom = str[J2].split("=")[0];
+        str2 = str[J1].split("=")[1].split(":");
+        tab = new int[str2.length-1];
+        for(int i=1; i<str2.length; i++)
+            tab[i-1]=Integer.parseInt(str2[i]);
+        joueurs[J2].setPieces(tab);
+
     }
     public void sauvegarder(String nomSauv){
         String sauv = "";
@@ -191,7 +233,6 @@ public class Arbitre {
         sauv += type+":"+difficulte+":"+nbCoup[J1]+":"+nbCoup[J1]+":"+jCourant+"\n";
         sauv += joueurs[J1]+"\n";
         sauv += joueurs[J2]+"\n";
-        sauv += "PLateau en cours\n";
         sauv += plateau.toString();
         sauv += "Historique en cours\n";
         Stack<Coup> tmp = new Stack();
@@ -202,7 +243,7 @@ public class Arbitre {
         }
         while(!tmp.isEmpty())
             historique.push(tmp.pop());
-        sauv += "Refaire en cours \n";
+        sauv += "Refaire en cours\n";
         while(!refaire.isEmpty()){
             Coup c = refaire.pop();
             sauv += c+"\n";
@@ -212,11 +253,15 @@ public class Arbitre {
             refaire.push(tmp.pop());
         
         try{
-            File f = new File("Sauvegardes/"+nomSauv);
-            try (FileWriter output = new FileWriter(f)) {
-                output.write(sauv);
+            File f = new File("Ressources/Sauvegardes/"+nomSauv);
+            f.createNewFile();
+            FileWriter output = new FileWriter(f);
+            output.write(sauv);
+            output.close();
                 //MaJ BDD
-            }
+            
+        }catch(FileNotFoundException e){
+            System.err.println("Impossible de sauvegarder, fichier introuvable "+nomSauv);
         }catch(IOException e){
             System.err.println("Impossible de sauvegarder "+nomSauv);
         }
@@ -224,7 +269,9 @@ public class Arbitre {
     }
     
     public void aide(){
-        
+        /*
+        A faire dès que les IA seront opérationnels
+        */
     }
 
     public void accept(Visiteur dessinateur) {
@@ -233,10 +280,25 @@ public class Arbitre {
 
     public void prochainJoueur() {
         
+        
         jCourant = ++jCourant % 2;
-        if(plateau.aucunCoup(jCourant)){
+        boolean b = true;
+        for(int i=0; i<joueurs[jCourant].pions().length; i++)
+            b &= joueurs[jCourant].pions()[i]==0;
+        if(plateau.aucunCoup(jCourant) && b){
             prochainJoueur();
         }
     }
+    
+    public int type(){
+        return type;
+    }
+    public int jCourant(){
+        return jCourant;
+    }
+    public int difficulte(){
+        return difficulte;
+    }
+    
     
 }

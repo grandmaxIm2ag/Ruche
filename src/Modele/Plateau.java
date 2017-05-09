@@ -54,15 +54,23 @@ public class Plateau extends Composant {
         Case c = new Case(1,0,1,1);
         c.deposePion(new Reine(1,0,1,1));
         matrice.put(new Point(1,0), c);
+        
         c = new Case(0,1,1,1);
         c.deposePion(new Reine(0,1,1,1));
-        matrice.put(new Point(0,1), c);c = new Case(0,1,1,1);
+        matrice.put(new Point(0,1), c);
+        
+        c = new Case(1,1,1,1);
         c.deposePion(new Reine(1,1,1,1));
-        matrice.put(new Point(1,1), c);c = new Case(0,1,1,1);
+        matrice.put(new Point(1,1), c);
+        
+        c = new Case(1,1,1,1);
         c.deposePion(new Reine(1,1,1,1));
-        matrice.put(new Point(-1,2), c);c = new Case(0,1,1,1);
+        matrice.put(new Point(-1,2), c);
+        
+        c = new Case(-1,2,1,1);
         c.deposePion(new Reine(-1,2,1,1));
         matrice.put(new Point(-1,2), c);
+        
         xMax = 1;
         yMax = 2;
     }
@@ -75,16 +83,17 @@ public class Plateau extends Composant {
     }
     public boolean deposePionValide(Depot d){
         boolean b = (matrice.get(d.destination())==null);
+        int degres = 0;
         //System.out.println(matrice.get(d.destination()).utilise());
         if(b)
             for(int i=(int)d.destination().x()-1 ; i<= (int)d.destination().x()+1 && b; i++ )
                  for(  int j= (int)d.destination().y()-1 ; j<= (int)d.destination().y()+1 && b; j++ )
-                    if(!((i==(int)pos.x()-1 && j==(int)pos.y()-1) || (i==(int)pos.x()+1 && j==(int)pos.y()+1) ))
+                    if(!((i==(int)d.destination().x()-1 && j==(int)d.destination().y()-1) || (i==(int)d.destination().x()+1 && j==(int)d.destination().y()+1) ))
                         if(matrice.get(new Point(i,j))!=null){
-                            System.out.println(i+" "+j);
                             b&=(d.joueur()==matrice.get(new Point(i,j)).tete().joueur());
+                            degres++;
                         }
-        return b ;
+        return b && (degres>0) ;
     }
     public boolean deplacePionValide(Deplacement d){
         Insecte e = matrice.get(d.source()).tete();
@@ -300,7 +309,7 @@ public class Plateau extends Composant {
         
         str+="plateau"+"\n";
         for(Map.Entry<Point,Case> entry : matrice.entrySet()) {
-            str+=entry.getKey()+"|"+entry.getValue()+"\n";
+            str+=entry.getKey()+"_"+entry.getValue()+"\n";
         }
         str+="graphe"+"\n";
         for(Map.Entry<Point,List<Point>> entry2 : voisins.entrySet()) {
@@ -430,4 +439,12 @@ public class Plateau extends Composant {
     public Map<Point, Case> matrice(){
         return matrice;
     }
+    public Map<Point, List<Point>> voisins(){
+        return voisins;
+    }
+    public List<Point> utilises(){
+        return utilises;
+    }
+    
+    
 }

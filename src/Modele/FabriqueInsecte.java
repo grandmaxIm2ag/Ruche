@@ -38,7 +38,7 @@ public class FabriqueInsecte {
 
     public static Insecte creer(String s) {
         String[] str = s.split("/");
-        return creer(Integer.parseInt(str[0].substring(0)), Integer.parseInt(str[1]), new Point(str[2].substring(0, str[2].length()-1)));
+        return creer(Integer.parseInt(str[0].substring(1)), Integer.parseInt(str[1]), new Point(str[2].substring(0, str[2].length()-1)));
     }
     
 }
