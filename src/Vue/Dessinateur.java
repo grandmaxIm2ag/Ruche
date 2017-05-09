@@ -88,7 +88,8 @@ public class Dessinateur extends Visiteur{
     
     @Override
     public boolean visite (Scarabee i) {
-        double [][] coords = Interface.hex_corner(i.position().x(),i.position().y(), i.h());
+        etendeur.fixeComposant(i);
+        double [][] coords = Interface.hex_corner(etendeur.x(), etendeur.y(), etendeur.h()/2);
         Color couleur = Color.WHITE;
         if (i.joueur() == 0)
             couleur = Color.GREEN;
@@ -98,14 +99,15 @@ public class Dessinateur extends Visiteur{
         gc.fillPolygon(coords[0], coords[1], 6);
         InputStream image = null;
         image =  ClassLoader.getSystemClassLoader().getResourceAsStream("Images/beetle.png");
-        Image img = new Image(image,(i.h()*1.50),(i.h()*1.50),true, true);
-        gc.drawImage(img,i.position().x()-(img.getWidth()/2), i.position().y()-(img.getHeight()/2));
+        Image img = new Image(image,((etendeur.h()/2)*1.75),((etendeur.h()/2)*1.75),true, true);
+        gc.drawImage(img,etendeur.x()-(img.getWidth()/2), etendeur.y()-(img.getHeight()/2));
         return false;
     }
     
     @Override
     public boolean visite (Coccinelle i) {
-        double [][] coords = Interface.hex_corner(i.position().x(),i.position().y(), i.h());
+        etendeur.fixeComposant(i);
+        double [][] coords = Interface.hex_corner(etendeur.x(), etendeur.y(), etendeur.h()/2);
         Color couleur = Color.WHITE;
         if (i.joueur() == 0)
             couleur = Color.GREEN;
@@ -115,14 +117,15 @@ public class Dessinateur extends Visiteur{
         gc.fillPolygon(coords[0], coords[1], 6);
         InputStream image = null;
         image =  ClassLoader.getSystemClassLoader().getResourceAsStream("Images/ladybug.png");
-        Image img = new Image(image,(i.h()*1.50),(i.h()*1.50),true, true);
-        gc.drawImage(img,i.position().x()-(img.getWidth()/2), i.position().y()-(img.getHeight()/2));
+        Image img = new Image(image,((etendeur.h()/2)*1.75),((etendeur.h()/2)*1.75),true, true);
+        gc.drawImage(img,etendeur.x()-(img.getWidth()/2), etendeur.y()-(img.getHeight()/2));
         return false;
     }
     
     @Override
     public boolean visite (Moustique i) {
-        double [][] coords = Interface.hex_corner(i.position().x(),i.position().y(), i.h());
+        etendeur.fixeComposant(i);
+        double [][] coords = Interface.hex_corner(etendeur.x(), etendeur.y(), etendeur.h()/2);
         Color couleur = Color.WHITE;
         if (i.joueur() == 0)
             couleur = Color.GREEN;
@@ -132,14 +135,15 @@ public class Dessinateur extends Visiteur{
         gc.fillPolygon(coords[0], coords[1], 6);
         InputStream image = null;
         image =  ClassLoader.getSystemClassLoader().getResourceAsStream("Images/moskito.png");
-        Image img = new Image(image,(i.h()*2),(i.h()*2),true, true);
-        gc.drawImage(img,i.position().x()-(img.getWidth()/2), i.position().y()-(img.getHeight()/2));
+        Image img = new Image(image,((etendeur.h()/2)*1.75),((etendeur.h()/2)*1.75),true, true);
+        gc.drawImage(img,etendeur.x()-(img.getWidth()/2), etendeur.y()-(img.getHeight()/2));
         return false;
     }
     
     @Override
     public boolean visite (Cloporte i) {
-        double [][] coords = Interface.hex_corner(i.position().x(),i.position().y(), i.h());
+        etendeur.fixeComposant(i);
+        double [][] coords = Interface.hex_corner(etendeur.x(), etendeur.y(), etendeur.h()/2);
         Color couleur = Color.WHITE;
         if (i.joueur() == 0)
             couleur = Color.GREEN;
@@ -149,14 +153,15 @@ public class Dessinateur extends Visiteur{
         gc.fillPolygon(coords[0], coords[1], 6);
         InputStream image = null;
         image =  ClassLoader.getSystemClassLoader().getResourceAsStream("Images/woodlouse.png");
-        Image img = new Image(image,(i.h()*1.75),(i.h()*1.75),true, true);
-        gc.drawImage(img,i.position().x()-(img.getWidth()/2), i.position().y()-(img.getHeight()/2));
+        Image img = new Image(image,((etendeur.h()/2)*1.75),((etendeur.h()/2)*1.75),true, true);
+        gc.drawImage(img,etendeur.x()-(img.getWidth()/2), etendeur.y()-(img.getHeight()/2));
         return false;
     }
     
     @Override
     public boolean visite (Fourmie i) {
-        double [][] coords = Interface.hex_corner(i.position().x(),i.position().y(), i.h());
+        etendeur.fixeComposant(i);
+        double [][] coords = Interface.hex_corner(etendeur.x(), etendeur.y(), etendeur.h()/2);
         Color couleur = Color.WHITE;
         if (i.joueur() == 0)
             couleur = Color.GREEN;
@@ -166,14 +171,15 @@ public class Dessinateur extends Visiteur{
         gc.fillPolygon(coords[0], coords[1], 6);
         InputStream image = null;
         image =  ClassLoader.getSystemClassLoader().getResourceAsStream("Images/ant.png");
-        Image img = new Image(image,(i.h()*1.60),(i.h()*1.60),true, true);
-        gc.drawImage(img,i.position().x()-(img.getWidth()/2), i.position().y()-(img.getHeight()/2));
+        Image img = new Image(image,((etendeur.h()/2)*1.75),((etendeur.h()/2)*1.75),true, true);
+        gc.drawImage(img,etendeur.x()-(img.getWidth()/2), etendeur.y()-(img.getHeight()/2));
         return false;
     }
     
     @Override
     public boolean visite (Araignee i) {
-        double [][] coords = Interface.hex_corner(i.position().x(),i.position().y(), i.h());
+        etendeur.fixeComposant(i);
+        double [][] coords = Interface.hex_corner(etendeur.x(), etendeur.y(), etendeur.h()/2);
         Color couleur = Color.WHITE;
         if (i.joueur() == 0)
             couleur = Color.GREEN;
@@ -183,14 +189,15 @@ public class Dessinateur extends Visiteur{
         gc.fillPolygon(coords[0], coords[1], 6);
         InputStream image = null;
         image =  ClassLoader.getSystemClassLoader().getResourceAsStream("Images/spider.png");
-        Image img = new Image(image,(i.h()*1.60),(i.h()*1.60),true, true);
-        gc.drawImage(img,i.position().x()-(img.getWidth()/2), i.position().y()-(img.getHeight()/2));
+        Image img = new Image(image,((etendeur.h()/2)*1.75),((etendeur.h()/2)*1.75),true, true);
+        gc.drawImage(img,etendeur.x()-(img.getWidth()/2), etendeur.y()-(img.getHeight()/2));
         return false;
     }
     
     @Override
     public boolean visite (Sauterelle i) {
-        double [][] coords = Interface.hex_corner(i.position().x(),i.position().y(), i.h());
+        etendeur.fixeComposant(i);
+        double [][] coords = Interface.hex_corner(etendeur.x(), etendeur.y(), etendeur.h()/2);
         Color couleur = Color.WHITE;
         if (i.joueur() == 0)
             couleur = Color.GREEN;
@@ -200,8 +207,8 @@ public class Dessinateur extends Visiteur{
         gc.fillPolygon(coords[0], coords[1], 6);
         InputStream image = null;
         image =  ClassLoader.getSystemClassLoader().getResourceAsStream("Images/grasshopper.png");
-        Image img = new Image(image,(i.h()*1.60),(i.h()*1.60),true ,true);
-        gc.drawImage(img,i.position().x()-(img.getWidth()/2), i.position().y()-(img.getHeight()/2));
+        Image img = new Image(image,((etendeur.h()/2)*1.75),((etendeur.h()/2)*1.75),true, true);
+        gc.drawImage(img,etendeur.x()-(img.getWidth()/2), etendeur.y()-(img.getHeight()/2));
         return false;
     }
     
