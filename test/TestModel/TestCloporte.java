@@ -38,7 +38,7 @@ public class TestCloporte {
     void base(){
         assertEquals(f, f.clone());
         assertEquals(f.position(), new Point(2,2));
-        assertEquals(f.toString(), "["+Insecte.CLOP+":0:"+f.position()+"]");
+        assertEquals(f.toString(), "["+Insecte.CLOP+"/0/"+f.position()+"]");
     }
     
     void deplacement1(){

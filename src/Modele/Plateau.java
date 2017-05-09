@@ -83,16 +83,17 @@ public class Plateau extends Composant {
     }
     public boolean deposePionValide(Depot d){
         boolean b = (matrice.get(d.destination())==null);
+        int degres = 0;
         //System.out.println(matrice.get(d.destination()).utilise());
         if(b)
             for(int i=(int)d.destination().x()-1 ; i<= (int)d.destination().x()+1 && b; i++ )
                  for(  int j= (int)d.destination().y()-1 ; j<= (int)d.destination().y()+1 && b; j++ )
-                    if(!((i==(int)pos.x()-1 && j==(int)pos.y()-1) || (i==(int)pos.x()+1 && j==(int)pos.y()+1) ))
+                    if(!((i==(int)d.destination().x()-1 && j==(int)d.destination().y()-1) || (i==(int)d.destination().x()+1 && j==(int)d.destination().y()+1) ))
                         if(matrice.get(new Point(i,j))!=null){
-                            System.out.println(i+" "+j);
                             b&=(d.joueur()==matrice.get(new Point(i,j)).tete().joueur());
+                            degres++;
                         }
-        return b ;
+        return b && (degres>0) ;
     }
     public boolean deplacePionValide(Deplacement d){
         Insecte e = matrice.get(d.source()).tete();

@@ -280,12 +280,25 @@ public class Arbitre {
 
     public void prochainJoueur() {
         
+        
         jCourant = ++jCourant % 2;
-        if(plateau.aucunCoup(jCourant)){
+        boolean b = true;
+        for(int i=0; i<joueurs[jCourant].pions().length; i++)
+            b &= joueurs[jCourant].pions()[i]==0;
+        if(plateau.aucunCoup(jCourant) && b){
             prochainJoueur();
         }
     }
     
+    public int type(){
+        return type;
+    }
+    public int jCourant(){
+        return jCourant;
+    }
+    public int difficulte(){
+        return difficulte;
+    }
     
     
 }
