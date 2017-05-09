@@ -10,6 +10,7 @@ import Modele.Case;
 import Modele.Coup;
 import Modele.Depot;
 import Modele.Deplacement;
+import Modele.Plateau;
 import Modele.Point;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -35,8 +36,8 @@ public class Ordinateur extends Joueur{
     public final static long GRAINE = 548789;
     Random r;
     
-    public int[] tabPieces;
-    public int nbPieces;
+    //public int[] tabPieces;
+    //public int nbPieces;
     
     public Ordinateur(boolean m, int d, Properties p, int[] tabP, int nbP) {
         super(m, p, tabP, nbP);
@@ -44,9 +45,9 @@ public class Ordinateur extends Joueur{
         if(difficulte==0||difficulte==-1){
             r= new Random(GRAINE);
         }
-        this.tabPieces= new int [8];
-        this.nbPieces=0;
-        Reglage.init(prop);
+        //this.tabPieces= tabP;
+        //this.nbPieces=nbP;
+        //Reglage.init(prop);
         /*
         tabPieces[0]=(int)Reglage.lis("nbReine");
         tabPieces[1]=(int)Reglage.lis("nbScarabee");
@@ -79,14 +80,14 @@ public class Ordinateur extends Joueur{
         ArrayList<Coup[]> l=new ArrayList<>();
         //Déplacements
         Coup[] t;
-        if( (t=a.plateau().deplacementPossible())!=null){////////////////////////////////prendre numéro joueur
+        if( (t=a.plateau().deplacementPossible(numJoueur))!=null){
             l.add(t);
         }
         //Dépots
         //pour tout type de pièces
         int type;
-        for(type=0;type<pions.length;type=type+1){
-            if(pions[type]!=0){
+        for(type=0;type<tabPieces.length;type=type+1){
+            if(tabPieces[type]!=0){
                 l.add(a.plateau().depotPossible(this.numJoueur,type));
             }
         }
@@ -118,7 +119,54 @@ public class Ordinateur extends Joueur{
         return taille;
     }
     
+    public int heuristique_Simple_Profondeur1_PointDeVueIA(Plateau p){
+        int heuristique=0;
+        if(p.estEncerclee(numJoueur)){
+            heuristique=(int)Float.NEGATIVE_INFINITY;
+        }else if(p.estEncerclee(numAdversaire())){
+            heuristique=(int)Float.POSITIVE_INFINITY;
+        }else{
+            if(!reineLibre(p,numJoueur)){
+                heuristique=heuristique-2;
+            }
+            if(!reineLibre(p,numAdversaire())){
+                heuristique=heuristique+2;
+            }      
+        }
+        return heuristique;
+    }
+    
+    public int nbLiberteesReine(Plateau p, int joueur){
+        //Case caseReine=p.matrice.get(p.reine(joueur));
+        //compter les voisins
+        int libertees=0;
+        //if(///.utilise()){libertees=libertees+1;}
+        
+        return libertees;////////////////////////////////////////////////////////////////////////////////////
+    }
+    
+    public boolean reineLibre(Plateau p, int joueur){
+        Case caseReine=p.matrice.get(p.reine(joueur));
+        if(caseReine.tete().type()==0){
+            Coup[] deplPoss=p.deplacementPossible(caseReine.tete());
+            if(deplPoss.length!=0){
+                return true;
+            }
+        }
+            return false;
+    }
+    
+    public int numAdversaire(){
+        if(numJoueur==0){
+            return 1;
+        }else{
+            return 0;
+        }
+    }
+    
 }//fin de la classe
+
+
     /*
     public Coup coup(Arbitre a){
         //Coup=Dépot ou Déplacement
