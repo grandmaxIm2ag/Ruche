@@ -140,6 +140,8 @@ public class Ordinateur extends Joueur{
         //Case caseReine=p.matrice.get(p.reine(joueur));
         //compter les voisins
         int libertees=0;
+        //p.voisin(p.reine(joueur));
+        
         //if(///.utilise()){libertees=libertees+1;}
         
         return libertees;////////////////////////////////////////////////////////////////////////////////////
