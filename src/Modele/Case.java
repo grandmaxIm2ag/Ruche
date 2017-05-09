@@ -81,6 +81,7 @@ public class Case extends Composant{
     
     @Override
     public String toString(){
+        System.out.println(insectes.size());
         String str = pos.toString();
         if(utilise()){
             Stack<Insecte> tmp = new Stack();

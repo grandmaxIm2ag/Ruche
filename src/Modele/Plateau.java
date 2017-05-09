@@ -44,6 +44,8 @@ public class Plateau extends Composant {
     public void premierPion(Insecte e){
         Case c = new Case(0,0, 1, 1);
         c.deposePion(e);
+        if(e.type()==Insecte.REINE)
+            reines[Arbitre.J1] = new Point(0,0);
         matrice.put(new Point(0,0), c);
         utilises.add(new Point(0,0));
         voisins.put(new Point(0,0), new ArrayList());
@@ -84,13 +86,13 @@ public class Plateau extends Composant {
     public boolean deposePionValide(Depot d){
         boolean b = (matrice.get(d.destination())==null);
         int degres = 0;
-        //System.out.println(matrice.get(d.destination()).utilise());
         if(b)
             for(int i=(int)d.destination().x()-1 ; i<= (int)d.destination().x()+1 && b; i++ )
                  for(  int j= (int)d.destination().y()-1 ; j<= (int)d.destination().y()+1 && b; j++ )
                     if(!((i==(int)d.destination().x()-1 && j==(int)d.destination().y()-1) || (i==(int)d.destination().x()+1 && j==(int)d.destination().y()+1) ))
                         if(matrice.get(new Point(i,j))!=null){
                             b&=(d.joueur()==matrice.get(new Point(i,j)).tete().joueur());
+                            System.out.println(i+" "+j+" "+matrice.get(new Point(i,j)).tete().joueur());
                             degres++;
                         }
         return b && (degres>0) ;
@@ -119,9 +121,16 @@ public class Plateau extends Composant {
         return b;
     }
     public void deplacePion(Deplacement d){
+        if(d.source().equals(reines[d.joueur()]))
+            reines[d.joueur()] = d.destination();
         Case c = matrice.get(d.source());
         Insecte e = c.retirePion();
-        Case c2 = new Case(d.destination().x(), d.destination.y(), Reglage.lis("lCase"), Reglage.lis("hCase"));
+        Case c2;
+        if(matrice.get(d.destination())==null)
+            c2 = new Case(d.destination().x(), d.destination.y(), Reglage.lis("lCase"), Reglage.lis("hCase"));
+        else
+            c2 = matrice.get(d.destination());
+        e.position().fixe(c2.position().x(), c2.position().y());
         c2.deposePion(e);
         matrice.put(d.destination(), c2);
         if(c.utilise())
@@ -136,6 +145,15 @@ public class Plateau extends Composant {
         majGraphe(d);
     }
     
+    public void afficheGraphe(){
+        for(Map.Entry<Point, List<Point>> entry : voisins.entrySet()){
+                List<Point> l = entry.getValue();
+                String str = entry.getKey().toString();
+                for(Point point : l)
+                    str+=":"+point;
+                System.out.println(str);
+            }
+    }
     public void majGraphe(Point source){
         if(matrice.get(source)==null){
            List<Point> v = voisins.get(source);
@@ -170,7 +188,7 @@ public class Plateau extends Composant {
             List<Point> v = new ArrayList();
             for(int i=(int)d.destination().x()-1 ; i<= (int)d.destination().x()+1; i++ )
                 for(  int j= (int)d.destination().y()-1 ; j<= (int)d.destination().y()+1; j++ ){
-                    if(!((i==(int)pos.x()-1 && j==(int)pos.y()-1) || (i==(int)pos.x()+1 && j==(int)pos.y()+1) ))
+                    if(!((i==(int)d.destination().x()-1 && j==(int)d.destination().y()-1) || (i==(int)d.destination().x()+1 && j==(int)d.destination().y()+1) ))
                         if(voisins.get(new Point(i,j))!=null){
                             v.add(new Point(i,j));
                         }
@@ -205,6 +223,8 @@ public class Plateau extends Composant {
     }
     
     public void deposePion(Depot d){
+        if(d.type()==Insecte.REINE)
+            reines[d.joueur()] = d.destination();
         Case c2 = new Case(d.destination().x(), d.destination.y(), Reglage.lis("lCase"), Reglage.lis("hCase"));
         c2.deposePion(FabriqueInsecte.creer(d.type(), d.joueur(), d.destination()));
         matrice.put(d.destination(), c2);
@@ -441,6 +461,9 @@ public class Plateau extends Composant {
     }
     public Map<Point, List<Point>> voisins(){
         return voisins;
+    }
+    public List<Point> voisins(Point p){
+        return voisins.get(p);
     }
     public List<Point> utilises(){
         return utilises;
