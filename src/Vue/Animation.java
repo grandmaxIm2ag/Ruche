@@ -5,17 +5,32 @@
  */
 package Vue;
 
+import Modele.Arbitre;
+import Modele.TestArbitre;
+import Modele.Visiteur;
 import javafx.animation.AnimationTimer;
+import javafx.scene.canvas.Canvas;
 
 /**
  *
- * @author grandmax
+ * @author Gueckmooh
  */
 public class Animation extends AnimationTimer{
 
+    Arbitre arbitre;
+    Canvas can;
+    Visiteur dessinateur;
+    
+    Animation (Arbitre a, Canvas c) {
+        arbitre = a;
+        can = c;
+        dessinateur = new Dessinateur (c);
+    }
+    
     @Override
     public void handle(long l) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        arbitre.accept(dessinateur);
     }
     
 }

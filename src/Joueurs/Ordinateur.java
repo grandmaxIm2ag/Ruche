@@ -38,15 +38,16 @@ public class Ordinateur extends Joueur{
     public int[] tabPieces;
     public int nbPieces;
     
-    public Ordinateur(boolean m, int diff, Properties p, int joueur) {
-        super(m, p, joueur);
-        difficulte = diff;
+    public Ordinateur(boolean m, int d, Properties p, int[] tabP, int nbP) {
+        super(m, p, tabP, nbP);
+        difficulte = d;
         if(difficulte==0||difficulte==-1){
             r= new Random(GRAINE);
         }
         this.tabPieces= new int [8];
         this.nbPieces=0;
         Reglage.init(prop);
+        /*
         tabPieces[0]=(int)Reglage.lis("nbReine");
         tabPieces[1]=(int)Reglage.lis("nbScarabee");
         tabPieces[2]=(int)Reglage.lis("nbSauterelle");
@@ -58,7 +59,7 @@ public class Ordinateur extends Joueur{
         for(int i=0; i<tabPieces.length; i=i+1){
             nbPieces=nbPieces+tabPieces[i];
         }
-        
+        */
     }
     public Coup coup(Arbitre a){
         //Coup=Dépot ou Déplacement

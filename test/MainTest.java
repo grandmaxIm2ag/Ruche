@@ -16,18 +16,41 @@ import ruche.Reglage;
  * @author grandmax
  */
 public class MainTest {
-    
+    Properties prop;
     public MainTest() {
-        Properties prop = Configuration.proprietes();
+        prop = Configuration.proprietes();
         Reglage.init(prop);
     }
     
-    @Test
-    public void test(){
+    void insecte(){
         TestCase tc = new TestCase();
         tc.test();
         TestFourmie tf = new TestFourmie();
         tf.test();
+        TestReine tr = new TestReine();
+        tr.test();
+        TestAraignee ta = new TestAraignee();
+        ta.test();
+        TestSauterelle tsa = new TestSauterelle();
+        tsa.test();
+        TestScarabee tsc = new TestScarabee();
+        tsc.test();
+        TestCoccinelle tco = new TestCoccinelle();
+        tco.test();
+        TestMoustique tm = new TestMoustique();
+        tm.test();
+        TestCloporte cloporte = new TestCloporte();
+        cloporte.test();
+    }
+    @Test
+    public void test(){
+        insecte();
+        TestCase tc = new TestCase();
+        tc.test();
+        TestFabrique tf = new TestFabrique();
+        tf.test();
+        TestPlateau tp = new TestPlateau(prop);
+        tp.test();
     }
     
 }

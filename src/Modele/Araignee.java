@@ -22,45 +22,61 @@ public class Araignee extends Insecte{
     }
 
     @Override
-    public Coup[] deplacementValide(Map plateau) {
+    public Coup[] deplacementValide(Map<Point, Case> plateau) {
         Point p = pos.clone();
-        Stack<Point> aVisiter = new Stack();
-        List<Point> marquer = new ArrayList();
-        marquer.add(p);
+        
+        Case c = plateau.get(p);
+        c.retirePion();
+        if(c.utilise())
+            plateau.put(p, c);
+        else
+            plateau.remove(p);
+        
+        
+        Stack<Deplacement> aVisiter = new Stack();
         
         List<Coup> co = glisser(plateau);
         Iterator<Coup> it = co.iterator();
+        //System.out.println("____________________________________");
         while(it.hasNext()){
-            Point po = it.next().destination();
-            if(!marquer.contains(po)){
-                marquer.add(po);
-                aVisiter.push(po);
-           }
+            aVisiter.push((Deplacement) it.next());
+            //System.out.println(aVisiter.peek());
         }
         
+        Stack<Deplacement> tmp = new Stack();
         for(int i=0; i<2; i++){
-            Stack<Point> tmp = new Stack();
+            //System.out.println("____________________________________");
             while(!aVisiter.isEmpty()){
-                Point tmp2 = aVisiter.pop();
-                pos.fixe(p.x(), p.y());
+                Deplacement tmp1 = aVisiter.pop();
+                //System.out.println(tmp1);
+                Point tmp2 = tmp1.destination();
+                pos.fixe(tmp2.x(), tmp2.y());
                 co = glisser(plateau);
                 it = co.iterator();
                 while(it.hasNext()){
                     Point po = it.next().destination();
-                    if(!marquer.contains(po)){
-                        marquer.add(po);
-                        tmp.push(po);
+                    if(!tmp1.aDejaVisite(po)){
+                        Deplacement clone = tmp1.clone();
+                        
+                        clone.add(po);
+                        
+                        tmp.push(clone);
                     }
                 }
             }
-            aVisiter = tmp;
+            while(!tmp.isEmpty())
+                aVisiter.push(tmp.pop());
         }
         
         pos.fixe(p.x(), p.y());
         
         Coup[] coups = new Coup[aVisiter.size()];
         for(int i=0; i<coups.length; i++)
-            coups[i] = new Deplacement(joueur, pos, aVisiter.pop());
+            coups[i] = aVisiter.pop();
+        
+        c.deposePion(this);
+        plateau.put(p,c);
+        
         return coups;
     }
 
@@ -81,6 +97,12 @@ public class Araignee extends Insecte{
     @Override
     public Insecte clone() {
         return new Araignee(pos.x(), pos.y(), l, h, joueur);
+    }
+
+    @Override
+    public int type() {
+        return ARAI;
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }

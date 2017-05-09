@@ -5,6 +5,7 @@
  */
 package Joueurs;
 
+import Modele.Insecte;
 import java.util.Properties;
 
 /**
@@ -13,25 +14,46 @@ import java.util.Properties;
  */
 public abstract class Joueur {
     String nom;
-    int[] pions;
+    int[] tabPieces;
+    int nbPieces;
     boolean main;
     Properties prop;
     int numJoueur;
     
-    public Joueur(boolean m, Properties p, int joueur){
-        this.numJoueur=joueur;
+    public Joueur(boolean m, Properties p, int[] tabP, int nbP){
         main=m;
         prop=p;
+        tabPieces=tabP;
+        nbPieces=nbP;
     }
     
     public void setMain(){
         main = !main;
     }
+    
+    public void addPion (int type, int qte) {
+        tabPieces[type] += qte;
+    }
+    
     public String nom(){
         return nom;
     }
     public int[] pions(){
-        return pions;
+        return tabPieces;
+    }
+    public int pion(int idx){
+        return tabPieces[idx];
+    }
+    
+    @Override
+    public String toString(){
+        String res = nom+"=";
+        
+        res+=tabPieces[0];
+        for(int i=1; i<tabPieces.length; i++)
+            res += ":"+tabPieces[i];
+        
+        return res;
     }
     
 }

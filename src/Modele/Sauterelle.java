@@ -25,16 +25,19 @@ public class Sauterelle extends Insecte{
         List<Coup> c = new ArrayList();
         
         for(int i=(int)pos.x()-1; i<=(int)pos.x()+1;i++)
-            for(int j=(int)pos.y()-1; j<=(int)pos.y()+1;i++)
+            for(int j=(int)pos.y()-1; j<=(int)pos.y()+1;j++)
                 if(!((i==(int)pos.x()-1 && j==(int)pos.y()-1) || (i==(int)pos.x()+1 && j==(int)pos.y()+1) ))
                     if(!pos.equals(new Point(i,j))){
                         Case ca = plateau.get(new Point(i,j)) ;
                         if(ca!=null){
                             int diffx = i - ((int)pos.x());
                             int diffy = j - ((int)pos.y());
-                            while(ca.utilise())
-                                ca=plateau.get(new Point(ca.position().x()+diffx, ca.position().y()+diffy));
-                            c.add(new Deplacement(joueur, pos, ca.position()));
+                            Point p = new Point(ca.position().x()+diffx, ca.position().y()+diffy);
+                            while(ca!=null){
+                                p = new Point(ca.position().x()+diffx, ca.position().y()+diffy);
+                                ca=plateau.get(p);
+                            }
+                            c.add(new Deplacement(joueur, pos, p));
                         }
                     }
         
@@ -63,6 +66,12 @@ public class Sauterelle extends Insecte{
     @Override
     public Insecte clone() {
         return new Sauterelle(pos.x(), pos.y(), l, h, joueur);
+    }
+
+    @Override
+    public int type() {
+        return SAUT;
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }

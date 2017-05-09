@@ -34,8 +34,12 @@ public class TestCase {
         assertFalse(c.utilise());
         c.deposePion(FabriqueInsecte.creer(Insecte.REINE,0,c.position()));
         c.deposePion(FabriqueInsecte.creer(Insecte.REINE,0,c.position()));
+        String str = FabriqueInsecte.creer(Insecte.REINE,0,c.position()).toString();
+        assertEquals(c.toString(), c.position()+":"+str+":"+str);
         c.retirePion();
+        assertEquals(c.toString(), c.position()+":"+str);
         assertTrue(c.utilise());
+        
     }
     
     @Test

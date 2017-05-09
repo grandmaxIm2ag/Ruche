@@ -22,6 +22,10 @@ public class Moustique extends Insecte{
 
     @Override
     public Coup[] deplacementValide(Map<Point, Case> plateau) {
+        boolean types[] = new boolean[NB_TYPE];
+        for(int i=0; i<types.length; i++ )
+            types[i]=false;
+        System.out.println(pos);
         boolean enHaut;
         Case ca = plateau.get(pos).clone();
         ca.retirePion();
@@ -32,19 +36,22 @@ public class Moustique extends Insecte{
             Scarabee scar = new Scarabee(pos.x(), pos.y(), l, h, joueur);
             return scar.deplacementValide(plateau);
         }else{
-            List<Case> voisins = new ArrayList();
+            List<Insecte> voisins = new ArrayList();
             for(int i=(int)pos.x()-1; i<=(int)pos.x()+1;i++)
-                for(int j=(int)pos.y()-1; j<=(int)pos.y()+1;i++)
+                for(int j=(int)pos.y()-1; j<=(int)pos.y()+1;j++){
                     if(!((i==(int)pos.x()-1 && j==(int)pos.y()-1) || (i==(int)pos.x()+1 && j==(int)pos.y()+1) ))
-                        if(!pos.equals(new Point(i,j)) && plateau.get(new Point(i,j))!=null ){
-                            voisins.add(plateau.get(new Point(i,j)));
+                        if(!pos.equals(new Point(i,j)) && plateau.get(new Point(i,j))!=null){
+                            if(!types[plateau.get(new Point(i,j)).tete().type()] ){
+                                voisins.add(plateau.get(new Point(i,j)).tete());
+                                types[plateau.get(new Point(i,j)).tete().type()]=true;
+                            }
                         }
-        
-            Iterator<Case> v = voisins.iterator();
-            while(v.hasNext()){
-                Case tmp = v.next().clone();
-                tmp.tete().position().fixe(pos.x(), pos.y());
-                Coup[] co = tmp.tete().deplacementValide(plateau);
+                }
+            Iterator<Insecte> w = voisins.iterator();
+            while(w.hasNext()){
+                Insecte tmp = w.next().clone();
+                tmp.position().fixe(pos.x(), pos.y());
+                Coup[] co = tmp.deplacementValide(plateau);
                 for(int i=0; i<co.length; i++)
                     c.add(co[i]);
             }
@@ -77,5 +84,10 @@ public class Moustique extends Insecte{
     public Insecte clone() {
        return new Moustique(pos.x(), pos.y(), l, h, joueur);
     }
-    
+
+    @Override
+    public int type() {
+        return MOUS;
+//throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

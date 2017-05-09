@@ -5,12 +5,16 @@
  */
 package TestModel;
 
-
-import Modele.*;
+import Modele.Case;
+import Modele.Coup;
+import Modele.Deplacement;
+import Modele.FabriqueInsecte;
+import Modele.Fourmie;
+import Modele.Insecte;
+import Modele.Point;
+import Modele.Reine;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.TreeMap;
-import org.junit.Assert;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import ruche.Reglage;
@@ -19,17 +23,18 @@ import ruche.Reglage;
  *
  * @author grandmax
  */
-public class TestFourmie {
-    Fourmie f;
+public class TestReine {
     
-    public TestFourmie() {
-        f = (Fourmie) FabriqueInsecte.creer(Insecte.FOUR, 0, new Point(2,2));
+    Reine f;
+    
+    public TestReine() {
+        f = (Reine) FabriqueInsecte.creer(Insecte.REINE, 0, new Point(2,2));
     }
     
     void base(){
         assertEquals(f, f.clone());
         assertEquals(f.position(), new Point(2,2));
-        assertEquals(f.toString(), "["+Insecte.FOUR+":0:"+f.position()+"]");
+        assertEquals(f.toString(), "["+Insecte.REINE+":0:"+f.position()+"]");
     }
     
     
@@ -55,11 +60,6 @@ public class TestFourmie {
         plateau.put(c2.position(), c2);
         
         Coup[] d = {new Deplacement(0,f.position(),new Point(2, 1)),
-                    new Deplacement(0,f.position(),new Point(3,0)),
-                    new Deplacement(0,f.position(),new Point(4,0)),
-                    new Deplacement(0,f.position(),new Point(4,1)),
-                    new Deplacement(0,f.position(),new Point(4,2)),
-                    new Deplacement(0,f.position(),new Point(3,3)),
                     new Deplacement(0,f.position(),new Point(2,3))
                     };
         Coup[] d2 = f.deplacementValide(plateau);

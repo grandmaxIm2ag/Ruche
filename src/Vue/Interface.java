@@ -15,6 +15,10 @@ import Modele.Arbitre;
 import Joueurs.Joueur;
 import Joueurs.Ordinateur;
 import Modele.Point;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import javafx.collections.FXCollections;
 import javafx.event.*;
 import javafx.geometry.Insets;
@@ -26,7 +30,14 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Separator;
-import javafx.scene.input.*;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import static javafx.scene.input.DataFormat.URL;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
+//import java.net.URL;
+//import javafx.scene.input.DataFormat.URL;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -37,6 +48,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import javax.imageio.ImageIO;
 
 /**
  *
@@ -67,7 +79,6 @@ public class Interface extends Application{
         
     @Override
     public void start(Stage stage) throws Exception {
-
 
 
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -107,28 +118,34 @@ public class Interface extends Application{
         
     }
     
-    public  void goPartie(){
-        root.setLeft(new Pane());
+    public static void goPartie() {
+        //root.setLeft(new Pane());
         root.setBottom(new Pane());
         Canvas c = new Canvas (500, 500);
-        StackPane stack = new StackPane(c);
-        stack.setAlignment(Pos.TOP_CENTER);
-        c.widthProperty().bind(stack.maxWidthProperty());
-        c.heightProperty().bind(stack.maxHeightProperty());
-        GraphicsContext gc;
-        gc = c.getGraphicsContext2D();
-        gc.setFill(Color.WHITESMOKE);
-        gc.fillRect(0, 0, 500, 500);
-        gc.strokeRect(0, 0, 500, 500);
-        gc.setFill(Color.BLUE);
-        gc.setFont(Font.font("Tahoma", FontWeight.NORMAL, 33));
-        gc.fillText("Ceci est le terrain de jeu", 50, 250);
+        //StackPane stack = new StackPane(c);
+        Pane stack = new Pane(c);
         root.setCenter(stack);
+        //stack.setAlignment(Pos.TOP_CENTER);
+        /*
+        createBee(c, 250, 250, 50);
+        createBeetle(c, 350, 250, 50);
+        createGrasshopper(c, 450, 250, 50);
+        createLadybug(c, 150, 250, 50);
+        createSpider(c, 200, 350, 50);
+        createAnt(c, 300, 350, 50);
+        createMoskito(c, 400, 350, 50);
+        createWoodlouse(c, 300, 150, 50);
+        */
+        root.setCenter(stack);
+        
+        c.widthProperty().bind(stack.widthProperty());
+        c.heightProperty().bind(stack.heightProperty().subtract(50));
+        
         VBox box = new VBox();
         box.setAlignment(Pos.TOP_CENTER);
         box.setPadding(new Insets(20,10,20,10));
         box.setSpacing(20);
-        root.setRight(box);
+        root.setLeft(box);
         Button btPrec = new Button("Précédent");
         Button btSuiv = new Button("Suivant");
         Button btSave = new Button ("Sauvegarder");
@@ -145,11 +162,62 @@ public class Interface extends Application{
             }
         });
         
+        GridPane bPion = new GridPane();
+        bPion.setHgap(10);
+        Separator sep = new Separator();
+        sep.setOrientation(Orientation.VERTICAL);
+        bPion.add(pionTableau(), 0, 0);
+        bPion.add(sep, 1, 0);
+        bPion.add(pionTableau(), 2, 0);
+        root.setRight(bPion);
+        
         box.getChildren().addAll(btPrec, btSuiv, btSave, btMenu);
+        
+        Animation anim = new Animation(arbitre, c);
+        anim.start();
 
     }
     
-    public void goMenu(){
+    public static double pythagorelol (double a) {
+        return Math.sqrt(Math.pow(a, 2) - Math.pow(a/2, 2));
+    }
+    
+    public static double pymoins1 (double a) {
+    return Math.cos(Math.PI/180*30)/a;
+}
+    
+    public static Canvas pionTableau() {
+        Canvas c = new Canvas(75,375);
+        GraphicsContext gc = c.getGraphicsContext2D();
+        double x, y;
+        x = 25;
+        y = 50;
+        createBee(c, x, y, 25);
+        x += pythagorelol(25);
+        y = y+25+25/2;
+        createBeetle(c,x, y, 25);
+        x -= pythagorelol(25);
+        y = y+25+25/2;
+        createGrasshopper(c, x, y, 25);
+        x += pythagorelol(25);
+        y = y+25+25/2;
+        createLadybug(c, x, y, 25);
+        x -= pythagorelol(25);
+        y = y+25+25/2;
+        createSpider(c, x, y, 25);
+        x += pythagorelol(25);
+        y = y+25+25/2;
+        createAnt(c, x, y, 25);
+        x -= pythagorelol(25);
+        y = y+25+25/2;
+        createMoskito(c, x, y, 25);
+        x += pythagorelol(25);
+        y = y+25+25/2;
+        createWoodlouse(c, x, y, 25);
+        return c;
+    }
+    
+    public static void goMenu(){
         root.setRight(new Pane());
         root.setLeft(new Pane());
         root.setBottom(new Pane());
@@ -157,10 +225,8 @@ public class Interface extends Application{
         GridPane grid = new GridPane();
         grid.setHgap(10);
         grid.setVgap(20);
-        StackPane stack = new StackPane();
         VBox box = new VBox();
         root.setCenter(box);
-        stack.setAlignment(Pos.CENTER);
         grid.setAlignment(Pos.CENTER);
         
         Button btNouveau = new Button("Nouvelle partie");
@@ -243,7 +309,7 @@ public class Interface extends Application{
     }
     
     
-    public double[][] hex_corner (double x, double y, double rayon) {
+    public static double[][] hex_corner (double x, double y, double rayon) {
         double [][] coords = new double[2][6];
         double angle_deg;
         double angle_rad;
@@ -260,7 +326,7 @@ public class Interface extends Application{
         
     }
     
-    public void goConfig () {
+    public static void goConfig () {
         VBox box = new VBox();
         box.setAlignment(Pos.TOP_CENTER);
         box.setSpacing(30);
@@ -306,13 +372,14 @@ public class Interface extends Application{
             }
         });
         
-        
-        bottom.getChildren().addAll(btValider, btRetour);
+        Separator sep = new Separator();
+        sep.setOrientation(Orientation.VERTICAL);
+        bottom.getChildren().addAll(btValider,sep, btRetour);
         
         box.getChildren().addAll(c, grid, bottom);
     }
     
-    public Canvas titreSect (String name) {
+    public static Canvas titreSect (String name) {
         Canvas c = new Canvas(200, 100);
         GraphicsContext gc;
         gc = c.getGraphicsContext2D();
@@ -327,7 +394,7 @@ public class Interface extends Application{
         return c;
     }
     
-    public void goCredits () {
+    public static void goCredits () {
         VBox box = new VBox();
         box.setSpacing(30);
         box.setPadding(new Insets(20,10,20,10));
@@ -379,6 +446,118 @@ public class Interface extends Application{
     
     public static void infoPartie(Joueur j1, Joueur j2, int nbManche, int joueur){
         
+    }
+    
+    public static void createBee (Canvas c, double x, double y, double taille) {
+        GraphicsContext gc;
+        gc = c.getGraphicsContext2D();
+        double [][] coords = hex_corner(x,y,taille);
+        gc.setFill(Color.BLANCHEDALMOND);
+        gc.fillPolygon(coords[0], coords[1], 6);
+        InputStream image = null;
+        image =  ClassLoader.getSystemClassLoader().getResourceAsStream("Images/bee.png");
+        Image img = new Image(image,(taille*1.75),(taille*1.75),true, true);
+        gc.drawImage(img,x-(img.getWidth()/2), y-(img.getHeight()/2));
+
+    }
+    
+    public static void createBeetle (Canvas c, double x, double y, double taille) {
+        GraphicsContext gc;
+        gc = c.getGraphicsContext2D();
+        double [][] coords = hex_corner(x,y,taille);
+        gc.setFill(Color.BURLYWOOD);
+        gc.fillPolygon(coords[0], coords[1], 6);
+        InputStream image = null;
+        image =  ClassLoader.getSystemClassLoader().getResourceAsStream("Images/beetle.png");
+        Image img = new Image(image,(taille*1.50),(taille*1.50),true, true);
+        gc.drawImage(img,x-(img.getWidth()/2), y-(img.getHeight()/2));
+
+
+    }
+    
+    public static void createLadybug (Canvas c, double x, double y, double taille) {
+        GraphicsContext gc;
+        gc = c.getGraphicsContext2D();
+        double [][] coords = hex_corner(x,y,taille);
+        gc.setFill(Color.RED);
+        gc.fillPolygon(coords[0], coords[1], 6);
+        InputStream image = null;
+        image =  ClassLoader.getSystemClassLoader().getResourceAsStream("Images/ladybug.png");
+        Image img = new Image(image,(taille*1.50),(taille*1.50),true, true);
+        gc.drawImage(img,x-(img.getWidth()/2), y-(img.getHeight()/2));
+
+
+    }
+    
+    public static void createMoskito (Canvas c, double x, double y, double taille) {
+        GraphicsContext gc;
+        gc = c.getGraphicsContext2D();
+        double [][] coords = hex_corner(x,y,taille);
+        gc.setFill(Color.GREENYELLOW);
+        gc.fillPolygon(coords[0], coords[1], 6);
+        InputStream image = null;
+        image =  ClassLoader.getSystemClassLoader().getResourceAsStream("Images/moskito.png");
+        Image img = new Image(image,(taille*2),(taille*2),true, true);
+        gc.drawImage(img,x-(img.getWidth()/2), y-(img.getHeight()/2));
+
+
+    }
+    
+    //  grasshopper
+    
+    public static void createWoodlouse (Canvas c, double x, double y, double taille) {
+        GraphicsContext gc;
+        gc = c.getGraphicsContext2D();
+        double [][] coords = hex_corner(x,y,taille);
+        gc.setFill(Color.CHOCOLATE);
+        gc.fillPolygon(coords[0], coords[1], 6);
+        InputStream image = null;
+        image =  ClassLoader.getSystemClassLoader().getResourceAsStream("Images/woodlouse.png");
+        Image img = new Image(image,(taille*1.75),(taille*1.75),true, true);
+        gc.drawImage(img,x-(img.getWidth()/2), y-(img.getHeight()/2));
+
+
+    }
+    
+    public static void createAnt (Canvas c, double x, double y, double taille) {
+        GraphicsContext gc;
+        gc = c.getGraphicsContext2D();
+        double [][] coords = hex_corner(x,y,taille);
+        gc.setFill(Color.AQUAMARINE);
+        gc.fillPolygon(coords[0], coords[1], 6);
+        InputStream image = null;
+        image =  ClassLoader.getSystemClassLoader().getResourceAsStream("Images/ant.png");
+        Image img = new Image(image,(taille*1.60),(taille*1.60),true, true);
+        gc.drawImage(img,x-(img.getWidth()/2), y-(img.getHeight()/2));
+
+
+    }
+    
+    public static void createSpider (Canvas c, double x, double y, double taille) {
+        GraphicsContext gc;
+        gc = c.getGraphicsContext2D();
+        double [][] coords = hex_corner(x,y,taille);
+        gc.setFill(Color.CORNFLOWERBLUE);
+        gc.fillPolygon(coords[0], coords[1], 6);
+        InputStream image = null;
+        image =  ClassLoader.getSystemClassLoader().getResourceAsStream("Images/spider.png");
+        Image img = new Image(image,(taille*1.60),(taille*1.60),true, true);
+        gc.drawImage(img,x-(img.getWidth()/2), y-(img.getHeight()/2));
+
+
+    }
+    
+    public static void createGrasshopper (Canvas c, double x, double y, double taille) {
+        GraphicsContext gc;
+        gc = c.getGraphicsContext2D();
+        double [][] coords = hex_corner(x,y,taille);
+        gc.setFill(Color.DARKGRAY);
+        gc.fillPolygon(coords[0], coords[1], 6);
+        InputStream image = null;
+        image =  ClassLoader.getSystemClassLoader().getResourceAsStream("Images/grasshopper.png");
+        Image img = new Image(image,(taille*1.60),(taille*1.60),true ,true);
+        gc.drawImage(img,x-(img.getWidth()/2), y-(img.getHeight()/2));
+
     }
     
     public static void initChoix(ChoiceBox cb, int c){
