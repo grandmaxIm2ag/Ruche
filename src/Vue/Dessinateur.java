@@ -59,9 +59,8 @@ public class Dessinateur extends Visiteur{
     
     @Override
     public boolean visite (Case c) {
-        //System.out.println(etendeur);
+        // System.out.println(etendeur);
         etendeur.fixeComposant(c);
-        System.out.println(etendeur);
         double [][] coords = Interface.hex_corner(etendeur.x(), etendeur.y(), etendeur.h()/2);
         gc.strokePolygon(coords[0], coords[1], 6);
         c.tete().accept(this);

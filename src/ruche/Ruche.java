@@ -25,7 +25,7 @@ public class Ruche {
         // TODO code application logic here
         Properties p = Configuration.proprietes();
         Interface it = new Interface();
-        it.creer(args, new TestArbitre(p));
+        it.creer(args, new Arbitre(p));
     }
     
 }

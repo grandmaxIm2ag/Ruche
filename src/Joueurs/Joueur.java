@@ -24,6 +24,7 @@ public abstract class Joueur {
         prop=p;
         tabPieces=tabP;
         nbPieces=nbP;
+        nom = "toto";
     }
     
     public void setMain(){

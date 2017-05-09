@@ -54,15 +54,23 @@ public class Plateau extends Composant {
         Case c = new Case(1,0,1,1);
         c.deposePion(new Reine(1,0,1,1));
         matrice.put(new Point(1,0), c);
+        
         c = new Case(0,1,1,1);
         c.deposePion(new Reine(0,1,1,1));
-        matrice.put(new Point(0,1), c);c = new Case(0,1,1,1);
+        matrice.put(new Point(0,1), c);
+        
+        c = new Case(1,1,1,1);
         c.deposePion(new Reine(1,1,1,1));
-        matrice.put(new Point(1,1), c);c = new Case(0,1,1,1);
+        matrice.put(new Point(1,1), c);
+        
+        c = new Case(1,1,1,1);
         c.deposePion(new Reine(1,1,1,1));
-        matrice.put(new Point(-1,2), c);c = new Case(0,1,1,1);
+        matrice.put(new Point(-1,2), c);
+        
+        c = new Case(-1,2,1,1);
         c.deposePion(new Reine(-1,2,1,1));
         matrice.put(new Point(-1,2), c);
+        
         xMax = 1;
         yMax = 2;
     }
@@ -300,7 +308,7 @@ public class Plateau extends Composant {
         
         str+="plateau"+"\n";
         for(Map.Entry<Point,Case> entry : matrice.entrySet()) {
-            str+=entry.getKey()+"|"+entry.getValue()+"\n";
+            str+=entry.getKey()+"_"+entry.getValue()+"\n";
         }
         str+="graphe"+"\n";
         for(Map.Entry<Point,List<Point>> entry2 : voisins.entrySet()) {
