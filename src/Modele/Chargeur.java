@@ -59,7 +59,10 @@ public class Chargeur {
                 for(int i=1; i<str.length; i++)
                     c.deposePion(FabriqueInsecte.creer(str[i]));
                 res.matrice().put(point, c);
+                res.utilises().add(point);
             }else if(g){
+                str = line.split(":");
+                Point point = new Point(str[0]);
                 
             }
         }

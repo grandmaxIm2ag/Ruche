@@ -430,4 +430,12 @@ public class Plateau extends Composant {
     public Map<Point, Case> matrice(){
         return matrice;
     }
+    public Map<Point, List<Point>> voisins(){
+        return voisins;
+    }
+    public List<Point> utilises(){
+        return utilises;
+    }
+    
+    
 }
