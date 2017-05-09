@@ -5,8 +5,11 @@
  */
 package Modele;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 import java.util.Scanner;
+import java.util.Stack;
 import ruche.Reglage;
 
 /**
@@ -20,6 +23,7 @@ public class Chargeur {
     int t=0, d=0, j=0;
     int[] n = {0,0};
     String[] joueurs = {"null", "null"};
+    Stack<Coup> h, r, r2;
     
     public void init(Properties p, String plateau){
         input = new Scanner(ClassLoader.getSystemClassLoader().getResourceAsStream(plateau));
@@ -63,9 +67,37 @@ public class Chargeur {
             }else if(g){
                 str = line.split(":");
                 Point point = new Point(str[0]);
-                
+                List<Point> lp = new ArrayList();
+                for(int i=1; i<str.length; i++)
+                    lp.add(new Point(str[i]));
+                res.voisins().put(point, lp);
             }
         }
+        
+        h = new Stack();
+        Stack<Coup> hBis = new Stack();
+        while(input.hasNext() && !line.equals("Refaire en cours")){
+            if(line.charAt(0)=='(')
+                hBis.push(new Deplacement(0,line));
+            else
+                hBis.push(new Depot(0,line));
+            
+            line = input.nextLine();
+        }
+        while(!hBis.isEmpty())
+            h.push(hBis.pop());
+        
+        r2 = new Stack();
+        while(input.hasNext() ){
+            if(line.charAt(0)=='(')
+                hBis.push(new Deplacement(0,line));
+            else
+                hBis.push(new Depot(0,line));
+            
+            line = input.nextLine();
+        }
+        while(!hBis.isEmpty())
+            r2.push(hBis.pop());
         
         return res;
     }
@@ -84,5 +116,11 @@ public class Chargeur {
     }
     String[] joueur(){
         return joueurs; 
+    }
+    Stack<Coup> historique(){
+        return h;
+    }
+    Stack<Coup> refaire(){
+        return r2;
     }
 }

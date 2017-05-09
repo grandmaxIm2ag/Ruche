@@ -63,6 +63,7 @@ public class Arbitre {
         
         chargeur = new Chargeur();
         
+        
         nbCoup = new int[2];
         nbCoup[0]=0; nbCoup[1]=0;
     }
@@ -181,9 +182,30 @@ public class Arbitre {
         
     }
     
-    public Plateau charger(String plateau){
+    public void charger(String plateau){
         
-        return null;
+        chargeur.init(prop, plateau);
+        this.plateau = chargeur.charger();
+        type = chargeur.type();
+        difficulte = chargeur.difficulte();
+        init();
+        historique = chargeur.historique();
+        refaire = chargeur.refaire();
+        
+        String[] str = chargeur.joueur();
+        joueurs[J1].nom = str[J1].split("=")[0];
+        String[] str2 = str[J1].split("=")[1].split(":");
+        int[] tab = new int[str2.length-1];
+        for(int i=1; i<str2.length; i++)
+            tab[i-1]=Integer.parseInt(str2[i]);
+        joueurs[J1].setPieces(tab);
+        joueurs[J2].nom = str[J2].split("=")[0];
+        str2 = str[J1].split("=")[1].split(":");
+        tab = new int[str2.length-1];
+        for(int i=1; i<str2.length; i++)
+            tab[i-1]=Integer.parseInt(str2[i]);
+        joueurs[J2].setPieces(tab);
+
     }
     public void sauvegarder(String nomSauv){
         String sauv = "";
@@ -202,7 +224,7 @@ public class Arbitre {
         }
         while(!tmp.isEmpty())
             historique.push(tmp.pop());
-        sauv += "Refaire en cours \n";
+        sauv += "Refaire en cours\n";
         while(!refaire.isEmpty()){
             Coup c = refaire.pop();
             sauv += c+"\n";
@@ -224,7 +246,9 @@ public class Arbitre {
     }
     
     public void aide(){
-        
+        /*
+        A faire dès que les IA seront opérationnels
+        */
     }
 
     public void accept(Visiteur dessinateur) {

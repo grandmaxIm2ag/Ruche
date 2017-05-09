@@ -13,7 +13,7 @@ import java.util.Properties;
  * @author grandmax
  */
 public abstract class Joueur {
-    String nom;
+    public String nom;
     int[] tabPieces;
     int nbPieces;
     boolean main;
@@ -53,6 +53,10 @@ public abstract class Joueur {
             res += ":"+tabPieces[i];
         
         return res;
+    }
+    
+    public void setPieces(int[] p){
+        this.tabPieces = p;
     }
     
 }
