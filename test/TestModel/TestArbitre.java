@@ -71,10 +71,18 @@ public class TestArbitre {
         assertEquals(a.jCourant(), Arbitre.J2);
         a.joue(new Deplacement(Arbitre.J2, "(2,-1)->(0,2)"));
         assertEquals(a.jCourant(), Arbitre.J1);
-        a.joue(new Depot(a.J1, Insecte.ARAI, new Point(-1,3)));
+        a.joue(new Depot(a.J1, Insecte.SAUT, new Point(-1,1)));
         assertEquals(a.jCourant(), Arbitre.J2);
-        a.joue(new Depot(a.J2, Insecte.SAUT, new Point(-1,1)));
+        a.joue(new Depot(a.J2, Insecte.ARAI, new Point(-1,3)));
         assertEquals(a.jCourant(), Arbitre.J1);
+        assertFalse(a.plateau().estEncerclee(Arbitre.J2));
+        a.joue(new Deplacement(Arbitre.J1, "(-1,1)->(2,1)"));
+        assertEquals(a.jCourant(), Arbitre.J2);
+        assertTrue(a.plateau().estEncerclee(Arbitre.J2));
+        //Prendre en compte dans l'arbitre la victoire de J1
+        a.joue(new Deplacement(Arbitre.J2, "(-1,3)->(2,2)"));
+        assertEquals(a.jCourant(), Arbitre.J1);
+        
    }
    @Test
    public void test(){

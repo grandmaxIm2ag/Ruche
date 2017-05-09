@@ -237,8 +237,8 @@ public class Plateau extends Composant {
         
         for(int i=(int)reines[j].x()-1 ; i<= (int)reines[j].x()+1; i++ )
             for(int k=(int)reines[j].y()-1 ; k<= (int)reines[j].y()+1; k++ )
-                if(!((i==(int)pos.x()-1 && k==(int)pos.y()-1) || (i==(int)pos.x()+1 && k==(int)pos.y()+1) ) && !reines[j].equals(new Point(i,k)))
-                    b &= matrice.get(new Point(i,k))==null;
+                if(!((i==(int)reines[j].x()-1 && k==(int)reines[j].y()-1) || (i==(int)reines[j].x()+1 && k==(int)reines[j].y()+1) ) && !reines[j].equals(new Point(i,k)))
+                    b &= matrice.get(new Point(i,k))!=null;
         
         return b;
     }
