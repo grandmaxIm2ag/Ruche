@@ -6,6 +6,7 @@
 package Vue;
 
 
+import Controleur.Bouton;
 import javafx.application.*;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
@@ -55,16 +56,7 @@ import javax.imageio.ImageIO;
  * @author grandmax
  */
 public class Interface extends Application{
-    public final static int BOUTTON_NOUVEL = 0;
-    public final static int BOUTTON_REFAIRE = 1;
-    public final static int BOUTTON_ANNULER = 2;
-    public final static int BOUTTON_SAUVEGARDER = 3;
-    public final static int BOUTON_AIDE = 4;
-    public final static int BOUTON_CHARGER = 5;
-    public final static int BOUTON_MENU = 6;
-    public final static int BOUTON_COMMENCER = 7;
-    public final static int BOUTON_QUITTER = 7;
-
+    
     public final static int SOURIS_PRESSEE = 0;
     public final static int SOURIS_BOUGEE = 1;
     
@@ -123,20 +115,7 @@ public class Interface extends Application{
         //root.setLeft(new Pane());
         root.setBottom(new Pane());
         Canvas c = new Canvas (500, 500);
-        //StackPane stack = new StackPane(c);
         Pane stack = new Pane(c);
-        root.setCenter(stack);
-        //stack.setAlignment(Pos.TOP_CENTER);
-        /*
-        createBee(c, 250, 250, 50);
-        createBeetle(c, 350, 250, 50);
-        createGrasshopper(c, 450, 250, 50);
-        createLadybug(c, 150, 250, 50);
-        createSpider(c, 200, 350, 50);
-        createAnt(c, 300, 350, 50);
-        createMoskito(c, 400, 350, 50);
-        createWoodlouse(c, 300, 150, 50);
-        */
         root.setCenter(stack);
         
         c.widthProperty().bind(stack.widthProperty());
@@ -155,13 +134,13 @@ public class Interface extends Application{
         btSuiv.setMaxWidth(150);
         btSave.setMaxWidth(150);
         btMenu.setMaxWidth(150);
-        btMenu.setOnAction(new EventHandler<ActionEvent>() {
         
-            @Override
-            public void handle(ActionEvent event) {
-                goMenu();
-            }
-        });
+        
+        btPrec.setOnAction(new Bouton(Bouton.BOUTON_UNDO, arbitre));
+        btSuiv.setOnAction(new Bouton(Bouton.BOUTON_DO, arbitre));
+        btSave.setOnAction(new Bouton (Bouton.BOUTON_SAUVEGARDER, arbitre));
+        btMenu.setOnAction(new Bouton(Bouton.BOUTON_MENU, arbitre));
+        
         
         GridPane bPion = new GridPane();
         bPion.setHgap(10);
@@ -179,13 +158,10 @@ public class Interface extends Application{
 
     }
     
-    public static double pythagorelol (double a) {
+    public static double py (double a) {
         return Math.sqrt(Math.pow(a, 2) - Math.pow(a/2, 2));
     }
-    
-    public static double pymoins1 (double a) {
-    return Math.cos(Math.PI/180*30)/a;
-}
+   
     
     public static Canvas pionTableau() {
         Canvas c = new Canvas(75,375);
@@ -194,25 +170,25 @@ public class Interface extends Application{
         x = 25;
         y = 50;
         createBee(c, x, y, 25);
-        x += pythagorelol(25);
+        x += py(25);
         y = y+25+25/2;
         createBeetle(c,x, y, 25);
-        x -= pythagorelol(25);
+        x -= py(25);
         y = y+25+25/2;
         createGrasshopper(c, x, y, 25);
-        x += pythagorelol(25);
+        x += py(25);
         y = y+25+25/2;
         createLadybug(c, x, y, 25);
-        x -= pythagorelol(25);
+        x -= py(25);
         y = y+25+25/2;
         createSpider(c, x, y, 25);
-        x += pythagorelol(25);
+        x += py(25);
         y = y+25+25/2;
         createAnt(c, x, y, 25);
-        x -= pythagorelol(25);
+        x -= py(25);
         y = y+25+25/2;
         createMoskito(c, x, y, 25);
-        x += pythagorelol(25);
+        x += py(25);
         y = y+25+25/2;
         createWoodlouse(c, x, y, 25);
         return c;
@@ -235,43 +211,18 @@ public class Interface extends Application{
         Button btConfig = new Button("Configuration");
         Button btCredits = new Button("Credits");
         Button btQuit = new Button("Quitter");
-
-        btQuit.setOnAction(new EventHandler<ActionEvent>() {
-
-            @Override
-            public void handle(ActionEvent event) {
-                System.exit(0);
-            }
-        });
-        
-        btNouveau.setOnAction(new EventHandler<ActionEvent>() {
-            
-            @Override
-            public void handle (ActionEvent event) {
-                goPartie();
-            }
-        });
-        
-        btConfig.setOnAction(new EventHandler<ActionEvent>() {
-            
-            @Override
-            public void handle(ActionEvent event) {
-                goConfig();
-            }
-        });
-        
-        btCredits.setOnAction(new EventHandler<ActionEvent>() {
-            
-            @Override
-            public void handle(ActionEvent event) {
-                goCredits();
-            }
-        });
         
         btNouveau.setMaxWidth(150);
         btCharger.setMaxWidth(150);
         btConfig.setMaxWidth(150);
         btCredits.setMaxWidth(150);
+        
+        btNouveau.setOnAction(new Bouton(Bouton.BOUTON_NOUVELLE_PARTIE, arbitre));
+        btCharger.setOnAction(new Bouton(Bouton.BOUTON_CHARGER, arbitre));
+        btConfig.setOnAction(new Bouton(Bouton.BOUTON_CONFIG, arbitre));
+        btCredits.setOnAction(new Bouton(Bouton.BOUTON_CREDITS, arbitre));
+        btQuit.setOnAction(new Bouton(Bouton.BOUTON_QUITTER, arbitre));
+
         box.setAlignment(Pos.TOP_CENTER);
         box.setSpacing(30);
         
@@ -365,13 +316,8 @@ public class Interface extends Application{
         Button btRetour = new Button("Retour");
         btValider.setMaxWidth(120);
         btRetour.setMaxWidth(120);
-        btRetour.setOnAction(new EventHandler<ActionEvent>() {
-            
-            @Override
-            public void handle(ActionEvent event) {
-                goMenu();
-            }
-        });
+        
+        btRetour.setOnAction(new Bouton(Bouton.BOUTON_MENU, arbitre));
         
         Separator sep = new Separator();
         sep.setOrientation(Orientation.VERTICAL);
@@ -416,15 +362,10 @@ public class Interface extends Application{
         Label lLu = new Label("Lucie Muller");
         Label lEnzo = new Label("Enzo Brignon");
         
-        Button bRetour = new Button("Retour");
+        Button btRetour = new Button("Retour");
         
-        bRetour.setOnAction(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent event) {
-                goMenu();
-            }
-        });
-        
+        btRetour.setOnAction(new Bouton(Bouton.BOUTON_MENU, arbitre));
+
         grid.add(lMoteur, 1, 0);
         grid.add(lMax, 0, 1);
         grid.add(lNarek, 2, 1);
@@ -435,7 +376,7 @@ public class Interface extends Application{
         grid.add(lEnzo, 0, 5);
         grid.add(lLu, 2, 5);
         
-        box.getChildren().addAll(c, grid, bRetour);
+        box.getChildren().addAll(c, grid, btRetour);
         
         root.setCenter(box);
         root.setRight(new Pane());

@@ -6,6 +6,7 @@
 package Modele;
 
 import Vue.Interface;
+import static Vue.Interface.py;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -19,7 +20,7 @@ public class Reine extends Insecte{
 
     public Reine(double x, double y, /*double larg,*/ double haut, int j) {
         //super(x, y, larg, haut,j);
-        super(x, y, Interface.pythagorelol(haut), haut, j);
+        super(x, y, Interface.py(haut), haut, j);
 
     }
 

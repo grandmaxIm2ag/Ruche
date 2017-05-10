@@ -76,7 +76,7 @@ public class Dessinateur extends Visiteur{
         if (i.joueur() == 0)
             couleur = Color.GREEN;
         else
-            couleur = Color.BLUE;
+            couleur = Color.CORNFLOWERBLUE;
         gc.setFill(couleur);
         gc.fillPolygon(coords[0], coords[1], 6);
         InputStream image = null;
@@ -94,12 +94,12 @@ public class Dessinateur extends Visiteur{
         if (i.joueur() == 0)
             couleur = Color.GREEN;
         else
-            couleur = Color.BLUE;
+            couleur = Color.CORNFLOWERBLUE;
         gc.setFill(couleur);
         gc.fillPolygon(coords[0], coords[1], 6);
         InputStream image = null;
         image =  ClassLoader.getSystemClassLoader().getResourceAsStream("Images/beetle.png");
-        Image img = new Image(image,((etendeur.h()/2)*1.75),((etendeur.h()/2)*1.75),true, true);
+        Image img = new Image(image,((etendeur.h()/2)*1.5),((etendeur.h()/2)*1.5),true, true);
         gc.drawImage(img,etendeur.x()-(img.getWidth()/2), etendeur.y()-(img.getHeight()/2));
         return false;
     }
@@ -112,12 +112,12 @@ public class Dessinateur extends Visiteur{
         if (i.joueur() == 0)
             couleur = Color.GREEN;
         else
-            couleur = Color.BLUE;
+            couleur = Color.CORNFLOWERBLUE;
         gc.setFill(couleur);
         gc.fillPolygon(coords[0], coords[1], 6);
         InputStream image = null;
         image =  ClassLoader.getSystemClassLoader().getResourceAsStream("Images/ladybug.png");
-        Image img = new Image(image,((etendeur.h()/2)*1.75),((etendeur.h()/2)*1.75),true, true);
+        Image img = new Image(image,((etendeur.h()/2)*1.6),((etendeur.h()/2)*1.6),true, true);
         gc.drawImage(img,etendeur.x()-(img.getWidth()/2), etendeur.y()-(img.getHeight()/2));
         return false;
     }
@@ -130,7 +130,7 @@ public class Dessinateur extends Visiteur{
         if (i.joueur() == 0)
             couleur = Color.GREEN;
         else
-            couleur = Color.BLUE;
+            couleur = Color.CORNFLOWERBLUE;
         gc.setFill(couleur);        
         gc.fillPolygon(coords[0], coords[1], 6);
         InputStream image = null;
@@ -148,7 +148,7 @@ public class Dessinateur extends Visiteur{
         if (i.joueur() == 0)
             couleur = Color.GREEN;
         else
-            couleur = Color.BLUE;
+            couleur = Color.CORNFLOWERBLUE;
         gc.setFill(couleur);
         gc.fillPolygon(coords[0], coords[1], 6);
         InputStream image = null;
@@ -166,7 +166,7 @@ public class Dessinateur extends Visiteur{
         if (i.joueur() == 0)
             couleur = Color.GREEN;
         else
-            couleur = Color.BLUE;
+            couleur = Color.CORNFLOWERBLUE;
         gc.setFill(couleur);
         gc.fillPolygon(coords[0], coords[1], 6);
         InputStream image = null;
@@ -184,7 +184,7 @@ public class Dessinateur extends Visiteur{
         if (i.joueur() == 0)
             couleur = Color.GREEN;
         else
-            couleur = Color.BLUE;
+            couleur = Color.CORNFLOWERBLUE;
         gc.setFill(couleur);
         gc.fillPolygon(coords[0], coords[1], 6);
         InputStream image = null;
@@ -202,7 +202,7 @@ public class Dessinateur extends Visiteur{
         if (i.joueur() == 0)
             couleur = Color.GREEN;
         else
-            couleur = Color.BLUE;
+            couleur = Color.CORNFLOWERBLUE;
         gc.setFill(couleur);
         gc.fillPolygon(coords[0], coords[1], 6);
         InputStream image = null;
