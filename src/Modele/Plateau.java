@@ -12,6 +12,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Stack;
 import java.util.TreeMap;
 import ruche.Reglage;
 
@@ -36,6 +37,7 @@ public class Plateau extends Composant {
         utilises = new ArrayList();
         reines = new Point[2];
         
+        xMin=0; xMax = 0; yMin=0; yMax=0;
     }
     
     public void setReine(int idx, Point p){
@@ -92,7 +94,6 @@ public class Plateau extends Composant {
                     if(!((i==(int)d.destination().x()-1 && j==(int)d.destination().y()-1) || (i==(int)d.destination().x()+1 && j==(int)d.destination().y()+1) ))
                         if(matrice.get(new Point(i,j))!=null){
                             b&=(d.joueur()==matrice.get(new Point(i,j)).tete().joueur());
-                            System.out.println(i+" "+j+" "+matrice.get(new Point(i,j)).tete().joueur());
                             degres++;
                         }
         return b && (degres>0) ;
@@ -212,7 +213,7 @@ public class Plateau extends Composant {
                 if(!((i==(int)pos.x()-1 && j==(int)pos.y()-1) || (i==(int)pos.x()+1 && j==(int)pos.y()+1) ))
                     if(voisins.get(new Point(i,j))!=null)
                         p.add(new Point(i,j));
-        voisins.put(d.destination(), p);
+        voisins.put(d.destination(), cloneList(p));
         Iterator<Point> it = p.iterator();
         while(it.hasNext()){
             Point tmp = it.next();
@@ -230,10 +231,22 @@ public class Plateau extends Composant {
         matrice.put(d.destination(), c2);
         utilises.add(d.destination());
         
+        if(xMin > d.destination.x())
+            xMin=(int) d.destination.x();
+        if(xMax < d.destination.x())
+            xMax=(int) d.destination.x();
+        if(yMin > d.destination.y())
+            yMin=(int) d.destination.y();
+        if(yMax < d.destination.y())
+            yMax=(int) d.destination.y();
+        
         majGraphe(d);
     }
     public boolean estEncerclee(int j){
         boolean b = true;
+        
+        if(reines[j]==null)
+            return false;
         
         for(int i=(int)reines[j].x()-1 ; i<= (int)reines[j].x()+1; i++ )
             for(int k=(int)reines[j].y()-1 ; k<= (int)reines[j].y()+1; k++ )
@@ -424,20 +437,42 @@ public class Plateau extends Composant {
     }
     
     public Coup[] depotPossible(int joueur, int t){
-        List<Coup> c = new ArrayList();
-        for(int i=xMin-1; i<=xMax+1; i++)
-            for(int j=yMin-1; j<=yMax+1; j++){
-                Depot d = new Depot(joueur, t, new Point(i,j));
-                if(deposePionValide(d)){
-                    c.add(d);
+        
+        if(utilises.isEmpty()){
+            Coup[] res = new Coup[1];
+            res[0] = new Depot(joueur, t, new Point(0,0));
+            return res;
+        }else if(utilises.size()==1){
+            List<Coup> c = new ArrayList();
+            for(int i=xMin-1; i<=xMax+1; i++)
+                for(int j=yMin-1; j<=yMax+1; j++){
+                    Depot d = new Depot(joueur, t, new Point(i,j));
+                    if(premierPionValide(d)){
+                        c.add(d);
+                    }
                 }
-            }
-        Coup[] coups = new Coup[c.size()];
-        Iterator<Coup> it = c.iterator();
-        int i=0; 
-        while(it.hasNext() && i<coups.length)
-            coups[i++]=it.next();
-        return coups;
+            Coup[] coups = new Coup[c.size()];
+            Iterator<Coup> it = c.iterator();
+            int i=0; 
+            while(it.hasNext() && i<coups.length)
+                coups[i++]=it.next();
+            return coups;
+        }else{
+            List<Coup> c = new ArrayList();
+            for(int i=xMin-1; i<=xMax+1; i++)
+                for(int j=yMin-1; j<=yMax+1; j++){
+                    Depot d = new Depot(joueur, t, new Point(i,j));
+                    if(deposePionValide(d)){
+                        c.add(d);
+                    }
+                }
+            Coup[] coups = new Coup[c.size()];
+            Iterator<Coup> it = c.iterator();
+            int i=0; 
+            while(it.hasNext() && i<coups.length)
+                coups[i++]=it.next();
+            return coups;
+        }
     }
     
     public void retirerPion(Point pos){
@@ -469,5 +504,9 @@ public class Plateau extends Composant {
         return utilises;
     }
     
+    @Override
+    public int hashCode(){
+        return toString().hashCode();
+    }
     
 }

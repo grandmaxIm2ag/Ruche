@@ -25,7 +25,6 @@ public class Moustique extends Insecte{
         boolean types[] = new boolean[NB_TYPE];
         for(int i=0; i<types.length; i++ )
             types[i]=false;
-        System.out.println(pos);
         boolean enHaut;
         Case ca = plateau.get(pos).clone();
         ca.retirePion();

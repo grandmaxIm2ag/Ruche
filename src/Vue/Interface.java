@@ -111,7 +111,7 @@ public class Interface extends Application{
     }
     
     public static void goPartie() {
-        arbitre.charger("test");
+        arbitre.init();
         //root.setLeft(new Pane());
         root.setBottom(new Pane());
         Canvas c = new Canvas (500, 500);

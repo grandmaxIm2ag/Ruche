@@ -74,7 +74,6 @@ public class Deplacement extends Coup{
     
     @Override
     public String toString(){
-        //System.out.println((route.size()-2)+" point intermédiaires");
         String res = "";
         
         Iterator<Point> it = route.iterator();

@@ -52,9 +52,9 @@ public class Arbitre {
         
         difficulte = Ordinateur.MOYEN;
         diff = new String[3];
-        diff[Ordinateur.FACILE_ALEATOIRE] = "Facile";
-        diff[Ordinateur.MOYEN] = "Normal";
-        diff[Ordinateur.DIFFICILE] = "Difficile";
+        //diff[Ordinateur.FACILE_ALEATOIRE] = "Facile";
+        //diff[Ordinateur.MOYEN] = "Normal";
+        //diff[Ordinateur.DIFFICILE] = "Difficile";
         
         type = JvIA;
         types = new String[2];
@@ -113,56 +113,79 @@ public class Arbitre {
         plateau.deposePion(d);
     }
     
+    public Coup[] deplacementPossible(int j){
+        if(plateau.reine(jCourant)==null)
+            return null;
+        else
+            return plateau.deplacementPossible(jCourant);
+    }
+    
+    public Coup[] depotPossible(int j, int t){
+        System.out.println("Il reste "+joueurs[jCourant].pion(t)+" possible pour "+t);
+        if((plateau.reine(jCourant)==null && t!=Insecte.REINE && nbCoup[j]>=3) || joueurs[jCourant].pion(t)<=0){
+            return null;
+        }else
+            return plateau.depotPossible(jCourant, t);
+    }
+    
     public void joue(Coup d){
         if(d instanceof Deplacement)
             joue((Deplacement)d);
         else if(d instanceof Depot)
             joue((Depot)d);
         else
-            System.err.println("Coup Inconnu");
+            System.err.println("Coup Inconnu "+d);
     }
     public void joue(Deplacement d){
         if(plateau().reine(jCourant)!=null){
             if(deplacePionValide(d)){
                 deplacePion(d);
                 nbCoup[jCourant]++;
-                prochainJoueur();
                 refaire.clear();
                 historique.add(d);
+                System.err.println(d+" déplacement effectué");
+                prochainJoueur();
             }else{
-                System.err.println("Deplacement impossible");
+                System.err.println("Deplacement impossible "+d);
             }
         }else{
-            System.err.println("Déplacement impossible tant que la reine n'a pas été déposée");
+            System.err.println("Déplacement impossible tant que la reine n'a pas été déposée "+jCourant);
         }
     }
     public void joue(Depot d){
         if(nbCoup[jCourant]==0 && jCourant == J1){
+            joueurs[jCourant].jouer(d.type());
             plateau.premierPion(FabriqueInsecte.creer(d.type(), jCourant, new Point(0,0)));
             nbCoup[jCourant]++;
-            prochainJoueur();
             refaire.clear();
             historique.add(d);
+            System.err.println("1- Dépot effectué "+d);
+            prochainJoueur();
         }else if(nbCoup[jCourant]==0 && jCourant == J2){
             if(plateau.premierPionValide(d)){
+            joueurs[jCourant].jouer(d.type());
                 deposePion(d);
                 nbCoup[jCourant]++;
-                prochainJoueur();
                 refaire.clear();
                 historique.add(d);
+                joueurs[jCourant].jouer(d.type());
+                System.err.println("2- Dépot effectué "+d);
+                prochainJoueur();
             }else{
                 System.err.println("Depot impossible");
             }
         }else if(deposePionValide(d) && joueurs[jCourant].pion(d.type())>0){
             
-            if((plateau.reine(jCourant)==null && (d.type()!=Insecte.REINE || nbCoup[jCourant]<3))||plateau.reine(jCourant)!=null){
+            if((plateau.reine(jCourant)==null && (d.type()==Insecte.REINE || nbCoup[jCourant]<3)) || plateau.reine(jCourant)!=null){
+                joueurs[jCourant].jouer(d.type());
                 deposePion(d);
                 nbCoup[jCourant]++;
-                prochainJoueur();
                 refaire.clear();
                 historique.add(d);
+                System.err.println("3- Dépot effectué "+d);
+                prochainJoueur();
             }else{
-                System.err.println("Vous devez déposé une reine");
+                System.err.println("Vous devez déposé une reine "+jCourant);
             }
         }else{
             System.err.println("Depot impossible");
@@ -282,11 +305,21 @@ public class Arbitre {
         
         
         jCourant = ++jCourant % 2;
-        boolean b = true;
-        for(int i=0; i<joueurs[jCourant].pions().length; i++)
-            b &= joueurs[jCourant].pions()[i]==0;
-        if(plateau.aucunCoup(jCourant) && b){
-            prochainJoueur();
+        
+        if(plateau.estEncerclee(jCourant)){
+            System.err.println(jCourant+" à perdu");
+        }else{
+            boolean b = true;
+            for(int i=0; i<joueurs[jCourant].pions().length; i++)
+                b &= joueurs[jCourant].pions()[i]==0;
+            if(plateau.aucunCoup(jCourant) && b){
+                prochainJoueur();
+            }else{
+                if(joueurs[jCourant] instanceof Ordinateur){
+                    Ordinateur o = (Ordinateur) joueurs[jCourant];
+                    joue(o.coup(this));
+                }
+            }
         }
     }
     

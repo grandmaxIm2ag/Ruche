@@ -37,18 +37,14 @@ public class Araignee extends Insecte{
         
         List<Coup> co = glisser(plateau);
         Iterator<Coup> it = co.iterator();
-        //System.out.println("____________________________________");
         while(it.hasNext()){
             aVisiter.push((Deplacement) it.next());
-            //System.out.println(aVisiter.peek());
         }
         
         Stack<Deplacement> tmp = new Stack();
         for(int i=0; i<2; i++){
-            //System.out.println("____________________________________");
             while(!aVisiter.isEmpty()){
                 Deplacement tmp1 = aVisiter.pop();
-                //System.out.println(tmp1);
                 Point tmp2 = tmp1.destination();
                 pos.fixe(tmp2.x(), tmp2.y());
                 co = glisser(plateau);

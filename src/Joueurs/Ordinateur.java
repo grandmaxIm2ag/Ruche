@@ -13,6 +13,7 @@ import Modele.Deplacement;
 import Modele.Plateau;
 import Modele.Point;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
@@ -84,15 +85,15 @@ public class Ordinateur extends Joueur{
         ArrayList<Coup[]> l=new ArrayList<>();
         //Déplacements
         Coup[] t;
-        if( (t=a.plateau().deplacementPossible(numJoueur))!=null){
+        if( (t=a.deplacementPossible(numJoueur))!=null){
             l.add(t);
         }
         //Dépots
         //pour tout type de pièces
         int type;
         for(type=0;type<tabPieces.length;type=type+1){
-            if(tabPieces[type]!=0){
-                l.add(a.plateau().depotPossible(this.numJoueur,type));
+            if(tabPieces[type]>0 && (t = a.depotPossible(this.numJoueur,type))!=null){
+                l.add(t);
             }
         }
         //choisi le coup:choix aléatoire avec nb de coup possibles
@@ -100,15 +101,29 @@ public class Ordinateur extends Joueur{
         Iterator<Coup[]> it =l.iterator();
         taille=nbCoupPossiblesTotaux(it);
         int choix2= r.nextInt(taille);
+        System.out.println(choix2+" "+taille);
         
+        /*
+        2 5
+        32 35
+        6 15
+        6 15
+        10 25
+        0 5
+        0 6
+        30 36
+        13 43
+        38 45
+        15 47
+        */
         it=l.iterator();
         int tmp=0;
         while(it.hasNext()){
             Coup[] c=it.next();
-            if(c.length<=tmp){
+            if(choix2<=tmp+c.length-1){
                 return c[choix2-tmp];
             }else{
-                tmp=tmp+c.length-1;
+                tmp=tmp+c.length;
             }
         }        
         return null;
@@ -126,18 +141,19 @@ public class Ordinateur extends Joueur{
         ArrayList<Coup[]> l=new ArrayList<>();
         //Déplacements
         Coup[] t;
-        if( (t=a.plateau().deplacementPossible(numJoueur))!=null){
+        if( (t=a.deplacementPossible(numJoueur))!=null){
             l.add(t);
         }
-        
         //Dépots
-        //pour tous les types de pièces
+        //pour tout type de pièces
         int type;
         for(type=0;type<tabPieces.length;type=type+1){
-            if(tabPieces[type]!=0){
-                l.add(a.plateau().depotPossible(this.numJoueur,type));
+            if(tabPieces[type]>0 && (t = a.depotPossible(this.numJoueur,type))!=null){
+                
+                l.add(t);
             }
         }
+        
         
         //choisir le coup pour lequel l'heuristique est maximale
         Iterator<Coup[]> it =l.iterator();
@@ -145,30 +161,41 @@ public class Ordinateur extends Joueur{
             ArrayList<Coup> res=new ArrayList();
             //res.add(it.next()[0]);
             Plateau tmp=a.plateau().clone();
-            a.joue(it.next()[0]);//+coup
-            int max=heuristique_Simple_Profondeur1_PointDeVueIA(tmp);
+            int max=Integer.MIN_VALUE; //heuristique_Simple_Profondeur1_PointDeVueIA(tmp);
             int heurCoup;
             
             while(it.hasNext()){
                 Coup[] courant=it.next();
                 for(int i=0;i<courant.length;i=i+1){
                     tmp=a.plateau().clone();
-                    a.joue(courant[i]);//+coup
+                    
+                    if(courant[i] instanceof Depot)
+                        tmp.deposePion((Depot)courant[i]);
+                    else if(courant[i] instanceof Deplacement)
+                        tmp.deplacePion((Deplacement)courant[i]);
+                    else
+                        continue;
+                    
                     heurCoup=heuristique_Simple_Profondeur1_PointDeVueIA(tmp);
+                    //System.out.println("MAX = "+max+" heurCoup"+heurCoup);
                     if(heurCoup==max){
                         //ajout à res
                         res.add(courant[i]);
+                        //System.out.println(res);
                     }else if(heurCoup>max){
                         max=heurCoup;
                         res.clear();
-                        res.add(courant[i]);                     
+                        res.add(courant[i]);
+                        //System.out.println(res);
                     }
                 }      
             }
             //choix aléatoire
+            //System.out.println(res.size()+"    "+l.size());//////////////////////////////////////////////////////////////////////////////////////////
             int choix= r.nextInt(res.size());
             return res.get(choix);
         }else{
+            System.out.println("BUG");
             return null;
         }
     }
@@ -176,9 +203,9 @@ public class Ordinateur extends Joueur{
     public int heuristique_Simple_Profondeur1_PointDeVueIA(Plateau p){
         int heuristique=0;
         if(p.estEncerclee(numJoueur)){
-            heuristique=(int)Float.NEGATIVE_INFINITY;
+            heuristique=Integer.MIN_VALUE;
         }else if(p.estEncerclee(numAdversaire())){
-            heuristique=(int)Float.POSITIVE_INFINITY;
+            heuristique=Integer.MAX_VALUE;
         }else{
             if(!reineLibre(p,numJoueur)){
                 heuristique=heuristique-2;
@@ -193,23 +220,27 @@ public class Ordinateur extends Joueur{
     
     public int nbLiberteesReine(Plateau p, int joueur){
         //compter les voisins
+        if(p.reine(joueur)==null)
+            return 6;
+        
         int libertees=0;
         List<Point> l=p.voisins(p.reine(joueur));
         Iterator it= l.iterator();
         while(it.hasNext()){
-            if(p.matrice.get(it.next()).utilise()){
+            if(!p.matrice.get(it.next()).utilise()){
                 libertees=libertees+1;
-            } else {
             }
         } 
         return libertees;
     }
     
     public boolean reineLibre(Plateau p, int joueur){
+        if(p.reine(joueur)==null)
+            return true;
         Case caseReine=p.matrice.get(p.reine(joueur));
         if(caseReine.tete().type()==0){
             Coup[] deplPoss=p.deplacementPossible(caseReine.tete());
-            if(deplPoss.length!=0){
+            if(deplPoss!=null && deplPoss.length>0){
                 return true;
             }
         }

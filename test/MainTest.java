@@ -52,7 +52,7 @@ public class MainTest {
         TestPlateau tp = new TestPlateau(prop);
         tp.test();
         TestArbitre ta = new TestArbitre(prop);
-        ta.test();
+        //ta.test();
     }
     
 }

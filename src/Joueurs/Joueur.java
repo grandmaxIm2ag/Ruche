@@ -61,4 +61,9 @@ public abstract class Joueur {
         this.tabPieces = p;
     }
     
+    public void jouer(int t){
+        System.out.println("Moins un pour "+t);
+        tabPieces[t]--;
+    }
+    
 }
