@@ -27,12 +27,11 @@ public class Etendeur {
             b = b < entry.getKey().x*0.5+entry.getKey().y ? b : entry.getKey().x*0.5+entry.getKey().y;
         }
         r = (c.getWidth()/(A+3-a)) < (c.getHeight()/(B+3-b)) ? (c.getWidth()/(A+3-a)) : (c.getHeight()/(B+3-b));
-        System.out.println ((A-a) + "\n" + (B-b));
-        if ((A+1-a)%2 == 1)
+        if ((A+1-a)%2 != 0)
             diffX = (c.getWidth()/(A+3-a)) < (c.getHeight()/(B+3-b)) ? Interface.pythagorelol(r)*(1.75-a) : (c.getWidth() - Interface.pythagorelol(r)*(A+3-a))/2 + Interface.pythagorelol(r)*(1.5-a);
         else
             diffX = (c.getWidth()/(A+3-a)) < (c.getHeight()/(B+3-b)) ? Interface.pythagorelol(r)*(2.25-a) : (c.getWidth() - Interface.pythagorelol(r)*(A+3-a))/2 + Interface.pythagorelol(r)*(1.5-a);
-        if ((B+1-b)%2 == 0)
+        if ((B+1-b)%2 != 1)
             diffY = (c.getWidth()/(A+3-a)) < (c.getHeight()/(B+3-b)) ? (c.getHeight() - r*(B+3-b))/2 + Interface.pythagorelol(r)*(2-b) : (r)*(1.75-b);
         else
             diffY = (c.getWidth()/(A+3-a)) < (c.getHeight()/(B+3-b)) ? (c.getHeight() - r*(B+3-b))/2 + Interface.pythagorelol(r)*(1.75-b) : (r)*(1.5-b);
