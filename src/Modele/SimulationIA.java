@@ -37,8 +37,12 @@ public class SimulationIA extends Arbitre {
         tabPieces[6]=(int)Reglage.lis("nbMoustique");  
         tabPieces[7]=(int)Reglage.lis("nbCloporte");
         
-        joueurs[J1] = new Ordinateur(true,Ordinateur.FACILE_ALEATOIRE, prop, tabPieces, (int)Reglage.lis("nbPiece"));
-        joueurs[J2] = new Ordinateur(true,Ordinateur.FACILE_ALEATOIRE, prop, tabPieces, (int)Reglage.lis("nbPiece"));
+        int[] tabPieces2 = new int[8];
+        for(int i=0; i<tabPieces2.length; i++)
+            tabPieces2[i]=tabPieces[i];
+        
+        joueurs[J1] = new Ordinateur(true,Ordinateur.FACILE_ALEATOIRE, prop, tabPieces, (int)Reglage.lis("nbPiece"), J1);
+        joueurs[J2] = new Ordinateur(true,Ordinateur.FACILE_ALEATOIRE, prop, tabPieces2, (int)Reglage.lis("nbPiece"), J2);
         
         go();
     }
@@ -52,13 +56,14 @@ public class SimulationIA extends Arbitre {
     
     @Override
     public void prochainJoueur() {
-        
-        if(nbCoup[J1] <= 5 && nbCoup[J2]<=5){
+        if(nbCoup[J1] <= 100 && nbCoup[J2]<= 100){
             jCourant = ++jCourant % 2;
 
             if(plateau.estEncerclee(jCourant)){
                 System.err.println(jCourant+" à perdu");
-            }else{
+            }else if(nul())
+                System.err.println("Match null");
+            else{
                 boolean b = true;
                 for(int i=0; i<joueurs[jCourant].pions().length; i++)
                     b &= joueurs[jCourant].pions()[i]==0;
@@ -71,6 +76,52 @@ public class SimulationIA extends Arbitre {
                     }
                 }
             }
+        }
+    }
+    
+    public void joue(Deplacement d){
+                deplacePion(d);
+                nbCoup[jCourant]++;
+                refaire.clear();
+                historique.add(d);
+                System.err.println(d+" déplacement effectué");
+                prochainJoueur();
+         
+    }
+    public void joue(Depot d){
+        if(nbCoup[jCourant]==0 && jCourant == J1){
+            joueurs[jCourant].jouer(d.type());
+            plateau.premierPion(FabriqueInsecte.creer(d.type(), jCourant, new Point(0,0)));
+            nbCoup[jCourant]++;
+            refaire.clear();
+            historique.add(d);
+            System.err.println("1- Dépot effectué "+d);
+            prochainJoueur();
+        }else if(nbCoup[jCourant]==0 && jCourant == J2){
+            if(plateau.premierPionValide(d)){
+            joueurs[jCourant].jouer(d.type());
+                deposePion(d);
+                nbCoup[jCourant]++;
+                refaire.clear();
+                historique.add(d);
+                joueurs[jCourant].jouer(d.type());
+                System.err.println("2- Dépot effectué "+d);
+                prochainJoueur();
+            }else{
+                System.err.println("Depot impossible");
+            }
+        }else if(deposePionValide(d) && joueurs[jCourant].pion(d.type())>0){
+            
+            joueurs[jCourant].jouer(d.type());
+            deposePion(d);
+            nbCoup[jCourant]++;
+            refaire.clear();
+            historique.add(d);
+            System.err.println("3- Dépot effectué "+d);
+            prochainJoueur();
+            
+        }else{
+            System.err.println("Depot impossible");
         }
     }
 }

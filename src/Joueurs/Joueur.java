@@ -20,12 +20,13 @@ public abstract class Joueur {
     Properties prop;
     int numJoueur;
     
-    public Joueur(boolean m, Properties p, int[] tabP, int nbP){
+    public Joueur(boolean m, Properties p, int[] tabP, int nbP, int j){
         main=m;
         prop=p;
         tabPieces=tabP;
         nbPieces=nbP;
         nom = "toto";
+        numJoueur=j;
     }
     
     public void setMain(){
@@ -62,7 +63,6 @@ public abstract class Joueur {
     }
     
     public void jouer(int t){
-        System.out.println("Moins un pour "+t);
         tabPieces[t]--;
     }
     

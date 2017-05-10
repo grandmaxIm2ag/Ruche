@@ -83,12 +83,12 @@ public class Arbitre {
         
         switch(type){
             case JvJ:
-                joueurs[J1] = new Humain(true, prop, tabPieces, (int)Reglage.lis("nbPiece"));
-                joueurs[J2] = new Humain(true, prop, tabPieces, (int)Reglage.lis("nbPiece"));
+                joueurs[J1] = new Humain(true, prop, tabPieces, (int)Reglage.lis("nbPiece"), J1);
+                joueurs[J2] = new Humain(true, prop, tabPieces, (int)Reglage.lis("nbPiece"), J2);
                 break;
             case JvIA:
-                joueurs[J1] = new Humain(true, prop, tabPieces, (int)Reglage.lis("nbPiece"));
-                joueurs[J2] = new Ordinateur(true,difficulte, prop, tabPieces, (int)Reglage.lis("nbPiece"));
+                joueurs[J1] = new Humain(true, prop, tabPieces, (int)Reglage.lis("nbPiece"), J1);
+                joueurs[J2] = new Ordinateur(true,difficulte, prop, tabPieces, (int)Reglage.lis("nbPiece"), J2);
                 break;
         }
     }
@@ -121,10 +121,11 @@ public class Arbitre {
     }
     
     public Coup[] depotPossible(int j, int t){
-        System.out.println("Il reste "+joueurs[jCourant].pion(t)+" possible pour "+t);
-        if((plateau.reine(jCourant)==null && t!=Insecte.REINE && nbCoup[j]>=3) || joueurs[jCourant].pion(t)<=0){
+        if((plateau.reine(jCourant)==null && t!=Insecte.REINE && nbCoup[j]>=3) ){
             return null;
-        }else
+        }else if ( joueurs[jCourant].pion(t)<=0)
+            return null;
+        else
             return plateau.depotPossible(jCourant, t);
     }
     
@@ -312,6 +313,7 @@ public class Arbitre {
             boolean b = true;
             for(int i=0; i<joueurs[jCourant].pions().length; i++)
                 b &= joueurs[jCourant].pions()[i]==0;
+            System.out.println(b);
             if(plateau.aucunCoup(jCourant) && b){
                 prochainJoueur();
             }else{
@@ -333,5 +335,14 @@ public class Arbitre {
         return difficulte;
     }
     
+    boolean nul(){
+        boolean b1 = true;
+        for(int i=0; i<joueurs[J1].pions().length; i++)
+                    b1 &= joueurs[J1].pions()[i]==0;
+        boolean b2 = true;
+        for(int i=0; i<joueurs[J2].pions().length; i++)
+                    b2 &= joueurs[J2].pions()[i]==0;
+        return plateau.aucunCoup(J1)&&plateau.aucunCoup(J2)&&b1&&b2;
+    }
     
 }

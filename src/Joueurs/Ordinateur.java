@@ -42,8 +42,8 @@ public class Ordinateur extends Joueur{
     //public int[] tabPieces;
     //public int nbPieces;
     
-    public Ordinateur(boolean m, int d, Properties p, int[] tabP, int nbP) {
-        super(m, p, tabP, nbP);
+    public Ordinateur(boolean m, int d, Properties p, int[] tabP, int nbP, int j) {
+        super(m, p, tabP, nbP, j);
         difficulte = d;
         if(difficulte==0||difficulte==-1){
             r= new Random(GRAINE);
@@ -82,6 +82,7 @@ public class Ordinateur extends Joueur{
     }
 
     public Coup coupALEATOIRE_3(Arbitre a){
+        System.out.println(Arrays.toString(tabPieces)+" "+numJoueur);
         ArrayList<Coup[]> l=new ArrayList<>();
         //Déplacements
         Coup[] t;
@@ -100,22 +101,9 @@ public class Ordinateur extends Joueur{
         int taille;
         Iterator<Coup[]> it =l.iterator();
         taille=nbCoupPossiblesTotaux(it);
+        System.out.println(taille);
         int choix2= r.nextInt(taille);
-        System.out.println(choix2+" "+taille);
         
-        /*
-        2 5
-        32 35
-        6 15
-        6 15
-        10 25
-        0 5
-        0 6
-        30 36
-        13 43
-        38 45
-        15 47
-        */
         it=l.iterator();
         int tmp=0;
         while(it.hasNext()){
@@ -239,8 +227,8 @@ public class Ordinateur extends Joueur{
             return true;
         Case caseReine=p.matrice.get(p.reine(joueur));
         if(caseReine.tete().type()==0){
-            Coup[] deplPoss=p.deplacementPossible(caseReine.tete());
-            if(deplPoss!=null && deplPoss.length>0){
+            List<Coup> deplPoss=p.deplacementPossible(caseReine.tete());
+            if(deplPoss!=null && deplPoss.size()>0){
                 return true;
             }
         }
