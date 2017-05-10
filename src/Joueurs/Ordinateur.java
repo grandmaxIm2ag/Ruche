@@ -14,6 +14,7 @@ import Modele.Plateau;
 import Modele.Point;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Properties;
 import java.util.Random;
 import ruche.Reglage;
@@ -28,7 +29,8 @@ public class Ordinateur extends Joueur{
     /*public final static int FACILE_ALEATOIRE_MAUVAIS=-2;
     public final static int ALEATOIRE_LONG=-1;*/
     
-    public final static int FACILE_ALEATOIRE=0;
+    public final static int FACILE_ALEATOIRE=-1;
+    public final static int FACILE_HEURISTIQUE=0;
     public final static int MOYEN=1;
     public final static int DIFFICILE=2;
     
@@ -67,6 +69,8 @@ public class Ordinateur extends Joueur{
         switch(difficulte){
             case FACILE_ALEATOIRE:
                 return coupALEATOIRE_3(a);
+            case FACILE_HEURISTIQUE:
+                return heuristiqueSurUnSeulCoup(a);
             case 1:
                 return null;
             case 2:
@@ -106,7 +110,6 @@ public class Ordinateur extends Joueur{
             }else{
                 tmp=tmp+c.length-1;
             }
-        
         }        
         return null;
     }
@@ -117,6 +120,57 @@ public class Ordinateur extends Joueur{
             taille=taille+it.next().length;
         }
         return taille;
+    }
+    
+    public Coup heuristiqueSurUnSeulCoup(Arbitre a){
+        ArrayList<Coup[]> l=new ArrayList<>();
+        //Déplacements
+        Coup[] t;
+        if( (t=a.plateau().deplacementPossible(numJoueur))!=null){
+            l.add(t);
+        }
+        
+        //Dépots
+        //pour tous les types de pièces
+        int type;
+        for(type=0;type<tabPieces.length;type=type+1){
+            if(tabPieces[type]!=0){
+                l.add(a.plateau().depotPossible(this.numJoueur,type));
+            }
+        }
+        
+        //choisir le coup pour lequel l'heuristique est maximale
+        Iterator<Coup[]> it =l.iterator();
+        if(it.hasNext()){
+            ArrayList<Coup> res=new ArrayList();
+            //res.add(it.next()[0]);
+            Plateau tmp=a.plateau().clone();
+            a.joue(it.next()[0]);//+coup
+            int max=heuristique_Simple_Profondeur1_PointDeVueIA(tmp);
+            int heurCoup;
+            
+            while(it.hasNext()){
+                Coup[] courant=it.next();
+                for(int i=0;i<courant.length;i=i+1){
+                    tmp=a.plateau().clone();
+                    a.joue(courant[i]);//+coup
+                    heurCoup=heuristique_Simple_Profondeur1_PointDeVueIA(tmp);
+                    if(heurCoup==max){
+                        //ajout à res
+                        res.add(courant[i]);
+                    }else if(heurCoup>max){
+                        max=heurCoup;
+                        res.clear();
+                        res.add(courant[i]);                     
+                    }
+                }      
+            }
+            //choix aléatoire
+            int choix= r.nextInt(res.size());
+            return res.get(choix);
+        }else{
+            return null;
+        }
     }
     
     public int heuristique_Simple_Profondeur1_PointDeVueIA(Plateau p){
@@ -132,19 +186,23 @@ public class Ordinateur extends Joueur{
             if(!reineLibre(p,numAdversaire())){
                 heuristique=heuristique+2;
             }      
+            heuristique=heuristique+nbLiberteesReine(p, numJoueur)-nbLiberteesReine(p, numAdversaire());
         }
         return heuristique;
     }
     
     public int nbLiberteesReine(Plateau p, int joueur){
-        //Case caseReine=p.matrice.get(p.reine(joueur));
         //compter les voisins
         int libertees=0;
-        //p.voisin(p.reine(joueur));
-        
-        //if(///.utilise()){libertees=libertees+1;}
-        
-        return libertees;////////////////////////////////////////////////////////////////////////////////////
+        List<Point> l=p.voisins(p.reine(joueur));
+        Iterator it= l.iterator();
+        while(it.hasNext()){
+            if(p.matrice.get(it.next()).utilise()){
+                libertees=libertees+1;
+            } else {
+            }
+        } 
+        return libertees;
     }
     
     public boolean reineLibre(Plateau p, int joueur){
