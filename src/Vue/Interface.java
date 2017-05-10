@@ -112,7 +112,6 @@ public class Interface extends Application{
     
     public static void goPartie() {
         arbitre.charger("test");
-        //root.setLeft(new Pane());
         root.setBottom(new Pane());
         Canvas c = new Canvas (500, 500);
         Pane stack = new Pane(c);
@@ -146,14 +145,16 @@ public class Interface extends Application{
         bPion.setHgap(10);
         Separator sep = new Separator();
         sep.setOrientation(Orientation.VERTICAL);
-        bPion.add(pionTableau(), 0, 0);
+        Canvas cj1 = new Canvas(75, 375);
+        Canvas cj2 = new Canvas(75, 375);
+        bPion.add(cj1, 0, 0);
         bPion.add(sep, 1, 0);
-        bPion.add(pionTableau(), 2, 0);
+        bPion.add(cj2, 2, 0);
         root.setRight(bPion);
         
         box.getChildren().addAll(btPrec, btSuiv, btSave, btMenu);
         
-        Animation anim = new Animation(arbitre, c);
+        Animation anim = new Animation(arbitre, c, cj1, cj2);
         anim.start();
 
     }

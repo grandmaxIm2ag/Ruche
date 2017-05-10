@@ -24,6 +24,10 @@ public abstract class Visiteur {
         return visite((Composant) p);
     }
     
+    public boolean visite (Arbitre a) {
+        return false;
+    }
+    
     public boolean visite(Reine p){
         return visite((Insecte) p);
     }

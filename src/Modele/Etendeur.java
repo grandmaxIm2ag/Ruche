@@ -7,6 +7,8 @@ package Modele;
 
 import Vue.Interface;
 import static Vue.Interface.py;
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Map;
 import javafx.scene.canvas.Canvas;
 
@@ -38,6 +40,23 @@ public class Etendeur {
             diffY = (c.getWidth()/(A+3-a)) < (c.getHeight()/(B+3-b)) ? (c.getHeight() - r*(B+3-b))/2 + Interface.py(r)*(1.75-b) : (r)*(1.5-b);
 
     }
+    
+    public void fixeEchelle(Canvas c, LinkedList<Insecte> p){
+        double A = 0, B = 0, a = 0, b = 0;
+        Iterator it = p.iterator();
+        while (it.hasNext()){
+            Insecte i = (Insecte) it.next();
+            A = A < (i.pos.x+i.pos.y*0.5) ? (i.pos.x+i.pos.y*0.5) : A;
+            a = a < (i.pos.x+i.pos.y*0.5) ? a : (i.pos.x+i.pos.y*0.5);
+            B = B < i.pos.x*0.5+i.pos.y ? i.pos.x*0.5+i.pos.y : B;
+            b = b < i.pos.x*0.5+i.pos.y ? b : i.pos.x*0.5+i.pos.y;
+        }
+        r = (c.getWidth()/(A+1-a)) < (c.getHeight()/(B+3-b)) ? (c.getWidth()/(A+1-a)) : (c.getHeight()/(B+3-b));
+            diffX = (c.getWidth()/(A+1-a)) < (c.getHeight()/(B+1-b)) ? Interface.py(r)*(0.75-a) : (c.getWidth() - Interface.py(r)*(A+1-a))/2 + Interface.py(r)*(1-a);
+            diffY = (c.getWidth()/(A+3-a)) < (c.getHeight()/(B+3-b)) ? (c.getHeight() - r*(B+3-b))/2 + Interface.py(r)*(2-b) : (r)*(1.75-b);
+
+    }
+    
     public void fixeComposant(Composant c){
        x = c.position().x()*Interface.py(r) + c.position().y()*Interface.py(r/2) + diffX;
        y = c.position().y()*0.75*r + diffY;
