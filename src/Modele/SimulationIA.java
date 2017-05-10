@@ -50,7 +50,7 @@ public class SimulationIA extends Arbitre {
     void go(){
         if(joueurs[J1] instanceof Ordinateur){
             Ordinateur o = (Ordinateur) joueurs[J1];
-            joue(o.coup(this));
+            joue(o.coup(this, null));
         }
     }
     
@@ -65,14 +65,17 @@ public class SimulationIA extends Arbitre {
                 System.err.println("Match null");
             else{
                 boolean b = true;
-                for(int i=0; i<joueurs[jCourant].pions().length; i++)
-                    b &= joueurs[jCourant].pions()[i]==0;
+            for(int i=0; i<joueurs[jCourant].pions().length; i++)
+                b &= joueurs[jCourant].pions()[i]==0;
+            
+                deplacements = deplacementPossible(jCourant);
+                aucun = deplacements==null || deplacements.length<=0;
                 if(plateau.aucunCoup(jCourant) && b){
                     prochainJoueur();
                 }else{
                     if(joueurs[jCourant] instanceof Ordinateur){
                         Ordinateur o = (Ordinateur) joueurs[jCourant];
-                        joue(o.coup(this));
+                        joue(o.coup(this, deplacements));
                     }
                 }
             }

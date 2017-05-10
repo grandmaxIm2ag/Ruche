@@ -41,6 +41,10 @@ public class Arbitre {
     
     int[] nbCoup;
     
+    Coup[] deplacements;
+    Coup[] depots;
+    boolean aucun;
+    
     public Arbitre(Properties p){
         Reglage.init(p);
         prop = p;
@@ -66,6 +70,8 @@ public class Arbitre {
         
         nbCoup = new int[2];
         nbCoup[0]=0; nbCoup[1]=0;
+        
+        aucun = false;
     }
     
     public void init(){
@@ -104,7 +110,12 @@ public class Arbitre {
         return plateau.deposePionValide(d);
     }
     public boolean deplacePionValide(Deplacement d){
-        return plateau.deplacePionValide(d);
+        boolean b = false;
+        
+        for(int i=0; i<deplacements.length; i++)
+            b|=d.equals(deplacements[i]);
+        
+        return b;
     }
     public void deplacePion(Deplacement d){
         plateau.deplacePion(d);
@@ -313,13 +324,15 @@ public class Arbitre {
             boolean b = true;
             for(int i=0; i<joueurs[jCourant].pions().length; i++)
                 b &= joueurs[jCourant].pions()[i]==0;
-            System.out.println(b);
+            
+            deplacements = deplacementPossible(jCourant);
+            aucun = deplacements.length<=0;
             if(plateau.aucunCoup(jCourant) && b){
                 prochainJoueur();
             }else{
                 if(joueurs[jCourant] instanceof Ordinateur){
                     Ordinateur o = (Ordinateur) joueurs[jCourant];
-                    joue(o.coup(this));
+                    joue(o.coup(this, deplacements));
                 }
             }
         }

@@ -65,13 +65,13 @@ public class Ordinateur extends Joueur{
         }
         */
     }
-    public Coup coup(Arbitre a){
+    public Coup coup(Arbitre a, Coup[] d){
         //Coup=Dépot ou Déplacement
         switch(difficulte){
             case FACILE_ALEATOIRE:
-                return coupALEATOIRE_3(a);
+                return coupALEATOIRE_3(a, d);
             case FACILE_HEURISTIQUE:
-                return heuristiqueSurUnSeulCoup(a);
+                return heuristiqueSurUnSeulCoup(a, d);
             case 1:
                 return null;
             case 2:
@@ -81,14 +81,13 @@ public class Ordinateur extends Joueur{
         }
     }
 
-    public Coup coupALEATOIRE_3(Arbitre a){
+    public Coup coupALEATOIRE_3(Arbitre a, Coup[] d){
         System.out.println(Arrays.toString(tabPieces)+" "+numJoueur);
         ArrayList<Coup[]> l=new ArrayList<>();
         //Déplacements
         Coup[] t;
-        if( (t=a.deplacementPossible(numJoueur))!=null){
-            l.add(t);
-        }
+        if(d!=null && d.length>0)
+            l.add(d);
         //Dépots
         //pour tout type de pièces
         int type;
@@ -125,13 +124,12 @@ public class Ordinateur extends Joueur{
         return taille;
     }
     
-    public Coup heuristiqueSurUnSeulCoup(Arbitre a){
+    public Coup heuristiqueSurUnSeulCoup(Arbitre a, Coup[] d){
         ArrayList<Coup[]> l=new ArrayList<>();
         //Déplacements
         Coup[] t;
-        if( (t=a.deplacementPossible(numJoueur))!=null){
-            l.add(t);
-        }
+        if(d!=null && d.length>0)
+            l.add(d);
         //Dépots
         //pour tout type de pièces
         int type;
