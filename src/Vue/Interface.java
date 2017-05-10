@@ -73,7 +73,6 @@ public class Interface extends Application{
     public void start(Stage stage) throws Exception {
 
 
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         stage.setTitle("Ruche");
         if (fullScreen) {
             s = new Scene(root);
@@ -164,37 +163,6 @@ public class Interface extends Application{
     }
    
     
-    public static Canvas pionTableau() {
-        Canvas c = new Canvas(75,375);
-        GraphicsContext gc = c.getGraphicsContext2D();
-        double x, y;
-        x = 25;
-        y = 50;
-        createBee(c, x, y, 25);
-        x += py(25);
-        y = y+25+25/2;
-        createBeetle(c,x, y, 25);
-        x -= py(25);
-        y = y+25+25/2;
-        createGrasshopper(c, x, y, 25);
-        x += py(25);
-        y = y+25+25/2;
-        createLadybug(c, x, y, 25);
-        x -= py(25);
-        y = y+25+25/2;
-        createSpider(c, x, y, 25);
-        x += py(25);
-        y = y+25+25/2;
-        createAnt(c, x, y, 25);
-        x -= py(25);
-        y = y+25+25/2;
-        createMoskito(c, x, y, 25);
-        x += py(25);
-        y = y+25+25/2;
-        createWoodlouse(c, x, y, 25);
-        return c;
-    }
-    
     public static void goMenu(){
         root.setRight(new Pane());
         root.setLeft(new Pane());
@@ -252,8 +220,6 @@ public class Interface extends Application{
         grid.add(lSave, 3, 1);
         grid.add(cbSave, 4, 1);
         grid.add(btCredits, 0, 3);
-        
-        
         
         Canvas c = titreSect("Menu");
         
@@ -391,117 +357,6 @@ public class Interface extends Application{
         
     }
     
-    public static void createBee (Canvas c, double x, double y, double taille) {
-        GraphicsContext gc;
-        gc = c.getGraphicsContext2D();
-        double [][] coords = hex_corner(x,y,taille);
-        gc.setFill(Color.BLANCHEDALMOND);
-        gc.fillPolygon(coords[0], coords[1], 6);
-        InputStream image = null;
-        image =  ClassLoader.getSystemClassLoader().getResourceAsStream("Images/bee.png");
-        Image img = new Image(image,(taille*1.75),(taille*1.75),true, true);
-        gc.drawImage(img,x-(img.getWidth()/2), y-(img.getHeight()/2));
-
-    }
-    
-    public static void createBeetle (Canvas c, double x, double y, double taille) {
-        GraphicsContext gc;
-        gc = c.getGraphicsContext2D();
-        double [][] coords = hex_corner(x,y,taille);
-        gc.setFill(Color.BURLYWOOD);
-        gc.fillPolygon(coords[0], coords[1], 6);
-        InputStream image = null;
-        image =  ClassLoader.getSystemClassLoader().getResourceAsStream("Images/beetle.png");
-        Image img = new Image(image,(taille*1.50),(taille*1.50),true, true);
-        gc.drawImage(img,x-(img.getWidth()/2), y-(img.getHeight()/2));
-
-
-    }
-    
-    public static void createLadybug (Canvas c, double x, double y, double taille) {
-        GraphicsContext gc;
-        gc = c.getGraphicsContext2D();
-        double [][] coords = hex_corner(x,y,taille);
-        gc.setFill(Color.RED);
-        gc.fillPolygon(coords[0], coords[1], 6);
-        InputStream image = null;
-        image =  ClassLoader.getSystemClassLoader().getResourceAsStream("Images/ladybug.png");
-        Image img = new Image(image,(taille*1.50),(taille*1.50),true, true);
-        gc.drawImage(img,x-(img.getWidth()/2), y-(img.getHeight()/2));
-
-
-    }
-    
-    public static void createMoskito (Canvas c, double x, double y, double taille) {
-        GraphicsContext gc;
-        gc = c.getGraphicsContext2D();
-        double [][] coords = hex_corner(x,y,taille);
-        gc.setFill(Color.GREENYELLOW);
-        gc.fillPolygon(coords[0], coords[1], 6);
-        InputStream image = null;
-        image =  ClassLoader.getSystemClassLoader().getResourceAsStream("Images/moskito.png");
-        Image img = new Image(image,(taille*2),(taille*2),true, true);
-        gc.drawImage(img,x-(img.getWidth()/2), y-(img.getHeight()/2));
-
-
-    }
-    
-    //  grasshopper
-    
-    public static void createWoodlouse (Canvas c, double x, double y, double taille) {
-        GraphicsContext gc;
-        gc = c.getGraphicsContext2D();
-        double [][] coords = hex_corner(x,y,taille);
-        gc.setFill(Color.CHOCOLATE);
-        gc.fillPolygon(coords[0], coords[1], 6);
-        InputStream image = null;
-        image =  ClassLoader.getSystemClassLoader().getResourceAsStream("Images/woodlouse.png");
-        Image img = new Image(image,(taille*1.75),(taille*1.75),true, true);
-        gc.drawImage(img,x-(img.getWidth()/2), y-(img.getHeight()/2));
-
-
-    }
-    
-    public static void createAnt (Canvas c, double x, double y, double taille) {
-        GraphicsContext gc;
-        gc = c.getGraphicsContext2D();
-        double [][] coords = hex_corner(x,y,taille);
-        gc.setFill(Color.AQUAMARINE);
-        gc.fillPolygon(coords[0], coords[1], 6);
-        InputStream image = null;
-        image =  ClassLoader.getSystemClassLoader().getResourceAsStream("Images/ant.png");
-        Image img = new Image(image,(taille*1.60),(taille*1.60),true, true);
-        gc.drawImage(img,x-(img.getWidth()/2), y-(img.getHeight()/2));
-
-
-    }
-    
-    public static void createSpider (Canvas c, double x, double y, double taille) {
-        GraphicsContext gc;
-        gc = c.getGraphicsContext2D();
-        double [][] coords = hex_corner(x,y,taille);
-        gc.setFill(Color.CORNFLOWERBLUE);
-        gc.fillPolygon(coords[0], coords[1], 6);
-        InputStream image = null;
-        image =  ClassLoader.getSystemClassLoader().getResourceAsStream("Images/spider.png");
-        Image img = new Image(image,(taille*1.60),(taille*1.60),true, true);
-        gc.drawImage(img,x-(img.getWidth()/2), y-(img.getHeight()/2));
-
-
-    }
-    
-    public static void createGrasshopper (Canvas c, double x, double y, double taille) {
-        GraphicsContext gc;
-        gc = c.getGraphicsContext2D();
-        double [][] coords = hex_corner(x,y,taille);
-        gc.setFill(Color.DARKGRAY);
-        gc.fillPolygon(coords[0], coords[1], 6);
-        InputStream image = null;
-        image =  ClassLoader.getSystemClassLoader().getResourceAsStream("Images/grasshopper.png");
-        Image img = new Image(image,(taille*1.60),(taille*1.60),true ,true);
-        gc.drawImage(img,x-(img.getWidth()/2), y-(img.getHeight()/2));
-
-    }
     
     public static void initChoix(ChoiceBox cb, int c){
 
