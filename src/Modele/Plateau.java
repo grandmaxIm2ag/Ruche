@@ -427,7 +427,7 @@ public class Plateau extends Composant {
                    b=true;
                 
                 if(!b && b2){
-                    RechercheConcurente rc = new RechercheConcurente(clone(), c2, matrice.get(tmp).tete());
+                    RechercheConcurente rc = new RechercheConcurente(clone(), c2, matrice.get(tmp).tete().clone());
                     threads.add(new Thread(rc));
                 }else if(b && b2){
                     List<Coup> t = deplacementPossible(matrice.get(tmp).tete());
