@@ -60,7 +60,10 @@ public class Dessinateur extends Visiteur{
     public boolean visite (Case c) {
         etendeur.fixeComposant(c);
         double [][] coords = Interface.hex_corner(etendeur.x(), etendeur.y(), etendeur.h()/2);
+        if (c.estpointe())
+            gc.setStroke(Color.RED);
         gc.strokePolygon(coords[0], coords[1], 6);
+        gc.setStroke(Color.BLACK);
         c.tete().accept(this);
         return false;
     }
@@ -75,6 +78,8 @@ public class Dessinateur extends Visiteur{
             couleur = Color.GREEN;
         else
             couleur = Color.CORNFLOWERBLUE;
+        if (i.estpointe())
+            couleur = Color.RED;
         gc.setFill(couleur);
         gc.fillPolygon(coords[0], coords[1], 6);
         InputStream image = null;
