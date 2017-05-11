@@ -10,6 +10,7 @@ import Modele.Case;
 import Modele.Coup;
 import Modele.Depot;
 import Modele.Deplacement;
+import Modele.Insecte;
 import Modele.Plateau;
 import Modele.Point;
 import java.util.ArrayList;
@@ -140,7 +141,6 @@ public class Ordinateur extends Joueur{
             }
         }
         
-        
         //choisir le coup pour lequel l'heuristique est maximale
         Iterator<Coup[]> it =l.iterator();
         if(it.hasNext()){
@@ -162,7 +162,7 @@ public class Ordinateur extends Joueur{
                     else
                         continue;
                     
-                    heurCoup=heuristique_Simple_Profondeur1_PointDeVueIA(tmp);
+                    heurCoup=heuristique_Simple_Profondeur1_PointDeVueIA(tmp, d);
                     //System.out.println("MAX = "+max+" heurCoup"+heurCoup);
                     if(heurCoup==max){
                         //ajout à res
@@ -186,17 +186,17 @@ public class Ordinateur extends Joueur{
         }
     }
     
-    public int heuristique_Simple_Profondeur1_PointDeVueIA(Plateau p){
+    public int heuristique_Simple_Profondeur1_PointDeVueIA(Plateau p, Coup[] d){
         int heuristique=0;
         if(p.estEncerclee(numJoueur)){
-            heuristique=Integer.MIN_VALUE;
+            return Integer.MIN_VALUE;
         }else if(p.estEncerclee(numAdversaire())){
-            heuristique=Integer.MAX_VALUE;
+            return Integer.MAX_VALUE;
         }else{
-            if(!reineLibre(p,numJoueur)){
+            if(!reineLibre(p,numJoueur, d)){
                 heuristique=heuristique-2;
             }
-            if(!reineLibre(p,numAdversaire())){
+            if(!reineLibre(p,numAdversaire(), d)){
                 heuristique=heuristique+2;
             }      
             heuristique=heuristique+nbLiberteesReine(p, numJoueur)-nbLiberteesReine(p, numAdversaire());
@@ -220,9 +220,25 @@ public class Ordinateur extends Joueur{
         return libertees;
     }
     
-    public boolean reineLibre(Plateau p, int joueur){
+    public boolean reineLibre(Plateau p, int joueur, Coup[] d){
+        
+        Case caseReine=p.matrice.get(p.reine(joueur));
+        if(d==null || d.length==0 || caseReine.tete().type()!=Insecte.REINE )
+            return false;
+        
         if(p.reine(joueur)==null)
             return true;
+        
+        boolean b = false;
+        
+        for(int i=0; i<d.length && !b; i++){
+            if(d[i] instanceof Deplacement)
+            {
+                Deplacement d2 = (Deplacement) d[i];
+                b = b || (d2.joueur()==joueur && d2.source().equals(p.reine(joueur))) ;
+            }
+        }
+        /*
         Case caseReine=p.matrice.get(p.reine(joueur));
         if(caseReine.tete().type()==0){
             List<Coup> deplPoss=p.deplacementPossible(caseReine.tete());
@@ -231,6 +247,8 @@ public class Ordinateur extends Joueur{
             }
         }
             return false;
+        */
+        return b;
     }
     
     public int numAdversaire(){

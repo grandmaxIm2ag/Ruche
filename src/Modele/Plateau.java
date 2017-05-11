@@ -400,7 +400,8 @@ public class Plateau extends Composant {
         Case ca = matrice.get(e.position()).clone();
         ca.retirePion();
         if(!ca.utilise()){
-            b = estConnexe(e);
+            if(voisins.get(e.position()).size()>1)
+                b = estConnexe(e);
         }
         if(b){
             Coup[] cp = matrice.get(e.position()).tete().deplacementValide(this.clone().matrice());
