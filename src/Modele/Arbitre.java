@@ -11,6 +11,9 @@ import Joueurs.Ordinateur;
 import java.io.File;
 import java.io.*;
 import java.io.IOException;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Properties;
 import java.util.Stack;
 import ruche.Reglage;
@@ -26,6 +29,14 @@ public class Arbitre {
     public final static int J1 = 0;
     public final static int J2 = 1;
     
+    final static int ATTENTE_COUP = 0;
+    final static int JOUE_EN_COURS = 1;
+    final static int A_JOUER = 2;
+    final static int FIN = 3;
+    
+    int etat;
+    long temps;
+    long temps_ecoule;
     
     public Properties prop;
     Joueur[] joueurs;
@@ -43,7 +54,9 @@ public class Arbitre {
     
     Coup[] deplacements;
     Coup[] depots;
+    Coup[] coups;
     boolean aucun;
+    boolean precAucun;
     
     public Arbitre(Properties p){
         Reglage.init(p);
@@ -70,8 +83,11 @@ public class Arbitre {
         
         nbCoup = new int[2];
         nbCoup[0]=0; nbCoup[1]=0;
-        
+        etat = ATTENTE_COUP;
         aucun = false;
+        temps = System.nanoTime();
+        temps_ecoule = 0;
+        precAucun = false;
     }
     
     public void init(){
@@ -89,12 +105,12 @@ public class Arbitre {
         
         switch(type){
             case JvJ:
-                joueurs[J1] = new Humain(true, prop, tabPieces, (int)Reglage.lis("nbPiece"), J1);
-                joueurs[J2] = new Humain(true, prop, tabPieces, (int)Reglage.lis("nbPiece"), J2);
+                joueurs[J1] = new Humain(true, prop, tabPieces, J1);
+                joueurs[J2] = new Humain(true, prop, tabPieces, J2);
                 break;
             case JvIA:
-                joueurs[J1] = new Humain(true, prop, tabPieces, (int)Reglage.lis("nbPiece"), J1);
-                joueurs[J2] = new Ordinateur(true,difficulte, prop, tabPieces, (int)Reglage.lis("nbPiece"), J2);
+                joueurs[J1] = new Humain(true, prop, tabPieces,  J1);
+                joueurs[J2] = new Ordinateur(true,difficulte, prop, tabPieces,  J2);
                 break;
         }
     }
@@ -315,24 +331,37 @@ public class Arbitre {
 
     public void prochainJoueur() {
         
-        
+        etat = 
         jCourant = ++jCourant % 2;
         
         if(plateau.estEncerclee(jCourant)){
             System.err.println(jCourant+" à perdu");
         }else{
-            boolean b = true;
-            for(int i=0; i<joueurs[jCourant].pions().length; i++)
-                b &= joueurs[jCourant].pions()[i]==0;
+            List<Coup[]> tab = new LinkedList();
+            for(int i=0; i<joueurs[jCourant].pions().length; i++){
+                if(joueurs[jCourant].pions()[i]!=0)
+                    tab.add(depotPossible(jCourant, i));
+            }
             
-            deplacements = deplacementPossible(jCourant);
-            aucun = deplacements.length<=0;
-            if(plateau.aucunCoup(jCourant) && b){
+            tab.add(deplacementPossible(jCourant));
+            
+            int taille= 0;
+            Iterator<Coup[]> it = tab.iterator();
+            while(it.hasNext())
+                taille+=it.next().length;
+            it = tab.iterator();
+            for(int i=0; i<taille;i++){
+                Coup[] x = it.next();
+                for(int j=0; j<x.length; j++)
+                    coups[i+j]=x[j];
+            }
+            aucun = coups.length<=0;
+            if(plateau.aucunCoup(jCourant)){
                 prochainJoueur();
             }else{
                 if(joueurs[jCourant] instanceof Ordinateur){
                     Ordinateur o = (Ordinateur) joueurs[jCourant];
-                    joue(o.coup(this, deplacements));
+                    joue(o.coup(this, coups));
                 }
             }
         }
@@ -348,6 +377,27 @@ public class Arbitre {
         return difficulte;
     }
     
+    public void maj(long t){
+        long nouv = t-temps;
+        temps=t;
+        switch(etat){
+            case ATTENTE_COUP:
+                go();
+                break;
+            case JOUE_EN_COURS:
+                temps_ecoule+=nouv;
+                if(temps_ecoule>=100000000){
+                    temps_ecoule=0;
+                    etat=A_JOUER;
+                }
+                break;
+            case A_JOUER:
+                prochainJoueur();
+                break;
+            case FIN:
+                break;
+        }
+    }
     boolean nul(){
         boolean b1 = true;
         for(int i=0; i<joueurs[J1].pions().length; i++)
@@ -356,6 +406,10 @@ public class Arbitre {
         for(int i=0; i<joueurs[J2].pions().length; i++)
                     b2 &= joueurs[J2].pions()[i]==0;
         return plateau.aucunCoup(J1)&&plateau.aucunCoup(J2)&&b1&&b2;
+    }
+    
+    public void go(){
+        
     }
     
 }

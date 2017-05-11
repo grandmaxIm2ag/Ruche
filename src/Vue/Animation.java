@@ -30,6 +30,7 @@ public class Animation extends AnimationTimer{
     @Override
     public void handle(long l) {
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        arbitre.maj(l);
         arbitre.accept(dessinateur);
     }
     

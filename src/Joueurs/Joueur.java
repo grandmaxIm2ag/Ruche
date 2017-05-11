@@ -20,11 +20,10 @@ public abstract class Joueur {
     Properties prop;
     int numJoueur;
     
-    public Joueur(boolean m, Properties p, int[] tabP, int nbP, int j){
+    public Joueur(boolean m, Properties p, int[] tabP, int j){
         main=m;
         prop=p;
         tabPieces=tabP;
-        nbPieces=nbP;
         nom = "toto";
         numJoueur=j;
     }

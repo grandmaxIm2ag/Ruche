@@ -15,8 +15,10 @@ import Modele.Plateau;
 import Modele.Point;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Random;
 import ruche.Reglage;
@@ -37,18 +39,20 @@ public class Ordinateur extends Joueur{
     public final static int DIFFICILE=2;
     
     
-    public final static long GRAINE = 548789;
+    public final static long GRAINE = System.nanoTime();
     Random r;
     
+    Map<Plateau, Integer> configurations;
     //public int[] tabPieces;
     //public int nbPieces;
     
-    public Ordinateur(boolean m, int d, Properties p, int[] tabP, int nbP, int j) {
-        super(m, p, tabP, nbP, j);
+    public Ordinateur(boolean m, int d, Properties p, int[] tabP, int j) {
+        super(m, p, tabP, j);
         difficulte = d;
         if(difficulte==0||difficulte==-1){
             r= new Random(GRAINE);
         }
+        configurations = new HashMap();
         //this.tabPieces= tabP;
         //this.nbPieces=nbP;
         //Reglage.init(prop);
@@ -84,18 +88,18 @@ public class Ordinateur extends Joueur{
 
     public Coup coupALEATOIRE_3(Arbitre a, Coup[] d){
         //System.out.println(Arrays.toString(tabPieces)+" "+numJoueur);
-        ArrayList<Coup[]> l=new ArrayList<>();
+        /*ArrayList<Coup[]> l=new ArrayList<>();
         //Déplacements
         Coup[] t;
         if(d!=null && d.length>0)
-            l.add(d);
+        l.add(d);
         //Dépots
         //pour tout type de pièces
         int type;
         for(type=0;type<tabPieces.length;type=type+1){
-            if(tabPieces[type]>0 && (t = a.depotPossible(this.numJoueur,type))!=null){
-                l.add(t);
-            }
+        if(tabPieces[type]>0 && (t = a.depotPossible(this.numJoueur,type))!=null){
+        l.add(t);
+        }
         }
         //choisi le coup:choix aléatoire avec nb de coup possibles
         int taille;
@@ -103,18 +107,18 @@ public class Ordinateur extends Joueur{
         taille=nbCoupPossiblesTotaux(it);
         //System.out.println(taille);
         int choix2= r.nextInt(taille);
-        
         it=l.iterator();
         int tmp=0;
         while(it.hasNext()){
-            Coup[] c=it.next();
-            if(choix2<=tmp+c.length-1){
-                return c[choix2-tmp];
-            }else{
-                tmp=tmp+c.length;
-            }
-        }        
-        return null;
+        Coup[] c=it.next();
+        if(choix2<=tmp+c.length-1){
+        return c[choix2-tmp];
+        }else{
+        tmp=tmp+c.length;
+        }
+        }*/
+        int choix2 = r.nextInt(d.length);
+        return d[choix2];
     }
     
     public int nbCoupPossiblesTotaux(Iterator<Coup[]> it){
@@ -131,16 +135,6 @@ public class Ordinateur extends Joueur{
         Coup[] t;
         if(d!=null && d.length>0)
             l.add(d);
-        //Dépots
-        //pour tout type de pièces
-        int type;
-        for(type=0;type<tabPieces.length;type=type+1){
-            if(tabPieces[type]>0 && (t = a.depotPossible(this.numJoueur,type))!=null){
-                
-                l.add(t);
-            }
-        }
-        
         //choisir le coup pour lequel l'heuristique est maximale
         Iterator<Coup[]> it =l.iterator();
         if(it.hasNext()){
@@ -163,21 +157,17 @@ public class Ordinateur extends Joueur{
                         continue;
                     
                     heurCoup=heuristique_Simple_Profondeur1_PointDeVueIA(tmp, d);
-                    //System.out.println("MAX = "+max+" heurCoup"+heurCoup);
                     if(heurCoup==max){
                         //ajout à res
                         res.add(courant[i]);
-                        //System.out.println(res);
                     }else if(heurCoup>max){
                         max=heurCoup;
                         res.clear();
                         res.add(courant[i]);
-                        //System.out.println(res);
                     }
                 }      
             }
             //choix aléatoire
-            //System.out.println(res.size()+"    "+l.size());//////////////////////////////////////////////////////////////////////////////////////////
             int choix= r.nextInt(res.size());
             return res.get(choix);
         }else{
@@ -187,6 +177,10 @@ public class Ordinateur extends Joueur{
     }
     
     public int heuristique_Simple_Profondeur1_PointDeVueIA(Plateau p, Coup[] d){
+        
+        if(configurations.get(p)!=null)
+            return configurations.get(p);
+        
         int heuristique=0;
         if(p.estEncerclee(numJoueur)){
             return Integer.MIN_VALUE;
@@ -198,36 +192,36 @@ public class Ordinateur extends Joueur{
             }
             if(!reineLibre(p,numAdversaire(), d)){
                 heuristique=heuristique+2;
-            }      
+            }
+            if(reineLibre(p,numJoueur, d)){
+                heuristique=heuristique+2;
+            }
+            if(reineLibre(p,numAdversaire(), d)){
+                heuristique=heuristique-2;
+            }
             heuristique=heuristique+nbLiberteesReine(p, numJoueur)-nbLiberteesReine(p, numAdversaire());
         }
+        
+        configurations.put(p, heuristique);
         return heuristique;
     }
     
     public int nbLiberteesReine(Plateau p, int joueur){
         //compter les voisins
-        if(p.reine(joueur)==null)
+        if(p.reine(joueur)==null || p.voisins().get(p.reine(joueur))==null)
             return 6;
         
-        int libertees=0;
-        List<Point> l=p.voisins(p.reine(joueur));
-        Iterator it= l.iterator();
-        while(it.hasNext()){
-            if(!p.matrice.get(it.next()).utilise()){
-                libertees=libertees+1;
-            }
-        } 
-        return libertees;
+        return 6-p.voisins().get(p.reine(joueur)).size();
     }
     
     public boolean reineLibre(Plateau p, int joueur, Coup[] d){
         
+        if(p.reine(joueur)==null)
+            return true;
         Case caseReine=p.matrice.get(p.reine(joueur));
         if(d==null || d.length==0 || caseReine.tete().type()!=Insecte.REINE )
             return false;
         
-        if(p.reine(joueur)==null)
-            return true;
         
         boolean b = false;
         
