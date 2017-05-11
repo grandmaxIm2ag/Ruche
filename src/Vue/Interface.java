@@ -7,6 +7,7 @@ package Vue;
 
 
 import Controleur.Bouton;
+import Controleur.Souris;
 import javafx.application.*;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
@@ -176,6 +177,8 @@ public class Interface extends Application{
         root.setRight(bPion);
         
         box.getChildren().addAll(btPrec, btSuiv, btSave, btMenu);
+        
+        c.setOnMouseMoved(new Souris(arbitre, Souris.SOURIS_BOUGEE,c));
         
         Animation anim = new Animation(arbitre, c, cj1, cj2);
         anim.start();

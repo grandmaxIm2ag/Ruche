@@ -272,6 +272,13 @@ public class Plateau extends Composant {
         return b;
     }
     
+    public void depointe () {
+        for(Map.Entry<Point,Case> entry : matrice.entrySet()) {
+            entry.getValue().depointe();
+            entry.getValue().tete().depointe();
+        }
+    }
+    
     public Plateau clone(){
         Plateau nouv = new Plateau(pos.x(), pos.y(), l, h, prop);
         

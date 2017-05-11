@@ -20,6 +20,11 @@ public class Etendeur {
     double factX, factY, diffX, diffY, r;
     double[] vecteur=null;
     double l,y, x, h;
+    double py;
+    
+    public Etendeur () {
+        py = Interface.py(1);
+    }
     
     public void fixeEchelle(Canvas c, Plateau p){
         double A = 0, B = 0, a = 0, b = 0;
@@ -31,13 +36,13 @@ public class Etendeur {
         }
         r = (c.getWidth()/(A+3-a)) < (c.getHeight()/(B+3-b)) ? (c.getWidth()/(A+3-a)) : (c.getHeight()/(B+3-b));
         if ((A+1-a)%2 != 0)
-            diffX = (c.getWidth()/(A+3-a)) < (c.getHeight()/(B+3-b)) ? Interface.py(r)*(1.75-a) : (c.getWidth() - Interface.py(r)*(A+3-a))/2 + Interface.py(r)*(1.5-a);
+            diffX = (c.getWidth()/(A+3-a)) < (c.getHeight()/(B+3-b)) ? py(r)*(1.75-a) : (c.getWidth() - py(r)*(A+3-a))/2 + py(r)*(1.5-a);
         else
-            diffX = (c.getWidth()/(A+3-a)) < (c.getHeight()/(B+3-b)) ? Interface.py(r)*(2.25-a) : (c.getWidth() - Interface.py(r)*(A+3-a))/2 + Interface.py(r)*(1.5-a);
+            diffX = (c.getWidth()/(A+3-a)) < (c.getHeight()/(B+3-b)) ? py(r)*(2.25-a) : (c.getWidth() - py(r)*(A+3-a))/2 + py(r)*(1.5-a);
         if ((B+1-b)%2 != 1)
-            diffY = (c.getWidth()/(A+3-a)) < (c.getHeight()/(B+3-b)) ? (c.getHeight() - r*(B+3-b))/2 + Interface.py(r)*(2-b) : (r)*(1.75-b);
+            diffY = (c.getWidth()/(A+3-a)) < (c.getHeight()/(B+3-b)) ? (c.getHeight() - r*(B+3-b))/2 + py(r)*(2-b) : (r)*(1.75-b);
         else
-            diffY = (c.getWidth()/(A+3-a)) < (c.getHeight()/(B+3-b)) ? (c.getHeight() - r*(B+3-b))/2 + Interface.py(r)*(1.75-b) : (r)*(1.5-b);
+            diffY = (c.getWidth()/(A+3-a)) < (c.getHeight()/(B+3-b)) ? (c.getHeight() - r*(B+3-b))/2 + py(r)*(1.75-b) : (r)*(1.5-b);
 
     }
     
@@ -52,13 +57,13 @@ public class Etendeur {
             b = b < i.pos.x*0.5+i.pos.y ? b : i.pos.x*0.5+i.pos.y;
         }
         r = (c.getWidth()/(A+1-a)) < (c.getHeight()/(B+3-b)) ? (c.getWidth()/(A+1-a)) : (c.getHeight()/(B+3-b));
-            diffX = (c.getWidth()/(A+1-a)) < (c.getHeight()/(B+1-b)) ? Interface.py(r)*(0.75-a) : (c.getWidth() - Interface.py(r)*(A+1-a))/2 + Interface.py(r)*(1-a);
-            diffY = (c.getWidth()/(A+3-a)) < (c.getHeight()/(B+3-b)) ? (c.getHeight() - r*(B+3-b))/2 + Interface.py(r)*(2-b) : (r)*(1.75-b);
+            diffX = (c.getWidth()/(A+1-a)) < (c.getHeight()/(B+1-b)) ? py(r)*(0.75-a) : (c.getWidth() - py(r)*(A+1-a))/2 + py(r)*(1-a);
+            diffY = (c.getWidth()/(A+3-a)) < (c.getHeight()/(B+3-b)) ? (c.getHeight() - r*(B+3-b))/2 + py(r)*(2-b) : (r)*(1.75-b);
 
     }
     
     public void fixeComposant(Composant c){
-       x = c.position().x()*Interface.py(r) + c.position().y()*Interface.py(r/2) + diffX;
+       x = c.position().x()*py(r) + c.position().y()*py(r/2) + diffX;
        y = c.position().y()*0.75*r + diffY;
        h = r;
     }

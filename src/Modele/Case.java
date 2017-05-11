@@ -21,10 +21,25 @@ public class Case extends Composant{
     public final static int SEST = 4;
     public final static int SOUEST = 5;
     
+    public static boolean EST_POINTE = false;
+    
     
     public Case(double x, double y, double larg, double haut){
         super(x,y,larg, haut);
         insectes = new Stack();
+    }
+    
+    public void pointe() {
+        EST_POINTE = true;
+        this.tete().pointe();
+    }
+    
+    public void depointe() {
+        EST_POINTE = false;
+    }
+    
+    public boolean estpointe () {
+        return EST_POINTE;
     }
     
     public boolean utilise(){

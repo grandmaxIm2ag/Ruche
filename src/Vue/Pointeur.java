@@ -32,6 +32,7 @@ public class Pointeur extends Visiteur {
     @Override
     public boolean visite (Plateau p) {
         etendeur.fixeEchelle(c, p);
+        p.depointe();
         return false;
     }
     
@@ -41,11 +42,6 @@ public class Pointeur extends Visiteur {
         double x1, x2, y1, y2;
         etendeur.fixeComposant(c);
         double [][] coords = Interface.hex_corner(etendeur.x(), etendeur.y(), etendeur.h()/2);
-        //System.out.println("\nCase coord : [" + c.position().x() + ";" + c.position().y() + "]");
-        //System.out.println("Souris : [" + me.getX() + ";" + me.getY() + "]");
-        //for (int i = 0; i < 6; i++) {
-            //System.out.println("[" + coords[0][i] + ";" + coords[1][i] + "]");
-        //}
         for (int i = 0; i < 6; i++) {
             x1 = coords[0][(i+1)%6] - coords[0][i];
             y1 = coords[1][(i+1)%6] - coords[1][i];
@@ -54,10 +50,10 @@ public class Pointeur extends Visiteur {
             y2 = me.getY() - coords[1][i];
             
             b = b&&((x1*y2) - (x2*y1))>0;
-            //System.out.println((((x1*y2) - (x2*y1))>0));
         }
         if (b)
-            System.out.println("[" + c.position().x()+ ";" + c.position().y()+ "]");
+            //System.out.println("[" + c.position().x()+ ";" + c.position().y()+ "]");
+            c.pointe();
         return false;
     }
 }
