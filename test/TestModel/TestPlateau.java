@@ -62,7 +62,7 @@ public class TestPlateau {
         assertTrue(p.premierPionValide(d));
         
         p.deposePion(d);
-       // assertTrue(p.estConnexe());
+        //ssertTrue(p.estConnexe());
         
         assertTrue(p.deposePionValide(new Depot(Arbitre.J2, Insecte.REINE, new Point(orig.x(), orig.y()+2))));
         assertFalse(p.deposePionValide(new Depot(Arbitre.J1, Insecte.REINE, new Point(orig.x(), orig.y()+2))));

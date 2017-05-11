@@ -116,13 +116,16 @@ public class Plateau extends Composant {
         Insecte e = matrice.get(d.source()).tete();
         Case ca = matrice.get(e.position()).clone();
         ca.retirePion();
-        boolean b = true;
+        boolean b = false;
         if(!ca.utilise()){
-            b = estConnexe(e);
+            b |= estConnexe(e);
         }
         if(b){
+            b=false;
+            System.out.println("coucou");
         Coup[] coups = e.deplacementValide(clone().matrice);
             for(int i=0; i<coups.length; i++){
+                System.out.println(coups[i]+" "+d.equals(coups[i]));
                 b |= d.equals(coups[i]);
             }
         }
@@ -150,7 +153,7 @@ public class Plateau extends Composant {
         else
             c2 = matrice.get(d.destination());
         
-        e.position().fixe(c2.position().x(), c2.position().y());
+        e.position().fixe(d.destination().x(), d.destination().y());
         c2.deposePion(e);
         matrice.put(d.destination(), c2);
         if(c.utilise())
@@ -186,7 +189,7 @@ public class Plateau extends Composant {
     
     public void majGraphe(Deplacement d){
         
-        if(matrice.get(d.source())==null){
+        if(voisins.containsKey(d.source())){
            voisins.remove(d.source());
            utilises.remove(d.source());
            for(Map.Entry<Point, List<Point> >  entry : voisins.entrySet()){
@@ -197,7 +200,7 @@ public class Plateau extends Composant {
            
         }
         
-        if(voisins.get(d.destination())==null){
+        if(!voisins.containsKey(d.destination())){
             List<Point> v = new ArrayList();
             for(int i=(int)d.destination().x()-1 ; i<= (int)d.destination().x()+1; i++ )
                 for(  int j= (int)d.destination().y()-1 ; j<= (int)d.destination().y()+1; j++ ){
@@ -276,22 +279,22 @@ public class Plateau extends Composant {
         
         u.remove(e.position());
         v.remove(e.position());
-        if(u.size()==1){
+        if(u.size()<=1){
             return true;
         }else{
-            Point tmp = u.get(0);
+            Point tmp = u.get(u.size()-1);
             Iterator<Point> it2 = u.iterator();
             while(b && it2.hasNext()){
                 Point p = it2.next();
-                if(!v.get(tmp).contains(p) && !tmp.equals(p))
-                    b &= voisin(tmp, p,cloneList(u), v);
+                if(!tmp.equals(p))
+                    b &= voisin(tmp, p, cloneList(u), v);
             }
         }
         
         return b;
     }
     
-    //Voisins direct et indirect
+    //Voisins directs et indirects
     public boolean voisin(Point p1, Point p2, List<Point> k, Map<Point, List<Point>> v){
         if(k.isEmpty()){
             return v.get(p1).contains(p2);
@@ -381,61 +384,19 @@ public class Plateau extends Composant {
 
     public boolean aucunCoup(int joueur){
         Coup[] c = deplacementPossible(joueur);
-        return c.length > 0;
+        return c.length <= 0;
     }
     
     public Coup[] deplacementPossible(int j){
         List<Coup> c = new ArrayList();
         List<Thread> threads = new ArrayList();
         DeplacementPartage c2 = new DeplacementPartage();
-        Iterator<Point> u = cloneList(utilises).iterator();
+        Iterator<Point> u = utilises.iterator();
         while(u.hasNext()){
             Point tmp = u.next();
             if(matrice.get(tmp).tete().joueur()==j){
-                Insecte e = matrice.get(tmp).tete();
-                Case ca = matrice.get(e.position()).clone();
-                ca.retirePion();
-                boolean b=false, b2=true;
-                if(matrice.get(tmp) == null || !matrice.get(tmp).tete().equals(matrice.get(tmp).tete()) )
-                    b2=false;
-                else if(voisins.get(matrice.get(tmp).tete().position()).size()>4 && (matrice.get(tmp).tete() instanceof Fourmie || matrice.get(tmp).tete() instanceof Reine || matrice.get(tmp).tete() instanceof Araignee ))
-                    b2 = false;
-                else if(voisins.get(e.position()).size()==4 && (
-                        (voisinage(e.position(), NORD) && voisinage(e.position(), SUD)) || (voisinage(e.position(), SOUEST) && voisinage(e.position(), NEST)) || (voisinage(e.position(), NOUEST) && voisinage(e.position(), SEST)) 
-                        )&& (e instanceof Fourmie || e instanceof Reine || e instanceof Araignee ))
-                    b2=false;
-                else if(!ca.utilise() && voisins.get(e.position()).size()==1)
-                    b=true;
-                else if(!ca.utilise() && voisins.get(e.position()).size()==2 && 
-                        (voisinage(e.position(), NORD) || voisinage(e.position(), SUD) || voisinage(e.position(), SEST)
-                        || voisinage(e.position(), SOUEST)|| voisinage(e.position(), NEST) || voisinage(e.position(), NOUEST)
-                        ))
-                    b = true;
-                else if(!ca.utilise() && voisins.get(e.position()).size()==4 && (
-                        ( (voisinage(e.position(), NORD) ^ voisinage(e.position(), SUD) ) && ( voisinage(e.position(), EST) ^ voisinage(e.position(), OUEST)) ) ||
-                        ( (voisinage(e.position(), ESTE) ^ voisinage(e.position(), OUESTE) ) && ( voisinage(e.position(), SUD) ^ voisinage(e.position(), NORD)) ) ||
-                        ( (voisinage(e.position(), SEST) ^ voisinage(e.position(), SOUEST) ) && voisinage(e.position(), NORD) ) ||
-                        ( (voisinage(e.position(), NEST) ^ voisinage(e.position(), NOUEST) ) && voisinage(e.position(), SUD) )
-                        ))
-                    b = true;
-                else if(!ca.utilise() && voisins.get(e.position()).size()==3 && (
-                       voisinage(e.position(), OUESTE)  || voisinage(e.position(), ESTE)
-                       || ((voisinage(e.position(), NORD) ^(voisinage(e.position(), SUD)) && (voisinage(e.position(), EST) ^ voisinage(e.position(), OUEST))))
-                       ))
-                   b = true;
-                else if(!ca.utilise() && voisins.get(e.position()).size()>= 5 )
-                   b=true;
-                
-                if(!b && b2){
-                    RechercheConcurente rc = new RechercheConcurente(clone(), c2, matrice.get(tmp).tete().clone());
-                    threads.add(new Thread(rc));
-                }else if(b && b2){
-                    List<Coup> t = deplacementPossible(matrice.get(tmp).tete());
-                    if(t!=null)
-                        c.addAll(t);
-                }else{
-                    continue;
-                }
+                RechercheConcurente rc = new RechercheConcurente(clone(), c2, matrice.get(tmp).tete().clone());
+                threads.add(new Thread(rc));
                 
             }
         }
@@ -467,13 +428,42 @@ public class Plateau extends Composant {
     }
     
     public List<Coup> deplacementPossible(Insecte e){
+        if(matrice.get(e.position()) == null || !matrice.get(e.position()).tete().equals(e) )
+            return null;
+        else if(voisins.get(matrice.get(e.position()).tete().position()).size()>4 && (matrice.get(e.position()).tete() instanceof Fourmie || matrice.get(e.position()).tete() instanceof Reine || matrice.get(e.position()).tete() instanceof Araignee ))
+            return null;
+        else if(voisins.get(e.position()).size()==4 && (
+                (voisinage(e.position(), NORD) && voisinage(e.position(), SUD)) || (voisinage(e.position(), SOUEST) && voisinage(e.position(), NEST)) || (voisinage(e.position(), NOUEST) && voisinage(e.position(), SEST)) 
+                )&& (e instanceof Fourmie || e instanceof Reine || e instanceof Araignee ))
+            return null;
         List<Coup[]> tab = new ArrayList();
         List<Coup> c = new ArrayList();
         boolean b = true;
         Case ca = matrice.get(e.position()).clone();
         ca.retirePion();
-                
-        b = estConnexe(e);
+        
+        if(!ca.utilise())
+            /*if(voisins.get(e.position()).size()<2)
+                b = true;
+            else if(!ca.utilise() && voisins.get(e.position()).size()==2 && 
+                    (voisinage(e.position(), NORD) || voisinage(e.position(), SUD) || voisinage(e.position(), SEST)
+                    || voisinage(e.position(), SOUEST)|| voisinage(e.position(), NEST) || voisinage(e.position(), NOUEST)
+                    ))
+                b = true;
+            else if(voisins.get(e.position()).size()==4 && (
+                   ( (voisinage(e.position(), NORD) ^ voisinage(e.position(), SUD) ) && ( voisinage(e.position(), EST) ^ voisinage(e.position(), OUEST)) ) ||
+                    ( (voisinage(e.position(), ESTE) ^ voisinage(e.position(), OUESTE) ) && ( voisinage(e.position(), SUD) ^ voisinage(e.position(), NORD)) ) ||
+                    ( (voisinage(e.position(), SEST) ^ voisinage(e.position(), SOUEST) ) && voisinage(e.position(), NORD) ) ||
+                    ( (voisinage(e.position(), NEST) ^ voisinage(e.position(), NOUEST) ) && voisinage(e.position(), SUD) )
+                    ))
+                b = true;
+            else if(voisins.get(e.position()).size()==3 && (
+                    voisinage(e.position(), OUESTE)  || voisinage(e.position(), ESTE)
+                    || ((voisinage(e.position(), NORD) ^(voisinage(e.position(), SUD)) && (voisinage(e.position(), EST) ^ voisinage(e.position(), OUEST))))
+                    ))
+                b = true;
+            else*/
+                b &= estConnexe(e);
         
         if(b){
             Coup[] cp = matrice.get(e.position()).tete().deplacementValide(this.clone().matrice());
@@ -584,25 +574,25 @@ public class Plateau extends Composant {
     boolean voisinage(Point p, int dir){
         switch(dir){
             case NORD:
-                return voisins.containsKey(new Point(p.x(), p.y()-1)) && voisins.containsKey(new Point(p.x()+1, p.y()-1));
+                return utilises.contains(new Point(p.x(), p.y()-1)) && utilises.contains(new Point(p.x()+1, p.y()-1));
             case OUEST:
-                return voisins.containsKey(new Point(p.x()-1, p.y()));
+                return utilises.contains(new Point(p.x()-1, p.y()));
             case EST:
-                return voisins.containsKey(new Point(p.x()+1, p.y()));
+                return utilises.contains(new Point(p.x()+1, p.y()));
             case SUD:
-                return voisins.containsKey(new Point(p.x(), p.y()+1)) && voisins.containsKey(new Point(p.x()-1, p.y()+1));
+                return utilises.contains(new Point(p.x(), p.y()+1)) && utilises.contains(new Point(p.x()-1, p.y()+1));
             case NEST:
-                return voisins.containsKey(new Point(p.x()+1, p.y()-1)) && voisins.containsKey(new Point(p.x()+1, p.y()));
+                return utilises.contains(new Point(p.x()+1, p.y()-1)) && utilises.contains(new Point(p.x()+1, p.y()));
             case NOUEST:
-                return voisins.containsKey(new Point(p.x(), p.y()-1)) && voisins.containsKey(new Point(p.x()-1, p.y()));
+                return utilises.contains(new Point(p.x(), p.y()-1)) && utilises.contains(new Point(p.x()-1, p.y()));
             case SEST:
-                return voisins.containsKey(new Point(p.x(), p.y()+1)) && voisins.containsKey(new Point(p.x()+1, p.y()));
+                return utilises.contains(new Point(p.x(), p.y()+1)) && utilises.contains(new Point(p.x()+1, p.y()));
             case SOUEST:
-                return voisins.containsKey(new Point(p.x()-1, p.y()+1)) && voisins.containsKey(new Point(p.x()-1, p.y()));
+                return utilises.contains(new Point(p.x()-1, p.y()+1)) && utilises.contains(new Point(p.x()-1, p.y()));
             case ESTE:
-                return voisins.containsKey(new Point(p.x()-1, p.y()+1)) && voisins.containsKey(new Point(p.x()-1, p.y())) && voisins.containsKey(new Point(p.x(), p.y()-1)) ;
+                return utilises.contains(new Point(p.x()+1, p.y()-1)) && utilises.contains(new Point(p.x()+1, p.y())) && utilises.contains(new Point(p.x(), p.y()+1)) ;
             case OUESTE:
-                return voisins.containsKey(new Point(p.x()+1, p.y()-1)) && voisins.containsKey(new Point(p.x()+1, p.y())) && voisins.containsKey(new Point(p.x(), p.y()+1)) ;
+                return utilises.contains(new Point(p.x()-1, p.y()+1)) && utilises.contains(new Point(p.x()-1, p.y())) && utilises.contains(new Point(p.x(), p.y()-1)) ;
             default:
                 return false;
         }
