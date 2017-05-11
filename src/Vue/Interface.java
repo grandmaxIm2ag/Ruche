@@ -289,8 +289,6 @@ public class Interface extends Application{
             }
         });
         
-
-        
         centerGrid.add(cbMOD, 0, 0);
         centerGrid.add(cbDIFF, 2, 0);
         centerGrid.add(tfJ1, 0, 2);
@@ -310,9 +308,6 @@ public class Interface extends Application{
         lNG.setFont(new Font(22));
         
         insideBox.getChildren().addAll(lNG, centerGrid, btBEG);
-        
-        
-        
         
         root.setCenter(centerBox);
     }
@@ -357,7 +352,7 @@ public class Interface extends Application{
         root.setCenter(centerBox);
     }
    
-    
+    /*
     public static void goM1nu(){
         root.setRight(new Pane());
         root.setLeft(new Pane());
@@ -435,7 +430,7 @@ public class Interface extends Application{
         
         box.getChildren().addAll(c, grid, btQuit, btTest);
         
-    }
+    }*/
     
     
     public static double[][] hex_corner (double x, double y, double rayon) {
@@ -506,11 +501,65 @@ public class Interface extends Application{
         centerGrid.add(sMusique,1,1);
         centerGrid.add(cFC,1,2);
         
-        insideBox.getChildren().addAll(lNG, centerGrid);
+        //insideBox.getChildren().addAll(lNG, centerGrid);
+        double [][] coords;
+        GraphicsContext gc;
         
+        HBox bInsecte = new HBox();
+        bInsecte.setSpacing(20);
+        bInsecte.setAlignment(Pos.CENTER);
+        
+        VBox bMoskito = new VBox();
+        bMoskito.setAlignment(Pos.CENTER);
+        bMoskito.setSpacing(10);
+        Canvas cMoskito = new Canvas(80,80);
+        gc = cMoskito.getGraphicsContext2D();
+        coords = hex_corner (40,40,40);
+        gc.setFill(Color.CADETBLUE);
+        gc.fillPolygon(coords[0], coords[1], 6);
+        InputStream imageM = null;
+        imageM =  ClassLoader.getSystemClassLoader().getResourceAsStream("Images/moskito.png");
+        Image imgM = new Image(imageM,((80)*1.20),((80)*1.20),true, true);
+        gc.drawImage(imgM,40-(imgM.getWidth()/2), 40-(imgM.getHeight()/2));
+        CheckBox cbMoskito = new CheckBox();
+        
+        VBox bClop = new VBox();
+        bClop.setAlignment(Pos.CENTER);
+        bClop.setSpacing(10);
+        Canvas cClop = new Canvas(80,80);
+        gc = cClop.getGraphicsContext2D();
+        coords = hex_corner (40,40,40);
+        gc.setFill(Color.BURLYWOOD);
+        gc.fillPolygon(coords[0], coords[1], 6);
+        InputStream imageC = null;
+        imageC =  ClassLoader.getSystemClassLoader().getResourceAsStream("Images/woodlouse.png");
+        Image imgC = new Image(imageC,((80)*1.0),((80)*1.0),true, true);
+        gc.drawImage(imgC,40-(imgC.getWidth()/2), 40-(imgC.getHeight()/2));
+        CheckBox cbClop = new CheckBox();
+        
+        VBox bCocc = new VBox();
+        bCocc.setAlignment(Pos.CENTER);
+        bCocc.setSpacing(10);
+        Canvas cCocc = new Canvas(80,80);
+        gc = cCocc.getGraphicsContext2D();
+        coords = hex_corner (40,40,40);
+        gc.setFill(Color.INDIANRED);
+        gc.fillPolygon(coords[0], coords[1], 6);
+        InputStream imageCo = null;
+        imageCo =  ClassLoader.getSystemClassLoader().getResourceAsStream("Images/ladybug.png");
+        Image imgCo = new Image(imageCo,((80)*0.80),((80)*0.80),true, true);
+        gc.drawImage(imgCo,40-(imgCo.getWidth()/2), 40-(imgCo.getHeight()/2));
+        CheckBox cbCocc = new CheckBox();
+        
+        bMoskito.getChildren().addAll(cMoskito, cbMoskito);
+        bClop.getChildren().addAll(cClop, cbClop);
+        bCocc.getChildren().addAll(cCocc, cbCocc);
+        bInsecte.getChildren().addAll(bMoskito, bClop, bCocc);
+        insideBox.getChildren().addAll(lNG, centerGrid, bInsecte);
         root.setCenter(centerBox);
     }
     
+    /*
     public static void goConf1g () {
         
         BorderPane border = new BorderPane();
@@ -627,9 +676,9 @@ public class Interface extends Application{
         final Rectangle rectangle = new Rectangle(100, 100, 150, 100); 
         rectangle.setFill(Color.RED); 
         rectangle.setEffect(dropShadow); 
-        */
+        /
         
-    }
+    }*/
     
     public static void goAffichage() {
         
