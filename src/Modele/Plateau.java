@@ -137,9 +137,9 @@ public class Plateau extends Composant {
         }
     }
     
-    public void afficheGraphe(){
-        System.out.println("NB PIECES POSEES "+voisins.size());
-        for(Map.Entry<Point, List<Point>> entry : voisins.entrySet()){
+    public void afficheGraphe(Map<Point, List<Point>> v){
+        System.out.println("NB PIECES POSEES "+v.size());
+        for(Map.Entry<Point, List<Point>> entry : v.entrySet()){
                 List<Point> l = entry.getValue();
                 String str = entry.getKey().toString();
                 for(Point point : l)
@@ -251,48 +251,47 @@ public class Plateau extends Composant {
         boolean b = true;
         List<Point> u = cloneList(utilises);
         Map<Point, List<Point>> v = new HashMap();
-        for(Map.Entry<Point, List<Point>> entry : voisins.entrySet())
-            v.put(new Point(entry.getKey().x(), entry.getKey().y()), cloneList(entry.getValue()));
+        for(Map.Entry<Point, List<Point>> entry : voisins.entrySet()){
+            List<Point> v2 = cloneList(entry.getValue());
+            if(v2.contains(e.position()))
+                v2.remove(e.position());
+            v.put(new Point(entry.getKey().x(), entry.getKey().y()), v2);
+        }
+        
         List<Point> marque = new ArrayList();
         u.remove(e.position());
-        v.remove(e);
+        v.remove(e.position());
         if(u.size()==1){
             return true;
         }else{
-            b &= voisin(u.get(0), u.get(1),u);
-        }
-        
-        /*Iterator<Point> it1 = v.get(e.position()).iterator();
-        while(it1.hasNext() && b){
+            Point tmp = u.get(0).clone();
             Iterator<Point> it2 = u.iterator();
-            Point tmp = it1.next();
-            while(it2.hasNext()){
-                Point tmp2 = it2.next();
-                if(!tmp.equals(tmp2) && !v.get(tmp).contains(tmp2) && !marque.contains(tmp2)){
-                    b&=voisin(tmp, tmp2, cloneList(u));
-                }
+            while(b && it2.hasNext()){
+                Point p = it2.next();
+                if(!v.get(tmp).contains(p) && !tmp.equals(p))
+                    b &= voisin(tmp, p,cloneList(u), v);
             }
-            marque.add(tmp);
-                
-        }*/
+        }
         
         return b;
     }
     
     //Voisins direct et indirect
-    public boolean voisin(Point p1, Point p2, List<Point> k){
+    public boolean voisin(Point p1, Point p2, List<Point> k, Map<Point, List<Point>> v){
         if(k.isEmpty()){
-            if(voisins.get(p1)!=null)
-                return voisins.get(p1).contains(p2);
-            return false;
+            return v.get(p1).contains(p2);
          }else{
             Point t = k.get(k.size()-1);
             k.remove(t);
-            boolean b1 = voisin(p1,t,cloneList(k));
-            boolean b2 = voisin(t,p2,cloneList(k));
-            boolean b3 = voisin(p1,p2,cloneList(k));
             
-            return ((b1&&b2)||b3);
+            boolean b3 = voisin(p1,p2,cloneList(k),v);
+            
+            if(!b3){
+                boolean b1 = voisin(p1,t,cloneList(k),v);
+                boolean b2 = voisin(t,p2,cloneList(k),v);
+                return b1&&b2;
+            }
+            return true;
          }
     }
     @Override
@@ -376,7 +375,7 @@ public class Plateau extends Composant {
         while(u.hasNext()){
             Point tmp = u.next();
             if(matrice.get(tmp).tete().joueur()==j){
-                System.out.println(matrice.get(tmp).tete());
+                //System.out.println(matrice.get(tmp).tete());
                 List<Coup> cBis = deplacementPossible(matrice.get(tmp).tete());
                 if(cBis != null)
                     c.addAll(cBis);

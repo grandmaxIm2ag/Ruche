@@ -42,7 +42,7 @@ public class SimulationIA extends Arbitre {
             tabPieces2[i]=tabPieces[i];
         
         joueurs[J1] = new Ordinateur(true,Ordinateur.FACILE_ALEATOIRE, prop, tabPieces, (int)Reglage.lis("nbPiece"), J1);
-        joueurs[J2] = new Ordinateur(true,Ordinateur.FACILE_ALEATOIRE, prop, tabPieces2, (int)Reglage.lis("nbPiece"), J2);
+        joueurs[J2] = new Ordinateur(true,Ordinateur.FACILE_HEURISTIQUE, prop, tabPieces2, (int)Reglage.lis("nbPiece"), J2);
         
         go();
     }
@@ -56,7 +56,8 @@ public class SimulationIA extends Arbitre {
     
     @Override
     public void prochainJoueur() {
-        if(nbCoup[J1] <= 100 && nbCoup[J2]<= 100){
+        System.out.println(nbCoup[J1]+" "+nbCoup[J2]);
+        if(nbCoup[J1] <= 50 && nbCoup[J2]<= 50){
             jCourant = ++jCourant % 2;
 
             if(plateau.estEncerclee(jCourant)){

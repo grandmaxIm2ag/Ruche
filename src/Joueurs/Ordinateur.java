@@ -82,7 +82,7 @@ public class Ordinateur extends Joueur{
     }
 
     public Coup coupALEATOIRE_3(Arbitre a, Coup[] d){
-        System.out.println(Arrays.toString(tabPieces)+" "+numJoueur);
+        //System.out.println(Arrays.toString(tabPieces)+" "+numJoueur);
         ArrayList<Coup[]> l=new ArrayList<>();
         //Déplacements
         Coup[] t;
@@ -100,7 +100,7 @@ public class Ordinateur extends Joueur{
         int taille;
         Iterator<Coup[]> it =l.iterator();
         taille=nbCoupPossiblesTotaux(it);
-        System.out.println(taille);
+        //System.out.println(taille);
         int choix2= r.nextInt(taille);
         
         it=l.iterator();
