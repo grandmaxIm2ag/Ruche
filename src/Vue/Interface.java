@@ -20,6 +20,10 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.event.*;
 import javafx.geometry.Insets;
@@ -28,9 +32,15 @@ import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Separator;
+import javafx.scene.control.Slider;
+import javafx.scene.control.TextField;
+import javafx.scene.effect.BlurType;
+import javafx.scene.effect.DropShadow;
+import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import static javafx.scene.input.DataFormat.URL;
@@ -46,6 +56,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
@@ -70,7 +81,7 @@ public class Interface extends Application{
     final static boolean fullScreen = false;
         
     @Override
-    public void start(Stage stage) throws Exception {
+    public  void start(Stage stage) throws Exception {
 
 
         stage.setTitle("Ruche");
@@ -80,23 +91,6 @@ public class Interface extends Application{
         } else {
             s = new Scene(root, 800, 600);
         }
-        
-        Canvas c = new Canvas(200, 100);
-        GraphicsContext gc;
-        gc = c.getGraphicsContext2D();
-        StackPane paneTop= new StackPane(c);
-        paneTop.setPadding(new Insets(20,20,20,20));
-        gc.setFill(Color.ORANGE);
-        gc.setStroke(Color.WHEAT);
-        double [][] coords = hex_corner(100, 50, 50);
-        gc.fillPolygon(coords[0], coords[1], 6);
-        gc.strokePolygon(coords[0], coords[1], 6);
-        gc.setFill(Color.ORANGERED);
-        gc.setFont(Font.font("Tahoma", FontWeight.NORMAL, 33));
-        gc.fillText("Hive", 70, 60);
-        paneTop.setAlignment(Pos.CENTER);
-        root.setTop(paneTop);
-        
         stage.setScene(s);
         goMenu();
         stage.show();
@@ -107,6 +101,36 @@ public class Interface extends Application{
         arbitre = a;
         launch(args);
         
+    }
+    
+    public static Canvas title() {
+        Canvas c = new Canvas(200, 100);
+        GraphicsContext gc;
+        gc = c.getGraphicsContext2D();
+        gc.setFill(Color.ORANGE);
+        gc.setStroke(Color.WHEAT);
+        double [][] coords = hex_corner(100, 50, 50);
+        gc.fillPolygon(coords[0], coords[1], 6);
+        gc.strokePolygon(coords[0], coords[1], 6);
+        gc.setFill(Color.ORANGERED);
+        gc.setFont(Font.font("Tahoma", FontWeight.NORMAL, 33));
+        gc.fillText("Hive", 70, 60);
+        return c;
+    }
+    
+    public static Canvas titleSect (String name) {
+        Canvas c = new Canvas(200, 100);
+        GraphicsContext gc;
+        gc = c.getGraphicsContext2D();
+        gc.setFill(Color.ORANGE);
+        gc.setStroke(Color.WHEAT);
+        double [][] coords = hex_corner(100, 50, 25);
+        gc.fillPolygon(coords[0], coords[1], 6);
+        gc.strokePolygon(coords[0], coords[1], 6);
+        gc.setFill(Color.ORANGERED);
+        gc.setFont(Font.font("Tahoma", FontWeight.NORMAL, 33));
+        gc.fillText(name, coords[0][3], coords[1][2]-1);
+        return c;
     }
     
     public static void goPartie() {
@@ -161,9 +185,177 @@ public class Interface extends Application{
     public static double py (double a) {
         return Math.sqrt(Math.pow(a, 2) - Math.pow(a/2, 2));
     }
+    
+    public static void goMenu () {
+        root.setRight(new Pane());
+        VBox topBox = new VBox();
+        topBox.setAlignment(Pos.TOP_CENTER);
+        topBox.setPadding(new Insets(20,10,20,10));
+        topBox.setSpacing(10);
+        topBox.getChildren().addAll(title(), titleSect("Accueil"));
+        root.setTop(topBox);
+        
+        StackPane leftStack = new StackPane();
+        Rectangle leftRect = new Rectangle();
+        leftRect.widthProperty().bind(leftStack.widthProperty());
+        leftRect.heightProperty().bind(leftStack.heightProperty());
+        leftRect.setFill(Color.WHITESMOKE);
+        leftRect.setArcWidth(20);
+        leftRect.setArcHeight(20);
+        DropShadow shadow = new DropShadow();
+        leftRect.setEffect(shadow);
+        VBox leftBox = new VBox();
+        leftBox.setPadding(new Insets(70,30,70,30));
+        leftBox.setSpacing(30);
+        VBox box = new VBox();
+        box.setPadding(new Insets(20,20,20,20));
+        box.getChildren().add(leftStack);
+        leftStack.getChildren().addAll(leftRect, leftBox);
+        
+        Button btNG = new Button("Nouvelle partie");
+        Button btLD = new Button("Charger partie");
+        Button btCFG = new Button("Configuration");
+        Button btQUIT = new Button("Quitter");
+        
+        btNG.setMinWidth(150);
+        btLD.setMinWidth(150);
+        btCFG.setMinWidth(150);
+        btQUIT.setMinWidth(150);
+        
+        btNG.setOnAction(new Bouton(Bouton.BOUTON_NOUVELLE_PARTIE, arbitre));
+        btLD.setOnAction(new Bouton(Bouton.BOUTON_CHARGER, arbitre));
+        btCFG.setOnAction(new Bouton(Bouton.BOUTON_CONFIG, arbitre));
+        btQUIT.setOnAction(new Bouton(Bouton.BOUTON_QUITTER, arbitre));
+        
+        leftBox.getChildren().addAll(btNG, btLD, btCFG, btQUIT);
+        
+        
+        root.setLeft(box);
+        goNewGame();
+    }
+    
+    public static void goNewGame() {
+        VBox centerBox = new VBox();
+        StackPane centerStack = new StackPane();
+        GridPane centerGrid = new GridPane();
+        VBox insideBox = new VBox();
+        Rectangle centerRect = new Rectangle();
+        centerBox.setPadding(new Insets(20,20,20,0));
+        centerBox.setAlignment(Pos.TOP_CENTER);
+        centerGrid.setHgap(10);
+        centerGrid.setVgap(10);
+        centerRect.widthProperty().bind(centerStack.widthProperty());
+        centerRect.heightProperty().bind(centerStack.heightProperty());
+        centerRect.setArcWidth(20);
+        centerRect.setArcHeight(20);
+        centerRect.setFill(Color.WHITESMOKE);
+        insideBox.setPadding(new Insets(70,30,70,30));
+        insideBox.setSpacing(30);
+        insideBox.setAlignment(Pos.CENTER);
+        DropShadow shadow = new DropShadow();
+        centerRect.setEffect(shadow);
+        
+        ChoiceBox cbMOD = new ChoiceBox(FXCollections.observableArrayList("Contre IA", "Contre Joueur", "En Ligne"));
+        ChoiceBox cbDIFF = new ChoiceBox(FXCollections.observableArrayList("Facile", "Moyen", "Difficile"));
+        
+        cbMOD.getSelectionModel().selectFirst();
+        cbDIFF.getSelectionModel().selectFirst();
+        
+        cbMOD.setMinWidth(200);
+        cbDIFF.setMinWidth(200);
+        
+        TextField tfJ1 = new TextField();
+        tfJ1.setPromptText("Nom joueur 1");
+        
+        TextField tfJ2 = new TextField();
+        tfJ2.setPromptText("Nom joueur 2");
+        
+        tfJ2.setDisable(true);
+        
+        cbMOD.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number> () {
+            
+            @Override
+            public void changed (ObservableValue ov, Number value, Number newValue) {
+                if (newValue.intValue() >= 1) {
+                    cbDIFF.setDisable(true);
+                    tfJ2.setDisable(false);
+                } else {
+                    cbDIFF.setDisable(false);
+                    tfJ2.setDisable(true);
+                }
+            }
+        });
+        
+
+        
+        centerGrid.add(cbMOD, 0, 0);
+        centerGrid.add(cbDIFF, 2, 0);
+        centerGrid.add(tfJ1, 0, 2);
+        centerGrid.add(tfJ2, 2, 2);
+        centerGrid.setAlignment(Pos.CENTER);
+        
+        Button btBEG = new Button("Commencer");
+        
+        btBEG.setMinWidth(150);
+        
+        btBEG.setOnAction(new Bouton(Bouton.BOUTON_NOUVELLE_PARTIE_COMMENCER, arbitre));
+
+        
+        centerBox.getChildren().add(centerStack);
+        centerStack.getChildren().addAll(centerRect, insideBox);//centerGrid);
+        Label lNG = new Label("Nouvelle Partie");
+        lNG.setFont(new Font(22));
+        
+        insideBox.getChildren().addAll(lNG, centerGrid, btBEG);
+        
+        
+        
+        
+        root.setCenter(centerBox);
+    }
+    
+    public static void goLoadGame () {
+        VBox centerBox = new VBox();
+        StackPane centerStack = new StackPane();
+        GridPane centerGrid = new GridPane();
+        VBox insideBox = new VBox();
+        Rectangle centerRect = new Rectangle();
+        centerBox.setPadding(new Insets(20,20,20,0));
+        centerBox.setAlignment(Pos.TOP_CENTER);
+        centerGrid.setHgap(10);
+        centerGrid.setVgap(10);
+        centerRect.widthProperty().bind(centerStack.widthProperty());
+        centerRect.heightProperty().bind(centerStack.heightProperty());
+        centerRect.setArcWidth(20);
+        centerRect.setArcHeight(20);
+        centerRect.setFill(Color.WHITESMOKE);
+        insideBox.setPadding(new Insets(70,30,70,30));
+        insideBox.setSpacing(30);
+        insideBox.setAlignment(Pos.CENTER);
+        DropShadow shadow = new DropShadow();
+        centerRect.setEffect(shadow);
+        
+        centerGrid.setAlignment(Pos.CENTER);
+        
+        Button btBEG = new Button("Commencer");
+        
+        btBEG.setMinWidth(150);
+        
+        btBEG.setOnAction(new Bouton(Bouton.BOUTON_NOUVELLE_PARTIE_COMMENCER, arbitre));
+
+        
+        centerBox.getChildren().add(centerStack);
+        centerStack.getChildren().addAll(centerRect, insideBox);//centerGrid);
+        Label lNG = new Label("Charger Partie");
+        lNG.setFont(new Font(22));
+        
+        insideBox.getChildren().addAll(lNG, centerGrid, btBEG);
+        
+        root.setCenter(centerBox);
+    }
    
     
-    public static void goMenu(){
+    public static void goM1nu(){
         root.setRight(new Pane());
         root.setLeft(new Pane());
         root.setBottom(new Pane());
@@ -180,6 +372,21 @@ public class Interface extends Application{
         Button btConfig = new Button("Configuration");
         Button btCredits = new Button("Credits");
         Button btQuit = new Button("Quitter");
+        
+        Button btTest = new Button("Test");
+        
+        GaussianBlur gaussianBlur = new GaussianBlur() ;       
+        gaussianBlur.setRadius(0) ; 
+        
+        root.setEffect(gaussianBlur);
+
+        
+        btTest.setOnAction(new EventHandler<ActionEvent> () {
+            @Override
+            public void handle (ActionEvent e) {
+                gaussianBlur.setRadius(10);
+            }
+        });
         
         btNouveau.setMaxWidth(150);
         btCharger.setMaxWidth(150);
@@ -221,9 +428,9 @@ public class Interface extends Application{
         grid.add(cbSave, 4, 1);
         grid.add(btCredits, 0, 3);
         
-        Canvas c = titreSect("Menu");
+        Canvas c = titleSect("Menu");
         
-        box.getChildren().addAll(c, grid, btQuit);
+        box.getChildren().addAll(c, grid, btQuit, btTest);
         
     }
     
@@ -246,6 +453,108 @@ public class Interface extends Application{
     }
     
     public static void goConfig () {
+        VBox centerBox = new VBox();
+        StackPane centerStack = new StackPane();
+        GridPane centerGrid = new GridPane();
+        VBox insideBox = new VBox();
+        Rectangle centerRect = new Rectangle();
+        centerBox.setPadding(new Insets(20,20,20,0));
+        centerBox.setAlignment(Pos.TOP_CENTER);
+        centerGrid.setHgap(10);
+        centerGrid.setVgap(10);
+        centerRect.widthProperty().bind(centerStack.widthProperty());
+        centerRect.heightProperty().bind(centerStack.heightProperty());
+        centerRect.setArcWidth(20);
+        centerRect.setArcHeight(20);
+        centerRect.setFill(Color.WHITESMOKE);
+        insideBox.setPadding(new Insets(70,30,70,30));
+        insideBox.setSpacing(30);
+        insideBox.setAlignment(Pos.CENTER);
+        DropShadow shadow = new DropShadow();
+        centerRect.setEffect(shadow);
+        
+        centerGrid.setAlignment(Pos.CENTER);
+        
+        Slider sSon = new Slider();
+        sSon.setValue(50); 
+        sSon.setShowTickMarks(true); 
+        sSon.setMajorTickUnit(20); 
+        
+        Slider sMusique = new Slider();
+        sMusique.setValue(50); 
+        sMusique.setShowTickMarks(true); 
+        sMusique.setMajorTickUnit(20);
+        
+        CheckBox cFC = new CheckBox();
+        
+        Label lSon = new Label("Son");
+        Label lMusique = new Label("Musique");
+        Label lFullScreen = new Label("Plein Ecran");
+        
+        centerBox.getChildren().add(centerStack);
+        centerStack.getChildren().addAll(centerRect, insideBox);//centerGrid);
+        Label lNG = new Label("Parametres");
+        lNG.setFont(new Font(22));
+        
+        centerGrid.add(lSon, 0, 0);
+        centerGrid.add(lMusique, 0,1);
+        centerGrid.add(lFullScreen, 0,2);
+        centerGrid.add(sSon, 1,0);
+        centerGrid.add(sMusique,1,1);
+        centerGrid.add(cFC,1,2);
+        
+        insideBox.getChildren().addAll(lNG, centerGrid);
+        
+        root.setCenter(centerBox);
+    }
+    
+    public static void goConf1g () {
+        
+        BorderPane border = new BorderPane();
+        VBox centerBox = new VBox();
+        centerBox.setPadding(new Insets(20,10,20,10));
+        centerBox.setSpacing(20);
+        //root.setCenter(border);
+        root.setCenter(centerBox);
+        
+        //border.setTop(titreSect("Config"));
+        Canvas title = titleSect("Config");
+        
+        VBox leftBox = new VBox();
+        leftBox.setPadding(new Insets(70,20,70,20));
+        leftBox.setSpacing(40);
+        
+        Button btAff = new Button("Affichage");
+        Button btSon = new Button ("Son");
+        Button btJeu = new Button ("Jeu");
+        Button btMenu = new Button ("Menu");
+        
+        btMenu.setOnAction(new Bouton(Bouton.BOUTON_MENU, arbitre));
+        
+        btAff.setMinWidth(100);
+        btSon.setMinWidth(100);
+        btJeu.setMinWidth(100);
+        btMenu.setMinWidth(100);
+        
+        leftBox.getChildren().addAll(btAff, btSon, btJeu, btMenu);
+        
+        StackPane leftStack = new StackPane();
+        Rectangle leftRect = new Rectangle();
+        leftRect.setFill(Color.WHITESMOKE);
+        leftRect.widthProperty().bind(leftStack.widthProperty());
+        leftRect.heightProperty().bind(leftStack.heightProperty());
+        leftRect.setArcWidth(20);
+        leftRect.setArcHeight(20);
+        leftRect.setEffect(new DropShadow());
+        leftStack.getChildren().addAll(leftRect, leftBox);
+        
+        border.setLeft(leftStack);
+        centerBox.getChildren().addAll(title, border);
+        centerBox.setAlignment(Pos.TOP_CENTER);
+        
+        //leftRect.onmo
+        
+        /*
         VBox box = new VBox();
         box.setAlignment(Pos.TOP_CENTER);
         box.setSpacing(30);
@@ -253,6 +562,23 @@ public class Interface extends Application{
         
         Canvas c = titreSect("Config");
         
+        StackPane stack = new StackPane();
+        final Color shadowColor = Color.BLACK.deriveColor(0, 0, 0, 0.5); 
+        final DropShadow dropShadow = new DropShadow(BlurType.THREE_PASS_BOX, shadowColor, 20, 0, 10, 10); 
+        final Rectangle rectangle = new Rectangle(100,100); 
+        rectangle.widthProperty().bind(stack.widthProperty().subtract(0));
+        rectangle.heightProperty().bind(stack.heightProperty());
+        rectangle.setFill(Color.RED); 
+        rectangle.setEffect(dropShadow); 
+        Button b1 = new Button("un bouton");
+        Button b2 = new Button("un autre bouton");
+        VBox v = new VBox();
+        v.getChildren().addAll(b1, b2);
+        stack.getChildren().addAll(rectangle, v);
+        box.getChildren().addAll(c);
+        root.setLeft(stack);
+        */
+        /*
         GridPane grid = new GridPane();
         grid.setHgap(10);
         grid.setVgap(20);
@@ -291,22 +617,22 @@ public class Interface extends Application{
         bottom.getChildren().addAll(btValider,sep, btRetour);
         
         box.getChildren().addAll(c, grid, bottom);
+        */
+        /*
+        final Color shadowColor = Color.BLACK.deriveColor(0, 0, 0, 0.5); 
+        final DropShadow dropShadow = new DropShadow(BlurType.THREE_PASS_BOX, shadowColor, 20, 0, 10, 10); 
+        final Rectangle rectangle = new Rectangle(100, 100, 150, 100); 
+        rectangle.setFill(Color.RED); 
+        rectangle.setEffect(dropShadow); 
+        */
+        
     }
     
-    public static Canvas titreSect (String name) {
-        Canvas c = new Canvas(200, 100);
-        GraphicsContext gc;
-        gc = c.getGraphicsContext2D();
-        gc.setFill(Color.ORANGE);
-        gc.setStroke(Color.WHEAT);
-        double [][] coords = hex_corner(100, 50, 25);
-        gc.fillPolygon(coords[0], coords[1], 6);
-        gc.strokePolygon(coords[0], coords[1], 6);
-        gc.setFill(Color.ORANGERED);
-        gc.setFont(Font.font("Tahoma", FontWeight.NORMAL, 33));
-        gc.fillText(name, coords[0][3], coords[1][2]-1);
-        return c;
+    public static void goAffichage() {
+        
     }
+    
+    
     
     public static void goCredits () {
         VBox box = new VBox();
@@ -317,7 +643,7 @@ public class Interface extends Application{
         grid.setHgap(10);
         grid.setVgap(20);
         grid.setAlignment(Pos.TOP_CENTER);
-        Canvas c = titreSect("Credits");
+        Canvas c = titleSect("Credits");
         
         Label lMoteur = new Label("Moteur");
         Label lIA = new Label("IA");

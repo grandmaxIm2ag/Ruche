@@ -30,6 +30,7 @@ public class Bouton implements EventHandler<ActionEvent>{
     public final static int BOUTON_QUITTER = 7;
     public final static int BOUTON_CONFIG = 8;
     public final static int BOUTON_CREDITS = 9;
+    public final static int BOUTON_NOUVELLE_PARTIE_COMMENCER = 10;
     
     public Bouton (int type, Arbitre arbitre) {
         value = type;
@@ -46,13 +47,20 @@ public class Bouton implements EventHandler<ActionEvent>{
                 System.exit(0);
                 break;
             case BOUTON_NOUVELLE_PARTIE:
-                Interface.goPartie();
+                //Interface.goPartie();
+                Interface.goNewGame();
                 break;
             case BOUTON_CONFIG:
                 Interface.goConfig();
                 break;
             case BOUTON_CREDITS:
                 Interface.goCredits();
+                break;
+            case BOUTON_NOUVELLE_PARTIE_COMMENCER:
+                Interface.goPartie();
+                break;
+            case BOUTON_CHARGER:
+                Interface.goLoadGame();
                 break;
             default:
                 break;
