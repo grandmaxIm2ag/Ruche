@@ -100,17 +100,14 @@ public class Plateau extends Composant {
     }
     public boolean deplacePionValide(Deplacement d){
         Insecte e = matrice.get(d.source()).tete();
-        Coup[] coups = e.deplacementValide(matrice);
-        Case ca = matrice.get(e.position());
+        Case ca = matrice.get(e.position()).clone();
         ca.retirePion();
-        if(ca.utilise())
-            matrice.put(e.position(), ca);
-        else{
-            voisins.remove(e.position());
+        boolean b = true;
+        if(!ca.utilise()){
+            b = estConnexe(e);
         }
-        boolean b = estConnexe(e);
-        deposePion(new Depot(e.joueur(), e.type(), e.position()));
         if(b){
+        Coup[] coups = e.deplacementValide(clone().matrice);
             for(int i=0; i<coups.length; i++){
                 b |= d.equals(coups[i]);
             }
@@ -252,23 +249,37 @@ public class Plateau extends Composant {
     
     public boolean estConnexe(Insecte e){
         boolean b = true;
-        Iterator<Point> it1 = voisins.get(e.position()).iterator();
-        while(it1.hasNext()){
-            Iterator<Point> it2 = utilises.iterator();
+        List<Point> u = cloneList(utilises);
+        Map<Point, List<Point>> v = new HashMap();
+        for(Map.Entry<Point, List<Point>> entry : voisins.entrySet())
+            v.put(new Point(entry.getKey().x(), entry.getKey().y()), cloneList(entry.getValue()));
+        List<Point> marque = new ArrayList();
+        u.remove(e.position());
+        v.remove(e);
+        if(u.size()==1){
+            return true;
+        }else{
+            b &= voisin(u.get(0), u.get(1),u);
+        }
+        
+        /*Iterator<Point> it1 = v.get(e.position()).iterator();
+        while(it1.hasNext() && b){
+            Iterator<Point> it2 = u.iterator();
             Point tmp = it1.next();
             while(it2.hasNext()){
                 Point tmp2 = it2.next();
-                if(!tmp.equals(tmp2) && !voisins.get(tmp).contains(tmp2)){
-                    b&=voisin(tmp, tmp2, cloneList(utilises));
+                if(!tmp.equals(tmp2) && !v.get(tmp).contains(tmp2) && !marque.contains(tmp2)){
+                    b&=voisin(tmp, tmp2, cloneList(u));
                 }
             }
+            marque.add(tmp);
                 
-        }
+        }*/
         
-        utilises.remove(e.position());
-        voisins.remove(e.position());
         return b;
     }
+    
+    //Voisins direct et indirect
     public boolean voisin(Point p1, Point p2, List<Point> k){
         if(k.isEmpty()){
             if(voisins.get(p1)!=null)
@@ -365,6 +376,7 @@ public class Plateau extends Composant {
         while(u.hasNext()){
             Point tmp = u.next();
             if(matrice.get(tmp).tete().joueur()==j){
+                System.out.println(matrice.get(tmp).tete());
                 List<Coup> cBis = deplacementPossible(matrice.get(tmp).tete());
                 if(cBis != null)
                     c.addAll(cBis);
@@ -386,18 +398,13 @@ public class Plateau extends Composant {
         List<Coup[]> tab = new ArrayList();
         List<Coup> c = new ArrayList();
         boolean b = true;
-        Case ca = matrice.get(e.position());
+        Case ca = matrice.get(e.position()).clone();
         ca.retirePion();
-        if(ca.utilise())
-            matrice.put(e.position(), ca);
-        else{
-            matrice.remove(e.position());
+        if(!ca.utilise()){
             b = estConnexe(e);
         }
-        this.deposePion(new Depot(e.joueur(), e.type(), e.position()));
-        
         if(b){
-            Coup[] cp = matrice.get(e.position()).tete().deplacementValide(this.matrice());
+            Coup[] cp = matrice.get(e.position()).tete().deplacementValide(this.clone().matrice());
 
             for(int k=0; k<cp.length; k++){
                 if(cp[k] instanceof Deplacement){

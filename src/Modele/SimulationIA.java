@@ -61,7 +61,7 @@ public class SimulationIA extends Arbitre {
 
             if(plateau.estEncerclee(jCourant)){
                 System.err.println(jCourant+" à perdu");
-            }else if(nul())
+            }else if(false)
                 System.err.println("Match null");
             else{
                 boolean b = true;
@@ -70,7 +70,7 @@ public class SimulationIA extends Arbitre {
             
                 deplacements = deplacementPossible(jCourant);
                 aucun = deplacements==null || deplacements.length<=0;
-                if(plateau.aucunCoup(jCourant) && b){
+                if(aucun && b){
                     prochainJoueur();
                 }else{
                     if(joueurs[jCourant] instanceof Ordinateur){
