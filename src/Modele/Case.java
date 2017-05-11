@@ -30,7 +30,7 @@ public class Case extends Composant{
     }
     
     public void pointe() {
-        EST_POINTE = true;
+        //EST_POINTE = true;
         this.tete().pointe();
     }
     
@@ -71,7 +71,7 @@ public class Case extends Composant{
     public boolean accept(Visiteur v) {
         boolean b = v.visite(this);
         if(utilise())
-            b |= v.visite(tete());
+            b |= tete().accept(v);
         return b;
     }
     

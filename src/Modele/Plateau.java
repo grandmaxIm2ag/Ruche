@@ -266,7 +266,7 @@ public class Plateau extends Composant {
     public boolean accept(Visiteur v) {
         boolean b=v.visite(this);
         for(Map.Entry<Point,Case> entry : matrice.entrySet()) {
-            b|=v.visite(entry.getValue());
+            b|= entry.getValue().accept(v);//v.visite(entry.getValue());
         }
             
         return b;

@@ -51,9 +51,10 @@ public class Pointeur extends Visiteur {
             
             b = b&&((x1*y2) - (x2*y1))>0;
         }
-        if (b)
-            //System.out.println("[" + c.position().x()+ ";" + c.position().y()+ "]");
-            c.pointe();
+        if (b) {
+            System.out.println("[" + c.position().x()+ ";" + c.position().y()+ "]");
+            c.tete().pointe();
+        }
         return false;
     }
 }
