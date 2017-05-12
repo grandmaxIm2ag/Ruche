@@ -65,7 +65,7 @@ import javax.imageio.ImageIO;
 
 /**
  *
- * @author grandmax
+ * @author brignone
  */
 public class Interface extends Application{
     
@@ -179,6 +179,7 @@ public class Interface extends Application{
         box.getChildren().addAll(btPrec, btSuiv, btSave, btMenu);
         
         c.setOnMouseMoved(new Souris(arbitre, Souris.SOURIS_BOUGEE,c));
+        //cj1.setOnMouseMoved(new Souris(arbitre, Souris.SOURIS_BOUGEE,cj1));
         
         Animation anim = new Animation(arbitre, c, cj1, cj2);
         anim.start();

@@ -5,6 +5,8 @@
  */
 package Modele;
 
+import Vue.ButtonDrawer;
+
 /**
  *
  * @author grandmax
@@ -51,5 +53,8 @@ public abstract class Visiteur {
     }
     public boolean visite(Coccinelle p){
         return visite((Insecte) p);
+    }
+    public boolean visite (ButtonDrawer b) {
+        return false;
     }
 }

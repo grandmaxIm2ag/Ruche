@@ -101,6 +101,8 @@ public class ButtonDrawer extends Visiteur {
             couleur = Color.GREEN;
         else
             couleur = Color.CORNFLOWERBLUE;
+        if (i.estpointe())
+            couleur = Color.RED;
         gc.setFill(couleur);
         gc.fillPolygon(coords[0], coords[1], 6);
         InputStream image = null;
@@ -118,6 +120,8 @@ public class ButtonDrawer extends Visiteur {
             couleur = Color.GREEN;
         else
             couleur = Color.CORNFLOWERBLUE;
+        if (i.estpointe())
+            couleur = Color.RED;
         gc.setFill(couleur);
         gc.fillPolygon(coords[0], coords[1], 6);
         InputStream image = null;
@@ -135,6 +139,8 @@ public class ButtonDrawer extends Visiteur {
             couleur = Color.GREEN;
         else
             couleur = Color.CORNFLOWERBLUE;
+        if (i.estpointe())
+            couleur = Color.RED;
         gc.setFill(couleur);
         gc.fillPolygon(coords[0], coords[1], 6);
         InputStream image = null;
@@ -152,6 +158,8 @@ public class ButtonDrawer extends Visiteur {
             couleur = Color.GREEN;
         else
             couleur = Color.CORNFLOWERBLUE;
+        if (i.estpointe())
+            couleur = Color.RED;
         gc.setFill(couleur);        
         gc.fillPolygon(coords[0], coords[1], 6);
         InputStream image = null;
@@ -169,6 +177,8 @@ public class ButtonDrawer extends Visiteur {
             couleur = Color.GREEN;
         else
             couleur = Color.CORNFLOWERBLUE;
+        if (i.estpointe())
+            couleur = Color.RED;
         gc.setFill(couleur);
         gc.fillPolygon(coords[0], coords[1], 6);
         InputStream image = null;
@@ -186,6 +196,8 @@ public class ButtonDrawer extends Visiteur {
             couleur = Color.GREEN;
         else
             couleur = Color.CORNFLOWERBLUE;
+        if (i.estpointe())
+            couleur = Color.RED;
         gc.setFill(couleur);
         gc.fillPolygon(coords[0], coords[1], 6);
         InputStream image = null;
@@ -203,6 +215,8 @@ public class ButtonDrawer extends Visiteur {
             couleur = Color.GREEN;
         else
             couleur = Color.CORNFLOWERBLUE;
+        if (i.estpointe())
+            couleur = Color.RED;
         gc.setFill(couleur);
         gc.fillPolygon(coords[0], coords[1], 6);
         InputStream image = null;
@@ -220,6 +234,8 @@ public class ButtonDrawer extends Visiteur {
             couleur = Color.GREEN;
         else
             couleur = Color.CORNFLOWERBLUE;
+        if (i.estpointe())
+            couleur = Color.RED;
         gc.setFill(couleur);
         gc.fillPolygon(coords[0], coords[1], 6);
         InputStream image = null;
@@ -227,6 +243,10 @@ public class ButtonDrawer extends Visiteur {
         Image img = new Image(image,((etendeur.h()/2)*1.75),((etendeur.h()/2)*1.75),true, true);
         gc.drawImage(img,etendeur.x()-(img.getWidth()/2), etendeur.y()-(img.getHeight()/2));
         return false;
+    }
+    
+    public boolean accept (Visiteur v) {
+        return v.visite(this);
     }
     
     
