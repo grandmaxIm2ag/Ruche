@@ -110,7 +110,7 @@ public class SimulationIA extends Arbitre {
             while(it.hasNext())
                 taille+=it.next().length;
             it = tab.iterator();
-            System.out.println("Il y a "+taille+" coups possibles");
+            System.out.println("Il y a "+taille+" coups possibles pour "+jCourant);
             coups = new Coup[taille];
             int i=0;
             while(it.hasNext()){
@@ -141,7 +141,7 @@ public class SimulationIA extends Arbitre {
                 nbCoup[jCourant]++;
                 refaire.clear();
                 historique.add(d);
-                System.err.println(d+" déplacement effectué");
+                System.err.println(d+" déplacement effectué par "+jCourant);
                 etat=JOUE_EN_COURS;
          
     }
@@ -152,7 +152,7 @@ public class SimulationIA extends Arbitre {
             nbCoup[jCourant]++;
             refaire.clear();
             historique.add(d);
-            System.err.println("1- Dépot effectué "+d);
+            System.err.println("1- Dépot effectué par "+jCourant+" "+d);
             etat=JOUE_EN_COURS;
         }else if(nbCoup[jCourant]==0 && jCourant == J2){
             if(plateau.premierPionValide(d)){
