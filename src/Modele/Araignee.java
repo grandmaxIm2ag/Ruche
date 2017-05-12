@@ -52,12 +52,12 @@ public class Araignee extends Insecte{
         for(int i=0; i<2; i++){
             while(!aVisiter.isEmpty()){
                 Deplacement tmp1 = aVisiter.pop();
-                Point tmp2 = tmp1.destination();
+                Point tmp2 = tmp1.destination().clone();
                 pos.fixe(tmp2.x(), tmp2.y());
                 co = glisser(plateau);
                 it = co.iterator();
                 while(it.hasNext()){
-                    Point po = it.next().destination();
+                    Point po = it.next().destination().clone();
                     if(!tmp1.aDejaVisite(po)){
                         Deplacement clone = tmp1.clone();
                         

@@ -89,9 +89,7 @@ public class SimulationIA extends Arbitre {
         if(plateau.estEncerclee(jCourant)){
             etat=FIN;
             System.err.println(jCourant+" à perdu");
-        }else if(false)
-           System.err.println("Match null");
-        else{
+        }else{
             List<Coup[]> tab = new LinkedList();
             for(int i=0; i<joueurs[jCourant].pions().length; i++){
                 if(joueurs[jCourant].pions()[i]!=0){
@@ -110,18 +108,21 @@ public class SimulationIA extends Arbitre {
             while(it.hasNext())
                 taille+=it.next().length;
             it = tab.iterator();
-            System.out.println("Il y a "+taille+" coups possibles");
+            System.out.println(nbCoup[J1]+" "+nbCoup[J2]);
             coups = new Coup[taille];
             int i=0;
             while(it.hasNext()){
                 Coup[] x = it.next();
                 int j;
-                for(j=0; j<x.length; j++)
+                for(j=0; j<x.length; j++){
                     coups[i+j]=x[j];
+                    //System.out.println(coups[i+j]+" "+(i+j));
+                }
                  i+=j;
             }
             aucun = coups == null || coups.length<=0;
             if(aucun){
+                System.out.println("Coucou");
                 prochainJoueur();
             }else if(precAucun && aucun){
                 etat=FIN;
