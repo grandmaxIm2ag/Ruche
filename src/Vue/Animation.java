@@ -32,7 +32,7 @@ public class Animation extends AnimationTimer{
     @Override
     public void handle(long l) {
         arbitre.accept(dessinateur);
-        arbitre.acceptButton(buttonDrawer);
+        //arbitre.acceptButton(buttonDrawer);
     }
     
 }

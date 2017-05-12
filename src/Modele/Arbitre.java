@@ -41,6 +41,8 @@ public class Arbitre {
     
     int[] nbCoup;
     
+    
+    
     public Arbitre(Properties p){
         Reglage.init(p);
         prop = p;

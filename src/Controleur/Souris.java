@@ -23,17 +23,20 @@ public class Souris implements EventHandler<MouseEvent>{
     Arbitre a;
     int value;
     Canvas c;
+    Pointeur p;
     
     public Souris (Arbitre a, int v, Canvas c) {
         this.a = a;
         this.value = v;
         this.c = c;
+        System.out.println("Caca");
+        p = new Pointeur(c);
     }
 
     @Override
     public void handle(MouseEvent t) {
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        Pointeur p = new Pointeur(c, t);
+        p.addEvent(t);
         a.accept(p);
     }
     

@@ -31,6 +31,16 @@ public class Pointeur extends Visiteur {
         etendeur = new Etendeur();
     }
     
+    public Pointeur (Canvas c) {
+        this.c = c;
+        this.me = me;
+        etendeur = new Etendeur();
+    }
+    
+    public void addEvent (MouseEvent me) {
+        this.me = me;
+    }
+    
     @Override
     public boolean visite (Plateau p) {
         etendeur.fixeEchelle(c, p);

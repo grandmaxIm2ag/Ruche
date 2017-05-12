@@ -24,6 +24,7 @@ public class Etendeur {
     
     public Etendeur () {
         py = py(1);
+        System.out.println(py);
     }
     
     public void fixeEchelle(Canvas c, Plateau p){
