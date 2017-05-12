@@ -20,11 +20,13 @@ public class Animation extends AnimationTimer{
     Arbitre arbitre;
     Canvas can;
     Visiteur dessinateur;
+    Visiteur buttonDrawer;
     
-    Animation (Arbitre a, Canvas c) {
+    Animation (Arbitre a, Canvas c, Canvas cj1, Canvas cj2) {
         arbitre = a;
         can = c;
         dessinateur = new Dessinateur (c);
+        buttonDrawer = new ButtonDrawer(cj1, cj2);
     }
     
     @Override
@@ -32,6 +34,7 @@ public class Animation extends AnimationTimer{
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         arbitre.maj(l);
         arbitre.accept(dessinateur);
+        //arbitre.acceptButton(buttonDrawer);
     }
     
 }

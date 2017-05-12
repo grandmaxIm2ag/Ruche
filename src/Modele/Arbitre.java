@@ -328,6 +328,11 @@ public class Arbitre {
     public void accept(Visiteur dessinateur) {
         plateau.accept(dessinateur);
     }
+    
+    public void acceptButton(Visiteur buttonDrawer) {
+        buttonDrawer.visite(this);
+    }
+        
 
     public void prochainJoueur() {
         

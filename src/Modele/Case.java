@@ -14,9 +14,32 @@ import java.util.Stack;
 public class Case extends Composant{
     Stack<Insecte> insectes;
     
+    public final static int EST = 0;
+    public final static int OUEST = 1;
+    public final static int NEST = 2;
+    public final static int NOUEST = 3;
+    public final static int SEST = 4;
+    public final static int SOUEST = 5;
+    
+    public static boolean EST_POINTE = false;
+    
+    
     public Case(double x, double y, double larg, double haut){
         super(x,y,larg, haut);
         insectes = new Stack();
+    }
+    
+    public void pointe() {
+        //EST_POINTE = true;
+        this.tete().pointe();
+    }
+    
+    public void depointe() {
+        EST_POINTE = false;
+    }
+    
+    public boolean estpointe () {
+        return EST_POINTE;
     }
     
     public boolean utilise(){
@@ -48,7 +71,7 @@ public class Case extends Composant{
     public boolean accept(Visiteur v) {
         boolean b = v.visite(this);
         if(utilise())
-            b |= v.visite(tete());
+            b |= tete().accept(v);
         return b;
     }
     

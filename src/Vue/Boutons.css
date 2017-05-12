@@ -1,0 +1,26 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 12 mai 2017, 14:35:20
+    Author     : brignone
+*/
+
+.star-button {
+    -outer-border-color: linear-gradient(from 0% 0% to 100% 100%, goldenrod 0%, darkgoldenrod 100%);
+    -inner-border-color: lightgoldenrodyellow;
+    /*-fill-color: linear-gradient(from 0% 0% to 100% 100%, lightgoldenrodyellow 0%, yellow 10%, gold 50%, gold 75%, orange 100%);*/
+    -fill-color: radial-gradient(center 100% 100%, radius 100%, orange 10%, gold 25%, gold 50%, yellow 80%, lightgoldenrodyellow 100%);
+    -fx-shape: "m 330,365.21935 c -6.20565,4.97745 -97.52794,-42.69418 -105.47409,-42.31493 -7.94615,0.37925 -94.31316,56.53157 -100.96465,52.16776 -6.65149,-4.36381 10.46679,-105.9478 7.6506,-113.38785 C 128.39568,254.24429 48.302777,189.4564 50.397583,181.78197 52.49239,174.10753 154.39435,158.9968 160.6,154.01935 c 6.20565,-4.97745 43.07253,-101.170885 51.01868,-101.550136 7.94615,-0.379251 53.80675,91.865796 60.45824,96.229606 6.65149,4.36381 109.52937,9.70089 112.34556,17.14093 2.81618,7.44004 -70.74237,79.56135 -72.83717,87.23579 C 309.4905,260.74997 336.20565,360.2419 330,365.21935 Z";    
+    -fx-background-color: -outer-border-color, -inner-border-color, -fill-color;
+    -fx-background-insets: 0px, 5px, 10px;
+}
+.star-button:hover {
+    -fx-scale-x: 1.2;
+    -fx-scale-y: 1.2;
+}
+.star-button:focused {
+    -outer-border-color: cornflowerblue;
+}

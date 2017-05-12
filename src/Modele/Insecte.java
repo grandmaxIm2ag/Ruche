@@ -24,11 +24,26 @@ public abstract class Insecte extends Composant{
     public final static int CLOP = 7;
     public final static int NB_TYPE = 8;
     
+    public boolean EST_POINTE;
+    
     int joueur;
     
     public Insecte(double x, double y, double larg, double haut, int j) {
         super(x, y, larg, haut);
         joueur = j;
+        EST_POINTE = false;
+    }
+    
+    public void pointe() {
+        EST_POINTE = true;
+    }
+    
+    public void depointe() {
+        EST_POINTE = false;
+    }
+    
+    public boolean estpointe () {
+        return EST_POINTE;
     }
 
     
@@ -145,4 +160,6 @@ public abstract class Insecte extends Composant{
     public String toString(){
         return "["+type()+"/"+joueur()+"/"+pos+"]";
     }
+    
+   
 }

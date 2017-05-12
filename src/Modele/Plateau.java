@@ -406,13 +406,19 @@ public class Plateau extends Composant {
     public boolean accept(Visiteur v) {
         boolean b=v.visite(this);
         for(Map.Entry<Point,Case> entry : matrice.entrySet()) {
-            b|=v.visite(entry.getValue());
+            b|= entry.getValue().accept(v);//v.visite(entry.getValue());
         }
             
         return b;
     }
     
-    @Override
+    public void depointe () {
+        for(Map.Entry<Point,Case> entry : matrice.entrySet()) {
+            entry.getValue().depointe();
+            entry.getValue().tete().depointe();
+        }
+    }
+    
     public Plateau clone(){
         Plateau nouv = new Plateau(pos.x(), pos.y(), l, h, prop);
         
