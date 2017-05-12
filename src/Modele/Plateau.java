@@ -7,6 +7,7 @@
 package Modele;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -23,31 +24,40 @@ import ruche.Reglage;
 public class Plateau extends Composant {
     public class UnionFind{
         int[] parent;
+        int[] rang;
             
         public UnionFind(int idx){
             parent = new int[idx];
-            for(int i=0; i<idx; i++)
+            rang = new int[idx];
+            for(int i=0; i<idx; i++){
                 parent[i] = i;
+                rang[i]=0;
+            }   
         }
-        int find(int i){
-            int j = i;
-            while (parent[j] != j) {
-                j = parent [j];
+        
+        int find(int p) {
+            while (p != parent[p]) {
+                parent[p] = parent[parent[p]];    // path compression by halving
+                p = parent[p];
             }
-            return j;
+            return p;
         }
-        int[] union(int i, int j){
-            parent[find(j)] = find(i);
-            return parent;
+        
+        void union(int i, int j){
+            int iRacine = find(i);
+            int jRacine = find(j);
+            if(jRacine!=iRacine)
+                if(rang[iRacine]<rang[jRacine])
+                    parent[iRacine]=jRacine;
+                else{
+                    parent[jRacine]=iRacine;
+                    if(rang[iRacine]==rang[jRacine])
+                        rang[iRacine]++;
+                }
+                    
         }
-        boolean estConnexe(){
-            int  nbComp = 0;
-                
-            for(int i=0; i<parent.length; i++)
-                if(parent[i]==i)
-                    nbComp++;
-                
-            return nbComp==1;
+        boolean connecter(int i, int j){
+            return find(i)==find(j);
         }
     }
     
@@ -315,20 +325,31 @@ public class Plateau extends Composant {
             
         }
         
+        v.remove(e.position());
+        u.remove(e.position());
         UnionFind uf = new UnionFind(idx);
         
+        List<Point> marquer = new ArrayList();
         for(Map.Entry<Point, List<Point>> entry : v.entrySet()){
+            marquer.add(entry.getKey());
             List<Point> v2 = entry.getValue();
             Iterator<Point> it = v2.iterator();
-            while(it.hasNext())
-                uf.union(0, m.get(it.next()));
+            while(it.hasNext()){
+                Point p = it.next().clone();
+                if(!marquer.contains(p))
+                    uf.union(m.get(entry.getKey()), m.get(p));
+            }
         }
         
+        b = true;
+        Point p = u.get(0).clone();
+        for(Point p2 : u)
+            b&=uf.connecter(m.get(p), m.get(p2));
         
-        return uf.estConnexe();
-        
+        return b;
         
         /*
+        
         u.remove(e.position());
         v.remove(e.position());
         if(u.isEmpty()){
@@ -352,8 +373,9 @@ public class Plateau extends Composant {
                     b &= voisin(tmp, p, cloneList(u), v);
             }
         }
-        */
-    }
+                
+        return b;
+*/    }
     
     //Voisins directs et indirects
     public boolean voisin(Point p1, Point p2, List<Point> k, Map<Point, List<Point>> v)

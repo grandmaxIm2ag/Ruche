@@ -39,7 +39,7 @@ public class Ordinateur extends Joueur{
     public final static int DIFFICILE=2;
     
     
-    public final static long GRAINE = (long)System.nanoTime();
+    public final static long GRAINE = 2992397;//(long)System.nanoTime();
     //public final static long GRAINE =4359965796962;
     Random r;
     

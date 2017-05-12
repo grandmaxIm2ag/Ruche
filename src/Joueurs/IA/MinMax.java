@@ -19,7 +19,7 @@ public class MinMax extends AI {
         super(me, a, heuristicFunction, searchDepth, maxTimeInMillis);
     }
     
-    
+    /*
      public Coup nextmove(int profondeur){
         int max_poids = -10000;
         int meilleur_coup = 1;
@@ -76,4 +76,5 @@ public class MinMax extends AI {
         }
         return min_poids;
     }
+    */
 }
