@@ -44,19 +44,21 @@ public class Ordinateur extends Joueur{
     Random r;
     
     Map<Plateau, Integer> configurations;
+    public Coup[] d;
 
     
     public Ordinateur(boolean m, int d, Properties p, int[] tabP, int j) {
         super(m, p, tabP, j);
         difficulte = d;
         if(difficulte==0||difficulte==-1){
-            System.out.println("GRAINE: "+GRAINE);///////////////////////////////////////////////////////////////////////////////////
+            System.out.println("GRAINE: "+GRAINE);
             r= new Random(GRAINE);
         }
         configurations = new HashMap();
     }
     
     public Coup coup(Arbitre a, Coup[] d){
+        this.d = d;
         //Coup=Dépot ou Déplacement
         switch(difficulte){
             case FACILE_ALEATOIRE:

@@ -65,4 +65,7 @@ public abstract class Joueur {
         tabPieces[t]--;
     }
     
+    public int numJ(){
+        return numJoueur;
+    }
 }
