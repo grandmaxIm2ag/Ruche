@@ -9,7 +9,7 @@ package Modele;
  *
  * @author grandmax
  */
-public class Point {
+public class Point implements Comparable {
     double x, y;
     
     public Point(double x, double y){
@@ -56,5 +56,14 @@ public class Point {
     public Point clone(){
         Point nouv = new Point(x(), y());
         return nouv;
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        if(o instanceof Point){
+            Point p = (Point) o;
+            return y < p.y ? -1 : y > p.y ? 1 : x < p.x ? -1 : x > p.x ? 1 : 0;
+        }
+        return -1;
     }
 }

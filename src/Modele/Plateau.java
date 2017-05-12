@@ -21,6 +21,37 @@ import ruche.Reglage;
  * @author grandmax
  */
 public class Plateau extends Composant {
+    public class UnionFind{
+        int[] parent;
+            
+        public UnionFind(int idx){
+            parent = new int[idx];
+            for(int i=0; i<idx; i++)
+                parent[i] = i;
+        }
+        int find(int i){
+            int j = i;
+            while (parent[j] != j) {
+                j = parent [j];
+            }
+            return j;
+        }
+        int[] union(int i, int j){
+            parent[find(j)] = find(i);
+            return parent;
+        }
+        boolean estConnexe(){
+            int  nbComp = 0;
+                
+            for(int i=0; i<parent.length; i++)
+                if(parent[i]==i)
+                    nbComp++;
+                
+            return nbComp==1;
+        }
+    }
+    
+    
     public final static int EST = 0;
     public final static int OUEST = 1;
     public final static int NORD = 2;
@@ -268,33 +299,33 @@ public class Plateau extends Composant {
         return voisins.get(reines[j]).size()>=6;
     }
     
+    
     public boolean estConnexe(Insecte e){
         boolean b = true;
         List<Point> u = cloneList(utilises);
         Map<Point, List<Point>> v = new HashMap();
-        Map<Point, Boolean> m = new HashMap();
-        int nonAtteint = 0;
+        Map<Point, Integer> m = new HashMap();
+        int idx = 0;
         for(Map.Entry<Point, List<Point>> entry : voisins.entrySet()){
             List<Point> v2 = cloneList(entry.getValue());
             if(v2.contains(e.position()))
                 v2.remove(e.position());
             v.put(entry.getKey().clone(), v2);
-            m.put(entry.getKey().clone(), false);
-            nonAtteint++;
-        }
-        for(Map.Entry<Point, List<Point>> entry : v.entrySet() ){
-            List<Point> v2 = entry.getValue();
-            for(Point p : v2){
-                if(nonAtteint<=0)
-                    return true;
-                if(!m.get(p)){
-                    m.put(p,true);
-                    nonAtteint--;
-                }
-            }
+            m.put(entry.getKey().clone(), idx++);
+            
         }
         
-        return nonAtteint<=0;
+        UnionFind uf = new UnionFind(idx);
+        
+        for(Map.Entry<Point, List<Point>> entry : v.entrySet()){
+            List<Point> v2 = entry.getValue();
+            Iterator<Point> it = v2.iterator();
+            while(it.hasNext())
+                uf.union(0, m.get(it.next()));
+        }
+        
+        
+        return uf.estConnexe();
         
         
         /*
