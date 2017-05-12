@@ -39,38 +39,26 @@ public class Ordinateur extends Joueur{
     public final static int DIFFICILE=2;
     
     
-    public final static long GRAINE = System.nanoTime();
+    public final static long GRAINE = (long)System.nanoTime();
+    //public final static long GRAINE =4359965796962;
     Random r;
     
     Map<Plateau, Integer> configurations;
-    //public int[] tabPieces;
-    //public int nbPieces;
+    public Coup[] d;
+
     
     public Ordinateur(boolean m, int d, Properties p, int[] tabP, int j) {
         super(m, p, tabP, j);
         difficulte = d;
         if(difficulte==0||difficulte==-1){
+            System.out.println("GRAINE: "+GRAINE);
             r= new Random(GRAINE);
         }
         configurations = new HashMap();
-        //this.tabPieces= tabP;
-        //this.nbPieces=nbP;
-        //Reglage.init(prop);
-        /*
-        tabPieces[0]=(int)Reglage.lis("nbReine");
-        tabPieces[1]=(int)Reglage.lis("nbScarabee");
-        tabPieces[2]=(int)Reglage.lis("nbSauterelle");
-        tabPieces[3]=(int)Reglage.lis("nbFourmi");
-        tabPieces[4]=(int)Reglage.lis("nbAraignee");
-        tabPieces[5]=(int)Reglage.lis("nbCoccinelle");
-        tabPieces[6]=(int)Reglage.lis("nbMoustique");  
-        tabPieces[7]=(int)Reglage.lis("nbCloporte");
-        for(int i=0; i<tabPieces.length; i=i+1){
-            nbPieces=nbPieces+tabPieces[i];
-        }
-        */
     }
+    
     public Coup coup(Arbitre a, Coup[] d){
+        this.d = d;
         //Coup=Dépot ou Déplacement
         switch(difficulte){
             case FACILE_ALEATOIRE:
@@ -130,46 +118,36 @@ public class Ordinateur extends Joueur{
     }
     
     public Coup heuristiqueSurUnSeulCoup(Arbitre a, Coup[] d){
-        ArrayList<Coup[]> l=new ArrayList<>();
-        //Déplacements
-        Coup[] t;
-        if(d!=null && d.length>0)
-            l.add(d);
-        //choisir le coup pour lequel l'heuristique est maximale
-        Iterator<Coup[]> it =l.iterator();
-        if(it.hasNext()){
+        if(d!=null && d.length>0){
+            //choisir le coup pour lequel l'heuristique est maximale
             ArrayList<Coup> res=new ArrayList();
-            //res.add(it.next()[0]);
-            Plateau tmp=a.plateau().clone();
-            int max=Integer.MIN_VALUE; //heuristique_Simple_Profondeur1_PointDeVueIA(tmp);
+            Plateau tmp;
+            int max=Integer.MIN_VALUE;
             int heurCoup;
             
-            while(it.hasNext()){
-                Coup[] courant=it.next();
-                for(int i=0;i<courant.length;i=i+1){
-                    tmp=a.plateau().clone();
+            for(int i=0;i<d.length;i=i+1){
+                tmp=a.plateau().clone();
                     
-                    if(courant[i] instanceof Depot)
-                        tmp.deposePion((Depot)courant[i]);
-                    else if(courant[i] instanceof Deplacement)
-                        tmp.deplacePion((Deplacement)courant[i]);
-                    else
-                        continue;
-                    
-                    heurCoup=heuristique_Simple_Profondeur1_PointDeVueIA(tmp, d);
-                    if(heurCoup==max){
-                        //ajout à res
-                        res.add(courant[i]);
-                    }else if(heurCoup>max){
-                        max=heurCoup;
-                        res.clear();
-                        res.add(courant[i]);
-                    }
+                if(d[i] instanceof Depot){
+                    tmp.deposePion((Depot)d[i]);
+                }else if(d[i] instanceof Deplacement){
+                    tmp.deplacePion((Deplacement)d[i]);
+                }else{
+                    continue;
                 }      
+                heurCoup=heuristique_Simple_Profondeur1_PointDeVueIA(tmp, d);
+                if(heurCoup==max){
+                    //ajout à res
+                    res.add(d[i]);
+                }else if(heurCoup>max){
+                    max=heurCoup;
+                    res.clear();
+                    res.add(d[i]);
+                }
             }
             //choix aléatoire
             int choix= r.nextInt(res.size());
-            return res.get(choix);
+                return res.get(choix);
         }else{
             System.out.println("BUG");
             return null;
@@ -178,8 +156,9 @@ public class Ordinateur extends Joueur{
     
     public int heuristique_Simple_Profondeur1_PointDeVueIA(Plateau p, Coup[] d){
         
-        if(configurations.get(p)!=null)
+        if(configurations.get(p)!=null){
             return configurations.get(p);
+        }
         
         int heuristique=0;
         if(p.estEncerclee(numJoueur)){
@@ -208,26 +187,24 @@ public class Ordinateur extends Joueur{
     
     public int nbLiberteesReine(Plateau p, int joueur){
         //compter les voisins
-        if(p.reine(joueur)==null || p.voisins().get(p.reine(joueur))==null)
+        if(p.reine(joueur)==null || p.voisins().get(p.reine(joueur))==null){
             return 6;
-        
+        }
         return 6-p.voisins().get(p.reine(joueur)).size();
     }
     
     public boolean reineLibre(Plateau p, int joueur, Coup[] d){
-        
-        if(p.reine(joueur)==null)
+        if(p.reine(joueur)==null){
             return true;
+        }
         Case caseReine=p.matrice.get(p.reine(joueur));
-        if(d==null || d.length==0 || caseReine.tete().type()!=Insecte.REINE )
+        if(d==null || d.length==0 || caseReine.tete().type()!=Insecte.REINE ){
             return false;
-        
-        
+        }
         boolean b = false;
         
         for(int i=0; i<d.length && !b; i++){
-            if(d[i] instanceof Deplacement)
-            {
+            if(d[i] instanceof Deplacement){
                 Deplacement d2 = (Deplacement) d[i];
                 b = b || (d2.joueur()==joueur && d2.source().equals(p.reine(joueur))) ;
             }
