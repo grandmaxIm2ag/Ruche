@@ -12,107 +12,203 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Stack;
 import java.util.TreeMap;
+import ruche.Reglage;
 
 /**
  *
  * @author grandmax
  */
 public class Plateau extends Composant {
-    public Case[][] matrice;
-    int xMin, yMin;
+    public final static int EST = 0;
+    public final static int OUEST = 1;
+    public final static int NORD = 2;
+    public final static int SUD = 3;
+    public final static int ESTE = 4;
+    public final static int NEST = 5;
+    public final static int SEST = 6;
+    public final static int OUESTE = 7;
+    public final static int NOUEST = 8;
+    public final static int SOUEST = 9;
+    public Map<Point, Case> matrice;
+    int xMin, yMin, xMax, yMax;
     Properties prop;
     Point[] reines;
-
     List<Point> utilises;
     Map<Point, List<Point>> voisins;
     
+    int pass;
+    int jCourant;
+    
     public Plateau(double x, double y, double larg, double haut, Properties p) {
         super(x, y, larg, haut);
-        matrice = new Case[(int)larg*2][(int)larg*2];
+        matrice = new HashMap();
         prop = p;
         
         voisins = new HashMap();
         utilises = new ArrayList();
+        reines = new Point[2];
+        pass=0;
+        xMin=0; xMax = 0; yMin=0; yMax=0;
+        jCourant = Arbitre.J1;
     }
     
+    public void setReine(int idx, Point p){
+        reines[idx] = p;
+    }
     public void premierPion(Insecte e){
-        matrice[(int)(l-1)][(int)(l-1)].deposePion(e);
+        Case c = new Case(0,0, 1, 1);
+        c.deposePion(e);
+        if(e.type()==Insecte.REINE)
+            reines[Arbitre.J1] = new Point(0,0);
+        matrice.put(new Point(0,0), c);
+        utilises.add(new Point(0,0));
+        voisins.put(new Point(0,0), new ArrayList());
     }
     
+    // Cette fonction est là pour tester hein
+    public void addPion () {
+        Case c = new Case(1,0,1,1);
+        c.deposePion(new Reine(1,0,1,1));
+        matrice.put(new Point(1,0), c);
+        
+        c = new Case(0,1,1,1);
+        c.deposePion(new Reine(0,1,1,1));
+        matrice.put(new Point(0,1), c);
+        
+        c = new Case(1,1,1,1);
+        c.deposePion(new Reine(1,1,1,1));
+        matrice.put(new Point(1,1), c);
+        
+        c = new Case(1,1,1,1);
+        c.deposePion(new Reine(1,1,1,1));
+        matrice.put(new Point(-1,2), c);
+        
+        c = new Case(-1,2,1,1);
+        c.deposePion(new Reine(-1,2,1,1));
+        matrice.put(new Point(-1,2), c);
+        
+        xMax = 1;
+        yMax = 2;
+    }
+    
+    public boolean premierPionValide(Depot d){
+        if(d.destination().x < -1 || d.destination().y < -1 || d.destination().x > 1 || d.destination().y > 1 || (d.destination().x == -1 && d.destination().y == -1 )
+                || (d.destination().x == 1 && d.destination().y == 1 ))
+            return false;
+        return true;
+    }
     public boolean deposePionValide(Depot d){
-        boolean b = !matrice[(int)d.destination.x()][(int)d.destination.y()].utilise();
+        boolean b = (matrice.get(d.destination())==null);
+        int degres = 0;
         if(b)
             for(int i=(int)d.destination().x()-1 ; i<= (int)d.destination().x()+1 && b; i++ )
                  for(  int j= (int)d.destination().y()-1 ; j<= (int)d.destination().y()+1 && b; j++ )
-                    if(!((i==(int)pos.x()-1 && j==(int)pos.y()-1) || (i==(int)pos.x()+1 && j==(int)pos.y()+1) ))
-                        if(matrice[i][j].utilise())
-                            b&=(d.joueur()==matrice[i][j].tete().joueur());
-        return b ;
+                    if(!((i==(int)d.destination().x()-1 && j==(int)d.destination().y()-1) || (i==(int)d.destination().x()+1 && j==(int)d.destination().y()+1) ))
+                        if(matrice.get(new Point(i,j))!=null){
+                            b&=(d.joueur()==matrice.get(new Point(i,j)).tete().joueur());
+                            degres++;
+                        }
+        return b && (degres>0) ;
     }
     public boolean deplacePionValide(Deplacement d){
-        Insecte e = matrice[(int)d.source().x()][(int)d.source().y()].tete();
-        Coup[] coups = e.deplacementValide(matrice);
-        
+        Insecte e = matrice.get(d.source()).tete();
+        Case ca = matrice.get(e.position()).clone();
+        ca.retirePion();
         boolean b = false;
-        for(int i=0; i<coups.length; i++){
-            b |= d.equals(coups[i]);
+        if(!ca.utilise()){
+            b |= estConnexe(e);
         }
-        
         if(b){
-            Plateau p = clone();
-            p.matrice[(int)d.source.x()][(int)d.source.y()].retirePion();
-            p.majGraphe(d.source());
-            b &= p.estConnexe(); 
+            b=false;
+            System.out.println("coucou");
+        Coup[] coups = e.deplacementValide(clone().matrice);
+            for(int i=0; i<coups.length; i++){
+                System.out.println(coups[i]+" "+d.equals(coups[i]));
+                b |= d.equals(coups[i]);
+            }
         }
-        
         return b;
+        
     }
     public void deplacePion(Deplacement d){
-        Insecte e = matrice[(int)d.source().x()][(int)d.source().y()].retirePion();
-        matrice[(int)d.destination().x()][(int)d.destination().y()].deposePion(e);
-        majGraphe(d);
+        if(matrice.get(d.source()).tete().position().equals(reines[d.joueur()]) && matrice.get(d.source()).tete().type()==Insecte.REINE)
+            reines[d.joueur()] = d.destination();
+        
+        if(xMin > d.destination.x())
+            xMin=(int) d.destination.x();
+        if(xMax < d.destination.x())
+            xMax=(int) d.destination.x();
+        if(yMin > d.destination.y())
+            yMin=(int) d.destination.y();
+        if(yMax < d.destination.y())
+            yMax=(int) d.destination.y();
+        
+        Case c = matrice.get(d.source());
+        Insecte e = c.retirePion();
+        Case c2;
+        if(matrice.get(d.destination())==null)
+            c2 = new Case(d.destination().x(), d.destination.y(), Reglage.lis("lCase"), Reglage.lis("hCase"));
+        else
+            c2 = matrice.get(d.destination());
+        
+        e.position().fixe(d.destination().x(), d.destination().y());
+        c2.deposePion(e);
+        matrice.put(d.destination(), c2);
+        if(c.utilise())
+            matrice.put(d.source(), c);
+        else{
+            matrice.remove(c.position());
+            majGraphe(d);
+        }
+    }
+    
+    public void afficheGraphe(Map<Point, List<Point>> v){
+        System.out.println("NB PIECES POSEES "+v.size());
+        for(Map.Entry<Point, List<Point>> entry : v.entrySet()){
+                List<Point> l = entry.getValue();
+                String str = entry.getKey().toString();
+                for(Point point : l)
+                    str+=":"+point;
+                System.out.println(str);
+            }
     }
     
     public void majGraphe(Point source){
-        if(!matrice[(int)source.x()][(int)source.y()].utilise()){
-           List<Point> v = voisins.get(source);
-           Iterator<Point> it = v.iterator();
-           while(it.hasNext()){
-               Point tmp = it.next();
-               List<Point> v2 = voisins.get(tmp);
-               v2.remove(source);
-               voisins.put(tmp,v2);
-           }
+        if(matrice.get(source)==null){
            voisins.remove(source);
            utilises.remove(source);
+           for(Map.Entry<Point, List<Point> >  entry : voisins.entrySet()){
+               List<Point> v2 = entry.getValue();
+               v2.remove(source);
+               voisins.put(entry.getKey(), v2);
+           }
         }
     }
     
     public void majGraphe(Deplacement d){
-        if(!matrice[(int)d.source().x()][(int)d.source().y()].utilise()){
-           List<Point> v = voisins.get(d.source());
-           Iterator<Point> it = v.iterator();
-           while(it.hasNext()){
-               Point tmp = it.next();
-               List<Point> v2 = voisins.get(tmp);
-               v2.remove(d.source());
-               voisins.put(tmp,v2);
-           }
+        
+        if(voisins.containsKey(d.source())){
            voisins.remove(d.source());
            utilises.remove(d.source());
+           for(Map.Entry<Point, List<Point> >  entry : voisins.entrySet()){
+               List<Point> v2 = entry.getValue();
+               v2.remove(d.source());
+               voisins.put(entry.getKey(), v2);
+           }
+           
         }
         
-        if(voisins.get(d.destination())==null){
+        if(!voisins.containsKey(d.destination())){
             List<Point> v = new ArrayList();
             for(int i=(int)d.destination().x()-1 ; i<= (int)d.destination().x()+1; i++ )
                 for(  int j= (int)d.destination().y()-1 ; j<= (int)d.destination().y()+1; j++ ){
-                    if(!((i==(int)pos.x()-1 && j==(int)pos.y()-1) || (i==(int)pos.x()+1 && j==(int)pos.y()+1) ))
-                        if(matrice[i][j].utilise()){
+                    if(!((i==(int)d.destination().x()-1 && j==(int)d.destination().y()-1) || (i==(int)d.destination().x()+1 && j==(int)d.destination().y()+1) ))
+                        if(voisins.get(new Point(i,j))!=null){
                             v.add(new Point(i,j));
                         }
                 }
-            voisins.put(d.destination(), v);
             Iterator<Point> it = v.iterator();
             while(it.hasNext()){
                 Point tmp = it.next();
@@ -120,128 +216,209 @@ public class Plateau extends Composant {
                 v2.add(d.destination());
                 voisins.put(tmp, v2);
             }
+            voisins.put(d.destination(), cloneList(v));
             utilises.add(d.destination());
         }
+        
     }
-    public void deposePion(Depot d){
-        matrice[(int)d.destination().x()][(int)d.destination().y()].deposePion(FabriqueInsecte.creer(d.type(), d.joueur(), d.destination()));
+    public void majGraphe(Depot d){
+        List<Point> p = new ArrayList();
+        
+        for(int i=(int)d.destination().x()-1 ; i<= (int)d.destination().x()+1; i++ )
+            for(  int j= (int)d.destination().y()-1 ; j<= (int)d.destination().y()+1; j++ )
+                if(!((i==(int)d.destination().x()-1 && j==(int)d.destination().y()-1) || (i==(int)d.destination().x()+1 && j==(int)d.destination().y()+1) ))
+                    if(voisins.get(new Point(i,j))!=null)
+                        p.add(new Point(i,j));
+        
+        Iterator<Point> it = p.iterator();
+        while(it.hasNext()){
+            Point tmp = it.next();
+            List<Point> tmp2 = voisins.get(tmp);
+            tmp2.add(d.destination());
+            voisins.put(tmp, tmp2);
+        }
+        voisins.put(d.destination(), p);
         utilises.add(d.destination());
-        voisins.put(d.destination(), new ArrayList());
+        
+    }
+    
+    public void deposePion(Depot d){
+        if(d.type()==Insecte.REINE)
+            reines[d.joueur()] = d.destination();
+        Case c2 = new Case(d.destination().x(), d.destination.y(), Reglage.lis("lCase"), Reglage.lis("hCase"));
+        c2.deposePion(FabriqueInsecte.creer(d.type(), d.joueur(), d.destination()));
+        matrice.put(d.destination(), c2);
+        
+        if(xMin > d.destination.x())
+            xMin=(int) d.destination.x();
+        if(xMax < d.destination.x())
+            xMax=(int) d.destination.x();
+        if(yMin > d.destination.y())
+            yMin=(int) d.destination.y();
+        if(yMax < d.destination.y())
+            yMax=(int) d.destination.y();
+        
+        majGraphe(d);
     }
     public boolean estEncerclee(int j){
+        if(reines[j]==null)
+            return false;
+        return voisins.get(reines[j]).size()>=6;
+    }
+    
+    public boolean estConnexe(Insecte e){
         boolean b = true;
+        List<Point> u = cloneList(utilises);
+        Map<Point, List<Point>> v = new HashMap();
+        for(Map.Entry<Point, List<Point>> entry : voisins.entrySet()){
+            List<Point> v2 = cloneList(entry.getValue());
+            if(v2.contains(e.position()))
+                v2.remove(e.position());
+            v.put(new Point(entry.getKey().x(), entry.getKey().y()), v2);
+        }
         
-        for(int i=(int)reines[j].x()-1 ; i<= (int)reines[j].x()+1; i++ )
-            for(int k=(int)reines[j].y()-1 ; k<= (int)reines[j].y()+1; k++ )
-                if(!((i==(int)pos.x()-1 && j==(int)pos.y()-1) || (i==(int)pos.x()+1 && j==(int)pos.y()+1) ) && !matrice[i][k].position().equals(reines[j]))
-                    b &= matrice[i][k].utilise();
+        u.remove(e.position());
+        v.remove(e.position());
+        if(u.size()<=1){
+            return true;
+        }else{
+            Point tmp = u.get(u.size()-1);
+            Iterator<Point> it2 = u.iterator();
+            while(b && it2.hasNext()){
+                Point p = it2.next();
+                if(!tmp.equals(p))
+                    b &= voisin(tmp, p, cloneList(u), v);
+            }
+        }
         
         return b;
     }
     
-    public boolean estConnexe(){
-        boolean b = true;
-        Iterator<Point> it1 = utilises.iterator();
-        
-        while(it1.hasNext()){
-            Iterator<Point> it2 = cloneList(utilises).iterator();
-            Point tmp = it1.next();
-            while(it2.hasNext()){
-                Point tmp2 = it2.next();
-                if(!tmp.equals(tmp2))
-                    b&=voisin(tmp, tmp2, cloneList(utilises));
-            }
-                
-        }
-        
-        return b;
-    }
-    public boolean voisin(Point p1, Point p2, List<Point> k){
-         if(k.isEmpty()){
-             return voisins.get(p1).contains(p2);
+    //Voisins directs et indirects
+    public boolean voisin(Point p1, Point p2, List<Point> k, Map<Point, List<Point>> v){
+        if(k.isEmpty()){
+            return v.get(p1).contains(p2);
          }else{
-             Point t = k.get(0);
-            boolean b1 = voisin(p1,t,cloneList(k));
-            boolean b2 = voisin(t,p2,cloneList(k));
-            boolean b3 = voisin(p1,p2,cloneList(k));
+            Point t = k.get(k.size()-1);
+            k.remove(t);
+            boolean b3 = voisin(p1,p2,cloneList(k),v);
             
-            return ((b1&&b2)||b3);
+            if(!b3){
+                boolean b1 = voisin(p1,t,cloneList(k),v);
+                boolean b2 = voisin(t,p2,cloneList(k),v);
+                return b1&&b2;
+            }
+            return true;
          }
     }
     @Override
     public boolean equals(Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if(o instanceof Plateau){
+            Plateau pl = (Plateau) o;
+            return matrice.equals(pl.matrice);
+        }
+        return false;
     }
 
     @Override
     public boolean accept(Visiteur v) {
         boolean b=v.visite(this);
-        for(int i=0; i<matrice.length; i++)
-            for(int j=0; j<matrice[i].length; j++)
-                b |= v.visite(matrice[i][j]);
+        for(Map.Entry<Point,Case> entry : matrice.entrySet()) {
+            b|=v.visite(entry.getValue());
+        }
             
         return b;
     }
     
+    @Override
     public Plateau clone(){
         Plateau nouv = new Plateau(pos.x(), pos.y(), l, h, prop);
         
         for(int i=0; i<reines.length; i++){
-            nouv.reines[i]= new Point(0,0);
-            nouv.reines[i].fixe(reines[i].x(), reines[i].y());
+            if(reines[i]!=null){
+                nouv.reines[i]= new Point(0,0);
+                nouv.reines[i].fixe(reines[i].x(), reines[i].y());
+            }
         }
         
-        for(int i=0; i<matrice.length; i++){
-            for(int j=0; j<matrice.length; j++){
-                nouv.matrice[i][j] = matrice[i][j].clone();
-            }
+        for(Map.Entry<Point,Case> entry : matrice.entrySet()) {
+            nouv.matrice.put(entry.getKey(), entry.getValue().clone());
+        }
+        
+        nouv.utilises = cloneList(utilises);
+        for(Map.Entry<Point,List<Point>> entry : voisins.entrySet()) {
+            nouv.voisins.put(entry.getKey(), cloneList(entry.getValue()));
         }
         
         return nouv;
     }
     public static List<Point> cloneList(List<Point> list) {
-    List<Point> clone = new ArrayList<Point>(list.size());
-    for (Point item : list) clone.add(item.clone());
+    List<Point> clone = new ArrayList<>(list.size());
+    list.forEach((item) -> {
+        clone.add(item.clone());
+        });
     return clone;
 }
     @Override
     public String toString(){
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        String str = "";
+        for (Point reine : reines) {
+            str += reine + "\n";
+        }
+        
+        str+="plateau"+"\n";
+        for(Map.Entry<Point,Case> entry : matrice.entrySet()) {
+            str+=entry.getKey()+"_"+entry.getValue()+"\n";
+        }
+        str+="graphe"+"\n";
+        for(Map.Entry<Point,List<Point>> entry2 : voisins.entrySet()) {
+            Iterator<Point> it = entry2.getValue().iterator();
+            String tmp = it.next().toString();
+            while(it.hasNext()){
+                tmp+=":"+it.next();
+            }
+            str+=entry2.getKey()+":"+tmp;
+        }
+        return str;
     }
 
     public boolean aucunCoup(int joueur){
-        boolean b = this.accept(new Visiteur(){
-           public boolean visite(Insecte e){
-               return e.deplacementValide(matrice)!=null;
-           } 
-        });
-        return !b;
+        Coup[] c = deplacementPossible(joueur);
+        return c.length <= 0;
     }
     
-    public Coup[] deplacementPossible(){
-        List<Coup[]> tab = new ArrayList();
+    public Coup[] deplacementPossible(int j){
         List<Coup> c = new ArrayList();
+        List<Thread> threads = new ArrayList();
+        DeplacementPartage c2 = new DeplacementPartage();
         Iterator<Point> u = utilises.iterator();
         while(u.hasNext()){
             Point tmp = u.next();
-            tab.add(matrice[(int)tmp.x()][(int)tmp.x()].tete().deplacementValide(this.clone().matrice()));
-        }
-        Iterator<Coup[]> t = tab.iterator();
-        while(t.hasNext()){
-            Coup[] tmp = t.next();
-            for(int k=0; k<tmp.length; k++){
-                if(tmp[k] instanceof Deplacement){
-                    Deplacement d = (Deplacement) tmp[k];
-                    Plateau p = clone();
-                    p.matrice[(int)d.source.x()][(int)d.source.y()].retirePion();
-                    p.majGraphe(d.source());
-                    boolean b = p.estConnexe(); 
-                    if(b){
-                        c.add(d);
-                    }
-                }
+            if(matrice.get(tmp).tete().joueur()==j){
+                RechercheConcurente rc = new RechercheConcurente(clone(), c2, matrice.get(tmp).tete().clone());
+                threads.add(new Thread(rc));
+                
             }
         }
+        
+        System.out.println("On entre");
+        if(!threads.isEmpty()){
+            Iterator<Thread> ith = threads.iterator();
+            while(ith.hasNext()){
+                ith.next().start();
+            }
+            ith = threads.iterator();
+            while(ith.hasNext()){
+                try{
+                    ith.next().join();
+                }catch(InterruptedException e){
+
+                }
+            }
+
+            c.addAll(c2.getCoup());
+        }
+        System.out.println("On sort");
         Coup[] coups = new Coup[c.size()];
         Iterator<Coup> it = c.iterator();
         int i=0; 
@@ -250,26 +427,174 @@ public class Plateau extends Composant {
         return coups;
     }
     
-    public Coup[] depotPossible(int joueur, int t){
+    public List<Coup> deplacementPossible(Insecte e){
+        if(matrice.get(e.position()) == null || !matrice.get(e.position()).tete().equals(e) )
+            return null;
+        else if(voisins.get(matrice.get(e.position()).tete().position()).size()>4 && (matrice.get(e.position()).tete() instanceof Fourmie || matrice.get(e.position()).tete() instanceof Reine || matrice.get(e.position()).tete() instanceof Araignee ))
+            return null;
+        else if(voisins.get(e.position()).size()==4 && (
+                (voisinage(e.position(), NORD) && voisinage(e.position(), SUD)) || (voisinage(e.position(), SOUEST) && voisinage(e.position(), NEST)) || (voisinage(e.position(), NOUEST) && voisinage(e.position(), SEST)) 
+                )&& (e instanceof Fourmie || e instanceof Reine || e instanceof Araignee ))
+            return null;
+        List<Coup[]> tab = new ArrayList();
         List<Coup> c = new ArrayList();
-        for(int i=0; i<matrice.length; i++)
-            for(int j=0; j<matrice[i].length; j++){
-                Depot d = new Depot(joueur, t, matrice[i][j].position());
-                if(deposePionValide(d)){
+        boolean b = true;
+        Case ca = matrice.get(e.position()).clone();
+        ca.retirePion();
+        
+        if(!ca.utilise())
+            /*if(voisins.get(e.position()).size()<2)
+                b = true;
+            else if(!ca.utilise() && voisins.get(e.position()).size()==2 && 
+                    (voisinage(e.position(), NORD) || voisinage(e.position(), SUD) || voisinage(e.position(), SEST)
+                    || voisinage(e.position(), SOUEST)|| voisinage(e.position(), NEST) || voisinage(e.position(), NOUEST)
+                    ))
+                b = true;
+            else if(voisins.get(e.position()).size()==4 && (
+                   ( (voisinage(e.position(), NORD) ^ voisinage(e.position(), SUD) ) && ( voisinage(e.position(), EST) ^ voisinage(e.position(), OUEST)) ) ||
+                    ( (voisinage(e.position(), ESTE) ^ voisinage(e.position(), OUESTE) ) && ( voisinage(e.position(), SUD) ^ voisinage(e.position(), NORD)) ) ||
+                    ( (voisinage(e.position(), SEST) ^ voisinage(e.position(), SOUEST) ) && voisinage(e.position(), NORD) ) ||
+                    ( (voisinage(e.position(), NEST) ^ voisinage(e.position(), NOUEST) ) && voisinage(e.position(), SUD) )
+                    ))
+                b = true;
+            else if(voisins.get(e.position()).size()==3 && (
+                    voisinage(e.position(), OUESTE)  || voisinage(e.position(), ESTE)
+                    || ((voisinage(e.position(), NORD) ^(voisinage(e.position(), SUD)) && (voisinage(e.position(), EST) ^ voisinage(e.position(), OUEST))))
+                    ))
+                b = true;
+            else*/
+                b &= estConnexe(e);
+        
+        if(b){
+            Coup[] cp = matrice.get(e.position()).tete().deplacementValide(this.clone().matrice());
+
+            for(int k=0; k<cp.length; k++){
+                if(cp[k] instanceof Deplacement){
+                    Deplacement d = (Deplacement) cp[k];
                     c.add(d);
                 }
             }
-        Coup[] coups = new Coup[c.size()];
-        Iterator<Coup> it = c.iterator();
-        int i=0; 
-        while(it.hasNext() && i<coups.length)
-            coups[i++]=it.next();
-        return coups;
+            return c;
+        }
+        return null;
     }
     
+    public Coup[] depotPossible(int joueur, int t){
+        
+        if(utilises.isEmpty()){
+            Coup[] res = new Coup[1];
+            res[0] = new Depot(joueur, t, new Point(0,0));
+            return res;
+        }else if(utilises.size()==1){
+            List<Coup> c = new ArrayList();
+            for(int i=xMin-1; i<=xMax+1; i++)
+                for(int j=yMin-1; j<=yMax+1; j++){
+                    Depot d = new Depot(joueur, t, new Point(i,j));
+                    if(premierPionValide(d)){
+                        c.add(d);
+                    }
+                }
+            Coup[] coups = new Coup[c.size()];
+            Iterator<Coup> it = c.iterator();
+            int i=0; 
+            while(it.hasNext() && i<coups.length)
+                coups[i++]=it.next();
+            return coups;
+        }else{
+            List<Coup> c = new ArrayList();
+            for(int i=xMin-1; i<=xMax+1; i++)
+                for(int j=yMin-1; j<=yMax+1; j++){
+                    Depot d = new Depot(joueur, t, new Point(i,j));
+                    if(deposePionValide(d)){
+                        c.add(d);
+                    }
+                }
+            Coup[] coups = new Coup[c.size()];
+            Iterator<Coup> it = c.iterator();
+            int i=0; 
+            while(it.hasNext() && i<coups.length)
+                coups[i++]=it.next();
+            return coups;
+        }
+    }
     
+    public void retirerPion(Point pos){
+        Case c = matrice.get(pos);
+        c.retirePion();
+        if(!c.utilise()){
+            matrice.remove(c.position());
+            voisins.remove(c.position());
+            utilises.remove(c.position());
+        }else{
+            matrice.put(pos, c);
+        }
+    }
     
-    public Case[][] matrice(){
+    public Point reine(int idx){
+        return reines[idx];
+    }
+    
+    public Map<Point, Case> matrice(){
         return matrice;
+    }
+    public Map<Point, List<Point>> voisins(){
+        return voisins;
+    }
+    public List<Point> voisins(Point p){
+        return voisins.get(p);
+    }
+    public List<Point> utilises(){
+        return utilises;
+    }
+    
+    @Override
+    public int hashCode(){
+        if(reines[jCourant]==null)
+            return matrice.hashCode();
+        
+        double diffx = 0 - reines[jCourant].x();
+        double diffy = 0 - reines[jCourant].y();
+        
+        Map<Point, Case> nouv = new HashMap();
+        for(Map.Entry<Point, Case> entry : matrice.entrySet() ){
+            Point p = new Point(entry.getKey().x() + diffx, entry.getKey().y() + diffy );
+            Case c = entry.getValue().clone();
+            c.position().fixe(c.position().x()+diffx, c.position().x()+diffx);
+            Iterator<Insecte> it = c.insectes().iterator();
+            while(it.hasNext()){
+                Insecte e = it.next();
+                e.position().fixe(e.position().x()+diffx, e.position().y()+diffy);
+            }
+            nouv.put(p,c);
+        }
+        
+        return nouv.hashCode();
+    }
+    
+    boolean voisinage(Point p, int dir){
+        switch(dir){
+            case NORD:
+                return utilises.contains(new Point(p.x(), p.y()-1)) && utilises.contains(new Point(p.x()+1, p.y()-1));
+            case OUEST:
+                return utilises.contains(new Point(p.x()-1, p.y()));
+            case EST:
+                return utilises.contains(new Point(p.x()+1, p.y()));
+            case SUD:
+                return utilises.contains(new Point(p.x(), p.y()+1)) && utilises.contains(new Point(p.x()-1, p.y()+1));
+            case NEST:
+                return utilises.contains(new Point(p.x()+1, p.y()-1)) && utilises.contains(new Point(p.x()+1, p.y()));
+            case NOUEST:
+                return utilises.contains(new Point(p.x(), p.y()-1)) && utilises.contains(new Point(p.x()-1, p.y()));
+            case SEST:
+                return utilises.contains(new Point(p.x(), p.y()+1)) && utilises.contains(new Point(p.x()+1, p.y()));
+            case SOUEST:
+                return utilises.contains(new Point(p.x()-1, p.y()+1)) && utilises.contains(new Point(p.x()-1, p.y()));
+            case ESTE:
+                return utilises.contains(new Point(p.x()+1, p.y()-1)) && utilises.contains(new Point(p.x()+1, p.y())) && utilises.contains(new Point(p.x(), p.y()+1)) ;
+            case OUESTE:
+                return utilises.contains(new Point(p.x()-1, p.y()+1)) && utilises.contains(new Point(p.x()-1, p.y())) && utilises.contains(new Point(p.x(), p.y()-1)) ;
+            default:
+                return false;
+        }
     }
 }

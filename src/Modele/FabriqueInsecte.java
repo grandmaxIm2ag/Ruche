@@ -18,7 +18,7 @@ public class FabriqueInsecte {
             case Insecte.SCAR:
                 return new Scarabee(pos.x(), pos.y(), (int)Reglage.lis("lInsecte"), (int)Reglage.lis("hInsecte"), joueur);
             case Insecte.REINE:
-                return new Reine(pos.x(), pos.y(), (int)Reglage.lis("lInsecte"), (int)Reglage.lis("hInsecte"), joueur);
+                return new Reine(pos.x(), pos.y(), /*(int)Reglage.lis("lInsecte"),*/ (int)Reglage.lis("hInsecte"), joueur);
             case Insecte.FOUR:
                 return new Fourmie(pos.x(), pos.y(), (int)Reglage.lis("lInsecte"), (int)Reglage.lis("hInsecte"), joueur);
             case Insecte.CLOP:
@@ -34,6 +34,11 @@ public class FabriqueInsecte {
             default:
                 return null;
         }
+    }
+
+    public static Insecte creer(String s) {
+        String[] str = s.split("/");
+        return creer(Integer.parseInt(str[0].substring(1)), Integer.parseInt(str[1]), new Point(str[2].substring(0, str[2].length()-1)));
     }
     
 }

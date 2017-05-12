@@ -8,6 +8,7 @@ package Modele;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -20,19 +21,19 @@ public class Cloporte extends Insecte{
     }
 
     @Override
-    public Coup[] deplacementValide(Case[][] plateau) {
+    public Coup[] deplacementValide(Map<Point, Case> plateau) {
         List<Coup> c = glisser(plateau);
         
         List<Case> voisins = new ArrayList();
         List<Point> depot = new ArrayList();
         for(int i=(int)pos.x()-1; i<=(int)pos.x()+1;i++)
-            for(int j=(int)pos.y()-1; j<=(int)pos.y()+1;i++)
+            for(int j=(int)pos.y()-1; j<=(int)pos.y()+1;j++)
                 if(!((i==(int)pos.x()-1 && j==(int)pos.y()-1) || (i==(int)pos.x()+1 && j==(int)pos.y()+1) ))
-                    if(!pos.equals(plateau[i][j].position())){
-                        if(plateau[i][j].utilise())
-                            voisins.add(plateau[i][j]);
+                    if(!pos.equals(new Point(i,j))){
+                        if(plateau.get(new Point(i,j))!=null)
+                            voisins.add(plateau.get(new Point(i,j)));
                         else
-                            depot.add(plateau[i][j].position());
+                            depot.add(new Point(i,j));
                     }
         Iterator<Case> v = voisins.iterator();
         while(v.hasNext()){
@@ -53,7 +54,11 @@ public class Cloporte extends Insecte{
 
     @Override
     public boolean equals(Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if(o instanceof Cloporte){
+            Cloporte a = (Cloporte)o;
+            return (a.position().equals(pos) && a.l()==l && a.h()==h);
+        }
+        return false;
     }
 
     @Override
@@ -64,6 +69,12 @@ public class Cloporte extends Insecte{
     @Override
     public Insecte clone() {
         return new Cloporte(pos.x(), pos.y(), l, h, joueur);
+    }
+
+    @Override
+    public int type() {
+        return CLOP;
+       // throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }

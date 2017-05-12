@@ -12,16 +12,7 @@ import java.util.Stack;
  * @author grandmax
  */
 public class Case extends Composant{
-    Point pos;
     Stack<Insecte> insectes;
-    
-    public final static int EST = 0;
-    public final static int OUEST = 1;
-    public final static int NEST = 2;
-    public final static int NOUEST = 3;
-    public final static int SEST = 4;
-    public final static int SOUEST = 5;
-    
     
     public Case(double x, double y, double larg, double haut){
         super(x,y,larg, haut);
@@ -79,4 +70,22 @@ public class Case extends Composant{
         return nouv;
     }
     
+    
+    @Override
+    public String toString(){
+        System.out.println(insectes.size());
+        String str = pos.toString();
+        if(utilise()){
+            Stack<Insecte> tmp = new Stack();
+            while(utilise())
+                tmp.push(retirePion());
+            
+            while(!tmp.isEmpty()){
+                Insecte e = tmp.pop();
+                deposePion(e);
+                str+=":"+e;
+            }
+        }
+        return str;
+    }
 }

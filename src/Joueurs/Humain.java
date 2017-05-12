@@ -13,8 +13,8 @@ import java.util.Properties;
  */
 public class Humain extends Joueur{
 
-    public Humain(boolean m, Properties p) {
-        super(m, p);
+    public Humain(boolean m, Properties p, int[] tabP, int j) {
+        super(m, p, tabP, j);
     }
     
 }

@@ -1,0 +1,31 @@
+Tue May 09 16:47:51 CEST 2017 : Apache Derby Network Server - 10.11.1.2 - (1629631) démarré et prêt à accepter les connexions sur le port 1527
+----------------------------------------------------------------
+Tue May 09 16:48:18 CEST 2017:
+Amorçage de Derby version The Apache Software Foundation - Apache Derby - 10.11.1.2 - (1629631) : instance a816c00e-015b-edae-40b5-ffffc21f4b9c 
+dans le répertoire de base de données /home/g/grandmax/NetBeansProjects/Ruche/projetRuche avec le chargeur de classe sun.misc.Launcher$AppClassLoader@1d44bcfa
+Chargé de file:/usr/lib/jvm/java-8-oracle/db/lib/derby.jar
+java.vendor=Oracle Corporation
+java.runtime.version=1.8.0_91-b14
+user.dir=/usr/lib/jvm/java-8-oracle/db
+os.name=Linux
+os.arch=amd64
+os.version=4.4.0-75-generic
+derby.system.home=/home/g/grandmax/NetBeansProjects/Ruche
+Chargeur de classe de la base de données démarré - derby.database.classpath = ''
+----------------------------------------------------------------
+Tue May 09 16:48:19 CEST 2017:
+Fermeture de l'instance a816c00e-015b-edae-40b5-ffffc21f4b9c sur le répertoire de base de données /home/g/grandmax/NetBeansProjects/Ruche/projetRuche avec le chargeur de classe sun.misc.Launcher$AppClassLoader@1d44bcfa 
+Tue May 09 16:48:19 CEST 2017 Thread[DRDAConnThread_3,5,main] (DATABASE = projetRuche), (DRDAID = {2}), Arrêt de la base de données 'projetRuche'.
+----------------------------------------------------------------
+Tue May 09 16:48:32 CEST 2017:
+Amorçage de Derby version The Apache Software Foundation - Apache Derby - 10.11.1.2 - (1629631) : instance a65c80ac-015b-edae-40b5-ffffc21f4b9c 
+dans le répertoire de base de données /home/g/grandmax/NetBeansProjects/Ruche/projetRuche avec le chargeur de classe sun.misc.Launcher$AppClassLoader@1d44bcfa
+Chargé de file:/usr/lib/jvm/java-8-oracle/db/lib/derby.jar
+java.vendor=Oracle Corporation
+java.runtime.version=1.8.0_91-b14
+user.dir=/usr/lib/jvm/java-8-oracle/db
+os.name=Linux
+os.arch=amd64
+os.version=4.4.0-75-generic
+derby.system.home=/home/g/grandmax/NetBeansProjects/Ruche
+Chargeur de classe de la base de données démarré - derby.database.classpath = ''

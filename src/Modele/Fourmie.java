@@ -6,8 +6,10 @@
 package Modele;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Stack;
 
 /**
@@ -22,7 +24,11 @@ public class Fourmie extends Insecte{
 
     @Override
     public boolean equals(Object o) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if(o instanceof Fourmie){
+            Fourmie a = (Fourmie)o;
+            return (a.position().equals(pos) && a.l()==l && a.h()==h);
+        }
+        return false;
     }
 
     @Override
@@ -31,55 +37,89 @@ public class Fourmie extends Insecte{
     }
 
     @Override
-    public Coup[] deplacementValide(Case[][] plateau) {
+    public Coup[] deplacementValide(Map<Point, Case> pl) {
+        
+        Map<Point, Case> plateau = new HashMap();
+        
+        for(Map.Entry<Point, Case> entry : pl.entrySet())
+            plateau.put(entry.getKey(), entry.getValue().clone());
         Point p = pos.clone();
-        Stack<Point> aVisiter = new Stack();
+        Case c = plateau.get(p);
+        c.retirePion();
+        if(c.utilise())
+            plateau.put(p, c);
+        else
+            plateau.remove(p);
+        
+        Stack<Deplacement> aVisiter = new Stack();
         List<Point> marquer = new ArrayList();
+        List<Deplacement> visite = new ArrayList();
         marquer.add(p);
         
         List<Coup> co = glisser(plateau);
         Iterator<Coup> it = co.iterator();
         while(it.hasNext()){
-            Point po = it.next().destination();
-            if(!marquer.contains(po)){
-                marquer.add(po);
-                aVisiter.push(po);
-           }
+            
+            Coup po = it.next();
+            marquer.add(po.destination());
+            visite.add((Deplacement) po);
+            aVisiter.push((Deplacement) po);
+           
         }
-        boolean insert = true;
+        
+        boolean insert = !aVisiter.isEmpty();
         while(insert){
             insert = false;
-            Stack<Point> tmp = new Stack();
+            Stack<Deplacement> tmp = new Stack();
             while(!aVisiter.isEmpty()){
-                Point tmp2 = aVisiter.pop();
-                pos.fixe(p.x(), p.y());
+                Deplacement tmp1 = aVisiter.pop();
+                Point tmp2 = tmp1.destination();
+                pos.fixe(tmp2.x(), tmp2.y());
                 co = glisser(plateau);
                 it = co.iterator();
                 while(it.hasNext()){
                     Point po = it.next().destination();
                     if(!marquer.contains(po)){
                         insert = true;
+                        Deplacement clone = tmp1.clone();
                         marquer.add(po);
-                        tmp.push(po);
+                        clone.add(po);
+                        visite.add(clone);
+                        tmp.push(clone);
                     }
                 }
             }
-            aVisiter = tmp;
+            while(!tmp.isEmpty())
+                aVisiter.push(tmp.pop());
             
         }
         
         
         pos.fixe(p.x(), p.y());
         
-        Coup[] coups = new Coup[aVisiter.size()];
-        for(int i=0; i<coups.length; i++)
-            coups[i] = new Deplacement(joueur, pos, aVisiter.pop());
+        marquer.remove(p);//
+        Coup[] coups = new Coup[visite.size()];
+        for(int i=0; i<coups.length; i++){
+             coups[i] = visite.get(i);
+        }
+        
+        c.deposePion(this);
+        plateau.put(p, c);
+            
         return coups;
     }
 
     @Override
     public Insecte clone() {
         return new Fourmie(pos.x(), pos.y(), l, h, joueur);
+    }
+    
+    
+
+    @Override
+    public int type() {
+       return FOUR;
+//throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }
