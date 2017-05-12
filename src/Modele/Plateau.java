@@ -272,13 +272,32 @@ public class Plateau extends Composant {
         boolean b = true;
         List<Point> u = cloneList(utilises);
         Map<Point, List<Point>> v = new HashMap();
+        Map<Point, Boolean> m = new HashMap();
+        int nonAtteint = 0;
         for(Map.Entry<Point, List<Point>> entry : voisins.entrySet()){
             List<Point> v2 = cloneList(entry.getValue());
             if(v2.contains(e.position()))
                 v2.remove(e.position());
             v.put(entry.getKey().clone(), v2);
+            m.put(entry.getKey().clone(), false);
+            nonAtteint++;
+        }
+        for(Map.Entry<Point, List<Point>> entry : v.entrySet() ){
+            List<Point> v2 = entry.getValue();
+            for(Point p : v2){
+                if(nonAtteint<=0)
+                    return true;
+                if(!m.get(p)){
+                    m.put(p,true);
+                    nonAtteint--;
+                }
+            }
         }
         
+        return nonAtteint<=0;
+        
+        
+        /*
         u.remove(e.position());
         v.remove(e.position());
         if(u.isEmpty()){
@@ -302,8 +321,7 @@ public class Plateau extends Composant {
                     b &= voisin(tmp, p, cloneList(u), v);
             }
         }
-        
-        return b;
+        */
     }
     
     //Voisins directs et indirects
