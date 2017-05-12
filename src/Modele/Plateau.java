@@ -307,7 +307,8 @@ public class Plateau extends Composant {
     }
     
     //Voisins directs et indirects
-    public boolean voisin(Point p1, Point p2, List<Point> k, Map<Point, List<Point>> v)·{
+    public boolean voisin(Point p1, Point p2, List<Point> k, Map<Point, List<Point>> v)
+    {
         if(k.isEmpty()){
             return v.get(p1).contains(p2);
          }else if(v.get(p1).contains(p2)){
