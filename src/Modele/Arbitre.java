@@ -38,6 +38,9 @@ public class Arbitre {
     long temps;
     long temps_ecoule;
     
+    Deplacement enCours;
+    Iterator<Point> enCoursIt;
+    
     public Properties prop;
     Joueur[] joueurs;
     int jCourant, type, difficulte;
@@ -167,7 +170,9 @@ public class Arbitre {
     public void joue(Deplacement d){
         if(plateau().reine(jCourant)!=null){
             if(deplacePionValide(d)){
-                deplacePion(d);
+                //deplacePion(d);
+                enCoursIt = d.route().iterator();
+                enCours = new Deplacement(d.joueur, enCoursIt.next(),enCoursIt.next());
                 nbCoup[jCourant]++;
                 refaire.clear();
                 historique.add(d);
@@ -336,7 +341,7 @@ public class Arbitre {
 
     public void prochainJoueur() {
         
-        etat = 
+        //etat = 
         jCourant = ++jCourant % 2;
         
         if(plateau.estEncerclee(jCourant)){
@@ -393,7 +398,20 @@ public class Arbitre {
                 temps_ecoule+=nouv;
                 if(temps_ecoule>=100000000){
                     temps_ecoule=0;
-                    etat=A_JOUER;
+                    if(enCours!=null){
+                        plateau.deplacePion(enCours);
+                        if(!enCoursIt.hasNext()){
+                            enCours = null;
+                            etat=A_JOUER;
+                        }else{
+                            Point p = enCoursIt.next();
+                            Point src = enCours.destination().clone();
+                            enCours = new Deplacement(enCours.joueur(),src, p );
+                        }
+                    }else{
+                        enCours = null;
+                        etat=A_JOUER;
+                    }
                 }
                 break;
             case A_JOUER:

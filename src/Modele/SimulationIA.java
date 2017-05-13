@@ -138,7 +138,11 @@ public class SimulationIA extends Arbitre {
     }
     
     public void joue(Deplacement d){
-                deplacePion(d);
+                //deplacePion(d);
+                System.out.println(d);
+                plateau.afficheGraphe(plateau.voisins());
+                enCoursIt = d.route().iterator();
+                enCours = new Deplacement(d.joueur, enCoursIt.next(),enCoursIt.next());
                 nbCoup[jCourant]++;
                 refaire.clear();
                 historique.add(d);
