@@ -51,7 +51,7 @@ public class MainTest {
         tf.test();
         TestPlateau tp = new TestPlateau(prop);
         tp.test();
-        TestArbitre ta = new TestArbitre(prop);
+        //TestArbitre ta = new TestArbitre(prop);
         //ta.test();
     }
     

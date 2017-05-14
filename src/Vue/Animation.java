@@ -5,8 +5,8 @@
  */
 package Vue;
 
-import Modele.Arbitre;
-import Modele.TestArbitre;
+import Modele.Arbitres.*;
+import Modele.Arbitres.TestArbitre;
 import Modele.Visiteur;
 import javafx.animation.AnimationTimer;
 import javafx.scene.canvas.Canvas;

@@ -5,7 +5,7 @@
  */
 package Controleur;
 
-import Modele.Arbitre;
+import Modele.Arbitres.*;
 import Vue.Interface;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;

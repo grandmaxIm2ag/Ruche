@@ -5,7 +5,7 @@
  */
 package Controleur;
 
-import Modele.Arbitre;
+import Modele.Arbitres.*;
 import Vue.Pointeur;
 import javafx.event.EventHandler;
 import javafx.scene.canvas.Canvas;

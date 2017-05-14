@@ -6,7 +6,7 @@
 package Vue;
 
 import Modele.Araignee;
-import Modele.Arbitre;
+import Modele.Arbitres.*;
 import Modele.Cloporte;
 import Modele.Coccinelle;
 import Modele.Etendeur;

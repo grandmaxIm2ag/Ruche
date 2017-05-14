@@ -5,7 +5,7 @@
  */
 package Controleur;
 
-import Modele.Arbitre;
+import Modele.Arbitres.*;
 import javafx.event.EventHandler;
 import javafx.scene.input.KeyEvent;
 

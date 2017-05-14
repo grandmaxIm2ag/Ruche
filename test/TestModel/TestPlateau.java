@@ -5,7 +5,7 @@
  */
 package TestModel;
 
-import Modele.Arbitre;
+import Modele.Arbitres.*;
 import Modele.Deplacement;
 import Modele.Depot;
 import Modele.FabriqueInsecte;
