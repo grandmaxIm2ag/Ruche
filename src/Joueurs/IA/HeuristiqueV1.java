@@ -8,6 +8,7 @@ package Joueurs.IA;
 import Joueurs.Ordinateur;
 import Modele.Arbitre;
 import Modele.Case;
+import Modele.Coup;
 import Modele.Plateau;
 import Modele.Point;
 import java.util.Map;
@@ -30,7 +31,7 @@ public class HeuristiqueV1 extends Heuristique {
     }
     
     
-    public int EvalPlateau(Arbitre etat, Ordinateur me) {
+    public int EvalPlateau(Arbitre etat, Coup[] d,Ordinateur me) {
         
         // Un null est considérer comme une défaite
         Boolean meWon = etat.plateau().estEncerclee(me.numJ());
@@ -49,7 +50,7 @@ public class HeuristiqueV1 extends Heuristique {
             return AI.MIN;
         }
 
-        int mePossibleDepl = me.d.length;
+        int mePossibleDepl = d.length;
         int meTokensOnBoard = free(etat.plateau(),me.numJ());
         int meHexesFilledAroundOpposingQueen = me.nbLiberteesReine(etat.plateau(), me.numAdversaire());
 
