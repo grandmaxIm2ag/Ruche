@@ -752,4 +752,8 @@ public class Plateau extends Composant {
     public boolean deplEntame () {
         return !aide.isEmpty();
     }
+    
+    public List<Case> aide () {
+        return aide;
+    }
 }

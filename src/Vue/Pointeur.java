@@ -7,6 +7,7 @@ package Vue;
 
 import Modele.Arbitres.Arbitre;
 import Modele.Case;
+import Modele.Depot;
 import Modele.Etendeur;
 import Modele.Insecte;
 import Modele.Plateau;
@@ -14,6 +15,7 @@ import Modele.Point;
 import Modele.Visiteur;
 import static Vue.Dessinateur.c;
 import java.util.Iterator;
+import java.util.List;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.input.MouseEvent;
 
@@ -67,16 +69,26 @@ public class Pointeur extends Visiteur {
             b = b&&((x1*y2) - (x2*y1))>0;
         }
             
-        if (me.getEventType() == MouseEvent.MOUSE_MOVED) {
-            if (b) {
+        
+        if (b) {
+            if (me.getEventType() == MouseEvent.MOUSE_MOVED) {
                 //System.out.println("[" + c.position().x()+ ";" + c.position().y()+ "]");
                 c.pointe();
                 if (c.utilise())
                 c.tete().pointe();
+            } else if (me.getEventType() == MouseEvent.MOUSE_CLICKED && arbitre.plateau().deplEntame()) {
+                List<Case> l = arbitre.plateau().aide();
+                Iterator<Case> it = l.iterator();
+                Case c2;
+                while (it.hasNext()) {
+                    c2 = it.next();
+                    if (c2.equals(c)) {
+                        arbitre.joue(new Depot(arbitre.jCourant(), arbitre.initDepot(), c.position()));
+                    }
+                }
             }
-        } //else if (me.getEventType() == MouseEvent.MOUSE_CLICKED && arbitre.) {
-            
-        //}
+        }
+        
         return false;
     }
     
