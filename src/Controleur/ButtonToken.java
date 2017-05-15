@@ -10,6 +10,7 @@ import Modele.Arbitres.*;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.Label;
+import javafx.scene.control.ToggleButton;
 
 /**
  *
@@ -40,8 +41,8 @@ public class ButtonToken implements EventHandler<ActionEvent> {
         tab = player.pions();
         switch (type) {
             case BEE_BUTTON:
-                tab[BEE_BUTTON]--;
-                label.setText("" + tab[BEE_BUTTON]);
+                if (((ToggleButton) e.getSource()).isSelected())            
+                    
                 break;
             default:
         }
