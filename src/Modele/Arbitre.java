@@ -11,6 +11,7 @@ import Joueurs.Ordinateur;
 import java.io.File;
 import java.io.*;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -149,7 +150,18 @@ public class Arbitre {
         else
             return plateau.deplacementPossible(jCourant);
     }
-    
+    public Coup[] deplacementPossible(Insecte e){
+        if(plateau.reine(jCourant)==null)
+            return null;
+        else{
+            List<Coup> l = plateau.deplacementPossible(e);
+            Coup[] res = new Coup[l.size()];
+            for(int i=0; i<l.size(); i++)
+                res[i]=l.get(i);
+            return res;
+        }
+            
+    }
     public Coup[] depotPossible(int j, int t){
         if((plateau.reine(jCourant)==null && t!=Insecte.REINE && nbCoup[j]>=3) ){
             return null;
@@ -431,6 +443,26 @@ public class Arbitre {
         return plateau.aucunCoup(J1)&&plateau.aucunCoup(J2)&&b1&&b2;
     }
     
+    public void dispo(int ins){
+        Coup[] c = depotPossible(jCourant, ins);
+        List<Case> l = new ArrayList();
+        for(int i=0; i<c.length; i++){
+            Case c2 = new Case(c[i].destination().x(), c[i].destination().y(), 1, 1);
+            c2.pointe();
+            l.add(c2);
+        }
+        plateau.setAide(l);
+    }
+    public void dispo(Insecte ins){
+        Coup[] c = deplacementPossible(ins);
+        List<Case> l = new ArrayList();
+        for(int i=0; i<c.length; i++){
+            Case c2 = new Case(c[i].destination().x(), c[i].destination().y(), 1, 1);
+            c2.pointe();
+            l.add(c2);
+        }
+        plateau.setAide(l);
+    }
     public void go(){
         
     }
