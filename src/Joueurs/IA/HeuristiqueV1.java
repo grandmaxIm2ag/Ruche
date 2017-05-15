@@ -6,7 +6,7 @@
 package Joueurs.IA;
 
 import Joueurs.Ordinateur;
-import Modele.Arbitre;
+import Modele.Arbitres.*;
 import Modele.Case;
 import Modele.Plateau;
 import Modele.Point;

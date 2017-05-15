@@ -5,7 +5,7 @@
  */
 package Joueurs;
 
-import Modele.Arbitre;
+import Modele.Arbitres.*;
 import Modele.Case;
 import Modele.Coup;
 import Modele.Depot;
@@ -33,10 +33,10 @@ public class Ordinateur extends Joueur{
     /*public final static int FACILE_ALEATOIRE_MAUVAIS=-2;
     public final static int ALEATOIRE_LONG=-1;*/
     
-    public final static int FACILE_ALEATOIRE=-1;
-    public final static int FACILE_HEURISTIQUE=0;
-    public final static int MOYEN=1;
-    public final static int DIFFICILE=2;
+    public final static int FACILE_ALEATOIRE=0;
+    public final static int FACILE_HEURISTIQUE=1;
+    public final static int MOYEN=2;
+    public final static int DIFFICILE=3;
     
     
     public final static long GRAINE = 2992397;//(long)System.nanoTime();
@@ -50,7 +50,7 @@ public class Ordinateur extends Joueur{
     public Ordinateur(boolean m, int d, Properties p, int[] tabP, int j) {
         super(m, p, tabP, j);
         difficulte = d;
-        if(difficulte==0||difficulte==-1){
+        if(difficulte==FACILE_ALEATOIRE||difficulte==FACILE_HEURISTIQUE){
             System.out.println("GRAINE: "+GRAINE);
             r= new Random(GRAINE);
         }
@@ -65,9 +65,9 @@ public class Ordinateur extends Joueur{
                 return coupALEATOIRE_3(a, d);
             case FACILE_HEURISTIQUE:
                 return heuristiqueSurUnSeulCoup(a, d);
-            case 1:
+            case MOYEN:
                 return null;
-            case 2:
+            case DIFFICILE:
                 return null;   
             default:        
                 return null;
@@ -147,7 +147,7 @@ public class Ordinateur extends Joueur{
             }
             //choix aléatoire
             int choix= r.nextInt(res.size());
-                return res.get(choix);
+            return res.get(choix);
         }else{
             System.out.println("BUG");
             return null;

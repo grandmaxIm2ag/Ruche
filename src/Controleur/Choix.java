@@ -5,7 +5,7 @@
  */
 package Controleur;
 
-import Modele.Arbitre;
+import Modele.Arbitres.*;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 

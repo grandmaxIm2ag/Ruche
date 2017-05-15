@@ -26,7 +26,7 @@ public abstract class Visiteur {
         return visite((Composant) p);
     }
     
-    public boolean visite (Arbitre a) {
+    public boolean visite (Modele.Arbitres.Arbitre a) {
         return false;
     }
     

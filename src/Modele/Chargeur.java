@@ -111,25 +111,25 @@ public class Chargeur {
         return res;
     }
     
-    int type(){
+    public int type(){
         return t;
     }
-    int difficulte(){
+    public int difficulte(){
         return d;
     }
-    int jCourant(){
+    public int jCourant(){
         return j;
     }
-    int[] nbCourant(){
+    public int[] nbCourant(){
         return n;
     }
-    String[] joueur(){
+    public String[] joueur(){
         return joueurs; 
     }
-    Stack<Coup> historique(){
+    public Stack<Coup> historique(){
         return h;
     }
-    Stack<Coup> refaire(){
+    public Stack<Coup> refaire(){
         return r2;
     }
 }

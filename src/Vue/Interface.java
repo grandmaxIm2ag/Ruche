@@ -12,7 +12,7 @@ import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.BorderPane;
-import Modele.Arbitre;
+import Modele.Arbitres.*;
 import Joueurs.Joueur;
 import Joueurs.Ordinateur;
 import Modele.Point;
@@ -85,6 +85,7 @@ public class Interface extends Application {
     public final static int CHOIX_PLATEAU = 2;
 
     static Arbitre arbitre;
+    static FabriqueArbitre fabrique;
     static BorderPane root;
     static Scene s;
     final static boolean fullScreen = false;
@@ -105,9 +106,9 @@ public class Interface extends Application {
         stage.show();
     }
 
-    public static void creer(String[] args, Arbitre a) {
+    public static void creer(String[] args, FabriqueArbitre a) {
         root = new BorderPane();
-        arbitre = a;
+        fabrique = a;
         launch(args);
 
     }
@@ -143,6 +144,7 @@ public class Interface extends Application {
     }
 
     public static void goPartie() {
+        arbitre = fabrique.nouveau();
         arbitre.init();
         //root.setBottom(new Pane());
         Canvas c = new Canvas(500, 500);
