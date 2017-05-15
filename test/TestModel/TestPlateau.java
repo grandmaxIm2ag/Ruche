@@ -34,14 +34,12 @@ public class TestPlateau {
     
     void base(){
         assertEquals(p, p.clone());
-        //toString
     }
     
     void testCoupDepot(){
         assertTrue(p.aucunCoup(0));
         Point orig = new Point(0,0);
         p.premierPion(FabriqueInsecte.creer(Insecte.REINE, Arbitre.J1, orig));
-        //assertTrue(p.estConnexe());
         
         Depot d = new Depot(Arbitre.J2, Insecte.REINE, new Point(orig.x()+1, orig.y()+1));
         assertFalse(p.premierPionValide(d));
@@ -62,30 +60,34 @@ public class TestPlateau {
         assertTrue(p.premierPionValide(d));
         
         p.deposePion(d);
-        //ssertTrue(p.estConnexe());
         
         assertTrue(p.deposePionValide(new Depot(Arbitre.J2, Insecte.REINE, new Point(orig.x(), orig.y()+2))));
         assertFalse(p.deposePionValide(new Depot(Arbitre.J1, Insecte.REINE, new Point(orig.x(), orig.y()+2))));
         
         p.deposePion(new Depot(Arbitre.J2, Insecte.REINE, new Point(orig.x(), orig.y()+5)));
-        //assertFalse(p.estConnexe());
     }
 
-    
     void testCoupDeplacement(){
         p = new Plateau(0,0,0,0, prop);
         Point orig = new Point(0,0);
         p.deposePion(new Depot(Arbitre.J2, Insecte.REINE, new Point(orig.x(), orig.y())));
         p.deposePion(new Depot(Arbitre.J2, Insecte.FOUR, new Point(orig.x()-1, orig.y())));
         
-       // assertTrue(p.estConnexe());
         assertFalse(p.deplacePionValide(new Deplacement(Arbitre.J2, new Point(orig.x()-1, orig.y()), new Point(orig.x()-1, orig.y()))));
         assertTrue(p.deplacePionValide(new Deplacement(Arbitre.J2, new Point(orig.x()-1, orig.y()), new Point(orig.x(), orig.y()-1))));
     
         p.deplacePion(new Deplacement(Arbitre.J2, new Point(orig.x()-1, orig.y()), new Point(orig.x(), orig.y()-1)));
-        //assertTrue(p.estConnexe());
         assertTrue(p.deposePionValide(new Depot(Arbitre.J2, Insecte.FOUR, new Point(orig.x()-1, orig.y()))));
         assertFalse(p.deposePionValide(new Depot(Arbitre.J2, Insecte.FOUR, new Point(orig.x(), orig.y()-1))));
+    }
+    
+    void testConnexe(){
+        p = new Plateau(0,0,0,0, prop);
+        Point orig = new Point(0,0);
+        p.premierPion(FabriqueInsecte.creer(Insecte.REINE, Arbitre.J1, orig));
+        p.deposePion(new Depot(Arbitre.J1, Insecte.REINE, new Point(orig.x()+1, orig.y()-1)));
+        
+        
     }
     @Test
     public void test() {
