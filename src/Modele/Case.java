@@ -47,6 +47,7 @@ public class Case extends Composant{
     }
     public void deposePion(Insecte e){
         insectes.push(e);
+        e.setClassement(insectes.size());
     }
     public Insecte retirePion(){
         return insectes.pop();
