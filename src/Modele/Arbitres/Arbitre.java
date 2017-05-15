@@ -18,6 +18,7 @@ import java.util.Properties;
 import java.util.Stack;
 import ruche.Reglage;
 import Modele.*;
+import Vue.PaneToken;
 
 /**
  *
@@ -262,7 +263,6 @@ public abstract class Arbitre {
         temps=t;
         switch(etat){
             case ATTENTE_COUP:
-                go();
                 break;
             case JOUE_EN_COURS:
                 temps_ecoule+=nouv;
@@ -285,6 +285,7 @@ public abstract class Arbitre {
                 }
                 break;
             case A_JOUER:
+                PaneToken.getInstance(this).update();
                 prochainJoueur();
                 break;
             case FIN:

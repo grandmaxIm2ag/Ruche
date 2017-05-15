@@ -6,7 +6,7 @@
 package Vue;
 
 import Controleur.ButtonToken;
-import Modele.Arbitre;
+import Modele.Arbitres.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.GridPane;
