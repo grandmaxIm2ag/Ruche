@@ -718,7 +718,7 @@ public class Plateau extends Composant {
         return nouv.hashCode();
     }
     
-    boolean voisinage(Point p, int dir){
+    public boolean voisinage(Point p, int dir){
         switch(dir){
             case NORD:
                 return utilises.contains(new Point(p.x(), p.y()-1)) && utilises.contains(new Point(p.x()+1, p.y()-1));
