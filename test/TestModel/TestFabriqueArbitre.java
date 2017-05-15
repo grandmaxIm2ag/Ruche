@@ -5,7 +5,11 @@
  */
 package TestModel;
 
+import Joueurs.Humain;
 import Modele.Arbitres.*;
+import Modele.Depot;
+import Modele.Insecte;
+import Modele.Point;
 import java.util.Properties;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -14,11 +18,11 @@ import static org.junit.Assert.*;
  *
  * @author grandmax
  */
-public class TestArbitre {
+public class TestFabriqueArbitre {
     Arbitre a;
     FabriqueArbitre fab;
     
-    public TestArbitre(Properties p) {
+    public TestFabriqueArbitre(Properties p) {
         fab = new FabriqueArbitre(p);
     }
     
@@ -49,18 +53,11 @@ public class TestArbitre {
         assertTrue(a.difficulte()==5);
     }
     
-    public void testLocalJvj(){
-        fab.initDiff(FabriqueArbitre.LOCAL_JVJ);
-        
-        
-        
-    }
     
     
     @Test
     public void test(){
         testFabrique();
-        testLocalJvj();
     }
     
 }
