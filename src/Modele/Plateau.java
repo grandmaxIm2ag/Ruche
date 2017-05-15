@@ -73,15 +73,15 @@ public class Plateau extends Composant {
     public final static int OUESTE = 7;
     public final static int NOUEST = 8;
     public final static int SOUEST = 9;
+    
     public Map<Point, Case> matrice;
-    int xMin, yMin, xMax, yMax;
-    Properties prop;
     Point[] reines;
     List<Point> utilises;
     List<Case> aide;
     Map<Point, List<Point>> voisins;
     
-    int pass;
+    int xMin, yMin, xMax, yMax;
+    Properties prop;
     int jCourant;
     
     public Plateau(double x, double y, double larg, double haut, Properties p) {
@@ -92,7 +92,6 @@ public class Plateau extends Composant {
         voisins = new HashMap();
         utilises = new ArrayList();
         reines = new Point[2];
-        pass=0;
         xMin=0; xMax = 0; yMin=0; yMax=0;
         jCourant = Arbitre.J1;
         aide= new ArrayList();
@@ -174,7 +173,6 @@ public class Plateau extends Composant {
             }
         }
         return b;
-        
     }
     public void deplacePion(Deplacement d){
         if(matrice.get(d.source()).tete().position().equals(reines[d.joueur()]) && matrice.get(d.source()).tete().type()==Insecte.REINE)
@@ -692,6 +690,9 @@ public class Plateau extends Composant {
     public void setAide(List<Case> a){
         aide = cloneList2(a);
     }
+    public void clearAide(){
+        aide.clear();
+    }
     
     @Override
     public int hashCode(){
@@ -742,5 +743,9 @@ public class Plateau extends Composant {
             default:
                 return false;
         }
+    }
+    
+    public void setJoueur(int j){
+        jCourant = j;
     }
 }

@@ -19,6 +19,7 @@ import java.util.Stack;
 import ruche.Reglage;
 import Modele.*;
 import Vue.PaneToken;
+import java.util.ArrayList;
 
 /**
  *
@@ -56,6 +57,9 @@ public abstract class Arbitre {
     Coup[] coups;
     boolean aucun;
     boolean precAucun;
+    
+    Insecte initDepl;
+    int initDepot;
     
     public Arbitre(Properties p){
         Reglage.init(p);
@@ -120,6 +124,19 @@ public abstract class Arbitre {
             return plateau.depotPossible(jCourant, t);
     }
     
+    public Coup[] deplacementPossible(Insecte e){
+        if(plateau.reine(jCourant)==null)
+            return null;
+        else{
+            List<Coup> l = plateau.deplacementPossible(e);
+            Coup[] res = new Coup[l.size()];
+            for(int i=0; i<l.size(); i++)
+                res[i]=l.get(i);
+            return res;
+        }
+            
+    }
+    
     public void joue(Coup d){
         if(d instanceof Deplacement)
             joue((Deplacement)d);
@@ -163,7 +180,8 @@ public abstract class Arbitre {
         }
     }
     public void abandon(){
-        
+        etat = FIN;
+        System.err.println(jCourant+" a abandonné");
     }
     
     public void charger(String plateau){
@@ -258,6 +276,12 @@ public abstract class Arbitre {
         return difficulte;
     }
     
+    public void setEtat(int e){
+        etat = e;
+    }
+    public int etat(){
+        return etat;
+    }
     public void maj(long t){
         long nouv = t-temps;
         temps=t;
@@ -287,6 +311,8 @@ public abstract class Arbitre {
             case A_JOUER:
                 PaneToken.getInstance(this).update();
                 prochainJoueur();
+                plateau.setJoueur(jCourant);
+                plateau.clearAide();
                 break;
             case FIN:
                 break;
@@ -302,6 +328,44 @@ public abstract class Arbitre {
         return plateau.aucunCoup(J1)&&plateau.aucunCoup(J2)&&b1&&b2;
     }
     
+    public void initDepot(int ins){
+        initDepot=ins;
+        plateau.clearAide();
+        dispo(ins);
+    }
+    public void initDeplacement(Insecte ins){
+        initDepl = ins.clone();
+        plateau.clearAide();
+        dispo(ins);
+    }
+    public void dispo(int ins){
+        Coup[] c = depotPossible(jCourant, ins);
+        List<Case> l = new ArrayList();
+        for(int i=0; i<c.length; i++){
+            Case c2 = new Case(c[i].destination().x(), c[i].destination().y(), 1, 1);
+            c2.pointe();
+            l.add(c2);
+        }
+        plateau.setAide(l);
+    }
+    
+    public Insecte initDeplacement(){
+        return initDepl;
+    }
+    public int initDepot(){
+        return initDepot;
+    }
+    
+    public void dispo(Insecte ins){
+        Coup[] c = deplacementPossible(ins);
+        List<Case> l = new ArrayList();
+        for(int i=0; i<c.length; i++){
+            Case c2 = new Case(c[i].destination().x(), c[i].destination().y(), 1, 1);
+            c2.pointe();
+            l.add(c2);
+        }
+        plateau.setAide(l);
+    }
     public void go(){
         etat = ATTENTE_COUP;
     }
