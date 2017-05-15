@@ -369,5 +369,7 @@ public abstract class Arbitre {
     public void go(){
         etat = ATTENTE_COUP;
     }
-    
+    /*
+    @Override
+    public abstract Arbitre clone();*/
 }
