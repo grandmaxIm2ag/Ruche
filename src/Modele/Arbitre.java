@@ -396,7 +396,7 @@ public class Arbitre {
                 break;
             case JOUE_EN_COURS:
                 temps_ecoule+=nouv;
-                if(temps_ecoule>=100000000){
+                if(temps_ecoule>=10000){
                     temps_ecoule=0;
                     if(enCours!=null){
                         plateau.deplacePion(enCours);

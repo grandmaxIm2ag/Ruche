@@ -151,12 +151,10 @@ public class Ordinateur extends Joueur{
                     res.clear();
                     res.add(d[i]);
                 }
-            }
-            //r= new Random(GRAINE);
-            // System.out.println(r.nextInt());
+            }   
             //return a random move from res
             int choice= r.nextInt(res.size());
-            System.out.println(res.get(choice));
+            //System.out.println(res.get(choice));
                 return res.get(choice);
         }
     }

@@ -18,7 +18,7 @@ public abstract class AI {
     
     protected Ordinateur me;
     protected Arbitre arb;
-    //protected AIStatistics aiStats = new AIStatistics(this);
+
     protected Heuristique heurs;
     protected int searchDepth;      // Search limit in depth
     protected int maxTimeInMillis;  // Search limit in milliseconds
