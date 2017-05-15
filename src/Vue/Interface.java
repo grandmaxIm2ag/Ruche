@@ -144,8 +144,7 @@ public class Interface extends Application {
 
     public static void goPartie() {
         arbitre.init();
-        //root.setLeft(new Pane());
-        root.setBottom(new Pane());
+        //root.setBottom(new Pane());
         Canvas c = new Canvas(500, 500);
         Pane stack = new Pane(c);
         root.setCenter(stack);
@@ -157,7 +156,7 @@ public class Interface extends Application {
         box.setAlignment(Pos.TOP_CENTER);
         box.setPadding(new Insets(20, 10, 20, 10));
         box.setSpacing(20);
-        root.setLeft(box);
+        root.setBottom(box);
         Button btPrec = new Button("Précédent");
         Button btSuiv = new Button("Suivant");
         Button btSave = new Button("Sauvegarder");
@@ -181,12 +180,15 @@ public class Interface extends Application {
         bPion.add(cj1, 0, 0);
         bPion.add(sep, 1, 0);
         bPion.add(cj2, 2, 0);
-        root.setRight(bPion);
+        //root.setRight(bPion);
+        PaneToken pt = PaneToken.getInstance(arbitre);
+        //PaneToken pt = new PaneToken(arbitre);
+        root.setRight(pt.getRightPane());
+        root.setLeft(pt.getLeftPane());
 
         box.getChildren().addAll(btPrec, btSuiv, btSave, btMenu);
 
         c.setOnMouseClicked(new Souris(arbitre, Souris.SOURIS_BOUGEE, c));
-        //cj1.setOnMouseMoved(new Souris(arbitre, Souris.SOURIS_BOUGEE,cj1));
 
         Animation anim = new Animation(arbitre, c, cj1, cj2);
         anim.start();
