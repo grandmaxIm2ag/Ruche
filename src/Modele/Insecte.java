@@ -27,11 +27,13 @@ public abstract class Insecte extends Composant{
     public boolean EST_POINTE;
     
     int joueur;
+    int classement;
     
     public Insecte(double x, double y, double larg, double haut, int j) {
         super(x, y, larg, haut);
         joueur = j;
         EST_POINTE = false;
+        classement = 0;
     }
     
     public void pointe() {
@@ -46,7 +48,12 @@ public abstract class Insecte extends Composant{
         return EST_POINTE;
     }
 
-    
+    public void setClassement(int c ){
+        classement = c;
+    }
+    public int classement(){
+        return classement;
+    }
     public double[] vecteur(){
         double[] vecteur = new double[12];
         double cote = l/2;
