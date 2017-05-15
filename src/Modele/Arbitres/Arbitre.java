@@ -494,9 +494,9 @@ public abstract class Arbitre {
     public void dispo(int ins){
         Coup[] c = depotPossible(jCourant, ins);
         List<Case> l = new ArrayList();
-        for (Coup c1 : c) {
-            Case c2 = new Case(c1.destination().x(), c1.destination().y(), 1, 1);
-            c2.pointe();
+        for(int i=0; i<c.length; i++){
+            Case c2 = new Case(c[i].destination().x(), c[i].destination().y(), 1, 1);
+            c2.jouable();
             l.add(c2);
         }
         plateau.setAide(l);

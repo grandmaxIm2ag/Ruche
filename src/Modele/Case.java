@@ -48,6 +48,7 @@ public class Case extends Composant{
      *
      */
     public static boolean EST_POINTE = false;
+    public static boolean JOUABLE = false;
     
     /**
      *
@@ -65,7 +66,8 @@ public class Case extends Composant{
      *
      */
     public void pointe() {
-        //EST_POINTE = true;
+        EST_POINTE = true;
+        if (!insectes.empty())
         this.tete().pointe();
     }
     
@@ -83,11 +85,20 @@ public class Case extends Composant{
     public boolean estpointe () {
         return EST_POINTE;
     }
+
+    public void jouable () {
+        JOUABLE = true;
+    }
     
-    /**
-     *
-     * @return
-     */
+    public void nonJouable () {
+        JOUABLE = false;
+    }
+    
+    public boolean estJouable () {
+        return JOUABLE;
+    }
+    
+
     public boolean utilise(){
         return !insectes.isEmpty();
     }

@@ -5,7 +5,9 @@
  */
 package Vue;
 
+import Modele.Arbitres.Arbitre;
 import Modele.Case;
+import Modele.Depot;
 import Modele.Etendeur;
 import Modele.Insecte;
 import Modele.Plateau;
@@ -13,6 +15,7 @@ import Modele.Point;
 import Modele.Visiteur;
 import static Vue.Dessinateur.c;
 import java.util.Iterator;
+import java.util.List;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.input.MouseEvent;
 
@@ -23,6 +26,7 @@ import javafx.scene.input.MouseEvent;
 public class Pointeur extends Visiteur {
     static Canvas c;
     Etendeur etendeur;
+    Arbitre arbitre;
     MouseEvent me;
     
     /**
@@ -36,14 +40,11 @@ public class Pointeur extends Visiteur {
         etendeur = new Etendeur();
     }
     
-    /**
-     *
-     * @param c
-     */
-    public Pointeur (Canvas c) {
+    public Pointeur (Canvas c, Arbitre a) {
         this.c = c;
         this.me = me;
         etendeur = new Etendeur();
+        this.arbitre = a;
     }
     
     /**
@@ -83,13 +84,30 @@ public class Pointeur extends Visiteur {
 
             x2 = me.getX() - coords[0][i];
             y2 = me.getY() - coords[1][i];
-            
+
             b = b&&((x1*y2) - (x2*y1))>0;
         }
+            
+        
         if (b) {
-            //System.out.println("[" + c.position().x()+ ";" + c.position().y()+ "]");
-            c.tete().pointe();
+            if (me.getEventType() == MouseEvent.MOUSE_MOVED) {
+                //System.out.println("[" + c.position().x()+ ";" + c.position().y()+ "]");
+                c.pointe();
+                if (c.utilise())
+                c.tete().pointe();
+            } else if (me.getEventType() == MouseEvent.MOUSE_CLICKED && arbitre.plateau().deplEntame()) {
+                List<Case> l = arbitre.plateau().aide();
+                Iterator<Case> it = l.iterator();
+                Case c2;
+                while (it.hasNext()) {
+                    c2 = it.next();
+                    if (c2.equals(c)) {
+                        arbitre.joue(new Depot(arbitre.jCourant(), arbitre.initDepot(), c.position()));
+                    }
+                }
+            }
         }
+        
         return false;
     }
     

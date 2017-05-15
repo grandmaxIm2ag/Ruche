@@ -22,6 +22,7 @@ public class Souris implements EventHandler<MouseEvent>{
      *
      */
     public final static int SOURIS_BOUGEE = 0;
+    public final static int SOURIS_CLIQUEE = 1;
     
     Arbitre a;
     int value;
@@ -38,8 +39,7 @@ public class Souris implements EventHandler<MouseEvent>{
         this.a = a;
         this.value = v;
         this.c = c;
-        System.out.println("Caca");
-        p = new Pointeur(c);
+        p = new Pointeur(c, a);
     }
 
     /**
