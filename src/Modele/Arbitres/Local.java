@@ -27,12 +27,22 @@ import ruche.Reglage;
  */
 public class Local extends Arbitre{
     
+    /**
+     *
+     * @param p
+     * @param t
+     * @param d
+     */
     public Local(Properties p, int t, int d) {
         super(p);
         difficulte = d;
         type = t;
     }
 
+    /**
+     *
+     */
+    @Override
     public void init(){
         
         int[] tabPieces = new int[8];
@@ -58,6 +68,10 @@ public class Local extends Arbitre{
         }
     }
     
+    /**
+     *
+     * @param d
+     */
     @Override
     public void joue(Deplacement d){
         if(plateau().reine(jCourant)!=null){
@@ -77,6 +91,10 @@ public class Local extends Arbitre{
         }
     }
 
+    /**
+     *
+     * @param d
+     */
     @Override
     public void joue(Depot d){
         if(nbCoup[jCourant]==0 && jCourant == J1){
@@ -118,6 +136,9 @@ public class Local extends Arbitre{
         }
     }
 
+    /**
+     *
+     */
     @Override
     public void prochainJoueur() {
         jCourant = ++jCourant % 2;

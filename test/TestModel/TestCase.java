@@ -18,6 +18,10 @@ import ruche.Reglage;
  */
 public class TestCase {
     Case c;
+
+    /**
+     *
+     */
     public TestCase() {
         c = new Case(0,0,5,5);
         Properties prop = Configuration.proprietes();
@@ -42,6 +46,9 @@ public class TestCase {
         
     }
     
+    /**
+     *
+     */
     @Test
     public void test(){
         base();

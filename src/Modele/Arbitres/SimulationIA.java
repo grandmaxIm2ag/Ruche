@@ -24,11 +24,19 @@ import ruche.Reglage;
  */
 public class SimulationIA extends Arbitre {
 
+    /**
+     *
+     * @param p
+     * @param d
+     */
     public SimulationIA(Properties p, int d) {
         super(p);
         difficulte = d;
     }
     
+    /**
+     *
+     */
     @Override
     public void init(){
         
@@ -52,6 +60,9 @@ public class SimulationIA extends Arbitre {
         go();
     }
     
+    /**
+     *
+     */
     public void go(){
         if(joueurs[J1] instanceof Ordinateur){
             Ordinateur o = (Ordinateur) joueurs[J1];
@@ -83,6 +94,10 @@ public class SimulationIA extends Arbitre {
                 joue(o.coup(this, coups));
         }
     }
+
+    /**
+     *
+     */
     @Override
     public void prochainJoueur() {
         jCourant = ++jCourant % 2;
@@ -135,6 +150,11 @@ public class SimulationIA extends Arbitre {
             }
         }
     }
+
+    /**
+     *
+     * @param d
+     */
     @Override
     public void joue(Deplacement d){
                 enCoursIt = d.route().iterator();
@@ -146,6 +166,11 @@ public class SimulationIA extends Arbitre {
                 etat=JOUE_EN_COURS;
          
     }
+
+    /**
+     *
+     * @param d
+     */
     @Override
     public void joue(Depot d){
         if(nbCoup[jCourant]==0 && jCourant == J1){

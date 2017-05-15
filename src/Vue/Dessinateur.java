@@ -45,6 +45,11 @@ public class Dessinateur extends Visiteur{
         gc = c.getGraphicsContext2D();
     }
     
+    /**
+     *
+     * @param p
+     * @return
+     */
     @Override 
     public boolean visite (Plateau p) {
         //etendeur.fixeEchelle(c.getWidth()/arbitre.plateau().l(), c.getHeight()/arbitre.plateau().h(), c.getWidth()/2, c.getHeight()/2);
@@ -56,6 +61,11 @@ public class Dessinateur extends Visiteur{
         return false;
     }
     
+    /**
+     *
+     * @param c
+     * @return
+     */
     @Override
     public boolean visite (Case c) {
         etendeur.fixeComposant(c);
@@ -69,7 +79,11 @@ public class Dessinateur extends Visiteur{
         return false;
     }
     
-    
+    /**
+     *
+     * @param i
+     * @return
+     */
     @Override
     public boolean visite (Reine i) {
         etendeur.fixeComposant(i);
@@ -90,6 +104,11 @@ public class Dessinateur extends Visiteur{
         return false;
     }
     
+    /**
+     *
+     * @param i
+     * @return
+     */
     @Override
     public boolean visite (Scarabee i) {
         etendeur.fixeComposant(i);
@@ -110,6 +129,11 @@ public class Dessinateur extends Visiteur{
         return false;
     }
     
+    /**
+     *
+     * @param i
+     * @return
+     */
     @Override
     public boolean visite (Coccinelle i) {
         etendeur.fixeComposant(i);
@@ -130,6 +154,11 @@ public class Dessinateur extends Visiteur{
         return false;
     }
     
+    /**
+     *
+     * @param i
+     * @return
+     */
     @Override
     public boolean visite (Moustique i) {
         etendeur.fixeComposant(i);
@@ -150,6 +179,11 @@ public class Dessinateur extends Visiteur{
         return false;
     }
     
+    /**
+     *
+     * @param i
+     * @return
+     */
     @Override
     public boolean visite (Cloporte i) {
         etendeur.fixeComposant(i);
@@ -170,6 +204,11 @@ public class Dessinateur extends Visiteur{
         return false;
     }
     
+    /**
+     *
+     * @param i
+     * @return
+     */
     @Override
     public boolean visite (Fourmie i) {
         etendeur.fixeComposant(i);
@@ -190,6 +229,11 @@ public class Dessinateur extends Visiteur{
         return false;
     }
     
+    /**
+     *
+     * @param i
+     * @return
+     */
     @Override
     public boolean visite (Araignee i) {
         etendeur.fixeComposant(i);
@@ -210,6 +254,11 @@ public class Dessinateur extends Visiteur{
         return false;
     }
     
+    /**
+     *
+     * @param i
+     * @return
+     */
     @Override
     public boolean visite (Sauterelle i) {
         etendeur.fixeComposant(i);

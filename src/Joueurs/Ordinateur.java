@@ -32,21 +32,51 @@ public class Ordinateur extends Joueur{
     
     /*public final static int FACILE_ALEATOIRE_MAUVAIS=-2;
     public final static int ALEATOIRE_LONG=-1;*/
+
+    /**
+     *
+     */
+    
     
     public final static int FACILE_ALEATOIRE=0;
+
+    /**
+     *
+     */
     public final static int FACILE_HEURISTIQUE=1;
+
+    /**
+     *
+     */
     public final static int MOYEN=2;
+
+    /**
+     *
+     */
     public final static int DIFFICILE=3;
     
-    
+    /**
+     *
+     */
     public final static long GRAINE = 87462397;//(long)System.nanoTime();
     //public final static long GRAINE =4359965796962;
     Random r;
     
     Map<Plateau, Integer> configurations;
+
+    /**
+     *
+     */
     public Coup[] d;
 
-    
+    /**
+     *
+     * @param m
+     * @param d
+     * @param p
+     * @param tabP
+     * @param j
+     */
     public Ordinateur(boolean m, int d, Properties p, int[] tabP, int j) {
         super(m, p, tabP, j);
         difficulte = d;
@@ -57,6 +87,12 @@ public class Ordinateur extends Joueur{
         configurations = new HashMap();
     }
     
+    /**
+     *
+     * @param a
+     * @param d
+     * @return
+     */
     public Coup coup(Arbitre a, Coup[] d){
         this.d = d;
         //Coup=Dépot ou Déplacement
@@ -74,6 +110,12 @@ public class Ordinateur extends Joueur{
         }
     }
 
+    /**
+     *
+     * @param a
+     * @param d
+     * @return
+     */
     public Coup coupALEATOIRE_3(Arbitre a, Coup[] d){
         //System.out.println(Arrays.toString(tabPieces)+" "+numJoueur);
         /*ArrayList<Coup[]> l=new ArrayList<>();
@@ -109,6 +151,11 @@ public class Ordinateur extends Joueur{
         return d[choix2];
     }
     
+    /**
+     *
+     * @param it
+     * @return
+     */
     public int nbCoupPossiblesTotaux(Iterator<Coup[]> it){
         int taille=0;
         while(it.hasNext()){
@@ -117,6 +164,12 @@ public class Ordinateur extends Joueur{
         return taille;
     }
     
+    /**
+     *
+     * @param a
+     * @param d
+     * @return
+     */
     public Coup heuristiqueSurUnSeulCoup(Arbitre a, Coup[] d){
         if(d!=null && d.length>0){
             //choisir le coup pour lequel l'heuristique est maximale
@@ -154,6 +207,12 @@ public class Ordinateur extends Joueur{
         }
     }
     
+    /**
+     *
+     * @param p
+     * @param d
+     * @return
+     */
     public int heuristique_Simple_Profondeur1_PointDeVueIA(Plateau p, Coup[] d){
         
         if(configurations.get(p)!=null){
@@ -185,6 +244,12 @@ public class Ordinateur extends Joueur{
         return heuristique;
     }
     
+    /**
+     *
+     * @param p
+     * @param joueur
+     * @return
+     */
     public int nbLiberteesReine(Plateau p, int joueur){
         //compter les voisins
         if(p.reine(joueur)==null || p.voisins().get(p.reine(joueur))==null){
@@ -193,6 +258,13 @@ public class Ordinateur extends Joueur{
         return 6-p.voisins().get(p.reine(joueur)).size();
     }
     
+    /**
+     *
+     * @param p
+     * @param joueur
+     * @param d
+     * @return
+     */
     public boolean reineLibre(Plateau p, int joueur, Coup[] d){
         if(p.reine(joueur)==null){
             return true;
@@ -222,6 +294,10 @@ public class Ordinateur extends Joueur{
         return b;
     }
     
+    /**
+     *
+     * @return
+     */
     public int numAdversaire(){
         if(numJoueur==0){
             return 1;

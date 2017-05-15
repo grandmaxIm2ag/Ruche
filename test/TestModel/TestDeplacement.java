@@ -17,6 +17,10 @@ import static org.junit.Assert.*;
  */
 public class TestDeplacement {
     Deplacement d;
+
+    /**
+     *
+     */
     public TestDeplacement() {
         d = new Deplacement(0, new Point(4,4), new Point(5,5));
         
@@ -48,6 +52,9 @@ public class TestDeplacement {
         assertEquals(tmp, d.route());
     }
             
+    /**
+     *
+     */
     @Test
     public void test(){
         base();

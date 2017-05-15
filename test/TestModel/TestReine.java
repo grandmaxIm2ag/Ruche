@@ -27,6 +27,9 @@ public class TestReine {
     
     Reine f;
     
+    /**
+     *
+     */
     public TestReine() {
         f = (Reine) FabriqueInsecte.creer(Insecte.REINE, 0, new Point(2,2));
     }
@@ -132,6 +135,10 @@ public class TestReine {
             b|=c.equals(d[i]);
         return b;
     }
+
+    /**
+     *
+     */
     @Test
     public void test(){
         base();

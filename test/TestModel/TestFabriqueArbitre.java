@@ -5,11 +5,7 @@
  */
 package TestModel;
 
-import Joueurs.Humain;
 import Modele.Arbitres.*;
-import Modele.Depot;
-import Modele.Insecte;
-import Modele.Point;
 import java.util.Properties;
 import org.junit.Test;
 import static org.junit.Assert.*;
@@ -22,10 +18,17 @@ public class TestFabriqueArbitre {
     Arbitre a;
     FabriqueArbitre fab;
     
+    /**
+     *
+     * @param p
+     */
     public TestFabriqueArbitre(Properties p) {
         fab = new FabriqueArbitre(p);
     }
     
+    /**
+     *
+     */
     public void testFabrique(){
         fab.initType(FabriqueArbitre.LOCAL_JVJ);
         a = fab.nouveau();
@@ -53,8 +56,9 @@ public class TestFabriqueArbitre {
         assertTrue(a.difficulte()==5);
     }
     
-    
-    
+    /**
+     *
+     */
     @Test
     public void test(){
         testFabrique();

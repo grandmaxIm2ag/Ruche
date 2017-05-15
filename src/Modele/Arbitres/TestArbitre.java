@@ -19,6 +19,10 @@ import java.util.Properties;
  */
 public class TestArbitre extends Arbitre {
     
+    /**
+     *
+     * @param p
+     */
     public TestArbitre(Properties p) {
         super(p);
         init();
@@ -26,26 +30,43 @@ public class TestArbitre extends Arbitre {
         plateau.addPion();
     }
 
+    /**
+     *
+     * @param d
+     */
     @Override
     public void joue(Deplacement d) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    /**
+     *
+     * @param d
+     */
     @Override
     public void joue(Depot d) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    /**
+     *
+     */
     @Override
     public void prochainJoueur() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    /**
+     *
+     */
     @Override
     public void go() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
+    /**
+     *
+     */
     @Override
     public void init() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.

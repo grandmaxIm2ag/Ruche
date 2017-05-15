@@ -22,10 +22,17 @@ import javafx.scene.text.FontWeight;
 public class TestCanvas extends AnimationTimer{
     Canvas c;
     
+    /**
+     *
+     * @param can
+     */
     public TestCanvas(Canvas can){
         c=can;
     }
     
+    /**
+     *
+     */
     public void draw(){
         System.out.println("coucou");
         GraphicsContext gc = c.getGraphicsContext2D();
@@ -46,6 +53,11 @@ public class TestCanvas extends AnimationTimer{
         gc.drawImage(img, 50, 50);
         
     }
+
+    /**
+     *
+     * @param now
+     */
     @Override
     public void handle(long now) {
         draw();

@@ -29,7 +29,12 @@ public class HeuristiqueV1 extends Heuristique {
         return fr;   
     }
     
-    
+    /**
+     *
+     * @param etat
+     * @param me
+     * @return
+     */
     public int EvalPlateau(Arbitre etat, Ordinateur me) {
         
         // Un null est considérer comme une défaite

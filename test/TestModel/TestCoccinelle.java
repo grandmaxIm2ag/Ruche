@@ -27,6 +27,9 @@ import ruche.Reglage;
 public class TestCoccinelle {
     Coccinelle f;
     
+    /**
+     *
+     */
     public TestCoccinelle() {
         f = (Coccinelle) FabriqueInsecte.creer(Insecte.COCC, 0, new Point(2,2));
     }
@@ -76,6 +79,9 @@ public class TestCoccinelle {
         }
     }
     
+    /**
+     *
+     */
     @Test
     public void test(){
         base();

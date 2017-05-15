@@ -22,6 +22,9 @@ import ruche.Reglage;
 public class TestFourmie {
     Fourmie f;
     
+    /**
+     *
+     */
     public TestFourmie() {
         f = (Fourmie) FabriqueInsecte.creer(Insecte.FOUR, 0, new Point(2,2));
     }
@@ -132,6 +135,10 @@ public class TestFourmie {
             b|=c.equals(d[i]);
         return b;
     }
+
+    /**
+     *
+     */
     @Test
     public void test(){
         base();

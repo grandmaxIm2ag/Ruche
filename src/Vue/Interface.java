@@ -77,11 +77,29 @@ import javax.imageio.ImageIO;
  */
 public class Interface extends Application {
 
+    /**
+     *
+     */
     public final static int SOURIS_PRESSEE = 0;
+
+    /**
+     *
+     */
     public final static int SOURIS_BOUGEE = 1;
 
+    /**
+     *
+     */
     public final static int CHOIX_MODE = 0;
+
+    /**
+     *
+     */
     public final static int CHOIX_DIFFICULTE = 1;
+
+    /**
+     *
+     */
     public final static int CHOIX_PLATEAU = 2;
 
     static Arbitre arbitre;
@@ -90,6 +108,11 @@ public class Interface extends Application {
     static Scene s;
     final static boolean fullScreen = false;
 
+    /**
+     *
+     * @param stage
+     * @throws Exception
+     */
     @Override
     public void start(Stage stage) throws Exception {
 
@@ -106,6 +129,11 @@ public class Interface extends Application {
         stage.show();
     }
 
+    /**
+     *
+     * @param args
+     * @param a
+     */
     public static void creer(String[] args, FabriqueArbitre a) {
         root = new BorderPane();
         fabrique = a;
@@ -113,6 +141,10 @@ public class Interface extends Application {
 
     }
 
+    /**
+     *
+     * @return
+     */
     public static Canvas title() {
         Canvas c = new Canvas(200, 100);
         GraphicsContext gc;
@@ -128,6 +160,11 @@ public class Interface extends Application {
         return c;
     }
 
+    /**
+     *
+     * @param name
+     * @return
+     */
     public static Canvas titleSect(String name) {
         Canvas c = new Canvas(200, 100);
         GraphicsContext gc;
@@ -143,6 +180,9 @@ public class Interface extends Application {
         return c;
     }
 
+    /**
+     *
+     */
     public static void goPartie() {
         arbitre = fabrique.nouveau();
         arbitre.init();
@@ -197,13 +237,20 @@ public class Interface extends Application {
 
     }
 
+    /**
+     *
+     * @param a
+     * @return
+     */
     public static double py(double a) {
         return Math.sqrt(Math.pow(a, 2) - Math.pow(a / 2, 2));
     }
     //static int i = 10;
     static IntegerProperty i = new SimpleIntegerProperty(10);
 
-
+    /**
+     *
+     */
     public static void goMenu() {
         root.setRight(new Pane());
         VBox topBox = new VBox();
@@ -272,6 +319,9 @@ public class Interface extends Application {
         goNewGame();
     }
 
+    /**
+     *
+     */
     public static void goNewGame() {
         VBox centerBox = new VBox();
         StackPane centerStack = new StackPane();
@@ -346,6 +396,9 @@ public class Interface extends Application {
         root.setCenter(centerBox);
     }
 
+    /**
+     *
+     */
     public static void goLoadGame() {
         VBox centerBox = new VBox();
         StackPane centerStack = new StackPane();
@@ -385,6 +438,13 @@ public class Interface extends Application {
         root.setCenter(centerBox);
     }
 
+    /**
+     *
+     * @param x
+     * @param y
+     * @param rayon
+     * @return
+     */
     public static double[][] hex_corner(double x, double y, double rayon) {
         double[][] coords = new double[2][6];
         double angle_deg;
@@ -398,10 +458,17 @@ public class Interface extends Application {
         return coords;
     }
 
+    /**
+     *
+     * @param gagnant
+     */
     public void goFin(String gagnant) {
 
     }
 
+    /**
+     *
+     */
     public static void goConfig() {
         VBox centerBox = new VBox();
         StackPane centerStack = new StackPane();
@@ -511,10 +578,16 @@ public class Interface extends Application {
         root.setCenter(centerBox);
     }
 
+    /**
+     *
+     */
     public static void goAffichage() {
 
     }
 
+    /**
+     *
+     */
     public static void goCredits() {
         VBox box = new VBox();
         box.setSpacing(30);
@@ -559,10 +632,22 @@ public class Interface extends Application {
 
     }
 
+    /**
+     *
+     * @param j1
+     * @param j2
+     * @param nbManche
+     * @param joueur
+     */
     public static void infoPartie(Joueur j1, Joueur j2, int nbManche, int joueur) {
 
     }
 
+    /**
+     *
+     * @param cb
+     * @param c
+     */
     public static void initChoix(ChoiceBox cb, int c) {
 
     }

@@ -16,10 +16,23 @@ import java.util.Map;
  */
 public class Sauterelle extends Insecte{
 
+    /**
+     *
+     * @param x
+     * @param y
+     * @param larg
+     * @param haut
+     * @param j
+     */
     public Sauterelle(double x, double y, double larg, double haut, int j) {
         super(x, y, larg, haut,j);
     }
 
+    /**
+     *
+     * @param plateau
+     * @return
+     */
     @Override
     public Coup[] deplacementValide(Map<Point, Case> plateau) {
         List<Coup> c = new ArrayList();
@@ -58,6 +71,11 @@ public class Sauterelle extends Insecte{
         return false;
     }
 
+    /**
+     *
+     * @param v
+     * @return
+     */
     @Override
     public boolean accept(Visiteur v) {
         return v.visite(this);
@@ -68,6 +86,10 @@ public class Sauterelle extends Insecte{
         return new Sauterelle(pos.x(), pos.y(), l, h, joueur);
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public int type() {
         return SAUT;

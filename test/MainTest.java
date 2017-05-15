@@ -17,6 +17,10 @@ import ruche.Reglage;
  */
 public class MainTest {
     Properties prop;
+
+    /**
+     *
+     */
     public MainTest() {
         prop = Configuration.proprietes();
         Reglage.init(prop);
@@ -42,6 +46,10 @@ public class MainTest {
         TestCloporte cloporte = new TestCloporte();
         cloporte.test();
     }
+
+    /**
+     *
+     */
     @Test
     public void test(){
         insecte();

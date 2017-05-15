@@ -25,22 +25,40 @@ public class Pointeur extends Visiteur {
     Etendeur etendeur;
     MouseEvent me;
     
+    /**
+     *
+     * @param c
+     * @param me
+     */
     public Pointeur (Canvas c, MouseEvent me) {
         this.c = c;
         this.me = me;
         etendeur = new Etendeur();
     }
     
+    /**
+     *
+     * @param c
+     */
     public Pointeur (Canvas c) {
         this.c = c;
         this.me = me;
         etendeur = new Etendeur();
     }
     
+    /**
+     *
+     * @param me
+     */
     public void addEvent (MouseEvent me) {
         this.me = me;
     }
     
+    /**
+     *
+     * @param p
+     * @return
+     */
     @Override
     public boolean visite (Plateau p) {
         etendeur.fixeEchelle(c, p);
@@ -48,6 +66,11 @@ public class Pointeur extends Visiteur {
         return false;
     }
     
+    /**
+     *
+     * @param c
+     * @return
+     */
     @Override
     public boolean visite (Case c) {
         boolean b = true;
@@ -70,6 +93,11 @@ public class Pointeur extends Visiteur {
         return false;
     }
     
+    /**
+     *
+     * @param b
+     * @return
+     */
     @Override
     public boolean visite (ButtonDrawer b) {
         Iterator<Insecte> it = b.lp1.iterator();
@@ -83,6 +111,11 @@ public class Pointeur extends Visiteur {
         return false;
     }
     
+    /**
+     *
+     * @param c
+     * @return
+     */
     @Override
     public boolean visite (Insecte c) {
         boolean b = true;
