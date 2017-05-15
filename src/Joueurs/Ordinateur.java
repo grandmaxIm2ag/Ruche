@@ -142,7 +142,6 @@ public class Ordinateur extends Joueur{
                     continue;
                 }      
                 EvalBoard = heurs.EvalPlateau(a, d, tmp, this);
-              //  System.out.println("board :"+EvalBoard);
                 if(EvalBoard == max){
                     //Add to results
                     res.add(d[i]);
@@ -154,7 +153,6 @@ public class Ordinateur extends Joueur{
             }   
             //return a random move from res
             int choice= r.nextInt(res.size());
-            //System.out.println(res.get(choice));
                 return res.get(choice);
         }
     }

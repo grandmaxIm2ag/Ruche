@@ -75,7 +75,7 @@ public class HeuristiqueV1 extends Heuristique {
         int otherHexesFilledAroundOpposingQueen = me.nbLiberteesReine(p, me.numJ());
 
         return 10*( otherHexesFilledAroundOpposingQueen - meHexesFilledAroundOpposingQueen)
-                /*+ 2*(otherPossibleDepl - mePossibleDepl)*/
-                + 1*(meTokensOnBoard - otherTokensOnBoard);
+                + 2*(otherPossibleDepl - mePossibleDepl)
+                /*+ 1*(meTokensOnBoard - otherTokensOnBoard)*/;
     }
 }
