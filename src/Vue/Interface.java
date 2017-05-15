@@ -190,7 +190,9 @@ public class Interface extends Application {
 
         box.getChildren().addAll(btPrec, btSuiv, btSave, btMenu);
 
-        c.setOnMouseClicked(new Souris(arbitre, Souris.SOURIS_BOUGEE, c));
+        c.setOnMouseMoved(new Souris(arbitre, Souris.SOURIS_BOUGEE, c));
+        c.setOnMouseClicked(new Souris(arbitre, Souris.SOURIS_CLIQUEE, c));
+
 
         Animation anim = new Animation(arbitre, c, cj1, cj2);
         anim.start();

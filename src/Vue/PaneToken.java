@@ -7,12 +7,18 @@ package Vue;
 
 import Controleur.ButtonToken;
 import Modele.Arbitres.*;
+import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.effect.GaussianBlur;
+import javafx.scene.image.Image;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
+import javafx.scene.paint.ImagePattern;
 
 /**
  *
@@ -23,6 +29,7 @@ public class PaneToken {
     private GridPane leftGrid;
     private GridPane rightGrid;
     Label[][] l;
+    ToggleButton[][] b;
     private static PaneToken INSTANCE = null;
     GaussianBlur leftBlur;
     GaussianBlur rightBlur;
@@ -30,6 +37,7 @@ public class PaneToken {
     private PaneToken (Arbitre arbitre) {
         this.arbitre = arbitre;
         l = new Label[2][8];
+        b = new ToggleButton[2][8];
         leftBlur = new GaussianBlur();
         rightBlur = new GaussianBlur();
         leftBlur.setRadius(0);
@@ -78,7 +86,49 @@ public class PaneToken {
         ToggleButton bSpider = new ToggleButton("Spider");
         ToggleButton bLadybug = new ToggleButton("Ladubug");
         ToggleButton bMoskito = new ToggleButton("Moskito");
-        ToggleButton bWoudlose = new ToggleButton("Wousloose");
+        ToggleButton bWoodlouse = new ToggleButton("Woodlouse");
+        
+        bBee.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Boutons/bee_red.png"))), CornerRadii.EMPTY, Insets.EMPTY)));
+        bBee.setMaxWidth(50);
+        bBee.setMaxHeight(50);
+        bBee.setMinWidth(50);
+        bBee.setMinHeight(50);
+        
+        bBeetle.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Boutons/beetle_red.png"))), CornerRadii.EMPTY, Insets.EMPTY)));
+        bBeetle.setMaxWidth(50);
+        bBeetle.setMaxHeight(50);
+        bBeetle.setMinWidth(50);
+        bBeetle.setMinHeight(50);
+        
+        bGrasshopper.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Boutons/grasshopper_red.png"))), CornerRadii.EMPTY, Insets.EMPTY)));
+        bGrasshopper.setMaxWidth(50);
+        bGrasshopper.setMaxHeight(50);
+        bGrasshopper.setMinWidth(50);
+        bGrasshopper.setMinHeight(50);
+        
+        bAnt.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Boutons/ant_red.png"))), CornerRadii.EMPTY, Insets.EMPTY)));
+        bAnt.setMaxWidth(50);
+        bAnt.setMaxHeight(50);
+        bAnt.setMinWidth(50);
+        bAnt.setMinHeight(50);
+        
+        bSpider.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Boutons/spider_red.png"))), CornerRadii.EMPTY, Insets.EMPTY)));
+        bSpider.setMaxWidth(50);
+        bSpider.setMaxHeight(50);
+        bSpider.setMinWidth(50);
+        bSpider.setMinHeight(50);
+        
+        bLadybug.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Boutons/ladybug_red.png"))), CornerRadii.EMPTY, Insets.EMPTY)));
+        bLadybug.setMaxWidth(50);
+        bLadybug.setMaxHeight(50);
+        bLadybug.setMinWidth(50);
+        bLadybug.setMinHeight(50);
+        
+        bMoskito.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Boutons/moskito_red.png"))), CornerRadii.EMPTY, Insets.EMPTY)));
+        bMoskito.setMaxWidth(50);
+        bMoskito.setMaxHeight(50);
+        bMoskito.setMinWidth(50);
+        bMoskito.setMinHeight(50);
         
         bBee.setToggleGroup(group);
         bBeetle.setToggleGroup(group);
@@ -87,7 +137,7 @@ public class PaneToken {
         bSpider.setToggleGroup(group);
         bLadybug.setToggleGroup(group);
         bMoskito.setToggleGroup(group);
-        bWoudlose.setToggleGroup(group);
+        bWoodlouse.setToggleGroup(group);
         
         Label lBee = new Label();
         Label lBeetle = new Label();
@@ -107,14 +157,14 @@ public class PaneToken {
         lMoskito.setText("" + arbitre.joueur(1).pion(6));
         lWoudlose.setText("" + arbitre.joueur(1).pion(7));
         
-        bBee.setOnAction(new ButtonToken(ButtonToken.BEE_BUTTON, lBee, arbitre.joueur(1)));
-        bBeetle.setOnAction(new ButtonToken(ButtonToken.BEETLE_BUTTON, lBee, arbitre.joueur(1)));
-        bGrasshopper.setOnAction(new ButtonToken(ButtonToken.GRASSHOPPER_BUTTON, lBee, arbitre.joueur(1)));
-        bAnt.setOnAction(new ButtonToken(ButtonToken.ANT_BUTTON, lBee, arbitre.joueur(1)));
-        bSpider.setOnAction(new ButtonToken(ButtonToken.SPIDER_BUTTON, lBee, arbitre.joueur(1)));
-        bLadybug.setOnAction(new ButtonToken(ButtonToken.LADYBUG_BUTTON, lBee, arbitre.joueur(1)));
-        bMoskito.setOnAction(new ButtonToken(ButtonToken.MOSKITO_BUTTON, lBee, arbitre.joueur(1)));
-        bWoudlose.setOnAction(new ButtonToken(ButtonToken.WOUDLOSE_BUTTON, lBee, arbitre.joueur(1)));
+        bBee.setOnAction(new ButtonToken(ButtonToken.BEE_BUTTON, lBee, arbitre.joueur(1), arbitre));
+        bBeetle.setOnAction(new ButtonToken(ButtonToken.BEETLE_BUTTON, lBee, arbitre.joueur(1), arbitre));
+        bGrasshopper.setOnAction(new ButtonToken(ButtonToken.GRASSHOPPER_BUTTON, lBee, arbitre.joueur(1), arbitre));
+        bAnt.setOnAction(new ButtonToken(ButtonToken.ANT_BUTTON, lBee, arbitre.joueur(1), arbitre));
+        bSpider.setOnAction(new ButtonToken(ButtonToken.SPIDER_BUTTON, lBee, arbitre.joueur(1), arbitre));
+        bLadybug.setOnAction(new ButtonToken(ButtonToken.LADYBUG_BUTTON, lBee, arbitre.joueur(1), arbitre));
+        bMoskito.setOnAction(new ButtonToken(ButtonToken.MOSKITO_BUTTON, lBee, arbitre.joueur(1), arbitre));
+        bWoodlouse.setOnAction(new ButtonToken(ButtonToken.WOUDLOSE_BUTTON, lBee, arbitre.joueur(1), arbitre));
         
         rightGrid.add(bBee, 0, 0);
         rightGrid.add(lBee, 1, 0);
@@ -138,7 +188,7 @@ public class PaneToken {
         rightGrid.add(lMoskito, 1, 6);
         
         rightGrid.add(lWoudlose, 0, 7);
-        rightGrid.add(bWoudlose, 1, 7);
+        rightGrid.add(bWoodlouse, 1, 7);
         
         l[0][0] = lBee;
         l[0][1] = lBeetle;
@@ -148,6 +198,15 @@ public class PaneToken {
         l[0][5] = lLadybug;
         l[0][6] = lMoskito;
         l[0][7] = lWoudlose;
+        
+        b[0][0] = bBee;
+        b[0][1] = bBeetle;
+        b[0][2] = bGrasshopper;
+        b[0][3] = bAnt;
+        b[0][4] = bSpider;
+        b[0][5] = bLadybug;
+        b[0][6] = bMoskito;
+        b[0][7] = bWoodlouse;
         
     }
     
@@ -166,7 +225,51 @@ public class PaneToken {
         ToggleButton bSpider = new ToggleButton("Spider");
         ToggleButton bLadybug = new ToggleButton("Ladubug");
         ToggleButton bMoskito = new ToggleButton("Moskito");
-        ToggleButton bWoudlose = new ToggleButton("Wousloose");
+        ToggleButton bWoodlouse = new ToggleButton("Woodlouse");
+        
+        bBee.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Boutons/bee_red.png"))), CornerRadii.EMPTY, Insets.EMPTY)));
+        bBee.setMaxWidth(50);
+        bBee.setMaxHeight(50);
+        bBee.setMinWidth(50);
+        bBee.setMinHeight(50);
+        
+        bBeetle.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Boutons/beetle_red.png"))), CornerRadii.EMPTY, Insets.EMPTY)));
+        bBeetle.setMaxWidth(50);
+        bBeetle.setMaxHeight(50);
+        bBeetle.setMinWidth(50);
+        bBeetle.setMinHeight(50);
+        
+        bGrasshopper.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Boutons/grasshopper_red.png"))), CornerRadii.EMPTY, Insets.EMPTY)));
+        bGrasshopper.setMaxWidth(50);
+        bGrasshopper.setMaxHeight(50);
+        bGrasshopper.setMinWidth(50);
+        bGrasshopper.setMinHeight(50);
+        
+        bAnt.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Boutons/ant_red.png"))), CornerRadii.EMPTY, Insets.EMPTY)));
+        bAnt.setMaxWidth(50);
+        bAnt.setMaxHeight(50);
+        bAnt.setMinWidth(50);
+        bAnt.setMinHeight(50);
+        
+        bSpider.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Boutons/spider_red.png"))), CornerRadii.EMPTY, Insets.EMPTY)));
+        bSpider.setMaxWidth(50);
+        bSpider.setMaxHeight(50);
+        bSpider.setMinWidth(50);
+        bSpider.setMinHeight(50);
+        
+        bLadybug.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Boutons/ladybug_red.png"))), CornerRadii.EMPTY, Insets.EMPTY)));
+        bLadybug.setMaxWidth(50);
+        bLadybug.setMaxHeight(50);
+        bLadybug.setMinWidth(50);
+        bLadybug.setMinHeight(50);
+        
+        bMoskito.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Boutons/moskito_red.png"))), CornerRadii.EMPTY, Insets.EMPTY)));
+        bMoskito.setMaxWidth(50);
+        bMoskito.setMaxHeight(50);
+        bMoskito.setMinWidth(50);
+        bMoskito.setMinHeight(50);
+        
+        //bMoskito
         
         bBee.setToggleGroup(group);
         bBeetle.setToggleGroup(group);
@@ -175,7 +278,7 @@ public class PaneToken {
         bSpider.setToggleGroup(group);
         bLadybug.setToggleGroup(group);
         bMoskito.setToggleGroup(group);
-        bWoudlose.setToggleGroup(group);
+        bWoodlouse.setToggleGroup(group);
         
         Label lBee = new Label();
         Label lBeetle = new Label();
@@ -195,14 +298,14 @@ public class PaneToken {
         lMoskito.setText("" + arbitre.joueur(1).pion(6));
         lWoudlose.setText("" + arbitre.joueur(1).pion(7));
         
-        bBee.setOnAction(new ButtonToken(ButtonToken.BEE_BUTTON, lBee, arbitre.joueur(1)));
-        bBeetle.setOnAction(new ButtonToken(ButtonToken.BEETLE_BUTTON, lBee, arbitre.joueur(1)));
-        bGrasshopper.setOnAction(new ButtonToken(ButtonToken.GRASSHOPPER_BUTTON, lBee, arbitre.joueur(1)));
-        bAnt.setOnAction(new ButtonToken(ButtonToken.ANT_BUTTON, lBee, arbitre.joueur(1)));
-        bSpider.setOnAction(new ButtonToken(ButtonToken.SPIDER_BUTTON, lBee, arbitre.joueur(1)));
-        bLadybug.setOnAction(new ButtonToken(ButtonToken.LADYBUG_BUTTON, lBee, arbitre.joueur(1)));
-        bMoskito.setOnAction(new ButtonToken(ButtonToken.MOSKITO_BUTTON, lBee, arbitre.joueur(1)));
-        bWoudlose.setOnAction(new ButtonToken(ButtonToken.WOUDLOSE_BUTTON, lBee, arbitre.joueur(1)));
+        bBee.setOnAction(new ButtonToken(ButtonToken.BEE_BUTTON, lBee, arbitre.joueur(1), arbitre));
+        bBeetle.setOnAction(new ButtonToken(ButtonToken.BEETLE_BUTTON, lBee, arbitre.joueur(1), arbitre));
+        bGrasshopper.setOnAction(new ButtonToken(ButtonToken.GRASSHOPPER_BUTTON, lBee, arbitre.joueur(1), arbitre));
+        bAnt.setOnAction(new ButtonToken(ButtonToken.ANT_BUTTON, lBee, arbitre.joueur(1), arbitre));
+        bSpider.setOnAction(new ButtonToken(ButtonToken.SPIDER_BUTTON, lBee, arbitre.joueur(1), arbitre));
+        bLadybug.setOnAction(new ButtonToken(ButtonToken.LADYBUG_BUTTON, lBee, arbitre.joueur(1), arbitre));
+        bMoskito.setOnAction(new ButtonToken(ButtonToken.MOSKITO_BUTTON, lBee, arbitre.joueur(1), arbitre));
+        bWoodlouse.setOnAction(new ButtonToken(ButtonToken.WOUDLOSE_BUTTON, lBee, arbitre.joueur(1), arbitre));
         
         leftGrid.add(bBee, 0, 0);
         leftGrid.add(lBee, 1, 0);
@@ -226,7 +329,7 @@ public class PaneToken {
         leftGrid.add(lMoskito, 1, 6);
         
         leftGrid.add(lWoudlose, 0, 7);
-        leftGrid.add(bWoudlose, 1, 7);
+        leftGrid.add(bWoodlouse, 1, 7);
         
         l[1][0] = lBee;
         l[1][1] = lBeetle;
@@ -237,12 +340,23 @@ public class PaneToken {
         l[1][6] = lMoskito;
         l[1][7] = lWoudlose;
         
+        b[1][0] = bBee;
+        b[1][1] = bBeetle;
+        b[1][2] = bGrasshopper;
+        b[1][3] = bAnt;
+        b[1][4] = bSpider;
+        b[1][5] = bLadybug;
+        b[1][6] = bMoskito;
+        b[1][7] = bWoodlouse;
+        
     }
     
     public void update () {
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 8; j++) {
                 l[i][j].setText("" + arbitre.joueur(i).pion(j));
+                if (arbitre.joueur(i).pion(j) == 0)
+                    b[i][j].setDisable(true);
             }
         }
         /*

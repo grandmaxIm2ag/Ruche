@@ -20,6 +20,7 @@ public class ButtonToken implements EventHandler<ActionEvent> {
     int type;
     Label label;
     Joueur player;
+    Arbitre arbitre;
     int[] tab;
     public final static int BEE_BUTTON = 0;
     public final static int BEETLE_BUTTON = 1;
@@ -30,21 +31,24 @@ public class ButtonToken implements EventHandler<ActionEvent> {
     public final static int MOSKITO_BUTTON = 6;
     public final static int WOUDLOSE_BUTTON = 7;
     
-    public ButtonToken (int type, Label label, Joueur player) {
+    public ButtonToken (int type, Label label, Joueur player, Arbitre arbitre) {
         this.type = type;
         this.label = label;
         this.player = player;
+        this.arbitre = arbitre;
     }
     
     @Override
     public void handle (ActionEvent e) {
         tab = player.pions();
-        switch (type) {
-            case BEE_BUTTON:
-                if (((ToggleButton) e.getSource()).isSelected())            
-                    
-                break;
-            default:
-        }
+        //switch (type) {
+            //case BEE_BUTTON:
+                if (((ToggleButton) e.getSource()).isSelected()) 
+                    arbitre.initDepot(type);
+                else
+                    arbitre.plateau().clearAide();
+                //break;
+            //default:
+        //}
     }
 }

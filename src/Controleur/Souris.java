@@ -19,6 +19,7 @@ import javafx.scene.input.MouseEvent;
 public class Souris implements EventHandler<MouseEvent>{
     
     public final static int SOURIS_BOUGEE = 0;
+    public final static int SOURIS_CLIQUEE = 1;
     
     Arbitre a;
     int value;
