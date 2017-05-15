@@ -748,4 +748,8 @@ public class Plateau extends Composant {
     public void setJoueur(int j){
         jCourant = j;
     }
+    
+    public boolean deplEntame () {
+        return !aide.isEmpty();
+    }
 }

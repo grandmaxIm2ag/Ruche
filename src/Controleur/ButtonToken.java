@@ -9,8 +9,14 @@ import Joueurs.Joueur;
 import Modele.Arbitres.*;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.scene.control.Label;
 import javafx.scene.control.ToggleButton;
+import javafx.scene.image.Image;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.paint.ImagePattern;
 
 /**
  *
@@ -29,7 +35,7 @@ public class ButtonToken implements EventHandler<ActionEvent> {
     public final static int SPIDER_BUTTON = 4;
     public final static int LADYBUG_BUTTON = 5;
     public final static int MOSKITO_BUTTON = 6;
-    public final static int WOUDLOSE_BUTTON = 7;
+    public final static int WOODLOUSE_BUTTON = 7;
     
     public ButtonToken (int type, Label label, Joueur player, Arbitre arbitre) {
         this.type = type;
@@ -41,12 +47,44 @@ public class ButtonToken implements EventHandler<ActionEvent> {
     @Override
     public void handle (ActionEvent e) {
         tab = player.pions();
+        String s = "";
         //switch (type) {
             //case BEE_BUTTON:
-                if (((ToggleButton) e.getSource()).isSelected()) 
+            switch (type) {
+                case BEE_BUTTON:
+                    s = "bee";
+                    break;
+                case BEETLE_BUTTON:
+                    s = "beetle";
+                    break;
+                case GRASSHOPPER_BUTTON:
+                    s = "grasshopper";
+                    break;
+                case ANT_BUTTON:
+                    s = "ant";
+                    break;
+                case SPIDER_BUTTON:
+                    s = "spider";
+                    break;
+                case LADYBUG_BUTTON:
+                    s = "ladybug";
+                    break;
+                case MOSKITO_BUTTON:
+                    s = "moskito";
+                    break;
+                default:
+            
+                    
+            }
+                if (((ToggleButton) e.getSource()).isSelected()) {
                     arbitre.initDepot(type);
-                else
+                    if (type != WOODLOUSE_BUTTON)
+                    ((ToggleButton) e.getSource()).setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Boutons/" + s + "_grey.png"))), CornerRadii.EMPTY, Insets.EMPTY)));
+                } else {
                     arbitre.plateau().clearAide();
+                    if (type != WOODLOUSE_BUTTON)
+                    ((ToggleButton) e.getSource()).setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Boutons/"+s+"_red.png"))), CornerRadii.EMPTY, Insets.EMPTY)));
+                }
                 //break;
             //default:
         //}

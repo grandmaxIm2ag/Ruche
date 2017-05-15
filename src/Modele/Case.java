@@ -22,6 +22,7 @@ public class Case extends Composant{
     public final static int SOUEST = 5;
     
     public static boolean EST_POINTE = false;
+    public static boolean JOUABLE = false;
     
     
     public Case(double x, double y, double larg, double haut){
@@ -30,7 +31,8 @@ public class Case extends Composant{
     }
     
     public void pointe() {
-        //EST_POINTE = true;
+        EST_POINTE = true;
+        if (!insectes.empty())
         this.tete().pointe();
     }
     
@@ -40,6 +42,18 @@ public class Case extends Composant{
     
     public boolean estpointe () {
         return EST_POINTE;
+    }
+    
+    public void jouable () {
+        JOUABLE = true;
+    }
+    
+    public void nonJouable () {
+        JOUABLE = false;
+    }
+    
+    public boolean estJouable () {
+        return JOUABLE;
     }
     
     public boolean utilise(){

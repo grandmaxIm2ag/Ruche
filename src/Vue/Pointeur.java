@@ -5,6 +5,7 @@
  */
 package Vue;
 
+import Modele.Arbitres.Arbitre;
 import Modele.Case;
 import Modele.Etendeur;
 import Modele.Insecte;
@@ -23,6 +24,7 @@ import javafx.scene.input.MouseEvent;
 public class Pointeur extends Visiteur {
     static Canvas c;
     Etendeur etendeur;
+    Arbitre arbitre;
     MouseEvent me;
     
     public Pointeur (Canvas c, MouseEvent me) {
@@ -31,10 +33,11 @@ public class Pointeur extends Visiteur {
         etendeur = new Etendeur();
     }
     
-    public Pointeur (Canvas c) {
+    public Pointeur (Canvas c, Arbitre a) {
         this.c = c;
         this.me = me;
         etendeur = new Etendeur();
+        this.arbitre = a;
     }
     
     public void addEvent (MouseEvent me) {
@@ -53,22 +56,27 @@ public class Pointeur extends Visiteur {
         boolean b = true;
         double x1, x2, y1, y2;
         etendeur.fixeComposant(c);
+        double [][] coords = Interface.hex_corner(etendeur.x(), etendeur.y(), etendeur.h()/2);
+        for (int i = 0; i < 6; i++) {
+            x1 = coords[0][(i+1)%6] - coords[0][i];
+            y1 = coords[1][(i+1)%6] - coords[1][i];
+
+            x2 = me.getX() - coords[0][i];
+            y2 = me.getY() - coords[1][i];
+
+            b = b&&((x1*y2) - (x2*y1))>0;
+        }
+            
         if (me.getEventType() == MouseEvent.MOUSE_MOVED) {
-            double [][] coords = Interface.hex_corner(etendeur.x(), etendeur.y(), etendeur.h()/2);
-            for (int i = 0; i < 6; i++) {
-                x1 = coords[0][(i+1)%6] - coords[0][i];
-                y1 = coords[1][(i+1)%6] - coords[1][i];
-
-                x2 = me.getX() - coords[0][i];
-                y2 = me.getY() - coords[1][i];
-
-                b = b&&((x1*y2) - (x2*y1))>0;
-            }
             if (b) {
                 //System.out.println("[" + c.position().x()+ ";" + c.position().y()+ "]");
+                c.pointe();
+                if (c.utilise())
                 c.tete().pointe();
             }
-        }
+        } //else if (me.getEventType() == MouseEvent.MOUSE_CLICKED && arbitre.) {
+            
+        //}
         return false;
     }
     

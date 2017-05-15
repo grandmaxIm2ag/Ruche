@@ -164,7 +164,7 @@ public class PaneToken {
         bSpider.setOnAction(new ButtonToken(ButtonToken.SPIDER_BUTTON, lBee, arbitre.joueur(1), arbitre));
         bLadybug.setOnAction(new ButtonToken(ButtonToken.LADYBUG_BUTTON, lBee, arbitre.joueur(1), arbitre));
         bMoskito.setOnAction(new ButtonToken(ButtonToken.MOSKITO_BUTTON, lBee, arbitre.joueur(1), arbitre));
-        bWoodlouse.setOnAction(new ButtonToken(ButtonToken.WOUDLOSE_BUTTON, lBee, arbitre.joueur(1), arbitre));
+        bWoodlouse.setOnAction(new ButtonToken(ButtonToken.WOODLOUSE_BUTTON, lBee, arbitre.joueur(1), arbitre));
         
         rightGrid.add(bBee, 0, 0);
         rightGrid.add(lBee, 1, 0);
@@ -305,7 +305,7 @@ public class PaneToken {
         bSpider.setOnAction(new ButtonToken(ButtonToken.SPIDER_BUTTON, lBee, arbitre.joueur(1), arbitre));
         bLadybug.setOnAction(new ButtonToken(ButtonToken.LADYBUG_BUTTON, lBee, arbitre.joueur(1), arbitre));
         bMoskito.setOnAction(new ButtonToken(ButtonToken.MOSKITO_BUTTON, lBee, arbitre.joueur(1), arbitre));
-        bWoodlouse.setOnAction(new ButtonToken(ButtonToken.WOUDLOSE_BUTTON, lBee, arbitre.joueur(1), arbitre));
+        bWoodlouse.setOnAction(new ButtonToken(ButtonToken.WOODLOUSE_BUTTON, lBee, arbitre.joueur(1), arbitre));
         
         leftGrid.add(bBee, 0, 0);
         leftGrid.add(lBee, 1, 0);
@@ -359,7 +359,7 @@ public class PaneToken {
                     b[i][j].setDisable(true);
             }
         }
-        /*
+        
         switch (arbitre.jCourant()) {
             case 0:
                 leftBlur.setRadius(10);
@@ -371,6 +371,6 @@ public class PaneToken {
                 break;
             default:
         }
-        */
+        
     }
 }

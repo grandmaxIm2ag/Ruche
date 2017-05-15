@@ -109,6 +109,7 @@ public class Interface extends Application {
     public static void creer(String[] args, FabriqueArbitre a) {
         root = new BorderPane();
         fabrique = a;
+        fabrique.initType(FabriqueArbitre.LOCAL_JVJ);
         launch(args);
 
     }

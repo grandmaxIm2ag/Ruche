@@ -343,7 +343,7 @@ public abstract class Arbitre {
         List<Case> l = new ArrayList();
         for(int i=0; i<c.length; i++){
             Case c2 = new Case(c[i].destination().x(), c[i].destination().y(), 1, 1);
-            c2.pointe();
+            c2.jouable();
             l.add(c2);
         }
         plateau.setAide(l);
