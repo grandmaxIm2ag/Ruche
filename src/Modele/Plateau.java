@@ -78,6 +78,7 @@ public class Plateau extends Composant {
     Properties prop;
     Point[] reines;
     List<Point> utilises;
+    List<Case> aide;
     Map<Point, List<Point>> voisins;
     
     int pass;
@@ -94,6 +95,7 @@ public class Plateau extends Composant {
         pass=0;
         xMin=0; xMax = 0; yMin=0; yMax=0;
         jCourant = Arbitre.J1;
+        aide= new ArrayList();
     }
     
     public void setReine(int idx, Point p){
@@ -409,6 +411,9 @@ public class Plateau extends Composant {
         for(Map.Entry<Point,Case> entry : matrice.entrySet()) {
             b|= entry.getValue().accept(v);//v.visite(entry.getValue());
         }
+        Iterator<Case> it = aide.iterator();
+        while(it.hasNext())
+            b|=it.next().accept(v);
             
         return b;
     }
@@ -447,7 +452,15 @@ public class Plateau extends Composant {
         clone.add(item.clone());
         });
     return clone;
-}
+    }
+    
+    public static List<Case> cloneList2(List<Case> list) {
+    List<Case> clone = new ArrayList<>(list.size());
+    list.forEach((item) -> {
+        clone.add(item.clone());
+        });
+    return clone;
+    }
     @Override
     public String toString(){
         String str = "";
@@ -674,6 +687,10 @@ public class Plateau extends Composant {
     }
     public List<Point> utilises(){
         return utilises;
+    }
+    
+    public void setAide(List<Case> a){
+        aide = cloneList2(a);
     }
     
     @Override
