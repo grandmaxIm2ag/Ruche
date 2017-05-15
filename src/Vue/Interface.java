@@ -24,6 +24,11 @@ import java.time.Duration;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.animation.RotateTransition;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.LongProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -190,6 +195,9 @@ public class Interface extends Application {
     public static double py(double a) {
         return Math.sqrt(Math.pow(a, 2) - Math.pow(a / 2, 2));
     }
+    //static int i = 10;
+    static IntegerProperty i = new SimpleIntegerProperty(10);
+
 
     public static void goMenu() {
         root.setRight(new Pane());
@@ -240,7 +248,20 @@ public class Interface extends Application {
         
         b.setOnAction(new Bouton(Bouton.BOUTON_QUITTER, arbitre));
         
-        leftBox.getChildren().addAll(btNG, btLD, btCFG, btQUIT, b);
+        Button bTest = new Button("test");
+        Label tTest = new Label();
+        //tTest.textProperty().bind(i.asString());
+        tTest.textProperty().bind(Bindings.createStringBinding(() -> "" + i.get(), i));
+        
+        bTest.setOnAction(new EventHandler<ActionEvent> () {
+            @Override
+            public void handle (ActionEvent e) {
+                i.set(i.get() +1);
+                System.out.println(i);
+            }
+        });
+        
+        leftBox.getChildren().addAll(btNG, btLD, btCFG, btQUIT, b, bTest, tTest);
 
         root.setLeft(box);
         goNewGame();
