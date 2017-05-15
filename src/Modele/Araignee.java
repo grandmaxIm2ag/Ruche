@@ -6,6 +6,7 @@
 package Modele;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -22,7 +23,13 @@ public class Araignee extends Insecte{
     }
 
     @Override
-    public Coup[] deplacementValide(Map<Point, Case> plateau) {
+    public Coup[] deplacementValide(Map<Point, Case> pl) {
+        
+        Map<Point, Case> plateau = new HashMap();
+        
+        for(Map.Entry<Point, Case> entry : pl.entrySet())
+            plateau.put(entry.getKey(), entry.getValue().clone());
+        
         Point p = pos.clone();
         
         Case c = plateau.get(p);
@@ -37,24 +44,20 @@ public class Araignee extends Insecte{
         
         List<Coup> co = glisser(plateau);
         Iterator<Coup> it = co.iterator();
-        //System.out.println("____________________________________");
         while(it.hasNext()){
             aVisiter.push((Deplacement) it.next());
-            //System.out.println(aVisiter.peek());
         }
         
         Stack<Deplacement> tmp = new Stack();
         for(int i=0; i<2; i++){
-            //System.out.println("____________________________________");
             while(!aVisiter.isEmpty()){
                 Deplacement tmp1 = aVisiter.pop();
-                //System.out.println(tmp1);
-                Point tmp2 = tmp1.destination();
+                Point tmp2 = tmp1.destination().clone();
                 pos.fixe(tmp2.x(), tmp2.y());
                 co = glisser(plateau);
                 it = co.iterator();
                 while(it.hasNext()){
-                    Point po = it.next().destination();
+                    Point po = it.next().destination().clone();
                     if(!tmp1.aDejaVisite(po)){
                         Deplacement clone = tmp1.clone();
                         

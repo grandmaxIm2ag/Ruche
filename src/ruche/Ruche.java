@@ -8,6 +8,7 @@ package ruche;
 //http://www.redblobgames.com/grids/hexagons/
 
 import Modele.Arbitre;
+import Modele.SimulationIA;
 import Modele.TestArbitre;
 import Vue.Interface;
 import java.util.Properties;
@@ -25,7 +26,7 @@ public class Ruche {
         // TODO code application logic here
         Properties p = Configuration.proprietes();
         Interface it = new Interface();
-        it.creer(args, new Arbitre(p));
+        it.creer(args, new SimulationIA(p));
     }
     
 }

@@ -107,13 +107,7 @@ public abstract class Insecte extends Composant{
                                 break;
                             case 0:
                                 if (diffy==-1){
-                                    
-                                    
-                                    /*System.out.println(plateau[(int)pos.x()+1][(int)pos.y()-1].utilise());
-                                    System.out.println(plateau[(int)pos.x()-1][(int)pos.y()].utilise());
-                                    System.out.println(plateau[(int)pos.x()+1][(int)pos.y()-1].utilise() ^ plateau[(int)pos.x()-1][(int)pos.y()].utilise() );
-                                    */if(plateau.get( new Point(pos.x()+1, pos.y()-1))==null ^ plateau.get( new Point(pos.x()-1, pos.y()))==null ){
-                                        //System.out.println("coucou");
+                                    if(plateau.get( new Point(pos.x()+1, pos.y()-1))==null ^ plateau.get( new Point(pos.x()-1, pos.y()))==null ){
                                         c.add(new Deplacement(joueur, new Point(pos.x(), pos.y()), new Point(i,j)));
                                     }
                                 }

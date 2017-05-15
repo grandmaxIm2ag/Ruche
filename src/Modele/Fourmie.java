@@ -6,6 +6,7 @@
 package Modele;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -36,8 +37,12 @@ public class Fourmie extends Insecte{
     }
 
     @Override
-    public Coup[] deplacementValide(Map<Point, Case> plateau) {
+    public Coup[] deplacementValide(Map<Point, Case> pl) {
         
+        Map<Point, Case> plateau = new HashMap();
+        
+        for(Map.Entry<Point, Case> entry : pl.entrySet())
+            plateau.put(entry.getKey(), entry.getValue().clone());
         Point p = pos.clone();
         Case c = plateau.get(p);
         c.retirePion();

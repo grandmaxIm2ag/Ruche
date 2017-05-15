@@ -95,7 +95,7 @@ public class Dessinateur extends Visiteur{
         etendeur.fixeComposant(i);
         double [][] coords = Interface.hex_corner(etendeur.x(), etendeur.y(), etendeur.h()/2);
         Color couleur = Color.WHITE;
-        if (i.joueur() == 0)
+        if (i.joueur() == Arbitre.J1)
             couleur = Color.GREEN;
         else
             couleur = Color.CORNFLOWERBLUE;

@@ -18,13 +18,14 @@ public abstract class Joueur {
     int nbPieces;
     boolean main;
     Properties prop;
+    int numJoueur;
     
-    public Joueur(boolean m, Properties p, int[] tabP, int nbP){
+    public Joueur(boolean m, Properties p, int[] tabP, int j){
         main=m;
         prop=p;
         tabPieces=tabP;
-        nbPieces=nbP;
         nom = "toto";
+        numJoueur=j;
     }
     
     public void setMain(){
@@ -60,4 +61,11 @@ public abstract class Joueur {
         this.tabPieces = p;
     }
     
+    public void jouer(int t){
+        tabPieces[t]--;
+    }
+    
+    public int numJ(){
+        return numJoueur;
+    }
 }
