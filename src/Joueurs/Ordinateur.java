@@ -5,6 +5,8 @@
  */
 package Joueurs;
 
+import Joueurs.IA.AI;
+import Joueurs.IA.HeuristiqueV1;
 import Modele.Arbitre;
 import Modele.Case;
 import Modele.Coup;
@@ -32,7 +34,8 @@ public class Ordinateur extends Joueur{
     
     
     public final static long GRAINE = (long)System.nanoTime();
-    //public final static long GRAINE =22115700504483L;
+    //public final static long GRAINE =26043607173097L;
+    //22115700504483L;
     Random r;
     
     Map<Plateau, Integer> configurations;
@@ -41,10 +44,9 @@ public class Ordinateur extends Joueur{
     public Ordinateur(boolean m, int d, Properties p, int[] tabP, int j) {
         super(m, p, tabP, j);
         difficulte = d;
-        if(difficulte==0||difficulte==1){
-            System.out.println("Joueur "+j+" GRAINE: "+GRAINE);///////////////////////////////////////////////////////////////////////////////
-            r= new Random(GRAINE);
-        }
+        System.out.println("Joueur "+j+" GRAINE: "+GRAINE);///////////////////////////////////////////////////////////////////////////////
+        r= new Random(GRAINE);
+
         configurations = new HashMap();
     }
     
@@ -56,8 +58,8 @@ public class Ordinateur extends Joueur{
                 return coupALEATOIRE_3(a, d);
             case FACILE_HEURISTIQUE:
                 return heuristiqueSurUnSeulCoup(a, d);
-            case 2:
-                return null;
+            case MOYEN:
+                return IA_Middle(a, d);
             case 3:
                 return null;   
             default:        
@@ -112,6 +114,53 @@ public class Ordinateur extends Joueur{
             return null;
         }
     }
+    
+    
+    //renvoie un coup parmi le tableau d des coups possibles en choississant parmi les coups 
+    //d'heuristique plus élevée
+    //utilise l'heuristique de HEURISTIQUEV1
+    //a arbitre de la partie, d tableau des coups possibles
+    public Coup IA_Middle(Arbitre a, Coup[] d){
+        if(d==null || d.length<= 0)
+            return null;
+        else{
+            HeuristiqueV1 heurs = new HeuristiqueV1();
+            //find the best move for the heuristic
+            ArrayList<Coup> res=new ArrayList();
+            Plateau tmp;
+            int max = AI.MIN;
+            int EvalBoard;
+            
+            for(int i=0;i<d.length;i=i+1){
+                tmp=a.plateau().clone();
+                    
+                if(d[i] instanceof Depot){
+                    tmp.deposePion((Depot)d[i]);
+                }else if(d[i] instanceof Deplacement){
+                    tmp.deplacePion((Deplacement)d[i]);
+                }else{
+                    continue;
+                }      
+                EvalBoard = heurs.EvalPlateau(a, d, tmp, this);
+              //  System.out.println("board :"+EvalBoard);
+                if(EvalBoard == max){
+                    //Add to results
+                    res.add(d[i]);
+                }else if(EvalBoard>max){
+                    max = EvalBoard;
+                    res.clear();
+                    res.add(d[i]);
+                }
+            }
+            //r= new Random(GRAINE);
+            // System.out.println(r.nextInt());
+            //return a random move from res
+            int choice= r.nextInt(res.size());
+            System.out.println(res.get(choice));
+                return res.get(choice);
+        }
+    }
+    
     
     //retourne l'heuristique de la configuration du plateau p
     //pour la difficultée FACILE_HEURISTIQUE
