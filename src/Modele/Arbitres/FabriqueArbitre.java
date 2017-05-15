@@ -86,7 +86,7 @@ public class FabriqueArbitre {
     public FabriqueArbitre(Properties p){
         this.prop = p;
         
-        this.difficulte = Ordinateur.FACILE_HEURISTIQUE;
+        this.difficulte = Ordinateur.MOYEN;
         this.diff = new String[4];
         this.diff[Ordinateur.FACILE_ALEATOIRE] = "Très Facile";
         this.diff[Ordinateur.FACILE_HEURISTIQUE] = "Facile";

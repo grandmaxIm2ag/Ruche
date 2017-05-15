@@ -7,7 +7,7 @@ package Joueurs;
 
 import Joueurs.IA.AI;
 import Joueurs.IA.HeuristiqueV1;
-import Modele.Arbitre;
+import Modele.Arbitres.*;
 import Modele.Case;
 import Modele.Coup;
 import Modele.Depot;
