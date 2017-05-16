@@ -134,7 +134,6 @@ public abstract class Arbitre {
      */
     public boolean deplacePionValide(Deplacement d){
         boolean b = false;
-        
         for (Coup deplacement : deplacements) {
             b |= d.equals(deplacement);
         }
@@ -244,7 +243,7 @@ public abstract class Arbitre {
     public void precedent(){
         if(!historique.isEmpty()){
             Coup c = historique.pop();
-            refaire.add(c);
+            refaire.push(c);
             if(c instanceof Deplacement){
                 Deplacement d = (Deplacement) c;
                 plateau.deplacePion(new Deplacement(d.joueur(),d.destination(), d.source()));
@@ -262,7 +261,14 @@ public abstract class Arbitre {
      */
     public void refaire(){
         if(!refaire.isEmpty()){
-            joue(refaire.pop());
+            Coup c = refaire.pop();
+            historique.push(c);
+            if(c instanceof Depot)
+                plateau.deposePion((Depot)c );
+            else{
+                Deplacement d = (Deplacement) c;
+                plateau.deplacePion(d);
+            }
         }else{
             System.out.println("Aucun coup à refaire");
         }
@@ -359,7 +365,7 @@ public abstract class Arbitre {
         }
         
         try{
-            PrintWriter writer = new PrintWriter("Sauvegardes/sauvegarde", "UTF-8");
+            PrintWriter writer = new PrintWriter("Ressources/Sauvegardes/Sauvegarde", "UTF-8");
             writer.print(str);
             writer.close();
         }catch(IOException e){

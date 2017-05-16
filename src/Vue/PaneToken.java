@@ -8,17 +8,23 @@ package Vue;
 import Controleur.ButtonToken;
 import Modele.Arbitres.*;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Rectangle;
 
 /**
  *
@@ -28,6 +34,8 @@ public class PaneToken {
     private Arbitre arbitre;
     private GridPane leftGrid;
     private GridPane rightGrid;
+    private StackPane right;
+    private StackPane left;
     Label[][] l;
     ToggleButton[][] b;
     private static PaneToken INSTANCE = null;
@@ -62,12 +70,12 @@ public class PaneToken {
      *
      * @return
      */
-    public GridPane getRightPane() {
-        if (rightGrid != null)
-            return rightGrid;
+    public Pane getRightPane() {
+        if (right != null)
+            return right;
         else {
             createRight();
-            return rightGrid;
+            return right;
         }
     }
     
@@ -75,16 +83,28 @@ public class PaneToken {
      *
      * @return
      */
-    public GridPane getLeftPane() {
-        if (leftGrid != null)
-            return leftGrid;
+    public Pane getLeftPane() {
+        if (left != null)
+            return left;
         else {
             createLeft();
-            return leftGrid;
+            return left;
         }
     }
     
     private void createRight () {
+        right = new StackPane();
+        right.setAlignment(Pos.TOP_CENTER );
+        Rectangle centerRect = new Rectangle();
+        centerRect.setOpacity(0.25);
+        centerRect.widthProperty().bind(right.widthProperty());
+        centerRect.heightProperty().bind(right.heightProperty());
+        centerRect.setArcWidth(20);
+        centerRect.setArcHeight(20);
+        centerRect.setFill(Color.BLACK);
+        DropShadow shadow = new DropShadow();
+        centerRect.setEffect(shadow);
+        
         rightGrid = new GridPane ();
         rightGrid.setHgap(30);
         rightGrid.setVgap(20);
@@ -221,9 +241,22 @@ public class PaneToken {
         b[0][6] = bMoskito;
         b[0][7] = bWoodlouse;
         
+        right.getChildren().addAll(centerRect, rightGrid);
+        
     }
     
     private void createLeft () {
+        left = new StackPane();
+        left.setAlignment(Pos.TOP_CENTER );
+        Rectangle centerRect = new Rectangle();
+        centerRect.setOpacity(0.25);
+        centerRect.widthProperty().bind(left.widthProperty());
+        centerRect.heightProperty().bind(left.heightProperty());
+        centerRect.setArcWidth(20);
+        centerRect.setArcHeight(20);
+        centerRect.setFill(Color.BLACK);
+        DropShadow shadow = new DropShadow();
+        centerRect.setEffect(shadow);
         leftGrid = new GridPane ();
         leftGrid.setHgap(30);
         leftGrid.setVgap(20);
@@ -362,6 +395,7 @@ public class PaneToken {
         b[1][6] = bMoskito;
         b[1][7] = bWoodlouse;
         
+        left.getChildren().addAll(centerRect, leftGrid);
     }
     
     /**
