@@ -15,7 +15,9 @@ import java.util.Properties;
 import java.util.Stack;
 import ruche.Reglage;
 import Modele.*;
+import Vue.Interface;
 import Vue.PaneToken;
+import Vue.Pointeur;
 import java.util.ArrayList;
 
 /**
@@ -204,6 +206,7 @@ public abstract class Arbitre {
      * @param d
      */
     public void joue(Coup d){
+        
         if(d instanceof Deplacement)
             joue((Deplacement)d);
         else if(d instanceof Depot)
@@ -360,8 +363,8 @@ public abstract class Arbitre {
      *
      * @param dessinateur
      */
-    public void accept(Visiteur dessinateur) {
-        plateau.accept(dessinateur);
+    public boolean accept(Visiteur dessinateur) {
+        return plateau.accept(dessinateur);
     }
     
     /**
@@ -422,7 +425,12 @@ public abstract class Arbitre {
      * @param t
      */
     public void maj(long t){
-        System.out.println("jCOurant = "+jCourant);
+        if(Interface.pointeur().event()!=null){
+        boolean b = this.accept(Interface.pointeur());
+        if(b)
+            plateau.clearAide();
+        Interface.pointeur().traiter();
+        }
         long nouv = t-temps;
         temps=t;
         switch(etat){

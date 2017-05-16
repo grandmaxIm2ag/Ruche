@@ -544,7 +544,7 @@ public class Plateau extends Composant {
             b|= entry.getValue().accept(v);//v.visite(entry.getValue());
         }
         Iterator<Case> it = aide.iterator();
-        while(it.hasNext())
+        while(it.hasNext())// && !b)
             b|=it.next().accept(v);
             
         return b;
@@ -967,7 +967,7 @@ public class Plateau extends Composant {
     }
     
     public boolean deplEntame () {
-        return !aide.isEmpty();
+        return !Plateau.cloneList2(aide).isEmpty();
     }
     
     public List<Case> aide () {

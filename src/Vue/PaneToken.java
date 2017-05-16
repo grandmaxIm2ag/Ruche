@@ -41,7 +41,8 @@ public class PaneToken {
         leftBlur = new GaussianBlur();
         rightBlur = new GaussianBlur();
         leftBlur.setRadius(0);
-        rightBlur.setRadius(10);
+        //rightBlur.setRadius(10);
+        rightBlur.setRadius(0);
     }
     
     /**
@@ -55,6 +56,22 @@ public class PaneToken {
         else {
             INSTANCE = new PaneToken (arbitre);
             return INSTANCE;
+        }
+    }
+    
+    public static PaneToken getInstance () {
+        return INSTANCE;
+    }
+    
+    public void initialize () {
+        createLeft();
+        createRight();
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 8; j++) {
+                l[i][j].setText("" + arbitre.joueur(i).pion(j));
+                if (arbitre.joueur(i).pion(j) == 0)
+                    b[i][j].setDisable(true);
+            }
         }
     }
     
@@ -143,6 +160,12 @@ public class PaneToken {
         bMoskito.setMinWidth(50);
         bMoskito.setMinHeight(50);
         
+        bWoodlouse.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Boutons/woodlouse_red.png"))), CornerRadii.EMPTY, Insets.EMPTY)));
+        bWoodlouse.setMaxWidth(50);
+        bWoodlouse.setMaxHeight(50);
+        bWoodlouse.setMinWidth(50);
+        bWoodlouse.setMinHeight(50);
+                
         bBee.setToggleGroup(group);
         bBeetle.setToggleGroup(group);
         bGrasshopper.setToggleGroup(group);
@@ -221,6 +244,7 @@ public class PaneToken {
         b[0][6] = bMoskito;
         b[0][7] = bWoodlouse;
         
+        //update();
     }
     
     private void createLeft () {
@@ -281,6 +305,12 @@ public class PaneToken {
         bMoskito.setMaxHeight(50);
         bMoskito.setMinWidth(50);
         bMoskito.setMinHeight(50);
+        
+        bWoodlouse.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Boutons/woodlouse_red.png"))), CornerRadii.EMPTY, Insets.EMPTY)));
+        bWoodlouse.setMaxWidth(50);
+        bWoodlouse.setMaxHeight(50);
+        bWoodlouse.setMinWidth(50);
+        bWoodlouse.setMinHeight(50);
         
         //bMoskito
         
@@ -362,6 +392,7 @@ public class PaneToken {
         b[1][6] = bMoskito;
         b[1][7] = bWoodlouse;
         
+        //update();
     }
     
     /**
@@ -378,14 +409,56 @@ public class PaneToken {
         
         switch (arbitre.jCourant()) {
             case 0:
-                leftBlur.setRadius(10);
+                //eftBlur.setRadius(10);
                 rightBlur.setRadius(0);
                 break;
             case 1:
                 leftBlur.setRadius(0);
-                rightBlur.setRadius(10);
+                //rightBlur.setRadius(10);
                 break;
             default:
+        }
+        
+    }
+    
+    private void setDefaultBackground (ToggleButton b, int i, int j) {
+        String s = "";
+        switch (j) {
+            case 0:
+                s = "bee";
+                break;
+            case 1:
+                s = "beetle";
+                break;
+            case 2:
+                s = "grasshopper";
+                break;
+            case 3:
+                s = "ant";
+                break;
+            case 4:
+                s = "spider";
+                break;
+            case 5:
+                s = "ladybug";
+                break;
+            case 6:
+                s = "moskito";
+                break;
+            case 7:
+                s = "woodlouse";
+                break;
+            default:
+        }
+        b.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Boutons/" + s + "_red.png"))), CornerRadii.EMPTY, Insets.EMPTY)));
+    }
+    
+    public void uncheck () {
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 8; j++) {
+                b[i][j].setSelected(false);
+                setDefaultBackground(b[i][j], i, j);
+            }
         }
         
     }

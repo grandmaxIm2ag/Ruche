@@ -102,6 +102,7 @@ public class Interface extends Application {
      */
     public final static int CHOIX_PLATEAU = 2;
 
+    static Pointeur pointeur;
     static Arbitre arbitre;
     static FabriqueArbitre fabrique;
     static BorderPane root;
@@ -181,14 +182,19 @@ public class Interface extends Application {
         return c;
     }
 
+    public static Pointeur pointeur(){
+        return pointeur;
+    }
     /**
      *
      */
     public static void goPartie() {
         arbitre = fabrique.nouveau();
+        
         arbitre.init();
         //root.setBottom(new Pane());
         Canvas c = new Canvas(500, 500);
+        pointeur = new Pointeur(c, arbitre);
         Pane stack = new Pane(c);
         root.setCenter(stack);
 
@@ -226,8 +232,9 @@ public class Interface extends Application {
         //root.setRight(bPion);
         PaneToken pt = PaneToken.getInstance(arbitre);
         //PaneToken pt = new PaneToken(arbitre);
-        root.setRight(pt.getRightPane());
-        root.setLeft(pt.getLeftPane());
+        pt.initialize();
+        root.setRight(pt.getLeftPane());
+        root.setLeft(pt.getRightPane());
 
         box.getChildren().addAll(btPrec, btSuiv, btSave, btMenu);
 
