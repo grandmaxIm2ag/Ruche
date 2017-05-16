@@ -20,40 +20,27 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Random;
 
-/**
- * <b>Ordinateur est la classe représentant un joueur de type IA </b>
- * 
+/**<b>Ordinateur est la classe représentant un joueur de type IA </b>
  * @author UGA L3 Projet Logiciel 2016-2017 groupe 7
  */
 public class Ordinateur extends Joueur{
     
-    /**
-    * La valeur de cette constante est comprise dans l'intervalle [0;3].
-    */
+    /** La valeur de cette constante est comprise dans l'intervalle [0;3]. */
     int difficulte;
     
-    /**
-    * La valeur de cette constante est {@value}.
-    */
+    /** La valeur de cette constante est {@value}. */
     public final static int FACILE_ALEATOIRE=0;
     
-    /**
-    * La valeur de cette constante est {@value}.
-    */
+    /** La valeur de cette constante est {@value}. */
     public final static int FACILE_HEURISTIQUE=1;
     
-    /**
-    * La valeur de cette constante est {@value}.
-    */
+    /** La valeur de cette constante est {@value}. */
     public final static int MOYEN=2;
     
-    /**
-    * La valeur de cette constante est {@value}.
-    */
+    /** La valeur de cette constante est {@value}. */
     public final static int DIFFICILE=3;
     
-    /**
-    * La valeur de la GRAINE dépend du résultat de la fonction System.nanoTime().
+    /** La valeur de la GRAINE dépend du résultat de la fonction System.nanoTime().
     * @see System.nanoTime()
     */
     public final static long GRAINE = (long)System.nanoTime();
@@ -62,23 +49,16 @@ public class Ordinateur extends Joueur{
     
     Random r;
     
-    /**
-     * @see ruche.Configuration
-     */
+    /** @see ruche.Configuration */
     Map<Plateau, Integer> configurations;
 
     /**Constructeur
      * Utilise le constructeur de la classe Joueur
-     * @param m
-     *      true ssi c'est le tour du joueur
-     * @param d
-     *      indice de la difficulté de l'ordinateur
-     * @param p
-     *      propriétés de la partie
-     * @param tabP
-     *      tableau des pièces que le joueur n'a pas posé
-     * @param j
-     *      indice du joueur (0 ou 1)
+     * @param m true ssi c'est le tour du joueur
+     * @param d indice de la difficulté de l'ordinateur
+     * @param p propriétés de la partie
+     * @param tabP tableau des pièces que le joueur n'a pas posé
+     * @param j indice du joueur (0 ou 1)
      */
     public Ordinateur(boolean m, int d, Properties p, int[] tabP, int j) {
         super(m, p, tabP, j);
@@ -90,12 +70,9 @@ public class Ordinateur extends Joueur{
     }
     
     /**renvoie un coup valide correspondant à la difficulté de l'IA
-     * @param a 
-     *      arbitre de la partie
-     * @param d 
-     *      tableau des coups possibles
-     * @return
-     *      Le coup à jouer
+     * @param a arbitre de la partie
+     * @param d tableau des coups possibles
+     * @return Le coup à jouer
      */
     public Coup coup(Arbitre a, Coup[] d){
         switch(difficulte){
@@ -113,12 +90,9 @@ public class Ordinateur extends Joueur{
     }
 
     /**renvoie un coup aléatoire parmi le tableau d des coups possibles
-     * @param a 
-     *      arbitre de la partie
-     * @param d 
-     *      tableau des coups possibles
-     * @return 
-     *      Un coup aléatoire
+     * @param a arbitre de la partie
+     * @param d tableau des coups possibles
+     * @return Un coup aléatoire
      */
     public Coup coupALEATOIRE_3(Arbitre a, Coup[] d){
         int choix2 = r.nextInt(d.length);
@@ -128,12 +102,9 @@ public class Ordinateur extends Joueur{
     /**renvoie un coup parmi le tableau d des coups possibles en choississant aléatoirement parmi les coups 
      * d'heuristique plus élevée
      * utilise l'heuristique_Simple_Profondeur1
-     * @param a 
-     *      arbitre de la partie
-     * @param d 
-     *      tableau des coups possibles
-     * @return 
-     *      Un coup aléatoire parmi les coups d'heuristique plus élevée
+     * @param a arbitre de la partie
+     * @param d tableau des coups possibles
+     * @return Un coup aléatoire parmi les coups d'heuristique plus élevée
      */
     public Coup heuristiqueSurUnSeulCoup(Arbitre a, Coup[] d){
         if(d!=null && d.length>0){
@@ -176,12 +147,9 @@ public class Ordinateur extends Joueur{
     /**renvoie un coup parmi le tableau d des coups possibles en choississant aléatoirement parmi les coups 
      * d'heuristique plus élevée
      * utilise l'heuristique de HEURISTIQUEV1
-     * @param a 
-     *      arbitre de la partie
-     * @param d 
-     *      tableau des coups possibles
-     * @return 
-     *      Un coup aléatoire parmi les coups d'heuristique plus élevée
+     * @param a arbitre de la partie
+     * @param d tableau des coups possibles
+     * @return Un coup aléatoire parmi les coups d'heuristique plus élevée
      */
     public Coup IA_Middle(Arbitre a, Coup[] d){
         if(d==null || d.length<= 0)
@@ -224,12 +192,9 @@ public class Ordinateur extends Joueur{
     /**retourne l'heuristique de la configuration du plateau p
      * pour la difficultée FACILE_HEURISTIQUE
      * utilise les fonctions nbLiberteesReine, reineLibre et estEncerclée(de plateau)
-     * @param p
-     *      Le plateau du jeu
-     * @param c
-     *      Le tableau des coups possibles
-     * @return 
-     *      La valeur de l'heuristique pour cette configuration
+     * @param p Le plateau du jeu
+     * @param c Le tableau des coups possibles
+     * @return La valeur de l'heuristique pour cette configuration
      */
     private int heuristique_Simple_Profondeur1(Plateau p, Coup[] c){      
         if(configurations.get(p)!=null){
@@ -258,12 +223,9 @@ public class Ordinateur extends Joueur{
     }
     
     /**renvoie le nombre de cases libres autour de la reine et 6 si elle n'est pas encore posée
-     * @param p
-     *      Plateau du jeu
-     * @param joueur
-     *      Indice du joueur (0 ou 1)
-     * @return 
-     *      Le nombre de libertées de la reine du joueur, entre 0 et 5 si elle est déjà posée et 6 si elle n'est pas encore posée(arbitraire)
+     * @param p Plateau du jeu
+     * @param joueur Indice du joueur (0 ou 1)
+     * @return Le nombre de libertées de la reine du joueur, entre 0 et 5 si elle est déjà posée et 6 si elle n'est pas encore posée(arbitraire)
      */
     public int nbLiberteesReine(Plateau p, int joueur){
         //compter les voisins
@@ -275,12 +237,9 @@ public class Ordinateur extends Joueur{
     
     /**renvoie vrai ssi: aucune pièce n'est posée au dessus de la reine du joueur d'indice "joueur" et 
      * que la reine peut se déplacer sur une case voisine
-     * @param p
-     *      Plateau du jeu
-     * @param joueur
-     *      Indice du joueur (0 ou 1)
-     * @param c
-     *      Tableau des coups possibles
+     * @param p Plateau du jeu
+     * @param joueur Indice du joueur (0 ou 1)
+     * @param c Tableau des coups possibles
      * @return vrai ssi: aucune pièce n'est posée au dessus de la reine du joueur d'indice "joueur" et 
      * que la reine peut se déplacer sur une case voisine, faux sinon
      */
@@ -304,8 +263,7 @@ public class Ordinateur extends Joueur{
     }
     
     /**renvoie l'indice de l'autre joueur
-     * @return 
-     *      l'indice de l'autre joueur
+     * @return l'indice de l'autre joueur
      */
     public int numAdversaire(){
         if(numJoueur==0){
