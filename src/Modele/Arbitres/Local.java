@@ -15,6 +15,7 @@ import Modele.Depot;
 import Modele.FabriqueInsecte;
 import Modele.Insecte;
 import Modele.Point;
+import Vue.PaneToken;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -100,6 +101,7 @@ public class Local extends Arbitre{
         if(nbCoup[jCourant]==0 && jCourant == J1){
             joueurs[jCourant].jouer(d.type());
             plateau.premierPion(FabriqueInsecte.creer(d.type(), jCourant, new Point(0,0)));
+            etat=A_JOUER;
             nbCoup[jCourant]++;
             refaire.clear();
             historique.add(d);
@@ -141,6 +143,8 @@ public class Local extends Arbitre{
      */
     @Override
     public void prochainJoueur() {
+        etat = ATTENTE_COUP;
+        PaneToken.getInstance(this).update();
         jCourant = ++jCourant % 2;
 
         if(plateau.estEncerclee(jCourant)){

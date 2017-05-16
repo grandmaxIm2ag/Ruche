@@ -12,6 +12,7 @@ import Modele.Deplacement;
 import Modele.Depot;
 import Modele.FabriqueInsecte;
 import Modele.Point;
+import Vue.PaneToken;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -101,7 +102,8 @@ public class SimulationIA extends Arbitre {
     @Override
     public void prochainJoueur() {
         jCourant = ++jCourant % 2;
-
+        etat = ATTENTE_COUP;
+        PaneToken.getInstance(this).update();
         if(plateau.estEncerclee(jCourant)){
             etat=FIN;
             System.err.println(jCourant+" à perdu");

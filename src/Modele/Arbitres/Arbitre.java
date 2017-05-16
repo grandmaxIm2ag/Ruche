@@ -422,6 +422,7 @@ public abstract class Arbitre {
      * @param t
      */
     public void maj(long t){
+        System.out.println("jCOurant = "+jCourant);
         long nouv = t-temps;
         temps=t;
         switch(etat){
@@ -448,7 +449,6 @@ public abstract class Arbitre {
                 }
                 break;
             case A_JOUER:
-                PaneToken.getInstance(this).update();
                 prochainJoueur();
                 plateau.setJoueur(jCourant);
                 plateau.clearAide();
