@@ -17,6 +17,8 @@ import ruche.Reglage;
 import Modele.*;
 import Vue.PaneToken;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Scanner;
 
 /**
  *
@@ -53,6 +55,7 @@ public abstract class Arbitre {
     Joueur[] joueurs;
     int jCourant, type, difficulte;
     Plateau plateau;
+    String pla;
     Chargeur chargeur;
     Stack<Coup> historique;
     Stack<Coup> refaire;
@@ -63,6 +66,7 @@ public abstract class Arbitre {
     Coup[] depots;
     Coup[] coups;
     boolean aucun;
+    boolean chargement = false;
     boolean precAucun;
     
     Insecte initDepl;
@@ -277,27 +281,26 @@ public abstract class Arbitre {
      * @param plateau
      */
     public void charger(String plateau){
-        
         chargeur.init(prop, plateau);
         this.plateau = chargeur.charger();
         type = chargeur.type();
         difficulte = chargeur.difficulte();
-        init();
         historique = chargeur.historique();
         refaire = chargeur.refaire();
         
         String[] str = chargeur.joueur();
         joueurs[J1].nom = str[J1].split("=")[0];
         String[] str2 = str[J1].split("=")[1].split(":");
-        int[] tab = new int[str2.length-1];
-        for(int i=1; i<str2.length; i++)
-            tab[i-1]=Integer.parseInt(str2[i]);
+        System.err.println(Arrays.toString(str2));
+        int[] tab = new int[str2.length];
+        for(int i=0; i<str2.length; i++)
+            tab[i]=Integer.parseInt(str2[i]);
         joueurs[J1].setPieces(tab);
         joueurs[J2].nom = str[J2].split("=")[0];
         str2 = str[J1].split("=")[1].split(":");
-        tab = new int[str2.length-1];
-        for(int i=1; i<str2.length; i++)
-            tab[i-1]=Integer.parseInt(str2[i]);
+        tab = new int[str2.length];
+        for(int i=0; i<str2.length; i++)
+            tab[i]=Integer.parseInt(str2[i]);
         joueurs[J2].setPieces(tab);
 
     }
@@ -338,13 +341,30 @@ public abstract class Arbitre {
             output.write(sauv);
             output.close();
                 //MaJ BDD
-            
+        
         }catch(FileNotFoundException e){
             System.err.println("Impossible de sauvegarder, fichier introuvable "+nomSauv);
         }catch(IOException e){
             System.err.println("Impossible de sauvegarder "+nomSauv);
         }
         
+        String str = "";
+        
+        Scanner fr =new Scanner(ClassLoader.getSystemClassLoader().getResourceAsStream("Sauvegardes/Sauvegarde"));
+        str = fr.nextLine();
+        if(str == null || str.equals("")){
+            str = nomSauv;
+        }else{
+            str += (":"+nomSauv);
+        }
+        
+        try{
+            PrintWriter writer = new PrintWriter("Sauvegardes/sauvegarde", "UTF-8");
+            writer.print(str);
+            writer.close();
+        }catch(IOException e){
+            System.err.println("Echec de la saucegarde "+e);
+        }
     }
     
     /**

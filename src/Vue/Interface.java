@@ -6,6 +6,7 @@
 package Vue;
 
 import Controleur.Bouton;
+import Controleur.Choix;
 import Controleur.Souris;
 import javafx.application.*;
 import javafx.stage.Stage;
@@ -346,9 +347,16 @@ public class Interface extends Application {
         DropShadow shadow = new DropShadow();
         centerRect.setEffect(shadow);
 
-        ChoiceBox cbMOD = new ChoiceBox(FXCollections.observableArrayList("Contre IA", "Contre Joueur", "En Ligne"));
-        ChoiceBox cbDIFF = new ChoiceBox(FXCollections.observableArrayList("Facile", "Moyen", "Difficile"));
-
+        ChoiceBox cbMOD = new ChoiceBox();
+        String[] tmp = fabrique.types();
+        for(int i=0; i<tmp.length; i++)
+            cbMOD.getItems().add(tmp[i]);
+        cbMOD.getSelectionModel().selectedIndexProperty().addListener(new Choix(fabrique, Choix.CHOIX_MODE));
+        ChoiceBox cbDIFF = new ChoiceBox();
+        tmp = fabrique.difficultes();
+        for(int i=0; i<tmp.length; i++)
+            cbDIFF.getItems().add(tmp[i]);
+        cbDIFF.getSelectionModel().selectedIndexProperty().addListener(new Choix(fabrique, Choix.CHOIX_DIFFICULTE));
         cbMOD.getSelectionModel().selectFirst();
         cbDIFF.getSelectionModel().selectFirst();
 
@@ -367,7 +375,7 @@ public class Interface extends Application {
 
             @Override
             public void changed(ObservableValue ov, Number value, Number newValue) {
-                if (newValue.intValue() >= 1) {
+                if (newValue.intValue() >= FabriqueArbitre.RESEAU_CLIENT) {
                     cbDIFF.setDisable(true);
                     tfJ2.setDisable(false);
                 } else {
@@ -435,8 +443,13 @@ public class Interface extends Application {
         centerStack.getChildren().addAll(centerRect, insideBox);//centerGrid);
         Label lNG = new Label("Charger Partie");
         lNG.setFont(new Font(22));
+        ChoiceBox cbMOD = new ChoiceBox();
+        String[] tmp = fabrique.plateaux();
+        for(int i=0; i<tmp.length; i++)
+            cbMOD.getItems().add(tmp[i]);
+        cbMOD.getSelectionModel().selectedIndexProperty().addListener(new Choix(fabrique, Choix.CHOIX_PLATEAU));
 
-        insideBox.getChildren().addAll(lNG, centerGrid, btBEG);
+        insideBox.getChildren().addAll(lNG, centerGrid, btBEG, cbMOD);
 
         root.setCenter(centerBox);
     }
