@@ -539,7 +539,7 @@ public abstract class Arbitre {
                 for (Coup c1 : c) {
                 System.out.println("Plein de petits cacas");
                 Case c2 = new Case(c1.destination().x(), c1.destination().y(), 1, 1);
-                c2.pointe();
+                c2.jouable();
                 l.add(c2);
             }
         plateau.setAide(l);
