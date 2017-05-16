@@ -47,8 +47,8 @@ public class Case extends Composant{
     /**
      *
      */
-    public static boolean EST_POINTE = false;
-    public static boolean JOUABLE = false;
+    public  boolean EST_POINTE = false;
+    public boolean JOUABLE = false;
     
     /**
      *
@@ -160,7 +160,8 @@ public class Case extends Composant{
     
     public Case clone(){
         Case nouv = new Case(pos.x(), pos.y(), l, h);
-        
+        nouv.EST_POINTE = EST_POINTE;
+        nouv.JOUABLE = JOUABLE;
         if(utilise()){
             Stack<Insecte> tmp = new Stack();
             while(utilise())

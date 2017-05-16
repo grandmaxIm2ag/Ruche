@@ -7,6 +7,7 @@ package Vue;
 
 import Modele.Arbitres.Arbitre;
 import Modele.Case;
+import Modele.Deplacement;
 import Modele.Depot;
 import Modele.Etendeur;
 import Modele.Insecte;
@@ -28,6 +29,7 @@ public class Pointeur extends Visiteur {
     Etendeur etendeur;
     Arbitre arbitre;
     MouseEvent me;
+    private boolean depl = false;
     
     /**
      *
@@ -94,19 +96,44 @@ public class Pointeur extends Visiteur {
                 //System.out.println("[" + c.position().x()+ ";" + c.position().y()+ "]");
                 c.pointe();
                 if (c.utilise())
-                c.tete().pointe();
-            } else if (me.getEventType() == MouseEvent.MOUSE_CLICKED && arbitre.plateau().deplEntame()) {
-                List<Case> l = arbitre.plateau().aide();
-                Iterator<Case> it = l.iterator();
-                Case c2;
-                while (it.hasNext()) {
-                    c2 = it.next();
-                    if (c2.equals(c)) {
-                        arbitre.joue(new Depot(arbitre.jCourant(), arbitre.initDepot(), c.position()));
+                    c.tete().pointe();
+            } else if (me.getEventType() == MouseEvent.MOUSE_CLICKED) {
+
+                if (arbitre.plateau().deplEntame()) {
+                    System.out.println("arbitre.plateau().deplEntame() : " + arbitre.plateau().deplEntame() + "\narbitre.plateau().aide()" + arbitre.plateau().aide());
+                    System.out.println ("c.estJouable() " + c.estJouable());
+                    if (c.estJouable()) {
+                        if (!depl) {
+                            PaneToken.getInstance().uncheck();
+                            arbitre.joue(new Depot(arbitre.jCourant(), arbitre.initDepot(), c.position()));
+                            return true;
+                        } else {
+                            
+                            PaneToken.getInstance().uncheck();
+                            arbitre.joue(new Deplacement(arbitre.jCourant(), arbitre.initDeplacement().position(), c.position()));
+                            depl = false;
+                            return true;
+                        }
+
+                    } else if (arbitre.initDeplacement().position().equals(c.position())) {
+                        System.out.println ("Chocrotte");
+                        depl = false;
+                        return true;
                     }
+                } else if (c.tete().joueur() == arbitre.jCourant()) {
+                    
+                    System.err.println(arbitre.plateau().aide());
+                    System.out.println(c.tete());
+                    System.err.println("caca2");
+                    arbitre.initDeplacement(c.tete());
+                    depl = true;
                 }
             }
         }
+            
+       
+
+    
         
         return false;
     }
@@ -154,5 +181,12 @@ public class Pointeur extends Visiteur {
             c.pointe();
         }
         return false;
+    }
+    
+    public MouseEvent event(){
+        return me;
+    }
+    public void traiter(){
+        me = null;
     }
 }

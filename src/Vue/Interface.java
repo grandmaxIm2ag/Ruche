@@ -117,6 +117,7 @@ public class Interface extends Application {
      */
     public final static int CHOIX_PLATEAU = 2;
 
+    static Pointeur pointeur;
     static Arbitre arbitre;
     static FabriqueArbitre fabrique;
     static BorderPane root;
@@ -200,14 +201,19 @@ public class Interface extends Application {
         return c;
     }
 
+    public static Pointeur pointeur(){
+        return pointeur;
+    }
     /**
      *
      */
     public static void goPartie() {
         arbitre = fabrique.nouveau();
+        
         arbitre.init();
         //root.setBottom(new Pane());
         Canvas c = new Canvas(500, 500);
+        pointeur = new Pointeur(c, arbitre);
         Pane stack = new Pane(c);
         root.setCenter(stack);
 
@@ -258,8 +264,9 @@ public class Interface extends Application {
         //root.setRight(bPion);
         PaneToken pt = PaneToken.getInstance(arbitre);
         //PaneToken pt = new PaneToken(arbitre);
-        root.setRight(pt.getRightPane());
-        root.setLeft(pt.getLeftPane());
+        pt.initialize();
+        root.setRight(pt.getLeftPane());
+        root.setLeft(pt.getRightPane());
 
         box.getChildren().addAll(btPrec, btHelp, btPause, btSuiv/*, btSave, btMenu*/);
 
@@ -706,15 +713,13 @@ public class Interface extends Application {
         box.setSpacing(30);
         box.setAlignment(Pos.CENTER);
         dialog.getDialogPane().setContent(box);
-
-        box.getChildren().add(new Label("Pause"));
-        Button restart = new Button("Recommencer");
-        box.getChildren().addAll(restart);
-        Button save = new Button("Sauvegarder");
-        box.getChildren().addAll(save);
-        Button saveQuit = new Button("Sauvegarder Quitter");
-        box.getChildren().addAll(saveQuit);
-        Button play = new Button("Retour Jeu");
+        
+        Label l = new Label("Pause");
+        l.setGraphic(new ImageView(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Icone/play.png"))));
+        l.setFont(new Font("Arial", 30));
+        
+        box.getChildren().add(l);
+        Button play = new Button("Continuer");
         play.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
@@ -724,6 +729,33 @@ public class Interface extends Application {
         });
 
         box.getChildren().addAll(play);
+        Button restart = new Button("Recommencer");
+        box.getChildren().addAll(restart);
+        Button save = new Button("Sauvegarder");
+        box.getChildren().addAll(save);
+        Button saveQuit = new Button("Sauvegarder Quitter");
+        box.getChildren().addAll(saveQuit);
+        Button menu = new Button("Menu pincipale");
+        menu.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                dialog.setResult(Boolean.TRUE);
+                dialog.close();
+                goMenu();
+            }
+        });
+        Button quit = new Button("Quitter");
+        quit.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                System.exit(0);
+            }
+        });
+        
+        
+        //
+        box.getChildren().addAll(menu);
+        box.getChildren().addAll(quit);
         dialog.show();
                 
 		

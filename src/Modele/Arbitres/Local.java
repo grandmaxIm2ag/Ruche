@@ -16,6 +16,7 @@ import Modele.FabriqueInsecte;
 import Modele.Insecte;
 import Modele.Point;
 import Vue.PaneToken;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -62,15 +63,24 @@ public class Local extends Arbitre{
         tabPieces[6]=(int)Reglage.lis("nbMoustique");  
         tabPieces[7]=(int)Reglage.lis("nbCloporte");
         
+        int[] tabPieces2 = new int[8];
+        tabPieces2[0]=(int)Reglage.lis("nbReine");
+        tabPieces2[1]=(int)Reglage.lis("nbScarabee");
+        tabPieces2[2]=(int)Reglage.lis("nbSauterelle");
+        tabPieces2[3]=(int)Reglage.lis("nbFourmi");
+        tabPieces2[4]=(int)Reglage.lis("nbAraignee");
+        tabPieces2[5]=(int)Reglage.lis("nbCoccinelle");
+        tabPieces2[6]=(int)Reglage.lis("nbMoustique");  
+        tabPieces2[7]=(int)Reglage.lis("nbCloporte");
         
         switch(type){
             case FabriqueArbitre.LOCAL_JVJ:
                 joueurs[J1] = new Humain(true, prop, tabPieces, J1);
-                joueurs[J2] = new Humain(true, prop, tabPieces, J2);
+                joueurs[J2] = new Humain(true, prop, tabPieces2, J2);
                 break;
             case FabriqueArbitre.LOCAL_JVIA:
                 joueurs[J1] = new Humain(true, prop, tabPieces,  J1);
-                joueurs[J2] = new Ordinateur(true,difficulte, prop, tabPieces,  J2);
+                joueurs[J2] = new Ordinateur(true,difficulte, prop, tabPieces2,  J2);
                 break;
         }
         
@@ -84,18 +94,21 @@ public class Local extends Arbitre{
      */
     @Override
     public void joue(Deplacement d){
+        System.out.println ("J'ai fait caca ici aussi :x" + d);
         if(plateau().reine(jCourant)!=null){
-            if(deplacePionValide(d)){
+            System.out.println ("Et là");
+            //if(deplacePionValide(d)){
+            System.out.println ("Et là");
                 enCoursIt = d.route().iterator();
                 enCours = new Deplacement(d.joueur(), enCoursIt.next(),enCoursIt.next());
                 nbCoup[jCourant]++;
                 refaire.clear();
                 historique.add(d);
-                System.err.println(d+" déplacement effectué");
-                prochainJoueur();
-            }else{
-                System.err.println("Deplacement impossible "+d);
-            }
+                etat = JOUE_EN_COURS;
+                System.err.println(d+" déplacement effectué "+enCours);
+            //}else{
+                //System.err.println("Deplacement impossible "+d);
+            //}
         }else{
             System.err.println("Déplacement impossible tant que la reine n'a pas été déposée "+jCourant);
         }
@@ -107,8 +120,11 @@ public class Local extends Arbitre{
      */
     @Override
     public void joue(Depot d){
+        System.err.println("caca" + d.joueur());
         if(nbCoup[jCourant]==0 && jCourant == J1){
-            joueurs[jCourant].jouer(d.type());
+            System.out.println(Arrays.toString(joueurs[J1].pions()));
+            System.out.println(Arrays.toString(joueurs[J2].pions()));
+            joueurs[d.joueur()].jouer(d.type());
             plateau.premierPion(FabriqueInsecte.creer(d.type(), jCourant, new Point(0,0)));
             etat=A_JOUER;
             nbCoup[jCourant]++;
@@ -118,12 +134,11 @@ public class Local extends Arbitre{
             prochainJoueur();
         }else if(nbCoup[jCourant]==0 && jCourant == J2){
             if(plateau.premierPionValide(d)){
-            joueurs[jCourant].jouer(d.type());
+                joueurs[jCourant].jouer(d.type());
                 deposePion(d);
                 nbCoup[jCourant]++;
                 refaire.clear();
                 historique.add(d);
-                joueurs[jCourant].jouer(d.type());
                 System.err.println("2- Dépot effectué "+d);
                 prochainJoueur();
             }else{
@@ -145,6 +160,9 @@ public class Local extends Arbitre{
         }else{
             System.err.println("Depot impossible");
         }
+        
+        
+
     }
 
     /**

@@ -6,6 +6,7 @@
 package Controleur;
 
 import Modele.Arbitres.*;
+import Vue.Interface;
 import Vue.Pointeur;
 import javafx.event.EventHandler;
 import javafx.scene.canvas.Canvas;
@@ -38,8 +39,10 @@ public class Souris implements EventHandler<MouseEvent>{
     public Souris (Arbitre a, int v, Canvas c) {
         this.a = a;
         this.value = v;
+        /*
         this.c = c;
         p = new Pointeur(c, a);
+        */
     }
 
     /**
@@ -49,8 +52,8 @@ public class Souris implements EventHandler<MouseEvent>{
     @Override
     public void handle(MouseEvent t) {
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        p.addEvent(t);
-        a.accept(p);
+        Interface.pointeur().addEvent(t);
+        //a.accept(p);
     }
     
 }

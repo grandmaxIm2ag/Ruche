@@ -15,7 +15,9 @@ import java.util.Properties;
 import java.util.Stack;
 import ruche.Reglage;
 import Modele.*;
+import Vue.Interface;
 import Vue.PaneToken;
+import Vue.Pointeur;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
@@ -207,6 +209,7 @@ public abstract class Arbitre {
      * @param d
      */
     public void joue(Coup d){
+        
         if(d instanceof Deplacement)
             joue((Deplacement)d);
         else if(d instanceof Depot)
@@ -386,8 +389,8 @@ public abstract class Arbitre {
      *
      * @param dessinateur
      */
-    public void accept(Visiteur dessinateur) {
-        plateau.accept(dessinateur);
+    public boolean accept(Visiteur dessinateur) {
+        return plateau.accept(dessinateur);
     }
     
     /**
@@ -448,7 +451,12 @@ public abstract class Arbitre {
      * @param t
      */
     public void maj(long t){
-        System.out.println("jCOurant = "+jCourant);
+        if(Interface.pointeur().event()!=null){
+        boolean b = this.accept(Interface.pointeur());
+        if(b)
+            plateau.clearAide();
+        Interface.pointeur().traiter();
+        }
         long nouv = t-temps;
         temps=t;
         switch(etat){
@@ -457,6 +465,7 @@ public abstract class Arbitre {
             case JOUE_EN_COURS:
                 temps_ecoule+=nouv;
                 if(temps_ecoule>=100000000){
+                    System.out.println("Joue déplacement "+enCours);
                     temps_ecoule=0;
                     if(enCours!=null){
                         plateau.deplacePion(enCours);
@@ -551,11 +560,14 @@ public abstract class Arbitre {
     public void dispo(Insecte ins){
         Coup[] c = deplacementPossible(ins);
         List<Case> l = new ArrayList();
-        for (Coup c1 : c) {
-            Case c2 = new Case(c1.destination().x(), c1.destination().y(), 1, 1);
-            c2.pointe();
-            l.add(c2);
-        }
+        System.out.println("Caca devans la porte" +c);
+            if (c != null)
+                for (Coup c1 : c) {
+                System.out.println("Plein de petits cacas");
+                Case c2 = new Case(c1.destination().x(), c1.destination().y(), 1, 1);
+                c2.jouable();
+                l.add(c2);
+            }
         plateau.setAide(l);
     }
 
