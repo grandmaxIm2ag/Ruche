@@ -326,11 +326,16 @@ public class Interface extends Application {
                 }
             }
         });
+        // Pour ajouter les boutons de couleur
+        ColorChoice cc = ColorChoice.getInstance();
 
         centerGrid.add(cbMOD, 0, 0);
         centerGrid.add(cbDIFF, 2, 0);
         centerGrid.add(tfJ1, 0, 2);
         centerGrid.add(tfJ2, 2, 2);
+        // pour mettre les gridpane dans le menu
+        centerGrid.add(cc.getPlayer1(), 0, 4);
+        centerGrid.add(cc.getPlayer2(), 2, 4);
         centerGrid.setAlignment(Pos.CENTER);
 
         Button btBEG = new Button("Commencer");
