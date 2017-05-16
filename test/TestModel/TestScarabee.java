@@ -28,6 +28,9 @@ import ruche.Reglage;
 public class TestScarabee {
     Scarabee f;
     
+    /**
+     *
+     */
     public TestScarabee() {
         f = (Scarabee) FabriqueInsecte.creer(Insecte.SCAR, 0, new Point(2,2));
     }
@@ -99,6 +102,9 @@ public class TestScarabee {
         }
     }
     
+    /**
+     *
+     */
     @Test
     public void test(){
         base();

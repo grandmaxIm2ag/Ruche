@@ -5,8 +5,8 @@
  */
 package Vue;
 
-import Modele.Arbitre;
-import Modele.TestArbitre;
+import Modele.Arbitres.*;
+import Modele.Arbitres.TestArbitre;
 import Modele.Visiteur;
 import javafx.animation.AnimationTimer;
 import javafx.scene.canvas.Canvas;
@@ -29,6 +29,10 @@ public class Animation extends AnimationTimer{
         buttonDrawer = new ButtonDrawer(cj1, cj2);
     }
     
+    /**
+     *
+     * @param l
+     */
     @Override
     public void handle(long l) {
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.

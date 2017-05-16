@@ -16,6 +16,12 @@ public class RechercheConcurente implements Runnable{
     DeplacementPartage coup;
     Insecte insecte;
     
+    /**
+     *
+     * @param p
+     * @param c
+     * @param e
+     */
     public RechercheConcurente(Plateau p, DeplacementPartage c, Insecte e){
         coup = c;
         insecte = e;

@@ -15,10 +15,19 @@ import java.util.Properties;
 public class Reglage {
     static Properties prop;
 
+    /**
+     *
+     * @param p
+     */
     public static void init(Properties p) {
         prop = p;
     }
     
+    /**
+     *
+     * @param nom
+     * @return
+     */
     public static double lis(String nom) {
         String value = prop.getProperty(nom);
         if (value != null)

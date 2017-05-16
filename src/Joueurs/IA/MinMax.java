@@ -6,7 +6,7 @@
 package Joueurs.IA;
 
 import Joueurs.Ordinateur;
-import Modele.Arbitre;
+import Modele.Arbitres.*;
 import Modele.Coup;
 
 /**
@@ -15,6 +15,14 @@ import Modele.Coup;
  */
 public class MinMax extends AI {
 
+    /**
+     *
+     * @param me
+     * @param a
+     * @param heuristicFunction
+     * @param searchDepth
+     * @param maxTimeInMillis
+     */
     public MinMax(Ordinateur me, Arbitre a, Heuristique heuristicFunction, int searchDepth, int maxTimeInMillis) {
         super(me, a, heuristicFunction, searchDepth, maxTimeInMillis);
     }

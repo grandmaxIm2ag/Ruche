@@ -5,7 +5,7 @@
  */
 package Controleur;
 
-import Modele.Arbitre;
+import Modele.Arbitres.*;
 import javafx.event.EventHandler;
 import javafx.scene.input.KeyEvent;
 
@@ -18,6 +18,10 @@ public class Touche implements EventHandler<KeyEvent>{
     Arbitre a;
     int value;
 
+    /**
+     *
+     * @param t
+     */
     @Override
     public void handle(KeyEvent t) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.

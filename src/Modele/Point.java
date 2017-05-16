@@ -12,10 +12,20 @@ package Modele;
 public class Point implements Comparable {
     double x, y;
     
+    /**
+     *
+     * @param x
+     * @param y
+     */
     public Point(double x, double y){
         this.x = x;
         this.y = y;
     }
+
+    /**
+     *
+     * @param m
+     */
     public Point(String m){
         String tmp[] = m.split(",");
         int x = (int)Double.parseDouble(tmp[0].substring(1));
@@ -24,13 +34,27 @@ public class Point implements Comparable {
         this.y = y;
     }
     
+    /**
+     *
+     * @param x
+     * @param y
+     */
     public void fixe(double x, double y){
         this.x = x; this.y = y;
     }
     
+    /**
+     *
+     * @return
+     */
     public double x(){
         return x;
     }
+
+    /**
+     *
+     * @return
+     */
     public double y(){
         return y;
     }

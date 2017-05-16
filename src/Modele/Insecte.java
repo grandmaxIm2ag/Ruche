@@ -14,39 +14,117 @@ import java.util.Map;
  * @author grandmax
  */
 public abstract class Insecte extends Composant{
+
+    /**
+     *
+     */
     public final static int SCAR = 1;
+
+    /**
+     *
+     */
     public final static int REINE = 0;
+
+    /**
+     *
+     */
     public final static int SAUT = 2;
+
+    /**
+     *
+     */
     public final static int FOUR = 3;
+
+    /**
+     *
+     */
     public final static int ARAI = 4;
+
+    /**
+     *
+     */
     public final static int COCC = 5;
+
+    /**
+     *
+     */
     public final static int MOUS = 6;
+
+    /**
+     *
+     */
     public final static int CLOP = 7;
+
+    /**
+     *
+     */
     public final static int NB_TYPE = 8;
     
+    /**
+     *
+     */
     public boolean EST_POINTE;
     
     int joueur;
+    int classement;
     
+    /**
+     *
+     * @param x
+     * @param y
+     * @param larg
+     * @param haut
+     * @param j
+     */
     public Insecte(double x, double y, double larg, double haut, int j) {
         super(x, y, larg, haut);
         joueur = j;
         EST_POINTE = false;
+        classement = 0;
     }
     
+    /**
+     *
+     */
     public void pointe() {
         EST_POINTE = true;
     }
     
+    /**
+     *
+     */
     public void depointe() {
         EST_POINTE = false;
     }
     
+    /**
+     *
+     * @return
+     */
     public boolean estpointe () {
         return EST_POINTE;
     }
 
-    
+    /**
+     *
+     * @param c
+     */
+    public void setClassement(int c ){
+        classement = c;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public int classement(){
+        return classement;
+    }
+
+    /**
+     *
+     * @return
+     */
     public double[] vecteur(){
         double[] vecteur = new double[12];
         double cote = l/2;
@@ -62,16 +140,35 @@ public abstract class Insecte extends Composant{
         return vecteur;
     }
     
+    /**
+     *
+     * @return
+     */
     public abstract int type();
     
+    /**
+     *
+     * @param plateau
+     * @return
+     */
     public abstract Coup[] deplacementValide(Map<Point, Case> plateau);
     
+    @Override
     public abstract Insecte clone();
     
+    /**
+     *
+     * @return
+     */
     public int joueur(){
         return joueur;
     }
     
+    /**
+     *
+     * @param plateau
+     * @return
+     */
     public List<Coup> glisser(Map<Point, Case> plateau){
         List<Coup> c = new ArrayList();
         int i1;
@@ -135,6 +232,11 @@ public abstract class Insecte extends Composant{
         return c;
     }
 
+    /**
+     *
+     * @param plateau
+     * @return
+     */
     public List<Coup> monter(Map<Point, Case> plateau){
         List<Coup> c = new ArrayList();
         for(int i=(int)pos.x()-1; i<=(int)pos.x()+1;i++)
@@ -145,6 +247,12 @@ public abstract class Insecte extends Composant{
                             c.add(new Deplacement(joueur, new Point(pos.x(), pos.y()), new Point(i,j)));
         return c;
     }
+
+    /**
+     *
+     * @param plateau
+     * @return
+     */
     public List<Coup> descendre(Map<Point, Case> plateau){
         List<Coup> c = new ArrayList();
         for(int i=(int)pos.x()-1; i<=(int)pos.x()+1;i++)

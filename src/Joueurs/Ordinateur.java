@@ -7,7 +7,7 @@ package Joueurs;
 
 import Joueurs.IA.AI;
 import Joueurs.IA.HeuristiqueV1;
-import Modele.Arbitre;
+import Modele.Arbitres.*;
 import Modele.Case;
 import Modele.Coup;
 import Modele.Depot;
@@ -40,7 +40,14 @@ public class Ordinateur extends Joueur{
     
     Map<Plateau, Integer> configurations;
 
-    
+    /**
+     *
+     * @param m
+     * @param d
+     * @param p
+     * @param tabP
+     * @param j
+     */
     public Ordinateur(boolean m, int d, Properties p, int[] tabP, int j) {
         super(m, p, tabP, j);
         difficulte = d;
@@ -108,7 +115,7 @@ public class Ordinateur extends Joueur{
             }
             //choix aléatoire
             int choix= r.nextInt(res.size());
-                return res.get(choix);
+            return res.get(choix);
         }else{
             System.err.println("BUG");
             return null;

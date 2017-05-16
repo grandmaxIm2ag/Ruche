@@ -3,14 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Modele;
+package Modele.Arbitres;
 
 import Joueurs.Humain;
 import Joueurs.Ordinateur;
-import static Modele.Arbitre.J1;
-import static Modele.Arbitre.J2;
-import static Modele.Arbitre.JvIA;
-import static Modele.Arbitre.JvJ;
+import Modele.Coup;
+import Modele.Deplacement;
+import Modele.Depot;
+import Modele.FabriqueInsecte;
+import Modele.Point;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -23,10 +24,19 @@ import ruche.Reglage;
  */
 public class SimulationIA extends Arbitre {
 
-    public SimulationIA(Properties p) {
+    /**
+     *
+     * @param p
+     * @param d
+     */
+    public SimulationIA(Properties p, int d) {
         super(p);
+        difficulte = d;
     }
     
+    /**
+     *
+     */
     @Override
     public void init(){
         
@@ -44,12 +54,15 @@ public class SimulationIA extends Arbitre {
         for(int i=0; i<tabPieces2.length; i++)
             tabPieces2[i]=tabPieces[i];
         
-        joueurs[J1] = new Ordinateur(true,Ordinateur.MOYEN, prop, tabPieces,J1);
-        joueurs[J2] = new Ordinateur(true,Ordinateur.FACILE_HEURISTIQUE, prop, tabPieces2,J2);
+        joueurs[J1] = new Ordinateur(true,difficulte, prop, tabPieces,J1);
+        joueurs[J2] = new Ordinateur(true,difficulte, prop, tabPieces2,J2);
         
         go();
     }
     
+    /**
+     *
+     */
     public void go(){
         if(joueurs[J1] instanceof Ordinateur){
             Ordinateur o = (Ordinateur) joueurs[J1];
@@ -81,7 +94,10 @@ public class SimulationIA extends Arbitre {
                 joue(o.coup(this, coups));
         }
     }
-    
+
+    /**
+     *
+     */
     @Override
     public void prochainJoueur() {
         jCourant = ++jCourant % 2;
@@ -116,13 +132,11 @@ public class SimulationIA extends Arbitre {
                 int j;
                 for(j=0; j<x.length; j++){
                     coups[i+j]=x[j];
-                    //System.out.println(coups[i+j]+" "+(i+j));
                 }
                  i+=j;
             }
             aucun = coups == null || coups.length<=0;
             if(aucun){
-                System.out.println("Coucou");
                 prochainJoueur();
             }else if(precAucun && aucun){
                 etat=FIN;
@@ -136,13 +150,15 @@ public class SimulationIA extends Arbitre {
             }
         }
     }
-    
+
+    /**
+     *
+     * @param d
+     */
+    @Override
     public void joue(Deplacement d){
-                //deplacePion(d);
-                System.out.println(d);
-                plateau.afficheGraphe(plateau.voisins());
                 enCoursIt = d.route().iterator();
-                enCours = new Deplacement(d.joueur, enCoursIt.next(),enCoursIt.next());
+                enCours = new Deplacement(d.joueur(), enCoursIt.next(),enCoursIt.next());
                 nbCoup[jCourant]++;
                 refaire.clear();
                 historique.add(d);
@@ -150,6 +166,12 @@ public class SimulationIA extends Arbitre {
                 etat=JOUE_EN_COURS;
          
     }
+
+    /**
+     *
+     * @param d
+     */
+    @Override
     public void joue(Depot d){
         if(nbCoup[jCourant]==0 && jCourant == J1){
             joueurs[jCourant].jouer(d.type());

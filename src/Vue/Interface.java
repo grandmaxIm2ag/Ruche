@@ -12,7 +12,7 @@ import javafx.stage.Stage;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.BorderPane;
-import Modele.Arbitre;
+import Modele.Arbitres.*;
 import Joueurs.Joueur;
 import Joueurs.Ordinateur;
 import Modele.Point;
@@ -24,6 +24,11 @@ import java.time.Duration;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.animation.RotateTransition;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.LongProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -72,18 +77,42 @@ import javax.imageio.ImageIO;
  */
 public class Interface extends Application {
 
+    /**
+     *
+     */
     public final static int SOURIS_PRESSEE = 0;
+
+    /**
+     *
+     */
     public final static int SOURIS_BOUGEE = 1;
 
+    /**
+     *
+     */
     public final static int CHOIX_MODE = 0;
+
+    /**
+     *
+     */
     public final static int CHOIX_DIFFICULTE = 1;
+
+    /**
+     *
+     */
     public final static int CHOIX_PLATEAU = 2;
 
     static Arbitre arbitre;
+    static FabriqueArbitre fabrique;
     static BorderPane root;
     static Scene s;
     final static boolean fullScreen = false;
 
+    /**
+     *
+     * @param stage
+     * @throws Exception
+     */
     @Override
     public void start(Stage stage) throws Exception {
 
@@ -100,13 +129,23 @@ public class Interface extends Application {
         stage.show();
     }
 
-    public static void creer(String[] args, Arbitre a) {
+    /**
+     *
+     * @param args
+     * @param a
+     */
+    public static void creer(String[] args, FabriqueArbitre a) {
         root = new BorderPane();
-        arbitre = a;
+        fabrique = a;
+        fabrique.initType(FabriqueArbitre.LOCAL_JVJ);
         launch(args);
 
     }
 
+    /**
+     *
+     * @return
+     */
     public static Canvas title() {
         Canvas c = new Canvas(200, 100);
         GraphicsContext gc;
@@ -122,6 +161,11 @@ public class Interface extends Application {
         return c;
     }
 
+    /**
+     *
+     * @param name
+     * @return
+     */
     public static Canvas titleSect(String name) {
         Canvas c = new Canvas(200, 100);
         GraphicsContext gc;
@@ -137,10 +181,13 @@ public class Interface extends Application {
         return c;
     }
 
+    /**
+     *
+     */
     public static void goPartie() {
+        arbitre = fabrique.nouveau();
         arbitre.init();
-        //root.setLeft(new Pane());
-        root.setBottom(new Pane());
+        //root.setBottom(new Pane());
         Canvas c = new Canvas(500, 500);
         Pane stack = new Pane(c);
         root.setCenter(stack);
@@ -152,7 +199,7 @@ public class Interface extends Application {
         box.setAlignment(Pos.TOP_CENTER);
         box.setPadding(new Insets(20, 10, 20, 10));
         box.setSpacing(20);
-        root.setLeft(box);
+        root.setBottom(box);
         Button btPrec = new Button("Précédent");
         Button btSuiv = new Button("Suivant");
         Button btSave = new Button("Sauvegarder");
@@ -176,22 +223,37 @@ public class Interface extends Application {
         bPion.add(cj1, 0, 0);
         bPion.add(sep, 1, 0);
         bPion.add(cj2, 2, 0);
-        root.setRight(bPion);
+        //root.setRight(bPion);
+        PaneToken pt = PaneToken.getInstance(arbitre);
+        //PaneToken pt = new PaneToken(arbitre);
+        root.setRight(pt.getRightPane());
+        root.setLeft(pt.getLeftPane());
 
         box.getChildren().addAll(btPrec, btSuiv, btSave, btMenu);
 
-        c.setOnMouseClicked(new Souris(arbitre, Souris.SOURIS_BOUGEE, c));
-        //cj1.setOnMouseMoved(new Souris(arbitre, Souris.SOURIS_BOUGEE,cj1));
+        c.setOnMouseMoved(new Souris(arbitre, Souris.SOURIS_BOUGEE, c));
+        c.setOnMouseClicked(new Souris(arbitre, Souris.SOURIS_CLIQUEE, c));
+
 
         Animation anim = new Animation(arbitre, c, cj1, cj2);
         anim.start();
 
     }
 
+    /**
+     *
+     * @param a
+     * @return
+     */
     public static double py(double a) {
         return Math.sqrt(Math.pow(a, 2) - Math.pow(a / 2, 2));
     }
+    //static int i = 10;
+    static IntegerProperty i = new SimpleIntegerProperty(10);
 
+    /**
+     *
+     */
     public static void goMenu() {
         root.setRight(new Pane());
         VBox topBox = new VBox();
@@ -241,12 +303,28 @@ public class Interface extends Application {
         
         b.setOnAction(new Bouton(Bouton.BOUTON_QUITTER, arbitre));
         
-        leftBox.getChildren().addAll(btNG, btLD, btCFG, btQUIT, b);
+        Button bTest = new Button("test");
+        Label tTest = new Label();
+        //tTest.textProperty().bind(i.asString());
+        tTest.textProperty().bind(Bindings.createStringBinding(() -> "" + i.get(), i));
+        
+        bTest.setOnAction(new EventHandler<ActionEvent> () {
+            @Override
+            public void handle (ActionEvent e) {
+                i.set(i.get() +1);
+                System.out.println(i);
+            }
+        });
+        
+        leftBox.getChildren().addAll(btNG, btLD, btCFG, btQUIT, b, bTest, tTest);
 
         root.setLeft(box);
         goNewGame();
     }
 
+    /**
+     *
+     */
     public static void goNewGame() {
         VBox centerBox = new VBox();
         StackPane centerStack = new StackPane();
@@ -321,6 +399,9 @@ public class Interface extends Application {
         root.setCenter(centerBox);
     }
 
+    /**
+     *
+     */
     public static void goLoadGame() {
         VBox centerBox = new VBox();
         StackPane centerStack = new StackPane();
@@ -360,6 +441,13 @@ public class Interface extends Application {
         root.setCenter(centerBox);
     }
 
+    /**
+     *
+     * @param x
+     * @param y
+     * @param rayon
+     * @return
+     */
     public static double[][] hex_corner(double x, double y, double rayon) {
         double[][] coords = new double[2][6];
         double angle_deg;
@@ -373,10 +461,17 @@ public class Interface extends Application {
         return coords;
     }
 
+    /**
+     *
+     * @param gagnant
+     */
     public void goFin(String gagnant) {
 
     }
 
+    /**
+     *
+     */
     public static void goConfig() {
         VBox centerBox = new VBox();
         StackPane centerStack = new StackPane();
@@ -486,10 +581,16 @@ public class Interface extends Application {
         root.setCenter(centerBox);
     }
 
+    /**
+     *
+     */
     public static void goAffichage() {
 
     }
 
+    /**
+     *
+     */
     public static void goCredits() {
         VBox box = new VBox();
         box.setSpacing(30);
@@ -534,10 +635,22 @@ public class Interface extends Application {
 
     }
 
+    /**
+     *
+     * @param j1
+     * @param j2
+     * @param nbManche
+     * @param joueur
+     */
     public static void infoPartie(Joueur j1, Joueur j2, int nbManche, int joueur) {
 
     }
 
+    /**
+     *
+     * @param cb
+     * @param c
+     */
     public static void initChoix(ChoiceBox cb, int c) {
 
     }

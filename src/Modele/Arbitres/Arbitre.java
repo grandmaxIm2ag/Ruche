@@ -3,30 +3,35 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package Modele;
+package Modele.Arbitres;
 
-import Joueurs.Humain;
 import Joueurs.Joueur;
-import Joueurs.Ordinateur;
 import java.io.File;
 import java.io.*;
 import java.io.IOException;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 import java.util.Stack;
 import ruche.Reglage;
+import Modele.*;
+import Vue.PaneToken;
+import java.util.ArrayList;
 
 /**
  *
  * @author grandmax
  */
-public class Arbitre {
-    public final static int JvJ=0;
-    public final static int JvIA=1;
+public abstract class Arbitre {
             
+    /**
+     *
+     */
     public final static int J1 = 0;
+
+    /**
+     *
+     */
     public final static int J2 = 1;
     
     final static int ATTENTE_COUP = 0;
@@ -41,6 +46,9 @@ public class Arbitre {
     Deplacement enCours;
     Iterator<Point> enCoursIt;
     
+    /**
+     *
+     */
     public Properties prop;
     Joueur[] joueurs;
     int jCourant, type, difficulte;
@@ -48,10 +56,6 @@ public class Arbitre {
     Chargeur chargeur;
     Stack<Coup> historique;
     Stack<Coup> refaire;
-    
-    String[] diff;
-    String[] types;
-    String[] plateaux;
     
     int[] nbCoup;
     
@@ -61,6 +65,13 @@ public class Arbitre {
     boolean aucun;
     boolean precAucun;
     
+    Insecte initDepl;
+    int initDepot;
+    
+    /**
+     *
+     * @param p
+     */
     public Arbitre(Properties p){
         Reglage.init(p);
         prop = p;
@@ -70,19 +81,7 @@ public class Arbitre {
         refaire = new Stack();
         plateau = new Plateau(0,0,Reglage.lis("nbPiece"),Reglage.lis("nbPiece"),p);
         
-        difficulte = Ordinateur.MOYEN;
-        diff = new String[3];
-        //diff[Ordinateur.FACILE_ALEATOIRE] = "Facile";
-        //diff[Ordinateur.MOYEN] = "Normal";
-        //diff[Ordinateur.DIFFICILE] = "Difficile";
-        
-        type = JvIA;
-        types = new String[2];
-        types[JvJ] = "Joueur vs Joueur";
-        types[JvIA] = "Joueur vs IA";
-        
         chargeur = new Chargeur();
-        
         
         nbCoup = new int[2];
         nbCoup[0]=0; nbCoup[1]=0;
@@ -93,56 +92,73 @@ public class Arbitre {
         precAucun = false;
     }
     
-    public void init(){
-        
-        int[] tabPieces = new int[8];
-        tabPieces[0]=(int)Reglage.lis("nbReine");
-        tabPieces[1]=(int)Reglage.lis("nbScarabee");
-        tabPieces[2]=(int)Reglage.lis("nbSauterelle");
-        tabPieces[3]=(int)Reglage.lis("nbFourmi");
-        tabPieces[4]=(int)Reglage.lis("nbAraignee");
-        tabPieces[5]=(int)Reglage.lis("nbCoccinelle");
-        tabPieces[6]=(int)Reglage.lis("nbMoustique");  
-        tabPieces[7]=(int)Reglage.lis("nbCloporte");
-        
-        
-        switch(type){
-            case JvJ:
-                joueurs[J1] = new Humain(true, prop, tabPieces, J1);
-                joueurs[J2] = new Humain(true, prop, tabPieces, J2);
-                break;
-            case JvIA:
-                joueurs[J1] = new Humain(true, prop, tabPieces,  J1);
-                joueurs[J2] = new Ordinateur(true,difficulte, prop, tabPieces,  J2);
-                break;
-        }
-    }
+    /**
+     *
+     */
+    public abstract void init();
     
+    /**
+     *
+     * @return
+     */
     public Plateau plateau(){
         return plateau;
     }
+
+    /**
+     *
+     * @param i
+     * @return
+     */
     public Joueur joueur(int i){
         return joueurs[i];
     }
     
+    /**
+     *
+     * @param d
+     * @return
+     */
     public boolean deposePionValide(Depot d){
         return plateau.deposePionValide(d);
     }
+
+    /**
+     *
+     * @param d
+     * @return
+     */
     public boolean deplacePionValide(Deplacement d){
         boolean b = false;
         
-        for(int i=0; i<deplacements.length; i++)
-            b|=d.equals(deplacements[i]);
+        for (Coup deplacement : deplacements) {
+            b |= d.equals(deplacement);
+        }
         
         return b;
     }
+
+    /**
+     *
+     * @param d
+     */
     public void deplacePion(Deplacement d){
         plateau.deplacePion(d);
     }
+
+    /**
+     *
+     * @param d
+     */
     public void deposePion(Depot d){
         plateau.deposePion(d);
     }
     
+    /**
+     *
+     * @param j
+     * @return
+     */
     public Coup[] deplacementPossible(int j){
         if(plateau.reine(jCourant)==null)
             return null;
@@ -150,6 +166,12 @@ public class Arbitre {
             return plateau.deplacementPossible(jCourant);
     }
     
+    /**
+     *
+     * @param j
+     * @param t
+     * @return
+     */
     public Coup[] depotPossible(int j, int t){
         if((plateau.reine(jCourant)==null && t!=Insecte.REINE && nbCoup[j]>=3) ){
             return null;
@@ -159,6 +181,28 @@ public class Arbitre {
             return plateau.depotPossible(jCourant, t);
     }
     
+    /**
+     *
+     * @param e
+     * @return
+     */
+    public Coup[] deplacementPossible(Insecte e){
+        if(plateau.reine(jCourant)==null)
+            return null;
+        else{
+            List<Coup> l = plateau.deplacementPossible(e);
+            Coup[] res = new Coup[l.size()];
+            for(int i=0; i<l.size(); i++)
+                res[i]=l.get(i);
+            return res;
+        }
+            
+    }
+    
+    /**
+     *
+     * @param d
+     */
     public void joue(Coup d){
         if(d instanceof Deplacement)
             joue((Deplacement)d);
@@ -167,64 +211,22 @@ public class Arbitre {
         else
             System.err.println("Coup Inconnu "+d);
     }
-    public void joue(Deplacement d){
-        if(plateau().reine(jCourant)!=null){
-            if(deplacePionValide(d)){
-                //deplacePion(d);
-                enCoursIt = d.route().iterator();
-                enCours = new Deplacement(d.joueur, enCoursIt.next(),enCoursIt.next());
-                nbCoup[jCourant]++;
-                refaire.clear();
-                historique.add(d);
-                System.err.println(d+" déplacement effectué");
-                prochainJoueur();
-            }else{
-                System.err.println("Deplacement impossible "+d);
-            }
-        }else{
-            System.err.println("Déplacement impossible tant que la reine n'a pas été déposée "+jCourant);
-        }
-    }
-    public void joue(Depot d){
-        if(nbCoup[jCourant]==0 && jCourant == J1){
-            joueurs[jCourant].jouer(d.type());
-            plateau.premierPion(FabriqueInsecte.creer(d.type(), jCourant, new Point(0,0)));
-            nbCoup[jCourant]++;
-            refaire.clear();
-            historique.add(d);
-            System.err.println("1- Dépot effectué "+d);
-            prochainJoueur();
-        }else if(nbCoup[jCourant]==0 && jCourant == J2){
-            if(plateau.premierPionValide(d)){
-            joueurs[jCourant].jouer(d.type());
-                deposePion(d);
-                nbCoup[jCourant]++;
-                refaire.clear();
-                historique.add(d);
-                joueurs[jCourant].jouer(d.type());
-                System.err.println("2- Dépot effectué "+d);
-                prochainJoueur();
-            }else{
-                System.err.println("Depot impossible");
-            }
-        }else if(deposePionValide(d) && joueurs[jCourant].pion(d.type())>0){
-            
-            if((plateau.reine(jCourant)==null && (d.type()==Insecte.REINE || nbCoup[jCourant]<3)) || plateau.reine(jCourant)!=null){
-                joueurs[jCourant].jouer(d.type());
-                deposePion(d);
-                nbCoup[jCourant]++;
-                refaire.clear();
-                historique.add(d);
-                System.err.println("3- Dépot effectué "+d);
-                prochainJoueur();
-            }else{
-                System.err.println("Vous devez déposé une reine "+jCourant);
-            }
-        }else{
-            System.err.println("Depot impossible");
-        }
-    }
     
+    /**
+     *
+     * @param d
+     */
+    public abstract void joue(Deplacement d);
+    
+    /**
+     *
+     * @param d
+     */
+    public abstract void joue(Depot d);
+    
+    /**
+     *
+     */
     public void nouvellePartie(){
         plateau = new Plateau(0,0,Reglage.lis("nbPiece"),Reglage.lis("nbPiece"),prop);
         nbCoup[0]=0; nbCoup[1]=0;
@@ -232,6 +234,9 @@ public class Arbitre {
         init();
     }
     
+    /**
+     *
+     */
     public void precedent(){
         if(!historique.isEmpty()){
             Coup c = historique.pop();
@@ -247,6 +252,10 @@ public class Arbitre {
             System.err.println("Aucun coup précedent");
         }
     }
+
+    /**
+     *
+     */
     public void refaire(){
         if(!refaire.isEmpty()){
             joue(refaire.pop());
@@ -254,10 +263,19 @@ public class Arbitre {
             System.out.println("Aucun coup à refaire");
         }
     }
+
+    /**
+     *
+     */
     public void abandon(){
-        
+        etat = FIN;
+        System.err.println(jCourant+" a abandonné");
     }
     
+    /**
+     *
+     * @param plateau
+     */
     public void charger(String plateau){
         
         chargeur.init(prop, plateau);
@@ -283,6 +301,11 @@ public class Arbitre {
         joueurs[J2].setPieces(tab);
 
     }
+
+    /**
+     *
+     * @param nomSauv
+     */
     public void sauvegarder(String nomSauv){
         String sauv = "";
         
@@ -324,79 +347,89 @@ public class Arbitre {
         
     }
     
+    /**
+     *
+     */
     public void aide(){
         /*
         A faire dès que les IA seront opérationnels
         */
     }
 
+    /**
+     *
+     * @param dessinateur
+     */
     public void accept(Visiteur dessinateur) {
         plateau.accept(dessinateur);
     }
     
+    /**
+     *
+     * @param buttonDrawer
+     */
     public void acceptButton(Visiteur buttonDrawer) {
         buttonDrawer.visite(this);
     }
         
-
-    public void prochainJoueur() {
-        
-        //etat = 
-        jCourant = ++jCourant % 2;
-        
-        if(plateau.estEncerclee(jCourant)){
-            System.err.println(jCourant+" à perdu");
-        }else{
-            List<Coup[]> tab = new LinkedList();
-            for(int i=0; i<joueurs[jCourant].pions().length; i++){
-                if(joueurs[jCourant].pions()[i]!=0)
-                    tab.add(depotPossible(jCourant, i));
-            }
-            
-            tab.add(deplacementPossible(jCourant));
-            
-            int taille= 0;
-            Iterator<Coup[]> it = tab.iterator();
-            while(it.hasNext())
-                taille+=it.next().length;
-            it = tab.iterator();
-            for(int i=0; i<taille;i++){
-                Coup[] x = it.next();
-                for(int j=0; j<x.length; j++)
-                    coups[i+j]=x[j];
-            }
-            aucun = coups.length<=0;
-            if(plateau.aucunCoup(jCourant)){
-                prochainJoueur();
-            }else{
-                if(joueurs[jCourant] instanceof Ordinateur){
-                    Ordinateur o = (Ordinateur) joueurs[jCourant];
-                    joue(o.coup(this, coups));
-                }
-            }
-        }
-    }
+    /**
+     *
+     */
+    public abstract void prochainJoueur();
     
+    /**
+     *
+     * @return
+     */
     public int type(){
         return type;
     }
+
+    /**
+     *
+     * @return
+     */
     public int jCourant(){
         return jCourant;
     }
+
+    /**
+     *
+     * @return
+     */
     public int difficulte(){
         return difficulte;
     }
     
+    /**
+     *
+     * @param e
+     */
+    public void setEtat(int e){
+        etat = e;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public int etat(){
+        return etat;
+    }
+
+    /**
+     *
+     * @param t
+     */
     public void maj(long t){
         long nouv = t-temps;
         temps=t;
         switch(etat){
             case ATTENTE_COUP:
-                go();
                 break;
             case JOUE_EN_COURS:
                 temps_ecoule+=nouv;
-                if(temps_ecoule>=10000){
+                if(temps_ecoule>=100000000){
                     temps_ecoule=0;
                     if(enCours!=null){
                         plateau.deplacePion(enCours);
@@ -415,7 +448,10 @@ public class Arbitre {
                 }
                 break;
             case A_JOUER:
+                PaneToken.getInstance(this).update();
                 prochainJoueur();
+                plateau.setJoueur(jCourant);
+                plateau.clearAide();
                 break;
             case FIN:
                 break;
@@ -431,8 +467,79 @@ public class Arbitre {
         return plateau.aucunCoup(J1)&&plateau.aucunCoup(J2)&&b1&&b2;
     }
     
-    public void go(){
-        
+    /**
+     *
+     * @param ins
+     */
+    public void initDepot(int ins){
+        initDepot=ins;
+        plateau.clearAide();
+        dispo(ins);
+    }
+
+    /**
+     *
+     * @param ins
+     */
+    public void initDeplacement(Insecte ins){
+        initDepl = ins.clone();
+        plateau.clearAide();
+        dispo(ins);
+    }
+
+    /**
+     *
+     * @param ins
+     */
+    public void dispo(int ins){
+        Coup[] c = depotPossible(jCourant, ins);
+        List<Case> l = new ArrayList();
+        for(int i=0; i<c.length; i++){
+            Case c2 = new Case(c[i].destination().x(), c[i].destination().y(), 1, 1);
+            c2.jouable();
+            l.add(c2);
+        }
+        plateau.setAide(l);
     }
     
+    /**
+     *
+     * @return
+     */
+    public Insecte initDeplacement(){
+        return initDepl;
+    }
+
+    /**
+     *
+     * @return
+     */
+    public int initDepot(){
+        return initDepot;
+    }
+    
+    /**
+     *
+     * @param ins
+     */
+    public void dispo(Insecte ins){
+        Coup[] c = deplacementPossible(ins);
+        List<Case> l = new ArrayList();
+        for (Coup c1 : c) {
+            Case c2 = new Case(c1.destination().x(), c1.destination().y(), 1, 1);
+            c2.pointe();
+            l.add(c2);
+        }
+        plateau.setAide(l);
+    }
+
+    /**
+     *
+     */
+    public void go(){
+        etat = ATTENTE_COUP;
+    }
+    /*
+    @Override
+    public abstract Arbitre clone();*/
 }

@@ -13,6 +13,13 @@ import ruche.Reglage;
  */
 public class FabriqueInsecte {
     
+    /**
+     *
+     * @param type
+     * @param joueur
+     * @param pos
+     * @return
+     */
     public static Insecte creer(int type, int joueur, Point pos){
         switch(type){
             case Insecte.SCAR:
@@ -36,6 +43,11 @@ public class FabriqueInsecte {
         }
     }
 
+    /**
+     *
+     * @param s
+     * @return
+     */
     public static Insecte creer(String s) {
         String[] str = s.split("/");
         return creer(Integer.parseInt(str[0].substring(1)), Integer.parseInt(str[1]), new Point(str[2].substring(0, str[2].length()-1)));

@@ -18,11 +18,17 @@ import ruche.Reglage;
  */
 public class TestFabrique {
     
+    /**
+     *
+     */
     public TestFabrique() {
         Properties prop = Configuration.proprietes();
         Reglage.init(prop);
     }
     
+    /**
+     *
+     */
     @Test
     public void test(){
         Insecte e = FabriqueInsecte.creer(Insecte.REINE, 0, new Point(0,0));

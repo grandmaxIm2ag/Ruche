@@ -18,6 +18,13 @@ import java.util.Map;
  */
 public class Reine extends Insecte{
 
+    /**
+     *
+     * @param x
+     * @param y
+     * @param haut
+     * @param j
+     */
     public Reine(double x, double y, /*double larg,*/ double haut, int j) {
         //super(x, y, larg, haut,j);
         super(x, y, Interface.py(haut), haut, j);
@@ -33,11 +40,21 @@ public class Reine extends Insecte{
         return false;
     }
 
+    /**
+     *
+     * @param v
+     * @return
+     */
     @Override
     public boolean accept(Visiteur v) {
         return v.visite(this);
     }
 
+    /**
+     *
+     * @param plateau
+     * @return
+     */
     @Override
     public Coup[] deplacementValide(Map<Point, Case> plateau) {
         List<Coup> c = glisser(plateau);
@@ -54,6 +71,10 @@ public class Reine extends Insecte{
         return new Reine(pos.x(), pos.y(), /*l,*/ h, joueur);
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public int type() {
         return REINE;

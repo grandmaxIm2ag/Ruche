@@ -18,6 +18,14 @@ import java.util.Stack;
  */
 public class Fourmie extends Insecte{
 
+    /**
+     *
+     * @param x
+     * @param y
+     * @param larg
+     * @param haut
+     * @param j
+     */
     public Fourmie(double x, double y, double larg, double haut, int j) {
         super(x, y, larg, haut,j);
     }
@@ -31,11 +39,21 @@ public class Fourmie extends Insecte{
         return false;
     }
 
+    /**
+     *
+     * @param v
+     * @return
+     */
     @Override
     public boolean accept(Visiteur v) {
         return v.visite(this);
     }
 
+    /**
+     *
+     * @param pl
+     * @return
+     */
     @Override
     public Coup[] deplacementValide(Map<Point, Case> pl) {
         
@@ -114,8 +132,10 @@ public class Fourmie extends Insecte{
         return new Fourmie(pos.x(), pos.y(), l, h, joueur);
     }
     
-    
-
+    /**
+     *
+     * @return
+     */
     @Override
     public int type() {
        return FOUR;

@@ -28,6 +28,9 @@ public class TestMoustique {
     
 Moustique f;
     
+    /**
+     *
+     */
     public TestMoustique() {
         f = (Moustique) FabriqueInsecte.creer(Insecte.MOUS, 0, new Point(0,2));
     }
@@ -244,6 +247,10 @@ Moustique f;
             b|=c.equals(d[i]);
         return b;
     }
+
+    /**
+     *
+     */
     @Test
     public void test(){
         base();

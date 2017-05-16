@@ -27,6 +27,9 @@ public class TestAraignee {
     
 Araignee f;
     
+    /**
+     *
+     */
     public TestAraignee() {
         f = (Araignee) FabriqueInsecte.creer(Insecte.ARAI, 0, new Point(2,1));
     }
@@ -132,6 +135,10 @@ Araignee f;
             b|=c.equals(d[i]);
         return b;
     }
+
+    /**
+     *
+     */
     @Test
     public void test(){
         base();

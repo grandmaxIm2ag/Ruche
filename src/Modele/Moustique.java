@@ -16,10 +16,23 @@ import java.util.Map;
  */
 public class Moustique extends Insecte{
 
+    /**
+     *
+     * @param x
+     * @param y
+     * @param larg
+     * @param haut
+     * @param j
+     */
     public Moustique(double x, double y, double larg, double haut, int j) {
         super(x, y, larg, haut,j);
     }
 
+    /**
+     *
+     * @param plateau
+     * @return
+     */
     @Override
     public Coup[] deplacementValide(Map<Point, Case> plateau) {
         boolean types[] = new boolean[NB_TYPE];
@@ -74,6 +87,11 @@ public class Moustique extends Insecte{
         return false;
     }
 
+    /**
+     *
+     * @param v
+     * @return
+     */
     @Override
     public boolean accept(Visiteur v) {
         return v.visite(this);
@@ -84,6 +102,10 @@ public class Moustique extends Insecte{
        return new Moustique(pos.x(), pos.y(), l, h, joueur);
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public int type() {
         return MOUS;

@@ -27,6 +27,9 @@ import ruche.Reglage;
 public class TestSauterelle {
     Sauterelle f;
     
+    /**
+     *
+     */
     public TestSauterelle() {
         f = (Sauterelle) FabriqueInsecte.creer(Insecte.SAUT, 0, new Point(2,1));
     }
@@ -115,6 +118,10 @@ public class TestSauterelle {
         for(int i=0; i<d2.length; i++)
             assertTrue(appartient(d2, d[i]));
     }
+
+    /**
+     *
+     */
     @Test
     public void test(){
         base();

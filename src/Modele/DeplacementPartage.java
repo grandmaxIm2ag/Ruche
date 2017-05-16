@@ -16,14 +16,25 @@ public class DeplacementPartage {
     List<Coup> lc;
     boolean b = true;
     
+    /**
+     *
+     */
     public DeplacementPartage(){
         lc = new ArrayList();
     }
     
+    /**
+     *
+     * @return
+     */
     public List<Coup> getCoup(){
         return lc;
     }
     
+    /**
+     *
+     * @param c
+     */
     public synchronized void add(List<Coup> c){
         while(!b)
             try{

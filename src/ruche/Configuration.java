@@ -31,6 +31,10 @@ public class Configuration {
         }
     }
 
+    /**
+     *
+     * @return
+     */
     public static Properties proprietes() {
         Properties p;
     InputStream in = ClassLoader.getSystemClassLoader().getResourceAsStream("Reglages/defaut.cfg");

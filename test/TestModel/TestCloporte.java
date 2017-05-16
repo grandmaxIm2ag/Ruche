@@ -31,6 +31,9 @@ import ruche.Reglage;
 public class TestCloporte {
     Cloporte f;
     
+    /**
+     *
+     */
     public TestCloporte() {
         f = (Cloporte) FabriqueInsecte.creer(Insecte.CLOP, 0, new Point(2,2));
     }
@@ -75,6 +78,10 @@ public class TestCloporte {
             assertTrue(appartient(d2, d[i]));
         }
     }
+
+    /**
+     *
+     */
     @Test
     public void test() {
         base();

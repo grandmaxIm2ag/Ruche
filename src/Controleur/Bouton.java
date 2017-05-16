@@ -5,7 +5,7 @@
  */
 package Controleur;
 
-import Modele.Arbitre;
+import Modele.Arbitres.*;
 import Vue.Interface;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -19,24 +19,81 @@ import javafx.event.EventHandler;
 public class Bouton implements EventHandler<ActionEvent>{
     int value;
     Arbitre arbitre;
+
+    /**
+     *
+     */
     public final static int BOUTON_NOUVELLE_PARTIE = 0;
+
+    /**
+     *
+     */
     public final static int BOUTON_DO = 1;
+
+    /**
+     *
+     */
     public final static int BOUTON_UNDO = 2;
+
+    /**
+     *
+     */
     public final static int BOUTON_SAUVEGARDER = 3;
+
+    /**
+     *
+     */
     public final static int BOUTON_AIDE = 4;
+
+    /**
+     *
+     */
     public final static int BOUTON_CHARGER = 5;
+
+    /**
+     *
+     */
     public final static int BOUTON_MENU = 6;
+
+    /**
+     *
+     */
     public final static int BOUTON_COMMENCER = 7;
+
+    /**
+     *
+     */
     public final static int BOUTON_QUITTER = 7;
+
+    /**
+     *
+     */
     public final static int BOUTON_CONFIG = 8;
+
+    /**
+     *
+     */
     public final static int BOUTON_CREDITS = 9;
+
+    /**
+     *
+     */
     public final static int BOUTON_NOUVELLE_PARTIE_COMMENCER = 10;
     
+    /**
+     *
+     * @param type
+     * @param arbitre
+     */
     public Bouton (int type, Arbitre arbitre) {
         value = type;
         this.arbitre = arbitre;
     }
     
+    /**
+     *
+     * @param t
+     */
     @Override
     public void handle(ActionEvent t) {
         switch(value) {
