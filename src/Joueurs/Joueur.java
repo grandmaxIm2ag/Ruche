@@ -5,12 +5,11 @@
  */
 package Joueurs;
 
-import Modele.Insecte;
 import java.util.Properties;
 
-/**
+/**<b>Classe représentant un joueur</b>
  *
- * @author grandmax
+ * @author UGA L3 Projet Logiciel 2016-2017 groupe 7
  */
 public abstract class Joueur {
 
@@ -24,12 +23,15 @@ public abstract class Joueur {
     Properties prop;
     int numJoueur;
     
-    /**
-     *
+    /**Constructeur
      * @param m
+     *      true ssi c'est le tour du joueur
      * @param p
+     *      propriétés de la partie
      * @param tabP
+     *      tableau des pièces que le joueur n'a pas posé
      * @param j
+     *      indice du joueur (0 ou 1)
      */
     public Joueur(boolean m, Properties p, int[] tabP, int j){
         main=m;
@@ -39,33 +41,34 @@ public abstract class Joueur {
         numJoueur=j;
     }
     
-    /**
-     *
+    /**Passe la main à l'autre joueur
+     * 
      */
     public void setMain(){
         main = !main;
     }
     
-    /**
-     *
+    /**Initialise le nombre de pions d'un type dans la main du joueur
      * @param type
+     *      L'indice du type de l'insecte
      * @param qte
+     *      Le nombre d'insectes de ce type
      */
     public void addPion (int type, int qte) {
         tabPieces[type] += qte;
     }
     
-    /**
-     *
-     * @return
+    /**Renvoie le nom du joueur
+     * @return 
+     *      Le nom du joueur
      */
     public String nom(){
         return nom;
     }
 
-    /**
-     *
+    /**renvoie le tableau des pions non posés
      * @return
+     *      Le tableau de spions non posés
      */
     public int[] pions(){
         return tabPieces;
@@ -107,9 +110,9 @@ public abstract class Joueur {
         tabPieces[t]--;
     }
     
-    /**
-     *
+    /**Renvoie l'indice du joueur
      * @return
+     *      Indice du joueur
      */
     public int numJ(){
         return numJoueur;

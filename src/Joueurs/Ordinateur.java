@@ -21,32 +21,64 @@ import java.util.Properties;
 import java.util.Random;
 
 /**
- *
+ * <b>Ordinateur est la classe représentant un joueur de type IA </b>
+ * 
  * @author UGA L3 Projet Logiciel 2016-2017 groupe 7
  */
 public class Ordinateur extends Joueur{
+    
+    /**
+    * La valeur de cette constante est comprise dans l'intervalle [0;3].
+    */
     int difficulte;
     
+    /**
+    * La valeur de cette constante est {@value}.
+    */
     public final static int FACILE_ALEATOIRE=0;
+    
+    /**
+    * La valeur de cette constante est {@value}.
+    */
     public final static int FACILE_HEURISTIQUE=1;
+    
+    /**
+    * La valeur de cette constante est {@value}.
+    */
     public final static int MOYEN=2;
+    
+    /**
+    * La valeur de cette constante est {@value}.
+    */
     public final static int DIFFICILE=3;
     
-    
+    /**
+    * La valeur de la GRAINE dépend du résultat de la fonction System.nanoTime().
+    * @see System.nanoTime()
+    */
     public final static long GRAINE = (long)System.nanoTime();
     //public final static long GRAINE =26043607173097L;
     //22115700504483L;
+    
     Random r;
     
+    /**
+     * @see ruche.Configuration
+     */
     Map<Plateau, Integer> configurations;
 
-    /**
-     *
+    /**Constructeur
+     * Utilise le constructeur de la classe Joueur
      * @param m
+     *      true ssi c'est le tour du joueur
      * @param d
+     *      indice de la difficulté de l'ordinateur
      * @param p
+     *      propriétés de la partie
      * @param tabP
+     *      tableau des pièces que le joueur n'a pas posé
      * @param j
+     *      indice du joueur (0 ou 1)
      */
     public Ordinateur(boolean m, int d, Properties p, int[] tabP, int j) {
         super(m, p, tabP, j);
@@ -57,8 +89,14 @@ public class Ordinateur extends Joueur{
         configurations = new HashMap();
     }
     
-    //renvoie un coup aléatoire parmi le tableau d des coups possibles
-    //a arbitre de la partie, d tableau des coups possibles
+    /**renvoie un coup valide correspondant à la difficulté de l'IA
+     * @param a 
+     *      arbitre de la partie
+     * @param d 
+     *      tableau des coups possibles
+     * @return
+     *      Le coup à jouer
+     */
     public Coup coup(Arbitre a, Coup[] d){
         switch(difficulte){
             case FACILE_ALEATOIRE:
@@ -74,17 +112,29 @@ public class Ordinateur extends Joueur{
         }
     }
 
-    //renvoie un coup aléatoire parmi le tableau d des coups possibles
-    //a arbitre de la partie, d tableau des coups possibles
+    /**renvoie un coup aléatoire parmi le tableau d des coups possibles
+     * @param a 
+     *      arbitre de la partie
+     * @param d 
+     *      tableau des coups possibles
+     * @return 
+     *      Un coup aléatoire
+     */
     public Coup coupALEATOIRE_3(Arbitre a, Coup[] d){
         int choix2 = r.nextInt(d.length);
         return d[choix2];
     }
     
-    //renvoie un coup parmi le tableau d des coups possibles en choississant aléatoirement parmi les coups 
-    //d'heuristique plus élevée
-    //utilise l'heuristique_Simple_Profondeur1_PointDeVueIA
-    //a arbitre de la partie, d tableau des coups possibles
+    /**renvoie un coup parmi le tableau d des coups possibles en choississant aléatoirement parmi les coups 
+     * d'heuristique plus élevée
+     * utilise l'heuristique_Simple_Profondeur1
+     * @param a 
+     *      arbitre de la partie
+     * @param d 
+     *      tableau des coups possibles
+     * @return 
+     *      Un coup aléatoire parmi les coups d'heuristique plus élevée
+     */
     public Coup heuristiqueSurUnSeulCoup(Arbitre a, Coup[] d){
         if(d!=null && d.length>0){
             //choisir le coup pour lequel l'heuristique est maximale
@@ -103,7 +153,7 @@ public class Ordinateur extends Joueur{
                 }else{
                     continue;
                 }      
-                heurCoup=heuristique_Simple_Profondeur1_PointDeVueIA(tmp, d);
+                heurCoup=heuristique_Simple_Profondeur1(tmp, d);
                 if(heurCoup==max){
                     //ajout à res
                     res.add(d[i]);
@@ -123,10 +173,16 @@ public class Ordinateur extends Joueur{
     }
     
     
-    //renvoie un coup parmi le tableau d des coups possibles en choississant parmi les coups 
-    //d'heuristique plus élevée
-    //utilise l'heuristique de HEURISTIQUEV1
-    //a arbitre de la partie, d tableau des coups possibles
+    /**renvoie un coup parmi le tableau d des coups possibles en choississant aléatoirement parmi les coups 
+     * d'heuristique plus élevée
+     * utilise l'heuristique de HEURISTIQUEV1
+     * @param a 
+     *      arbitre de la partie
+     * @param d 
+     *      tableau des coups possibles
+     * @return 
+     *      Un coup aléatoire parmi les coups d'heuristique plus élevée
+     */
     public Coup IA_Middle(Arbitre a, Coup[] d){
         if(d==null || d.length<= 0)
             return null;
@@ -165,10 +221,17 @@ public class Ordinateur extends Joueur{
     }
     
     
-    //retourne l'heuristique de la configuration du plateau p
-    //pour la difficultée FACILE_HEURISTIQUE
-    //p: Plateau du jeu, joueur: indice du joueur (celui qui doit jouer)
-    private int heuristique_Simple_Profondeur1_PointDeVueIA(Plateau p, Coup[] d){      
+    /**retourne l'heuristique de la configuration du plateau p
+     * pour la difficultée FACILE_HEURISTIQUE
+     * utilise les fonctions nbLiberteesReine, reineLibre et estEncerclée(de plateau)
+     * @param p
+     *      Le plateau du jeu
+     * @param c
+     *      Le tableau des coups possibles
+     * @return 
+     *      La valeur de l'heuristique pour cette configuration
+     */
+    private int heuristique_Simple_Profondeur1(Plateau p, Coup[] c){      
         if(configurations.get(p)!=null){
             return configurations.get(p);
         }      
@@ -178,12 +241,12 @@ public class Ordinateur extends Joueur{
         }else if(p.estEncerclee(numAdversaire())){
             return Integer.MAX_VALUE;
         }else{
-            if(!reineLibre(p,numJoueur, d)){
+            if(!reineLibre(p,numJoueur, c)){
                 heuristique=heuristique-2;
             }else{
                 heuristique=heuristique+2;
             }
-            if(!reineLibre(p,numAdversaire(), d)){
+            if(!reineLibre(p,numAdversaire(), c)){
                 heuristique=heuristique+2;
             }else{
                 heuristique=heuristique-2;
@@ -194,8 +257,14 @@ public class Ordinateur extends Joueur{
         return heuristique;
     }
     
-    //renvoie le nombre de cases libres autour de la reine et 6 si elle n'est pas encore posée
-    //p: Plateau du jeu, joueur: indice du joueur (celui qui doit jouer)
+    /**renvoie le nombre de cases libres autour de la reine et 6 si elle n'est pas encore posée
+     * @param p
+     *      Plateau du jeu
+     * @param joueur
+     *      Indice du joueur (0 ou 1)
+     * @return 
+     *      Le nombre de libertées de la reine du joueur, entre 0 et 5 si elle est déjà posée et 6 si elle n'est pas encore posée(arbitraire)
+     */
     public int nbLiberteesReine(Plateau p, int joueur){
         //compter les voisins
         if(p.reine(joueur)==null || p.voisins().get(p.reine(joueur))==null){
@@ -204,29 +273,40 @@ public class Ordinateur extends Joueur{
         return 6-p.voisins().get(p.reine(joueur)).size();
     }
     
-    //renvoie vrai ssi: aucune pièce n'est posée au dessus de la reine du joueur d'indice "joueur" et 
-    //que la reine peut se déplacer sur une case voisine
-    //p: Plateau du jeu, joueur: indice du joueur (celui qui doit jouer), d: tableau des coups possibles
-    private boolean reineLibre(Plateau p, int joueur, Coup[] d){
+    /**renvoie vrai ssi: aucune pièce n'est posée au dessus de la reine du joueur d'indice "joueur" et 
+     * que la reine peut se déplacer sur une case voisine
+     * @param p
+     *      Plateau du jeu
+     * @param joueur
+     *      Indice du joueur (0 ou 1)
+     * @param c
+     *      Tableau des coups possibles
+     * @return vrai ssi: aucune pièce n'est posée au dessus de la reine du joueur d'indice "joueur" et 
+     * que la reine peut se déplacer sur une case voisine, faux sinon
+     */
+    private boolean reineLibre(Plateau p, int joueur, Coup[] c){
         if(p.reine(joueur)==null){
             return true;
         }
         Case caseReine=p.matrice.get(p.reine(joueur));
-        if(d==null || d.length==0 || caseReine.tete().type()!=Insecte.REINE ){
+        if(c==null || c.length==0 || caseReine.tete().type()!=Insecte.REINE ){
             return false;
         }
         boolean b = false;
         
-        for(int i=0; i<d.length && !b; i++){
-            if(d[i] instanceof Deplacement){
-                Deplacement d2 = (Deplacement) d[i];
-                b = b || (d2.joueur()==joueur && d2.source().equals(p.reine(joueur))) ;
+        for(int i=0; i<c.length && !b; i++){
+            if(c[i] instanceof Deplacement){
+                Deplacement d = (Deplacement) c[i];
+                b = b || (d.joueur()==joueur && d.source().equals(p.reine(joueur))) ;
             }
         }
         return b;
     }
     
-    //renvoie l'indice de l'autre joueur
+    /**renvoie l'indice de l'autre joueur
+     * @return 
+     *      l'indice de l'autre joueur
+     */
     public int numAdversaire(){
         if(numJoueur==0){
             return 1;
