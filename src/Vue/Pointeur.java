@@ -104,23 +104,26 @@ public class Pointeur extends Visiteur {
                         
                     if (c.estJouable())
                         if (!depl) {
-                            //arbitre.plateau().clearAide();
                             PaneToken.getInstance().uncheck();
                             arbitre.joue(new Depot(arbitre.jCourant(), arbitre.initDepot(), c.position()));
                             return true;
-                        } else {
-                            //arbitre.plateau().clearAide();
+                        } else if (!arbitre.initDeplacement().position().equals(c.position())){
+                            
                             PaneToken.getInstance().uncheck();
                             arbitre.joue(new Deplacement(arbitre.jCourant(), arbitre.initDeplacement().position(), c.position()));
+                            depl = false;
+                            return true;
+                        } else {
+                            depl = false;
                             return true;
                         }
-                } else {
+                } else if (c.tete().joueur() == arbitre.jCourant()) {
+                    
                     System.err.println(arbitre.plateau().aide());
+                    System.out.println(c.tete());
                     System.err.println("caca2");
                     arbitre.initDeplacement(c.tete());
                     depl = true;
-                    System.err.println(arbitre.plateau().aide());
-
                 }
             }
         }

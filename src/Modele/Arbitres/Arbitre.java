@@ -439,6 +439,7 @@ public abstract class Arbitre {
             case JOUE_EN_COURS:
                 temps_ecoule+=nouv;
                 if(temps_ecoule>=100000000){
+                    System.out.println("Joue déplacement "+enCours);
                     temps_ecoule=0;
                     if(enCours!=null){
                         plateau.deplacePion(enCours);
@@ -533,11 +534,14 @@ public abstract class Arbitre {
     public void dispo(Insecte ins){
         Coup[] c = deplacementPossible(ins);
         List<Case> l = new ArrayList();
-        for (Coup c1 : c) {
-            Case c2 = new Case(c1.destination().x(), c1.destination().y(), 1, 1);
-            c2.pointe();
-            l.add(c2);
-        }
+        System.out.println("Caca devans la porte" +c);
+            if (c != null)
+                for (Coup c1 : c) {
+                System.out.println("Plein de petits cacas");
+                Case c2 = new Case(c1.destination().x(), c1.destination().y(), 1, 1);
+                c2.pointe();
+                l.add(c2);
+            }
         plateau.setAide(l);
     }
 

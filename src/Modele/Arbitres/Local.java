@@ -85,18 +85,21 @@ public class Local extends Arbitre{
      */
     @Override
     public void joue(Deplacement d){
+        System.out.println ("J'ai fait caca ici aussi :x" + d);
         if(plateau().reine(jCourant)!=null){
-            if(deplacePionValide(d)){
+            System.out.println ("Et là");
+            //if(deplacePionValide(d)){
+            System.out.println ("Et là");
                 enCoursIt = d.route().iterator();
                 enCours = new Deplacement(d.joueur(), enCoursIt.next(),enCoursIt.next());
                 nbCoup[jCourant]++;
                 refaire.clear();
                 historique.add(d);
-                System.err.println(d+" déplacement effectué");
-                prochainJoueur();
-            }else{
-                System.err.println("Deplacement impossible "+d);
-            }
+                etat = JOUE_EN_COURS;
+                System.err.println(d+" déplacement effectué "+enCours);
+            //}else{
+                //System.err.println("Deplacement impossible "+d);
+            //}
         }else{
             System.err.println("Déplacement impossible tant que la reine n'a pas été déposée "+jCourant);
         }
