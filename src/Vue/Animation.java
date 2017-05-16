@@ -29,6 +29,10 @@ public class Animation extends AnimationTimer{
         buttonDrawer = new ButtonDrawer(cj1, cj2);
     }
     
+    /**
+     *
+     * @param l
+     */
     @Override
     public void handle(long l) {
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.

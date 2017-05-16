@@ -28,12 +28,40 @@ public class ButtonToken implements EventHandler<ActionEvent> {
     Joueur player;
     Arbitre arbitre;
     int[] tab;
+
+    /**
+     *
+     */
     public final static int BEE_BUTTON = 0;
+
+    /**
+     *
+     */
     public final static int BEETLE_BUTTON = 1;
+
+    /**
+     *
+     */
     public final static int GRASSHOPPER_BUTTON = 2;
+
+    /**
+     *
+     */
     public final static int ANT_BUTTON = 3;
+
+    /**
+     *
+     */
     public final static int SPIDER_BUTTON = 4;
+
+    /**
+     *
+     */
     public final static int LADYBUG_BUTTON = 5;
+
+    /**
+     *
+     */
     public final static int MOSKITO_BUTTON = 6;
     public final static int WOODLOUSE_BUTTON = 7;
     
@@ -44,6 +72,10 @@ public class ButtonToken implements EventHandler<ActionEvent> {
         this.arbitre = arbitre;
     }
     
+    /**
+     *
+     * @param e
+     */
     @Override
     public void handle (ActionEvent e) {
         tab = player.pions();

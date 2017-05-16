@@ -44,6 +44,11 @@ public class PaneToken {
         rightBlur.setRadius(10);
     }
     
+    /**
+     *
+     * @param arbitre
+     * @return
+     */
     public static PaneToken getInstance(Arbitre arbitre) {
         if (INSTANCE != null)
             return INSTANCE;
@@ -53,6 +58,10 @@ public class PaneToken {
         }
     }
     
+    /**
+     *
+     * @return
+     */
     public GridPane getRightPane() {
         if (rightGrid != null)
             return rightGrid;
@@ -62,6 +71,10 @@ public class PaneToken {
         }
     }
     
+    /**
+     *
+     * @return
+     */
     public GridPane getLeftPane() {
         if (leftGrid != null)
             return leftGrid;
@@ -351,6 +364,9 @@ public class PaneToken {
         
     }
     
+    /**
+     *
+     */
     public void update () {
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 8; j++) {

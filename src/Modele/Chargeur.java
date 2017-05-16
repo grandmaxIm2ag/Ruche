@@ -25,11 +25,20 @@ public class Chargeur {
     String[] joueurs = {"null", "null"};
     Stack<Coup> h, r, r2;
     
+    /**
+     *
+     * @param p
+     * @param plateau
+     */
     public void init(Properties p, String plateau){
         input = new Scanner(ClassLoader.getSystemClassLoader().getResourceAsStream("Sauvegardes/"+plateau));
         prop = p;
     }
     
+    /**
+     *
+     * @return
+     */
     public Plateau charger(){
         Plateau res = new Plateau(0,0,0,0,prop);
         
@@ -111,24 +120,58 @@ public class Chargeur {
         return res;
     }
     
+    /**
+     *
+     * @return
+     */
     public int type(){
         return t;
     }
+
+    /**
+     *
+     * @return
+     */
     public int difficulte(){
         return d;
     }
+
+    /**
+     *
+     * @return
+     */
     public int jCourant(){
         return j;
     }
+
+    /**
+     *
+     * @return
+     */
     public int[] nbCourant(){
         return n;
     }
+
+    /**
+     *
+     * @return
+     */
     public String[] joueur(){
         return joueurs; 
     }
+
+    /**
+     *
+     * @return
+     */
     public Stack<Coup> historique(){
         return h;
     }
+
+    /**
+     *
+     * @return
+     */
     public Stack<Coup> refaire(){
         return r2;
     }

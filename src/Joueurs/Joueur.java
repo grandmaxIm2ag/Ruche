@@ -13,6 +13,10 @@ import java.util.Properties;
  * @author grandmax
  */
 public abstract class Joueur {
+
+    /**
+     *
+     */
     public String nom;
     int[] tabPieces;
     int nbPieces;
@@ -20,6 +24,13 @@ public abstract class Joueur {
     Properties prop;
     int numJoueur;
     
+    /**
+     *
+     * @param m
+     * @param p
+     * @param tabP
+     * @param j
+     */
     public Joueur(boolean m, Properties p, int[] tabP, int j){
         main=m;
         prop=p;
@@ -28,20 +39,43 @@ public abstract class Joueur {
         numJoueur=j;
     }
     
+    /**
+     *
+     */
     public void setMain(){
         main = !main;
     }
     
+    /**
+     *
+     * @param type
+     * @param qte
+     */
     public void addPion (int type, int qte) {
         tabPieces[type] += qte;
     }
     
+    /**
+     *
+     * @return
+     */
     public String nom(){
         return nom;
     }
+
+    /**
+     *
+     * @return
+     */
     public int[] pions(){
         return tabPieces;
     }
+
+    /**
+     *
+     * @param idx
+     * @return
+     */
     public int pion(int idx){
         return tabPieces[idx];
     }
@@ -57,14 +91,26 @@ public abstract class Joueur {
         return res;
     }
     
+    /**
+     *
+     * @param p
+     */
     public void setPieces(int[] p){
         this.tabPieces = p;
     }
     
+    /**
+     *
+     * @param t
+     */
     public void jouer(int t){
         tabPieces[t]--;
     }
     
+    /**
+     *
+     * @return
+     */
     public int numJ(){
         return numJoueur;
     }

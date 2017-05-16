@@ -16,10 +16,23 @@ import java.util.Map;
  */
 public class Cloporte extends Insecte{
 
-   public Cloporte(double x, double y, double larg, double haut, int j) {
+    /**
+     *
+     * @param x
+     * @param y
+     * @param larg
+     * @param haut
+     * @param j
+     */
+    public Cloporte(double x, double y, double larg, double haut, int j) {
         super(x, y, larg, haut,j);
     }
 
+    /**
+     *
+     * @param plateau
+     * @return
+     */
     @Override
     public Coup[] deplacementValide(Map<Point, Case> plateau) {
         List<Coup> c = glisser(plateau);
@@ -61,6 +74,11 @@ public class Cloporte extends Insecte{
         return false;
     }
 
+    /**
+     *
+     * @param v
+     * @return
+     */
     @Override
     public boolean accept(Visiteur v) {
         return v.visite(this);
@@ -71,6 +89,10 @@ public class Cloporte extends Insecte{
         return new Cloporte(pos.x(), pos.y(), l, h, joueur);
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public int type() {
         return CLOP;

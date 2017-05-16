@@ -5,14 +5,11 @@
  */
 package Modele.Arbitres;
 
-import Joueurs.Humain;
 import Joueurs.Joueur;
-import Joueurs.Ordinateur;
 import java.io.File;
 import java.io.*;
 import java.io.IOException;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 import java.util.Stack;
@@ -27,7 +24,14 @@ import java.util.ArrayList;
  */
 public abstract class Arbitre {
             
+    /**
+     *
+     */
     public final static int J1 = 0;
+
+    /**
+     *
+     */
     public final static int J2 = 1;
     
     final static int ATTENTE_COUP = 0;
@@ -42,6 +46,9 @@ public abstract class Arbitre {
     Deplacement enCours;
     Iterator<Point> enCoursIt;
     
+    /**
+     *
+     */
     public Properties prop;
     Joueur[] joueurs;
     int jCourant, type, difficulte;
@@ -61,6 +68,10 @@ public abstract class Arbitre {
     Insecte initDepl;
     int initDepot;
     
+    /**
+     *
+     * @param p
+     */
     public Arbitre(Properties p){
         Reglage.init(p);
         prop = p;
@@ -81,33 +92,73 @@ public abstract class Arbitre {
         precAucun = false;
     }
     
+    /**
+     *
+     */
     public abstract void init();
     
+    /**
+     *
+     * @return
+     */
     public Plateau plateau(){
         return plateau;
     }
+
+    /**
+     *
+     * @param i
+     * @return
+     */
     public Joueur joueur(int i){
         return joueurs[i];
     }
     
+    /**
+     *
+     * @param d
+     * @return
+     */
     public boolean deposePionValide(Depot d){
         return plateau.deposePionValide(d);
     }
+
+    /**
+     *
+     * @param d
+     * @return
+     */
     public boolean deplacePionValide(Deplacement d){
         boolean b = false;
         
-        for(int i=0; i<deplacements.length; i++)
-            b|=d.equals(deplacements[i]);
+        for (Coup deplacement : deplacements) {
+            b |= d.equals(deplacement);
+        }
         
         return b;
     }
+
+    /**
+     *
+     * @param d
+     */
     public void deplacePion(Deplacement d){
         plateau.deplacePion(d);
     }
+
+    /**
+     *
+     * @param d
+     */
     public void deposePion(Depot d){
         plateau.deposePion(d);
     }
     
+    /**
+     *
+     * @param j
+     * @return
+     */
     public Coup[] deplacementPossible(int j){
         if(plateau.reine(jCourant)==null)
             return null;
@@ -115,6 +166,12 @@ public abstract class Arbitre {
             return plateau.deplacementPossible(jCourant);
     }
     
+    /**
+     *
+     * @param j
+     * @param t
+     * @return
+     */
     public Coup[] depotPossible(int j, int t){
         if((plateau.reine(jCourant)==null && t!=Insecte.REINE && nbCoup[j]>=3) ){
             return null;
@@ -124,6 +181,11 @@ public abstract class Arbitre {
             return plateau.depotPossible(jCourant, t);
     }
     
+    /**
+     *
+     * @param e
+     * @return
+     */
     public Coup[] deplacementPossible(Insecte e){
         if(plateau.reine(jCourant)==null)
             return null;
@@ -137,6 +199,10 @@ public abstract class Arbitre {
             
     }
     
+    /**
+     *
+     * @param d
+     */
     public void joue(Coup d){
         if(d instanceof Deplacement)
             joue((Deplacement)d);
@@ -146,10 +212,21 @@ public abstract class Arbitre {
             System.err.println("Coup Inconnu "+d);
     }
     
+    /**
+     *
+     * @param d
+     */
     public abstract void joue(Deplacement d);
     
+    /**
+     *
+     * @param d
+     */
     public abstract void joue(Depot d);
     
+    /**
+     *
+     */
     public void nouvellePartie(){
         plateau = new Plateau(0,0,Reglage.lis("nbPiece"),Reglage.lis("nbPiece"),prop);
         nbCoup[0]=0; nbCoup[1]=0;
@@ -157,6 +234,9 @@ public abstract class Arbitre {
         init();
     }
     
+    /**
+     *
+     */
     public void precedent(){
         if(!historique.isEmpty()){
             Coup c = historique.pop();
@@ -172,6 +252,10 @@ public abstract class Arbitre {
             System.err.println("Aucun coup précedent");
         }
     }
+
+    /**
+     *
+     */
     public void refaire(){
         if(!refaire.isEmpty()){
             joue(refaire.pop());
@@ -179,11 +263,19 @@ public abstract class Arbitre {
             System.out.println("Aucun coup à refaire");
         }
     }
+
+    /**
+     *
+     */
     public void abandon(){
         etat = FIN;
         System.err.println(jCourant+" a abandonné");
     }
     
+    /**
+     *
+     * @param plateau
+     */
     public void charger(String plateau){
         
         chargeur.init(prop, plateau);
@@ -209,6 +301,11 @@ public abstract class Arbitre {
         joueurs[J2].setPieces(tab);
 
     }
+
+    /**
+     *
+     * @param nomSauv
+     */
     public void sauvegarder(String nomSauv){
         String sauv = "";
         
@@ -250,39 +347,82 @@ public abstract class Arbitre {
         
     }
     
+    /**
+     *
+     */
     public void aide(){
         /*
         A faire dès que les IA seront opérationnels
         */
     }
 
+    /**
+     *
+     * @param dessinateur
+     */
     public void accept(Visiteur dessinateur) {
         plateau.accept(dessinateur);
     }
     
+    /**
+     *
+     * @param buttonDrawer
+     */
     public void acceptButton(Visiteur buttonDrawer) {
         buttonDrawer.visite(this);
     }
         
+    /**
+     *
+     */
     public abstract void prochainJoueur();
     
+    /**
+     *
+     * @return
+     */
     public int type(){
         return type;
     }
+
+    /**
+     *
+     * @return
+     */
     public int jCourant(){
         return jCourant;
     }
+
+    /**
+     *
+     * @return
+     */
     public int difficulte(){
         return difficulte;
     }
     
+    /**
+     *
+     * @param e
+     */
     public void setEtat(int e){
         etat = e;
     }
+
+    /**
+     *
+     * @return
+     */
     public int etat(){
         return etat;
     }
+
+    /**
+     *
+     * @param t
+     */
     public void maj(long t){
+        System.out.println("jCOurant = "+jCourant);
         long nouv = t-temps;
         temps=t;
         switch(etat){
@@ -309,7 +449,6 @@ public abstract class Arbitre {
                 }
                 break;
             case A_JOUER:
-                PaneToken.getInstance(this).update();
                 prochainJoueur();
                 plateau.setJoueur(jCourant);
                 plateau.clearAide();
@@ -328,16 +467,30 @@ public abstract class Arbitre {
         return plateau.aucunCoup(J1)&&plateau.aucunCoup(J2)&&b1&&b2;
     }
     
+    /**
+     *
+     * @param ins
+     */
     public void initDepot(int ins){
         initDepot=ins;
         plateau.clearAide();
         dispo(ins);
     }
+
+    /**
+     *
+     * @param ins
+     */
     public void initDeplacement(Insecte ins){
         initDepl = ins.clone();
         plateau.clearAide();
         dispo(ins);
     }
+
+    /**
+     *
+     * @param ins
+     */
     public void dispo(int ins){
         Coup[] c = depotPossible(jCourant, ins);
         List<Case> l = new ArrayList();
@@ -349,23 +502,40 @@ public abstract class Arbitre {
         plateau.setAide(l);
     }
     
+    /**
+     *
+     * @return
+     */
     public Insecte initDeplacement(){
         return initDepl;
     }
+
+    /**
+     *
+     * @return
+     */
     public int initDepot(){
         return initDepot;
     }
     
+    /**
+     *
+     * @param ins
+     */
     public void dispo(Insecte ins){
         Coup[] c = deplacementPossible(ins);
         List<Case> l = new ArrayList();
-        for(int i=0; i<c.length; i++){
-            Case c2 = new Case(c[i].destination().x(), c[i].destination().y(), 1, 1);
+        for (Coup c1 : c) {
+            Case c2 = new Case(c1.destination().x(), c1.destination().y(), 1, 1);
             c2.pointe();
             l.add(c2);
         }
         plateau.setAide(l);
     }
+
+    /**
+     *
+     */
     public void go(){
         etat = ATTENTE_COUP;
     }

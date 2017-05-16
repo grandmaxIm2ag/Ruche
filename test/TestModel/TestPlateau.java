@@ -23,6 +23,11 @@ import static org.junit.Assert.*;
 public class TestPlateau {
     Plateau p;
     Properties prop;
+
+    /**
+     *
+     * @param pr
+     */
     public TestPlateau(Properties pr) {
         prop = pr;
         this.p = new Plateau(0.0,0.0,0.0,0.0,pr);
@@ -250,6 +255,10 @@ public class TestPlateau {
         assertFalse(p.estConnexe(p.matrice().get(orig).tete()));
         assertTrue(p.estConnexe(p.matrice().get(new Point(orig.x()+3, orig.y()-1)).tete()));
     }
+
+    /**
+     *
+     */
     @Test
     public void test() {
         base();

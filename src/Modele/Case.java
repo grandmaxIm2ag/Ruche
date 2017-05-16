@@ -14,36 +14,78 @@ import java.util.Stack;
 public class Case extends Composant{
     Stack<Insecte> insectes;
     
+    /**
+     *
+     */
     public final static int EST = 0;
+
+    /**
+     *
+     */
     public final static int OUEST = 1;
+
+    /**
+     *
+     */
     public final static int NEST = 2;
+
+    /**
+     *
+     */
     public final static int NOUEST = 3;
+
+    /**
+     *
+     */
     public final static int SEST = 4;
+
+    /**
+     *
+     */
     public final static int SOUEST = 5;
     
+    /**
+     *
+     */
     public static boolean EST_POINTE = false;
     public static boolean JOUABLE = false;
     
-    
+    /**
+     *
+     * @param x
+     * @param y
+     * @param larg
+     * @param haut
+     */
     public Case(double x, double y, double larg, double haut){
         super(x,y,larg, haut);
         insectes = new Stack();
     }
     
+    /**
+     *
+     */
     public void pointe() {
         EST_POINTE = true;
         if (!insectes.empty())
         this.tete().pointe();
     }
     
+    /**
+     *
+     */
     public void depointe() {
         EST_POINTE = false;
     }
     
+    /**
+     *
+     * @return
+     */
     public boolean estpointe () {
         return EST_POINTE;
     }
-    
+
     public void jouable () {
         JOUABLE = true;
     }
@@ -56,19 +98,40 @@ public class Case extends Composant{
         return JOUABLE;
     }
     
+
     public boolean utilise(){
         return !insectes.isEmpty();
     }
+
+    /**
+     *
+     * @param e
+     */
     public void deposePion(Insecte e){
         insectes.push(e);
         e.setClassement(insectes.size());
     }
+
+    /**
+     *
+     * @return
+     */
     public Insecte retirePion(){
         return insectes.pop();
     }
+
+    /**
+     *
+     * @return
+     */
     public Insecte tete(){
         return insectes.peek();
     }
+
+    /**
+     *
+     * @return
+     */
     public Stack insectes(){
         return insectes;
     }
@@ -82,6 +145,11 @@ public class Case extends Composant{
         return false;
     }
 
+    /**
+     *
+     * @param v
+     * @return
+     */
     @Override
     public boolean accept(Visiteur v) {
         boolean b = v.visite(this);

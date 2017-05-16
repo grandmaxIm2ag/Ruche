@@ -10,16 +10,33 @@ package Modele;
  * @author grandmax
  */
 public abstract class Coup {
+
+    /**
+     *
+     */
     public Point destination;
     int joueur;
     
+    /**
+     *
+     * @param j
+     */
     public Coup(int j){
         joueur = j;
     }
+
+    /**
+     *
+     * @return
+     */
     public Point destination(){
         return destination;
     }
     
+    /**
+     *
+     * @return
+     */
     public int joueur(){
         return joueur;
     }

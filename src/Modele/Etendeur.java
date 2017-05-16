@@ -22,11 +22,19 @@ public class Etendeur {
     double l,y, x, h;
     double py;
     
+    /**
+     *
+     */
     public Etendeur () {
         py = py(1);
         System.out.println(py);
     }
     
+    /**
+     *
+     * @param c
+     * @param p
+     */
     public void fixeEchelle(Canvas c, Plateau p){
         double A = 0, B = 0, a = 0, b = 0;
         for(Map.Entry<Point, Case> entry : p.matrice().entrySet()){
@@ -47,6 +55,11 @@ public class Etendeur {
 
     }
     
+    /**
+     *
+     * @param c
+     * @param p
+     */
     public void fixeEchelle(Canvas c, LinkedList<Insecte> p){
         double A = 0, B = 0, a = 0, b = 0;
         Iterator it = p.iterator();
@@ -63,27 +76,60 @@ public class Etendeur {
 
     }
     
+    /**
+     *
+     * @param c
+     */
     public void fixeComposant(Composant c){
        x = c.position().x()*py*(r) + c.position().y()*py*(r/2) + diffX;
        y = c.position().y()*0.75*r + diffY;
        h = r;
     }
+
+    /**
+     *
+     * @param v
+     */
     public void fixeVecteur(double[] v){
         
     }
     
+    /**
+     *
+     * @return
+     */
     public double x(){
         return x;
     }
+
+    /**
+     *
+     * @return
+     */
     public double y(){
         return y;
     }
+
+    /**
+     *
+     * @return
+     */
     public double l(){
         return l;
     }
+
+    /**
+     *
+     * @return
+     */
     public double h(){
         return h;
     }
+
+    /**
+     *
+     * @return
+     */
     public double[] vecteur(){
         return null;
     }

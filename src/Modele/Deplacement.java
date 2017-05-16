@@ -18,6 +18,12 @@ public class Deplacement extends Coup{
     Point source;
     List<Point> route;
     
+    /**
+     *
+     * @param j
+     * @param s
+     * @param d
+     */
     public Deplacement(int j,  Point s, Point d){
         super(j);
         source = new Point(s.x(), s.y());
@@ -27,6 +33,11 @@ public class Deplacement extends Coup{
         route.add(d);
     }
     
+    /**
+     *
+     * @param j
+     * @param str
+     */
     public Deplacement(int j, String str){
         super(j);
         String[] r = str.split("->");
@@ -38,19 +49,36 @@ public class Deplacement extends Coup{
         destination = new Point(route.get(route.size()-1).x() , route.get(route.size()-1).y() );
     }
     
+    /**
+     *
+     * @return
+     */
     public Point source(){
         return source;
     }
     
+    /**
+     *
+     * @param p
+     * @return
+     */
     public boolean aDejaVisite(Point p){
         return route.contains(p);
     }
     
+    /**
+     *
+     * @param p
+     */
     public void add(Point p){
         destination.fixe(p.x(), p.y());
         route.add(destination);
     } 
     
+    /**
+     *
+     * @return
+     */
     public List<Point> route(){
         return route;
     }

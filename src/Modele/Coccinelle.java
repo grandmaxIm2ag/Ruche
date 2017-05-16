@@ -18,10 +18,23 @@ import java.util.Stack;
  */
 public class Coccinelle extends Insecte{
 
+    /**
+     *
+     * @param x
+     * @param y
+     * @param larg
+     * @param haut
+     * @param j
+     */
     public Coccinelle(double x, double y, double larg, double haut, int j) {
         super(x, y, larg, haut,j);
     }
 
+    /**
+     *
+     * @param pl
+     * @return
+     */
     @Override
     public Coup[] deplacementValide(Map<Point, Case> pl) {
         
@@ -99,6 +112,11 @@ public class Coccinelle extends Insecte{
         return false;
     }
 
+    /**
+     *
+     * @param v
+     * @return
+     */
     @Override
     public boolean accept(Visiteur v) {
         return v.visite(this);
@@ -109,6 +127,10 @@ public class Coccinelle extends Insecte{
         return new Coccinelle(pos.x(), pos.y(), l, h, joueur);
     }
 
+    /**
+     *
+     * @return
+     */
     @Override
     public int type() {
         return COCC;

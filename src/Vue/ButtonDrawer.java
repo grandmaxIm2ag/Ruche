@@ -37,6 +37,11 @@ public class ButtonDrawer extends Visiteur {
     LinkedList<Insecte> lp1, lp2;
     Plateau p1;
     
+    /**
+     *
+     * @param cp1
+     * @param cp2
+     */
     public ButtonDrawer (Canvas cp1, Canvas cp2) {
         canvasPlayer1 = cp1;
         canvasPlayer2 = cp2;
@@ -67,6 +72,11 @@ public class ButtonDrawer extends Visiteur {
         lp2.add(new Cloporte(-3,7,1,0,1));
     }
     
+    /**
+     *
+     * @param a
+     * @return
+     */
     @Override
     public boolean visite (Arbitre a) {
         etendeur.fixeEchelle(canvasPlayer1, lp1);
@@ -93,6 +103,13 @@ public class ButtonDrawer extends Visiteur {
         
     }
     
+    /**
+     *
+     * @param i
+     * @param gc
+     * @param c
+     * @return
+     */
     public boolean visite (Reine i, GraphicsContext gc, Canvas c) {
         etendeur.fixeComposant(i);
         double [][] coords = Interface.hex_corner(etendeur.x(), etendeur.y(), etendeur.h()/2);
@@ -112,6 +129,13 @@ public class ButtonDrawer extends Visiteur {
         return false;
     }
     
+    /**
+     *
+     * @param i
+     * @param gc
+     * @param c
+     * @return
+     */
     public boolean visite (Scarabee i, GraphicsContext gc, Canvas c) {
         etendeur.fixeComposant(i);
         double [][] coords = Interface.hex_corner(etendeur.x(), etendeur.y(), etendeur.h()/2);
@@ -131,6 +155,13 @@ public class ButtonDrawer extends Visiteur {
         return false;
     }
     
+    /**
+     *
+     * @param i
+     * @param gc
+     * @param c
+     * @return
+     */
     public boolean visite (Coccinelle i, GraphicsContext gc, Canvas c) {
         etendeur.fixeComposant(i);
         double [][] coords = Interface.hex_corner(etendeur.x(), etendeur.y(), etendeur.h()/2);
@@ -150,6 +181,13 @@ public class ButtonDrawer extends Visiteur {
         return false;
     }
     
+    /**
+     *
+     * @param i
+     * @param gc
+     * @param c
+     * @return
+     */
     public boolean visite (Moustique i, GraphicsContext gc, Canvas c) {
         etendeur.fixeComposant(i);
         double [][] coords = Interface.hex_corner(etendeur.x(), etendeur.y(), etendeur.h()/2);
@@ -169,6 +207,13 @@ public class ButtonDrawer extends Visiteur {
         return false;
     }
     
+    /**
+     *
+     * @param i
+     * @param gc
+     * @param c
+     * @return
+     */
     public boolean visite (Cloporte i, GraphicsContext gc, Canvas c) {
         etendeur.fixeComposant(i);
         double [][] coords = Interface.hex_corner(etendeur.x(), etendeur.y(), etendeur.h()/2);
@@ -188,6 +233,13 @@ public class ButtonDrawer extends Visiteur {
         return false;
     }
     
+    /**
+     *
+     * @param i
+     * @param gc
+     * @param c
+     * @return
+     */
     public boolean visite (Fourmie i, GraphicsContext gc, Canvas c) {
         etendeur.fixeComposant(i);
         double [][] coords = Interface.hex_corner(etendeur.x(), etendeur.y(), etendeur.h()/2);
@@ -207,6 +259,13 @@ public class ButtonDrawer extends Visiteur {
         return false;
     }
     
+    /**
+     *
+     * @param i
+     * @param gc
+     * @param c
+     * @return
+     */
     public boolean visite (Araignee i, GraphicsContext gc, Canvas c) {
         etendeur.fixeComposant(i);
         double [][] coords = Interface.hex_corner(etendeur.x(), etendeur.y(), etendeur.h()/2);
@@ -226,6 +285,13 @@ public class ButtonDrawer extends Visiteur {
         return false;
     }
     
+    /**
+     *
+     * @param i
+     * @param gc
+     * @param c
+     * @return
+     */
     public boolean visite (Sauterelle i, GraphicsContext gc, Canvas c) {
         etendeur.fixeComposant(i);
         double [][] coords = Interface.hex_corner(etendeur.x(), etendeur.y(), etendeur.h()/2);
@@ -245,6 +311,11 @@ public class ButtonDrawer extends Visiteur {
         return false;
     }
     
+    /**
+     *
+     * @param v
+     * @return
+     */
     public boolean accept (Visiteur v) {
         return v.visite(this);
     }

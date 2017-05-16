@@ -14,14 +14,21 @@ import static org.junit.Assert.*;
  *
  * @author grandmax
  */
-public class TestArbitre {
+public class TestFabriqueArbitre {
     Arbitre a;
     FabriqueArbitre fab;
     
-    public TestArbitre(Properties p) {
+    /**
+     *
+     * @param p
+     */
+    public TestFabriqueArbitre(Properties p) {
         fab = new FabriqueArbitre(p);
     }
     
+    /**
+     *
+     */
     public void testFabrique(){
         fab.initType(FabriqueArbitre.LOCAL_JVJ);
         a = fab.nouveau();
@@ -49,18 +56,12 @@ public class TestArbitre {
         assertTrue(a.difficulte()==5);
     }
     
-    public void testLocalJvj(){
-        fab.initDiff(FabriqueArbitre.LOCAL_JVJ);
-        
-        
-        
-    }
-    
-    
+    /**
+     *
+     */
     @Test
     public void test(){
         testFabrique();
-        testLocalJvj();
     }
     
 }

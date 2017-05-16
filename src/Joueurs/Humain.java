@@ -13,6 +13,13 @@ import java.util.Properties;
  */
 public class Humain extends Joueur{
 
+    /**
+     *
+     * @param m
+     * @param p
+     * @param tabP
+     * @param j
+     */
     public Humain(boolean m, Properties p, int[] tabP, int j) {
         super(m, p, tabP, j);
     }

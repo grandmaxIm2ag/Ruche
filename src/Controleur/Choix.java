@@ -17,6 +17,12 @@ public class Choix implements ChangeListener<Number>{
     Arbitre a;
     int value;
 
+    /**
+     *
+     * @param ov
+     * @param t
+     * @param t1
+     */
     @Override
     public void changed(ObservableValue<? extends Number> ov, Number t, Number t1) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.

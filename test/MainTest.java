@@ -17,6 +17,10 @@ import ruche.Reglage;
  */
 public class MainTest {
     Properties prop;
+
+    /**
+     *
+     */
     public MainTest() {
         prop = Configuration.proprietes();
         Reglage.init(prop);
@@ -42,6 +46,10 @@ public class MainTest {
         TestCloporte cloporte = new TestCloporte();
         cloporte.test();
     }
+
+    /**
+     *
+     */
     @Test
     public void test(){
         insecte();
@@ -51,8 +59,9 @@ public class MainTest {
         tf.test();
         TestPlateau tp = new TestPlateau(prop);
         tp.test();
-        TestArbitre ta = new TestArbitre(prop);
+        TestFabriqueArbitre ta = new TestFabriqueArbitre(prop);
         ta.test();
     }
+    
     
 }

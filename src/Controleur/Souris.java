@@ -18,6 +18,9 @@ import javafx.scene.input.MouseEvent;
  */
 public class Souris implements EventHandler<MouseEvent>{
     
+    /**
+     *
+     */
     public final static int SOURIS_BOUGEE = 0;
     public final static int SOURIS_CLIQUEE = 1;
     
@@ -26,6 +29,12 @@ public class Souris implements EventHandler<MouseEvent>{
     Canvas c;
     Pointeur p;
     
+    /**
+     *
+     * @param a
+     * @param v
+     * @param c
+     */
     public Souris (Arbitre a, int v, Canvas c) {
         this.a = a;
         this.value = v;
@@ -33,6 +42,10 @@ public class Souris implements EventHandler<MouseEvent>{
         p = new Pointeur(c, a);
     }
 
+    /**
+     *
+     * @param t
+     */
     @Override
     public void handle(MouseEvent t) {
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.

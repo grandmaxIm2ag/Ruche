@@ -5,6 +5,8 @@
  */
 package Joueurs;
 
+import Joueurs.IA.AI;
+import Joueurs.IA.HeuristiqueV1;
 import Modele.Arbitres.*;
 import Modele.Case;
 import Modele.Coup;
@@ -12,26 +14,18 @@ import Modele.Depot;
 import Modele.Deplacement;
 import Modele.Insecte;
 import Modele.Plateau;
-import Modele.Point;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Random;
-import ruche.Reglage;
 
 /**
  *
- * @author grandmax
+ * @author UGA L3 Projet Logiciel 2016-2017 groupe 7
  */
 public class Ordinateur extends Joueur{
     int difficulte;
-    
-    /*public final static int FACILE_ALEATOIRE_MAUVAIS=-2;
-    public final static int ALEATOIRE_LONG=-1;*/
     
     public final static int FACILE_ALEATOIRE=0;
     public final static int FACILE_HEURISTIQUE=1;
@@ -39,84 +33,58 @@ public class Ordinateur extends Joueur{
     public final static int DIFFICILE=3;
     
     
-    public final static long GRAINE = 87462397;//(long)System.nanoTime();
-    //public final static long GRAINE =4359965796962;
+    public final static long GRAINE = (long)System.nanoTime();
+    //public final static long GRAINE =26043607173097L;
+    //22115700504483L;
     Random r;
     
     Map<Plateau, Integer> configurations;
-    public Coup[] d;
 
-    
+    /**
+     *
+     * @param m
+     * @param d
+     * @param p
+     * @param tabP
+     * @param j
+     */
     public Ordinateur(boolean m, int d, Properties p, int[] tabP, int j) {
         super(m, p, tabP, j);
         difficulte = d;
-        if(difficulte==FACILE_ALEATOIRE||difficulte==FACILE_HEURISTIQUE){
-            System.out.println("GRAINE: "+GRAINE);
-            r= new Random(GRAINE);
-        }
+        System.out.println("Joueur "+j+" GRAINE: "+GRAINE);///////////////////////////////////////////////////////////////////////////////
+        r= new Random(GRAINE);
+
         configurations = new HashMap();
     }
     
+    //renvoie un coup aléatoire parmi le tableau d des coups possibles
+    //a arbitre de la partie, d tableau des coups possibles
     public Coup coup(Arbitre a, Coup[] d){
-        this.d = d;
-        //Coup=Dépot ou Déplacement
         switch(difficulte){
             case FACILE_ALEATOIRE:
                 return coupALEATOIRE_3(a, d);
             case FACILE_HEURISTIQUE:
                 return heuristiqueSurUnSeulCoup(a, d);
             case MOYEN:
-                return null;
-            case DIFFICILE:
+                return IA_Middle(a, d);
+            case 3:
                 return null;   
             default:        
                 return null;
         }
     }
 
+    //renvoie un coup aléatoire parmi le tableau d des coups possibles
+    //a arbitre de la partie, d tableau des coups possibles
     public Coup coupALEATOIRE_3(Arbitre a, Coup[] d){
-        //System.out.println(Arrays.toString(tabPieces)+" "+numJoueur);
-        /*ArrayList<Coup[]> l=new ArrayList<>();
-        //Déplacements
-        Coup[] t;
-        if(d!=null && d.length>0)
-        l.add(d);
-        //Dépots
-        //pour tout type de pièces
-        int type;
-        for(type=0;type<tabPieces.length;type=type+1){
-        if(tabPieces[type]>0 && (t = a.depotPossible(this.numJoueur,type))!=null){
-        l.add(t);
-        }
-        }
-        //choisi le coup:choix aléatoire avec nb de coup possibles
-        int taille;
-        Iterator<Coup[]> it =l.iterator();
-        taille=nbCoupPossiblesTotaux(it);
-        //System.out.println(taille);
-        int choix2= r.nextInt(taille);
-        it=l.iterator();
-        int tmp=0;
-        while(it.hasNext()){
-        Coup[] c=it.next();
-        if(choix2<=tmp+c.length-1){
-        return c[choix2-tmp];
-        }else{
-        tmp=tmp+c.length;
-        }
-        }*/
         int choix2 = r.nextInt(d.length);
         return d[choix2];
     }
     
-    public int nbCoupPossiblesTotaux(Iterator<Coup[]> it){
-        int taille=0;
-        while(it.hasNext()){
-            taille=taille+it.next().length;
-        }
-        return taille;
-    }
-    
+    //renvoie un coup parmi le tableau d des coups possibles en choississant aléatoirement parmi les coups 
+    //d'heuristique plus élevée
+    //utilise l'heuristique_Simple_Profondeur1_PointDeVueIA
+    //a arbitre de la partie, d tableau des coups possibles
     public Coup heuristiqueSurUnSeulCoup(Arbitre a, Coup[] d){
         if(d!=null && d.length>0){
             //choisir le coup pour lequel l'heuristique est maximale
@@ -149,17 +117,63 @@ public class Ordinateur extends Joueur{
             int choix= r.nextInt(res.size());
             return res.get(choix);
         }else{
-            System.out.println("BUG");
+            System.err.println("BUG");
             return null;
         }
     }
     
-    public int heuristique_Simple_Profondeur1_PointDeVueIA(Plateau p, Coup[] d){
-        
+    
+    //renvoie un coup parmi le tableau d des coups possibles en choississant parmi les coups 
+    //d'heuristique plus élevée
+    //utilise l'heuristique de HEURISTIQUEV1
+    //a arbitre de la partie, d tableau des coups possibles
+    public Coup IA_Middle(Arbitre a, Coup[] d){
+        if(d==null || d.length<= 0)
+            return null;
+        else{
+            HeuristiqueV1 heurs = new HeuristiqueV1();
+            //find the best move for the heuristic
+            ArrayList<Coup> res=new ArrayList();
+            Plateau tmp;
+            int max = AI.MIN;
+            int EvalBoard;
+            
+            for(int i=0;i<d.length;i=i+1){
+                tmp=a.plateau().clone();
+                    
+                if(d[i] instanceof Depot){
+                    tmp.deposePion((Depot)d[i]);
+                }else if(d[i] instanceof Deplacement){
+                    tmp.deplacePion((Deplacement)d[i]);
+                }else{
+                    continue;
+                }      
+                EvalBoard = heurs.EvalPlateau(a, d, tmp, this);
+              //  System.out.println("board :"+EvalBoard);
+                if(EvalBoard == max){
+                    //Add to results
+                    res.add(d[i]);
+                }else if(EvalBoard>max){
+                    max = EvalBoard;
+                    res.clear();
+                    res.add(d[i]);
+                }
+            }   
+            //return a random move from res
+            int choice= r.nextInt(res.size());
+            //System.out.println(res.get(choice));
+                return res.get(choice);
+        }
+    }
+    
+    
+    //retourne l'heuristique de la configuration du plateau p
+    //pour la difficultée FACILE_HEURISTIQUE
+    //p: Plateau du jeu, joueur: indice du joueur (celui qui doit jouer)
+    private int heuristique_Simple_Profondeur1_PointDeVueIA(Plateau p, Coup[] d){      
         if(configurations.get(p)!=null){
             return configurations.get(p);
-        }
-        
+        }      
         int heuristique=0;
         if(p.estEncerclee(numJoueur)){
             return Integer.MIN_VALUE;
@@ -168,23 +182,22 @@ public class Ordinateur extends Joueur{
         }else{
             if(!reineLibre(p,numJoueur, d)){
                 heuristique=heuristique-2;
+            }else{
+                heuristique=heuristique+2;
             }
             if(!reineLibre(p,numAdversaire(), d)){
                 heuristique=heuristique+2;
-            }
-            if(reineLibre(p,numJoueur, d)){
-                heuristique=heuristique+2;
-            }
-            if(reineLibre(p,numAdversaire(), d)){
+            }else{
                 heuristique=heuristique-2;
             }
-            heuristique=heuristique+nbLiberteesReine(p, numJoueur)-nbLiberteesReine(p, numAdversaire());
+            heuristique = heuristique + nbLiberteesReine(p, numJoueur) - nbLiberteesReine(p, numAdversaire());
         }
-        
         configurations.put(p, heuristique);
         return heuristique;
     }
     
+    //renvoie le nombre de cases libres autour de la reine et 6 si elle n'est pas encore posée
+    //p: Plateau du jeu, joueur: indice du joueur (celui qui doit jouer)
     public int nbLiberteesReine(Plateau p, int joueur){
         //compter les voisins
         if(p.reine(joueur)==null || p.voisins().get(p.reine(joueur))==null){
@@ -193,7 +206,10 @@ public class Ordinateur extends Joueur{
         return 6-p.voisins().get(p.reine(joueur)).size();
     }
     
-    public boolean reineLibre(Plateau p, int joueur, Coup[] d){
+    //renvoie vrai ssi: aucune pièce n'est posée au dessus de la reine du joueur d'indice "joueur" et 
+    //que la reine peut se déplacer sur une case voisine
+    //p: Plateau du jeu, joueur: indice du joueur (celui qui doit jouer), d: tableau des coups possibles
+    private boolean reineLibre(Plateau p, int joueur, Coup[] d){
         if(p.reine(joueur)==null){
             return true;
         }
@@ -209,19 +225,10 @@ public class Ordinateur extends Joueur{
                 b = b || (d2.joueur()==joueur && d2.source().equals(p.reine(joueur))) ;
             }
         }
-        /*
-        Case caseReine=p.matrice.get(p.reine(joueur));
-        if(caseReine.tete().type()==0){
-            List<Coup> deplPoss=p.deplacementPossible(caseReine.tete());
-            if(deplPoss!=null && deplPoss.size()>0){
-                return true;
-            }
-        }
-            return false;
-        */
         return b;
     }
     
+    //renvoie l'indice de l'autre joueur
     public int numAdversaire(){
         if(numJoueur==0){
             return 1;
@@ -231,148 +238,3 @@ public class Ordinateur extends Joueur{
     }
     
 }//fin de la classe
-
-
-    /*
-    public Coup coup(Arbitre a){
-        //Coup=Dépot ou Déplacement
-        switch(difficulte){
-            case -2:
-                return coup_ALEATOIRE_MAUVAIS();
-            case -1:
-                return coup_ALEATOIRE_LONG(a);
-            default:        
-                return null;
-        }
-    }
-    
-    public Coup coup_ALEATOIRE_MAUVAIS(){
-        Deplacement[] tabMouv=deplacementsPossibles_MAUVAIS();
-        if(pionsDisponibles() && tabMouv.length!=0){
-            //Dépots possibles et Déplacements possibles
-            int choix=r.nextInt(1);
-                if(choix==0){
-                    //Deplacement
-                    int depl=r.nextInt(tabMouv.length);
-                    return tabMouv[depl];
-                }else{
-                    //Depot
-                    return depotAleatoire_MAUVAIS();
-                }  
-        }else if(pionsDisponibles() || tabMouv.length!=0){
-            //Dépots possibles ou Déplacements possibles
-            if(tabMouv.length==0){
-                //Dépots possibles
-                return depotAleatoire_MAUVAIS();
-            }else{
-                //Déplacements possibles
-                int depl=r.nextInt(tabMouv.length);
-                return tabMouv[depl];
-            } 
-        }
-        return null;
-    }
-    
-    
-    //Attention! condition initiale: pionsDisponibles==true
-    public Coup depotAleatoire_MAUVAIS(){
-            int t=r.nextInt(pions.length);
-            while(pions[t]==0){
-                t=r.nextInt(pions.length);
-            }
-            //t contient l'indice d'un pion pouvant être joué
-            //TODO: choix placement
-            //TODO: choix placement
-            //TODO: choix placement
-            return new Depot(0,t,new Point(0,0));
-    }
-    
-    public Deplacement[] deplacementsPossibles_MAUVAIS(){
-        Deplacement[] tabMouv=new Deplacement[9999999];
-        //TODO:construire le tableau
-        //TODO:construire le tableau
-        //TODO:construire le tableau
-        return tabMouv;
-    }
-    
-
-    public Coup coup_ALEATOIRE_LONG(Arbitre a){
-        //choix du type d'insecte joué
-        int choix=r.nextInt(nbPieces);
-        int typeChoisi=choixParSommesCumulees(choix,tabPieces);
-        Case [][] mat=a.plateau().matrice;
-        int i=0;
-        int insectesTrouves=0;
-        ArrayList<Coup[]> l=new ArrayList<>();
-        
-        while(i<mat.length && insectesTrouves!=tabPieces[typeChoisi]){
-            int j=0;
-            while(j<mat[0].length && insectesTrouves!=tabPieces[typeChoisi]){
-                if(mat[i][j].tete().type()==typeChoisi){
-                    insectesTrouves=insectesTrouves+1;
-                    Coup[] t;
-                    if( (t=mat[i][j].tete().deplacementValide(mat))!=null){
-                        l.add(t);
-                    }
-                }               
-                j=j+1;
-            }
-            i=i+1;
-        }
-        if(!l.isEmpty()){
-            //choisi le coup
-            //nb de coup possibles
-            int taille;
-            Iterator<Coup[]> it =l.iterator();
-            taille=nbCoupPossiblesTotaux(it);
-            int choix2= r.nextInt(taille);
-            it=l.iterator();
-            int tmp=0;
-            while(it.hasNext()){
-                Coup[] c=it.next();
-                if(c.length<=tmp){
-                    return c[choix2-tmp];
-                }else{
-                    tmp=tmp+c.length-1;
-                }
-            
-            }              
-        }else{
-            System.err.println("Nouvelle recherche");
-            return coup_ALEATOIRE_LONG(a);//relance si pas de coup possible
-        }
-        return null;
-    }
-    
-    public int nbCoupPossiblesTotaux(Iterator<Coup[]> it){
-        int taille=0;
-        while(it.hasNext()){
-            taille=taille+it.next().length;
-        }
-        return taille;
-    }
-    
-    public int choixParSommesCumulees(int choix, int[] pieces){
-        int tmp=0;
-        int j=0;
-        while(j<pieces.length && tmp<=choix){
-            if(tmp>=choix){
-                return j;
-            }
-            tmp=tmp+pieces[j];
-            j=j+1;
-        }
-        return -1;
-    }
-    
-    public boolean pionsDisponibles(){
-        boolean dispo=false;
-        int i=0;
-        while(i<(pions.length) && !dispo){
-            if(pions[i]!=0){
-             dispo=true;
-            }
-            i=i+1;
-        }
-        return dispo;
-    }*/
