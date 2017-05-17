@@ -44,8 +44,9 @@ public class Ordinateur extends Joueur{
     * @see System.nanoTime()
     */
     public final static long GRAINE = (long)System.nanoTime();
-    //public final static long GRAINE =26043607173097L;
-    //22115700504483L;
+    //public final static long GRAINE =19783713274596L;
+    //19783713274596 //bug de superposition
+    
     
     Random r;
     
