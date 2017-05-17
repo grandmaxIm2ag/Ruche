@@ -80,14 +80,16 @@ public class Dessinateur extends Visiteur{
             gc.setStroke(Color.RED);
             System.out.println(c.position().x() + " " + c.position().y());
         }
-        //if (arbitre.initDeplacement() != null && arbitre.initDeplacement() instanceof Cloporte) {
-            //Coup[] coupPossible = arbitre.deplacementPossible(arbitre.initDeplacement());
-            //for (Coup coup : coupPossible) {
-                //Deplacement d = (Deplacement)coup;
-                //if (arbitre.plateau().matrice.get(d.source()).tete() instanceof Cloporte)
-                    //gc.strokePolygon(coords[0], coords[1], 6);
-            //}
-        //} else 
+        if (arbitre.initDeplacement() != null && arbitre.initDeplacement() instanceof Cloporte) {
+            Coup[] coupPossible = arbitre.deplacementPossible(arbitre.initDeplacement());
+            for (Coup coup : coupPossible) {
+                Deplacement d = (Deplacement)coup;
+                if (d.source().equals(arbitre.initDeplacement().position()) && c.position().equals(d.destination())) 
+                    gc.strokePolygon(coords[0], coords[1], 6);
+                else if (arbitre.getInitClopDepl() != null && d.source().equals(arbitre.getInitClopDepl().position()) && c.position().equals(d.destination()))
+                    gc.strokePolygon(coords[0], coords[1], 6);
+            }
+        } else
             gc.strokePolygon(coords[0], coords[1], 6);
         gc.setStroke(Color.BLACK);
         if (c.utilise() && c.estpointe() && !c.insectes().empty() && (c.tete().classement() > 1)) {

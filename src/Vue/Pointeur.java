@@ -8,6 +8,7 @@ package Vue;
 import Modele.Arbitres.Arbitre;
 import Modele.Case;
 import Modele.Cloporte;
+import Modele.Coup;
 import Modele.Deplacement;
 import Modele.Depot;
 import Modele.Etendeur;
@@ -110,7 +111,11 @@ public class Pointeur extends Visiteur {
                             return true;
                         } else {
                             PaneToken.getInstance().uncheck();
-                            arbitre.joue(new Deplacement(arbitre.jCourant(), arbitre.initDeplacement().position(), c.position()));
+                            if (arbitre.getInitClopDepl() == null)
+                                arbitre.joue(new Deplacement(arbitre.jCourant(), arbitre.initDeplacement().position(), c.position()));
+                            else 
+                                arbitre.joue(new Deplacement(arbitre.jCourant(), arbitre.getInitClopDepl().position(), c.position()));
+                            arbitre.reinitDepl();
                             depl = false;
                             return true;
                         }
@@ -121,6 +126,14 @@ public class Pointeur extends Visiteur {
                         return true;
                     } else if (arbitre.initDeplacement() instanceof Cloporte) {
                         System.out.println ("Cacahahaha");
+                        Coup[] coups = arbitre.deplacementPossible(arbitre.initDeplacement());
+                        for (Coup coup : coups) {
+                            Deplacement deplacement = (Deplacement) coup;
+                            if (deplacement.source().equals(c.position()))
+                                //arbitre.initDeplacement(c.tete());
+                                arbitre.initClopDepl(c.tete());
+                        }
+                        
                     }
                 } else if (c.tete().joueur() == arbitre.jCourant()) {
                     
