@@ -12,6 +12,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Properties;
 import java.util.Scanner;
+import ruche.Configuration;
+import ruche.Reglage;
 
 /**
  *<b>FabriqueArbitre est la classe représentant le pattern Fabrique pour les Arbitres </b>
@@ -75,6 +77,9 @@ public class FabriqueArbitre {
      */
     private String[] plateaux;
     
+    private boolean cocc;
+    private boolean clop;
+    private boolean mous;
     /**
      * Constructeur FabriqueArbitre
      * <p>
@@ -115,6 +120,10 @@ public class FabriqueArbitre {
         this.types[RESEAU_SERVER] = "Créer une partie en ligne";
         this.types[RESEAU_CLIENT] = "Réjoindre un Hôte";
         
+        cocc=false;
+        clop=false;
+        mous=false;
+        
     }
     
     /**
@@ -125,6 +134,7 @@ public class FabriqueArbitre {
      */
     public Arbitre nouveau(){
         boolean b = plateau != null && !plateau.equals("(none)");
+        initConf();
         switch(type){
             case LOCAL_JVJ:
                 if(b)
@@ -226,5 +236,35 @@ public class FabriqueArbitre {
             default:
                 break;
         }
-}
+    }
+
+    
+    public void initConf(){
+        if(cocc && mous && clop){
+            Configuration.chargerProprietes(prop, ClassLoader.getSystemClassLoader().getResourceAsStream("Reglages/conf213.cfg"));
+            Reglage.init(prop);
+        }else if(cocc && mous){
+            Configuration.chargerProprietes(prop, ClassLoader.getSystemClassLoader().getResourceAsStream("Reglages/conf32.cfg"));
+            Reglage.init(prop);
+        }else if(cocc && clop){
+            Configuration.chargerProprietes(prop, ClassLoader.getSystemClassLoader().getResourceAsStream("Reglages/conf21.cfg"));
+            Reglage.init(prop);
+        }else if(mous && clop){
+            Configuration.chargerProprietes(prop, ClassLoader.getSystemClassLoader().getResourceAsStream("Reglages/conf31.cfg"));
+            Reglage.init(prop);
+        }else if(cocc){
+            Configuration.chargerProprietes(prop, ClassLoader.getSystemClassLoader().getResourceAsStream("Reglages/conf2.cfg"));
+            Reglage.init(prop);
+        }else if(mous){
+            Configuration.chargerProprietes(prop, ClassLoader.getSystemClassLoader().getResourceAsStream("Reglages/conf3.cfg"));
+            Reglage.init(prop);
+        }else if(clop){
+            Configuration.chargerProprietes(prop, ClassLoader.getSystemClassLoader().getResourceAsStream("Reglages/conf1.cfg"));
+            Reglage.init(prop);
+        }else{
+            Configuration.chargerProprietes(prop, ClassLoader.getSystemClassLoader().getResourceAsStream("Reglages/defaut.cfg"));
+            Reglage.init(prop);
+        }
+    }
+
 }

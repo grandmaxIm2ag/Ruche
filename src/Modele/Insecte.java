@@ -151,7 +151,7 @@ public abstract class Insecte extends Composant{
      * @param plateau
      * @return
      */
-    public abstract Coup[] deplacementValide(Map<Point, Case> plateau);
+    public abstract Coup[] deplacementValide(Plateau p);
     
     @Override
     public abstract Insecte clone();

@@ -34,7 +34,8 @@ public class Sauterelle extends Insecte{
      * @return
      */
     @Override
-    public Coup[] deplacementValide(Map<Point, Case> plateau) {
+    public Coup[] deplacementValide(Plateau pl) {
+        Map<Point, Case> plateau = pl.matrice();
         List<Coup> c = new ArrayList();
         
         for(int i=(int)pos.x()-1; i<=(int)pos.x()+1;i++)
