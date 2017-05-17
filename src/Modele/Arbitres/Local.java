@@ -40,6 +40,12 @@ public class Local extends Arbitre{
         difficulte = d;
         type = t;
     }
+    
+    public Local(Properties p, int t, int d, String pl) {
+        this(p,t,d);
+        chargement = true;
+        pla = pl;
+    }
 
     /**
      *
@@ -77,6 +83,9 @@ public class Local extends Arbitre{
                 joueurs[J2] = new Ordinateur(true,difficulte, prop, tabPieces2,  J2);
                 break;
         }
+        
+        if(chargement)
+            charger(pla);
     }
     
     /**

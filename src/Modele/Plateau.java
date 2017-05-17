@@ -624,9 +624,9 @@ public class Plateau extends Composant {
             Iterator<Point> it = entry2.getValue().iterator();
             String tmp = it.next().toString();
             while(it.hasNext()){
-                tmp+=":"+it.next();
+                tmp+=":"+it.next().toString();
             }
-            str+=entry2.getKey()+":"+tmp;
+            str+=entry2.getKey()+":"+tmp+"\n";
         }
         return str;
     }
