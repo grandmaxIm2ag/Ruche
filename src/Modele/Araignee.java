@@ -36,12 +36,9 @@ public class Araignee extends Insecte{
      * @return
      */
     @Override
-    public Coup[] deplacementValide(Map<Point, Case> pl) {
+    public Coup[] deplacementValide(Plateau pl) {
         
-        Map<Point, Case> plateau = new HashMap();
-        
-        for(Map.Entry<Point, Case> entry : pl.entrySet())
-            plateau.put(entry.getKey(), entry.getValue().clone());
+        Map<Point, Case> plateau = pl.matrice();
         
         Point p = pos.clone();
         

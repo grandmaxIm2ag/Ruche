@@ -33,7 +33,8 @@ public class Scarabee extends Insecte{
      * @return
      */
     @Override
-    public Coup[] deplacementValide(Map<Point, Case> plateau) {
+    public Coup[] deplacementValide(Plateau pl) {
+        Map<Point, Case> plateau = pl.matrice();
         boolean enHaut;
         List<Coup> c;
                 

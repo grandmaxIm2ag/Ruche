@@ -32,10 +32,12 @@ public class Ordinateur extends Joueur{
     public final static int MOYEN=2;
     public final static int DIFFICILE=3;
     
-    
-    public final static long GRAINE = (long)System.nanoTime();
-    //public final static long GRAINE =26043607173097L;
-    //22115700504483L;
+    /**
+     *
+     */
+    public final static long GRAINE = 19783713274596L;//(long)System.nanoTime();
+    //public final static long GRAINE =22115700504483L;
+    //;
     Random r;
     
     Map<Plateau, Integer> configurations;
