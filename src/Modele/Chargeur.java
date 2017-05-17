@@ -70,7 +70,6 @@ public class Chargeur {
                     r++;
                 line = input.nextLine();
             }else if(p){
-                System.out.println("\t"+ line.split("_")[1]);
                 Point point = new Point(line.split("_")[0]);
                 str = line.split("_")[1].split(":");
                 Point p2 = new Point(str[0]);

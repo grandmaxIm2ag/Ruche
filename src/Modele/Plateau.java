@@ -211,7 +211,7 @@ public class Plateau extends Composant {
      */
     public boolean premierPionValide(Depot d){
         return !(d.destination().x < -1 || d.destination().y < -1 || d.destination().x > 1 || d.destination().y > 1 || (d.destination().x == -1 && d.destination().y == -1 )
-                || (d.destination().x == 1 && d.destination().y == 1 ));
+                || (d.destination().x == 1 && d.destination().y == 1 ) || (d.destination().x == 0 && d.destination().y == 0 ));
     }
 
     /**
@@ -249,7 +249,7 @@ public class Plateau extends Composant {
         if(b){
             b=false;
             System.out.println("coucou");
-        Coup[] coups = e.deplacementValide(clone().matrice);
+        Coup[] coups = e.deplacementValide(clone());
             for (Coup coup : coups) {
                 System.out.println(coup + " " + d.equals(coup));
                 b |= d.equals(coup);
@@ -544,7 +544,7 @@ public class Plateau extends Composant {
             b|= entry.getValue().accept(v);//v.visite(entry.getValue());
         }
         Iterator<Case> it = aide.iterator();
-        while(it.hasNext())
+        while(it.hasNext())// && !b)
             b|=it.next().accept(v);
             
         return b;
@@ -624,9 +624,9 @@ public class Plateau extends Composant {
             Iterator<Point> it = entry2.getValue().iterator();
             String tmp = it.next().toString();
             while(it.hasNext()){
-                tmp+=":"+it.next();
+                tmp+=":"+it.next().toString();
             }
-            str+=entry2.getKey()+":"+tmp;
+            str+=entry2.getKey()+":"+tmp+"\n";
         }
         return str;
     }
@@ -770,7 +770,7 @@ public class Plateau extends Composant {
                 b = estConnexe(e);
         
         if(b){
-            Coup[] cp = matrice.get(e.position()).tete().deplacementValide(this.clone().matrice());
+            Coup[] cp = matrice.get(e.position()).tete().deplacementValide(this.clone());
 
             for (Coup cp1 : cp) {
                 if (cp1 instanceof Deplacement) {
@@ -792,17 +792,25 @@ public class Plateau extends Composant {
     public Coup[] depotPossible(int joueur, int t){
         
         if(utilises.isEmpty()){
+            if(joueur == 1){
+                System.err.println("coucou");
+            }
             Coup[] res = new Coup[1];
             res[0] = new Depot(joueur, t, new Point(0,0));
             return res;
         }else if(utilises.size()==1){
+            if(joueur == 1){
+                System.err.println("coucou 2 "+utilises.get(0));
+            }
             List<Coup> c = new ArrayList();
             for(int i=xMin-1; i<=xMax+1; i++)
                 for(int j=yMin-1; j<=yMax+1; j++){
+
                     Depot d = new Depot(joueur, t, new Point(i,j));
                     if(premierPionValide(d)){
                         c.add(d);
                     }
+                    
                 }
             Coup[] coups = new Coup[c.size()];
             Iterator<Coup> it = c.iterator();
@@ -967,7 +975,7 @@ public class Plateau extends Composant {
     }
     
     public boolean deplEntame () {
-        return !aide.isEmpty();
+        return !Plateau.cloneList2(aide).isEmpty();
     }
     
     public List<Case> aide () {

@@ -15,8 +15,12 @@ import java.util.Properties;
 import java.util.Stack;
 import ruche.Reglage;
 import Modele.*;
+import Vue.Interface;
 import Vue.PaneToken;
+import Vue.Pointeur;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Scanner;
 
 /**
  *
@@ -53,6 +57,7 @@ public abstract class Arbitre {
     Joueur[] joueurs;
     int jCourant, type, difficulte;
     Plateau plateau;
+    String pla;
     Chargeur chargeur;
     Stack<Coup> historique;
     Stack<Coup> refaire;
@@ -63,6 +68,7 @@ public abstract class Arbitre {
     Coup[] depots;
     Coup[] coups;
     boolean aucun;
+    boolean chargement = false;
     boolean precAucun;
     
     Insecte initDepl;
@@ -130,7 +136,6 @@ public abstract class Arbitre {
      */
     public boolean deplacePionValide(Deplacement d){
         boolean b = false;
-        
         for (Coup deplacement : deplacements) {
             b |= d.equals(deplacement);
         }
@@ -204,6 +209,7 @@ public abstract class Arbitre {
      * @param d
      */
     public void joue(Coup d){
+        
         if(d instanceof Deplacement)
             joue((Deplacement)d);
         else if(d instanceof Depot)
@@ -240,7 +246,7 @@ public abstract class Arbitre {
     public void precedent(){
         if(!historique.isEmpty()){
             Coup c = historique.pop();
-            refaire.add(c);
+            refaire.push(c);
             if(c instanceof Deplacement){
                 Deplacement d = (Deplacement) c;
                 plateau.deplacePion(new Deplacement(d.joueur(),d.destination(), d.source()));
@@ -258,7 +264,14 @@ public abstract class Arbitre {
      */
     public void refaire(){
         if(!refaire.isEmpty()){
-            joue(refaire.pop());
+            Coup c = refaire.pop();
+            historique.push(c);
+            if(c instanceof Depot)
+                plateau.deposePion((Depot)c );
+            else{
+                Deplacement d = (Deplacement) c;
+                plateau.deplacePion(d);
+            }
         }else{
             System.out.println("Aucun coup à refaire");
         }
@@ -277,27 +290,26 @@ public abstract class Arbitre {
      * @param plateau
      */
     public void charger(String plateau){
-        
         chargeur.init(prop, plateau);
         this.plateau = chargeur.charger();
         type = chargeur.type();
         difficulte = chargeur.difficulte();
-        init();
         historique = chargeur.historique();
         refaire = chargeur.refaire();
         
         String[] str = chargeur.joueur();
         joueurs[J1].nom = str[J1].split("=")[0];
         String[] str2 = str[J1].split("=")[1].split(":");
-        int[] tab = new int[str2.length-1];
-        for(int i=1; i<str2.length; i++)
-            tab[i-1]=Integer.parseInt(str2[i]);
+        System.err.println(Arrays.toString(str2));
+        int[] tab = new int[str2.length];
+        for(int i=0; i<str2.length; i++)
+            tab[i]=Integer.parseInt(str2[i]);
         joueurs[J1].setPieces(tab);
         joueurs[J2].nom = str[J2].split("=")[0];
         str2 = str[J1].split("=")[1].split(":");
-        tab = new int[str2.length-1];
-        for(int i=1; i<str2.length; i++)
-            tab[i-1]=Integer.parseInt(str2[i]);
+        tab = new int[str2.length];
+        for(int i=0; i<str2.length; i++)
+            tab[i]=Integer.parseInt(str2[i]);
         joueurs[J2].setPieces(tab);
 
     }
@@ -338,13 +350,30 @@ public abstract class Arbitre {
             output.write(sauv);
             output.close();
                 //MaJ BDD
-            
+        
         }catch(FileNotFoundException e){
             System.err.println("Impossible de sauvegarder, fichier introuvable "+nomSauv);
         }catch(IOException e){
             System.err.println("Impossible de sauvegarder "+nomSauv);
         }
         
+        String str = "";
+        
+        Scanner fr =new Scanner(ClassLoader.getSystemClassLoader().getResourceAsStream("Sauvegardes/Sauvegarde"));
+        str = fr.nextLine();
+        if(str == null || str.equals("")){
+            str = nomSauv;
+        }else{
+            str += (":"+nomSauv);
+        }
+        
+        try{
+            PrintWriter writer = new PrintWriter("Ressources/Sauvegardes/Sauvegarde", "UTF-8");
+            writer.print(str);
+            writer.close();
+        }catch(IOException e){
+            System.err.println("Echec de la saucegarde "+e);
+        }
     }
     
     /**
@@ -360,8 +389,8 @@ public abstract class Arbitre {
      *
      * @param dessinateur
      */
-    public void accept(Visiteur dessinateur) {
-        plateau.accept(dessinateur);
+    public boolean accept(Visiteur dessinateur) {
+        return plateau.accept(dessinateur);
     }
     
     /**
@@ -422,6 +451,12 @@ public abstract class Arbitre {
      * @param t
      */
     public void maj(long t){
+        if(Interface.pointeur().event()!=null){
+        boolean b = this.accept(Interface.pointeur());
+        if(b)
+            plateau.clearAide();
+        Interface.pointeur().traiter();
+        }
         long nouv = t-temps;
         temps=t;
         switch(etat){
@@ -430,6 +465,7 @@ public abstract class Arbitre {
             case JOUE_EN_COURS:
                 temps_ecoule+=nouv;
                 if(temps_ecoule>=100000000){
+                    System.out.println("Joue déplacement "+enCours);
                     temps_ecoule=0;
                     if(enCours!=null){
                         plateau.deplacePion(enCours);
@@ -448,7 +484,6 @@ public abstract class Arbitre {
                 }
                 break;
             case A_JOUER:
-                PaneToken.getInstance(this).update();
                 prochainJoueur();
                 plateau.setJoueur(jCourant);
                 plateau.clearAide();
@@ -525,11 +560,14 @@ public abstract class Arbitre {
     public void dispo(Insecte ins){
         Coup[] c = deplacementPossible(ins);
         List<Case> l = new ArrayList();
-        for (Coup c1 : c) {
-            Case c2 = new Case(c1.destination().x(), c1.destination().y(), 1, 1);
-            c2.pointe();
-            l.add(c2);
-        }
+        System.out.println("Caca devans la porte" +c);
+            if (c != null)
+                for (Coup c1 : c) {
+                System.out.println("Plein de petits cacas");
+                Case c2 = new Case(c1.destination().x(), c1.destination().y(), 1, 1);
+                c2.jouable();
+                l.add(c2);
+            }
         plateau.setAide(l);
     }
 

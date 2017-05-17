@@ -5,8 +5,15 @@
  */
 package Modele.Arbitres;
 
+import Controleur.Choix;
 import Joueurs.Ordinateur;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.Properties;
+import java.util.Scanner;
+import ruche.Configuration;
+import ruche.Reglage;
 
 /**
  *<b>FabriqueArbitre est la classe représentant le pattern Fabrique pour les Arbitres </b>
@@ -70,6 +77,9 @@ public class FabriqueArbitre {
      */
     private String[] plateaux;
     
+    private boolean cocc;
+    private boolean clop;
+    private boolean mous;
     /**
      * Constructeur FabriqueArbitre
      * <p>
@@ -93,10 +103,27 @@ public class FabriqueArbitre {
         this.diff[Ordinateur.MOYEN] = "Normal";
         this.diff[Ordinateur.DIFFICILE] = "Difficile";
         
+        Scanner fr =new Scanner(ClassLoader.getSystemClassLoader().getResourceAsStream("Sauvegardes/Sauvegarde"));
+        String str = fr.nextLine();
+        if(str == null || str.equals("")){
+            plateaux = new String[1];
+            plateaux[0] = "(none)";
+        }else{
+            plateaux = str.split(":");
+        }
+        
         this.type = SIMULATION;
-        this.types = new String[4];
+        this.types = new String[5];
         this.types[LOCAL_JVJ] = "Joueur vs Joueur";
         this.types[LOCAL_JVIA] = "Joueur vs IA";
+        this.types[SIMULATION] = "Simulation";
+        this.types[RESEAU_SERVER] = "Créer une partie en ligne";
+        this.types[RESEAU_CLIENT] = "Réjoindre un Hôte";
+        
+        cocc=false;
+        clop=false;
+        mous=false;
+        
     }
     
     /**
@@ -106,10 +133,16 @@ public class FabriqueArbitre {
      *  
      */
     public Arbitre nouveau(){
+        boolean b = plateau != null && !plateau.equals("(none)");
+        initConf();
         switch(type){
             case LOCAL_JVJ:
+                if(b)
+                    return new Local(prop, type, difficulte, plateau);
                 return new Local(prop, type, difficulte);
             case LOCAL_JVIA:
+                if(b)
+                    return new Local(prop, type, difficulte, plateau);
                 return new Local(prop, type, difficulte);
             case SIMULATION:
                 return new SimulationIA(prop, difficulte);
@@ -152,6 +185,7 @@ public class FabriqueArbitre {
      * @see FabriqueArbitre#plateau
      */
     public void initP(String p){
+        System.err.println("Passé");
         plateau=p;
     }
     
@@ -188,4 +222,49 @@ public class FabriqueArbitre {
         return plateaux;
     }
     
+    public void setInit(int c,int i){
+        switch(c){
+            case Choix.CHOIX_MODE:
+                initType(i);
+                break;
+            case Choix.CHOIX_DIFFICULTE:
+                initDiff(i);
+                break;
+            case Choix.CHOIX_PLATEAU:
+                initP(plateaux[i]);
+                break;
+            default:
+                break;
+        }
+    }
+
+    
+    public void initConf(){
+        if(cocc && mous && clop){
+            Configuration.chargerProprietes(prop, ClassLoader.getSystemClassLoader().getResourceAsStream("Reglages/conf213.cfg"));
+            Reglage.init(prop);
+        }else if(cocc && mous){
+            Configuration.chargerProprietes(prop, ClassLoader.getSystemClassLoader().getResourceAsStream("Reglages/conf32.cfg"));
+            Reglage.init(prop);
+        }else if(cocc && clop){
+            Configuration.chargerProprietes(prop, ClassLoader.getSystemClassLoader().getResourceAsStream("Reglages/conf21.cfg"));
+            Reglage.init(prop);
+        }else if(mous && clop){
+            Configuration.chargerProprietes(prop, ClassLoader.getSystemClassLoader().getResourceAsStream("Reglages/conf31.cfg"));
+            Reglage.init(prop);
+        }else if(cocc){
+            Configuration.chargerProprietes(prop, ClassLoader.getSystemClassLoader().getResourceAsStream("Reglages/conf2.cfg"));
+            Reglage.init(prop);
+        }else if(mous){
+            Configuration.chargerProprietes(prop, ClassLoader.getSystemClassLoader().getResourceAsStream("Reglages/conf3.cfg"));
+            Reglage.init(prop);
+        }else if(clop){
+            Configuration.chargerProprietes(prop, ClassLoader.getSystemClassLoader().getResourceAsStream("Reglages/conf1.cfg"));
+            Reglage.init(prop);
+        }else{
+            Configuration.chargerProprietes(prop, ClassLoader.getSystemClassLoader().getResourceAsStream("Reglages/defaut.cfg"));
+            Reglage.init(prop);
+        }
+    }
+
 }

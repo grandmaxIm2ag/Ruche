@@ -56,7 +56,8 @@ public class Reine extends Insecte{
      * @return
      */
     @Override
-    public Coup[] deplacementValide(Map<Point, Case> plateau) {
+    public Coup[] deplacementValide(Plateau pl) {
+        Map<Point, Case> plateau = pl.matrice();
         List<Coup> c = glisser(plateau);
         Coup[] coups = new Coup[c.size()];
         Iterator<Coup> it = c.iterator();

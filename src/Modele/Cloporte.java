@@ -30,11 +30,12 @@ public class Cloporte extends Insecte{
 
     /**
      *
-     * @param plateau
+     * @param pl
      * @return
      */
     @Override
-    public Coup[] deplacementValide(Map<Point, Case> plateau) {
+    public Coup[] deplacementValide(Plateau pl) {
+        Map<Point, Case> plateau = pl.matrice();
         List<Coup> c = glisser(plateau);
         
         List<Case> voisins = new ArrayList();
@@ -51,9 +52,11 @@ public class Cloporte extends Insecte{
         Iterator<Case> v = voisins.iterator();
         while(v.hasNext()){
             Case tmp = v.next();
-            Iterator<Point> d = depot.iterator();
-            while(d.hasNext()){
-                c.add(new Deplacement(tmp.tete().joueur(), tmp.position(), d.next()));
+            if(pl.estConnexe(tmp.tete())){
+                Iterator<Point> d = depot.iterator();
+                while(d.hasNext()){
+                    c.add(new Deplacement(tmp.tete().joueur(), tmp.position(), d.next()));
+                }
             }
         }
                 
@@ -67,6 +70,7 @@ public class Cloporte extends Insecte{
 
     @Override
     public boolean equals(Object o) {
+
         if(o instanceof Cloporte){
             Cloporte a = (Cloporte)o;
             return (a.position().equals(pos) && a.l()==l && a.h()==h);
@@ -97,6 +101,12 @@ public class Cloporte extends Insecte{
     public int type() {
         return CLOP;
        // throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        return hash;
     }
     
 }

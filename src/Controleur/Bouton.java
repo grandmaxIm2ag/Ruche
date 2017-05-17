@@ -79,6 +79,11 @@ public class Bouton implements EventHandler<ActionEvent>{
      *
      */
     public final static int BOUTON_NOUVELLE_PARTIE_COMMENCER = 10;
+    /**
+     *
+     */
+    public final static int BOUTON_PAUSE = 11;
+    
     
     /**
      *
@@ -104,7 +109,6 @@ public class Bouton implements EventHandler<ActionEvent>{
                 System.exit(0);
                 break;
             case BOUTON_NOUVELLE_PARTIE:
-                //Interface.goPartie();
                 Interface.goNewGame();
                 break;
             case BOUTON_CONFIG:
@@ -116,8 +120,21 @@ public class Bouton implements EventHandler<ActionEvent>{
             case BOUTON_NOUVELLE_PARTIE_COMMENCER:
                 Interface.goPartie();
                 break;
+            
             case BOUTON_CHARGER:
                 Interface.goLoadGame();
+                break;
+            case BOUTON_SAUVEGARDER:
+                arbitre.sauvegarder("testS");
+                break;
+            case BOUTON_UNDO:
+                arbitre.precedent();
+                break;
+            case BOUTON_DO:
+                arbitre.refaire();
+                break;
+            case BOUTON_PAUSE:
+                Interface.pause();
                 break;
             default:
                 break;
