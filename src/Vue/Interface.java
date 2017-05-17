@@ -247,7 +247,7 @@ public class Interface extends Application {
         btSuiv.setOnAction(new Bouton(Bouton.BOUTON_DO, arbitre));
         btSave.setOnAction(new Bouton(Bouton.BOUTON_SAUVEGARDER, arbitre));
         btMenu.setOnAction(new Bouton(Bouton.BOUTON_MENU, arbitre));
-         btPause.setOnAction(new Bouton(Bouton.BOUTON_PAUSE, arbitre));
+        btPause.setOnAction(new Bouton(Bouton.BOUTON_PAUSE, arbitre));
 
         GridPane bPion = new GridPane();
         bPion.setHgap(10);
