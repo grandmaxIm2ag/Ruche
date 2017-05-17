@@ -123,12 +123,13 @@ public class Interface extends Application {
     static Arbitre arbitre;
     static FabriqueArbitre fabrique;
     static BorderPane root;
-    static Scene s;
+    static Scene scene;
     final static boolean fullScreen = false;
     static VBox ngBox;
     static VBox loadBox;
     static VBox configBox;
     static String[] args2;
+    public static Stage stage;
 
     /**
      *
@@ -137,15 +138,15 @@ public class Interface extends Application {
      */
     @Override
     public void start(Stage stage) throws Exception {
-
+        this.stage = stage;
         stage.setTitle("Ruche");
         if (fullScreen) {
-            s = new Scene(root);
+            scene = new Scene(root);
             stage.setFullScreen(true);
         } else {
-            s = new Scene(root, 1000, 800);
+            scene = new Scene(root, 1000, 800);
         }
-        stage.setScene(s);
+        stage.setScene(scene);
         
         //goMenu();
         goNewGame();
@@ -173,12 +174,12 @@ public class Interface extends Application {
     
     public static void goTest () {
         Rectangle rleft = new Rectangle(100,100);
-        rleft.widthProperty().bind(s.widthProperty().divide(10));
+        rleft.widthProperty().bind(scene.widthProperty().divide(10));
         rleft.setOpacity(0);
         Pane left = new Pane(rleft);
         root.setLeft(left);
         Rectangle rright = new Rectangle(100,100);
-        rright.widthProperty().bind(s.widthProperty().divide(10));
+        rright.widthProperty().bind(scene.widthProperty().divide(10));
         rright.setOpacity(0);
         Pane right = new Pane(rright);
         root.setRight(right);

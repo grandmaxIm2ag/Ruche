@@ -32,7 +32,9 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
+import javafx.stage.Popup;
 
 /**
  *
@@ -78,7 +80,10 @@ public class Dessinateur extends Visiteur{
         double [][] coords = Interface.hex_corner(etendeur.x(), etendeur.y(), etendeur.h()/2);
         if (c.estpointe()) {
             gc.setStroke(Color.RED);
-            System.out.println(c.position().x() + " " + c.position().y());
+            //System.out.println(c.position().x() + " " + c.position().y());
+            //Popup popup = new Popup();
+            //Rectangle rect = new Rectangle(100,100);
+            //popup.xProperty().
         }
         if (arbitre.initDeplacement() != null && arbitre.initDeplacement() instanceof Cloporte) {
             Coup[] coupPossible = arbitre.deplacementPossible(arbitre.initDeplacement());

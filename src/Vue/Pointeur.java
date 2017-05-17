@@ -21,6 +21,8 @@ import java.util.Iterator;
 import java.util.List;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.shape.Rectangle;
+import javafx.stage.Popup;
 
 /**
  *
@@ -32,6 +34,7 @@ public class Pointeur extends Visiteur {
     Arbitre arbitre;
     MouseEvent me;
     private boolean depl = false;
+    Popup popup;
     
     /**
      *
@@ -49,6 +52,8 @@ public class Pointeur extends Visiteur {
         this.me = me;
         etendeur = new Etendeur();
         this.arbitre = a;
+        popup = new Popup();
+
     }
     
     /**
@@ -95,10 +100,23 @@ public class Pointeur extends Visiteur {
         
         if (b) {
             if (me.getEventType() == MouseEvent.MOUSE_MOVED) {
+                if (popup.isShowing())
+                    popup.hide();
                 //System.out.println("[" + c.position().x()+ ";" + c.position().y()+ "]");
                 c.pointe();
                 if (c.utilise())
                     c.tete().pointe();
+                //i(c.insectes().)
+                if (c.tete().classement() > 1) {
+                    System.err.println("JeanClaudeVanDamn");
+                    
+                    Rectangle rect = new Rectangle(100,100);
+                    popup.setX(me.getX());
+                    popup.setY(me.getY());
+                    popup.getContent().add(rect);
+                    popup.show(Interface.stage);
+                    //popup.show(Interface.scene, me.getX(), me.getY());
+                }
             } else if (me.getEventType() == MouseEvent.MOUSE_CLICKED) {
 
                 if (arbitre.plateau().deplEntame()) {
