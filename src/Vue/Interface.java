@@ -122,7 +122,7 @@ public class Interface extends Application {
     static FabriqueArbitre fabrique;
     static BorderPane root;
     static Scene s;
-    final static boolean fullScreen = true;
+    final static boolean fullScreen = false;
     static String[] args2;
 
     /**
@@ -231,9 +231,6 @@ public class Interface extends Application {
         Image imageDo = new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Icone/droite.png"));
         Button btSuiv = new Button();
         btSuiv.setGraphic(new ImageView(imageDo));
-        Image imageHelp = new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Icone/help.png"));
-        Button btHelp = new Button();
-        btHelp.setGraphic(new ImageView(imageHelp));
         Image imagePause = new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Icone/play.png"));
         Button btPause = new Button();
 
@@ -268,7 +265,7 @@ public class Interface extends Application {
         root.setRight(pt.getLeftPane());
         root.setLeft(pt.getRightPane());
 
-        box.getChildren().addAll(btPrec, btHelp, btPause, btSuiv/*, btSave, btMenu*/);
+        box.getChildren().addAll(btPrec, btPause, btSuiv/*, btSave, btMenu*/);
 
         c.setOnMouseMoved(new Souris(arbitre, Souris.SOURIS_BOUGEE, c));
         c.setOnMouseClicked(new Souris(arbitre, Souris.SOURIS_CLIQUEE, c));
@@ -426,6 +423,7 @@ public class Interface extends Application {
         centerBox.getChildren().add(centerStack);
         centerStack.getChildren().addAll(centerRect, insideBox);//centerGrid);
         Label lNG = new Label("Nouvelle Partie");
+        lNG.setTextFill(Color.WHITE);
         lNG.setFont(new Font(22));
 
         insideBox.getChildren().addAll(lNG, centerGrid, btBEG);
@@ -469,6 +467,7 @@ public class Interface extends Application {
         centerBox.getChildren().add(centerStack);
         centerStack.getChildren().addAll(centerRect, insideBox);//centerGrid);
         Label lNG = new Label("Charger Partie");
+        lNG.setTextFill(Color.WHITE);
         lNG.setFont(new Font(22));
         ChoiceBox cbMOD = new ChoiceBox();
         String[] tmp = fabrique.plateaux();
@@ -553,10 +552,13 @@ public class Interface extends Application {
         Label lSon = new Label("Son");
         Label lMusique = new Label("Musique");
         Label lFullScreen = new Label("Plein Ecran");
-
+        lSon.setTextFill(Color.WHITE);
+        lMusique.setTextFill(Color.WHITE);
+        lFullScreen.setTextFill(Color.WHITE);
         centerBox.getChildren().add(centerStack);
         centerStack.getChildren().addAll(centerRect, insideBox);//centerGrid);
-        Label lNG = new Label("Parametres");
+        Label lNG = new Label("Configuration");
+        lNG.setTextFill(Color.WHITE);
         lNG.setFont(new Font(22));
 
         centerGrid.add(lSon, 0, 0);
@@ -717,7 +719,7 @@ public class Interface extends Application {
         Label l = new Label("Pause");
         l.setGraphic(new ImageView(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Icone/play.png"))));
         l.setFont(new Font("Arial", 30));
-        
+        l.setTextFill(Color.RED);
         box.getChildren().add(l);
         Button play = new Button("Continuer");
         play.setOnAction(new EventHandler<ActionEvent>() {
@@ -735,7 +737,7 @@ public class Interface extends Application {
         box.getChildren().addAll(save);
         Button saveQuit = new Button("Sauvegarder Quitter");
         box.getChildren().addAll(saveQuit);
-        Button menu = new Button("Menu pincipale");
+        Button menu = new Button("Menu pincipal");
         menu.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {

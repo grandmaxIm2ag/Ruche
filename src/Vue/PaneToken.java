@@ -16,6 +16,7 @@ import javafx.scene.control.ToggleGroup;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
@@ -49,7 +50,8 @@ public class PaneToken {
         leftBlur = new GaussianBlur();
         rightBlur = new GaussianBlur();
         leftBlur.setRadius(0);
-        //rightBlur.setRadius(10);
+        if (arbitre.type() == FabriqueArbitre.LOCAL_JVJ || arbitre.type() == FabriqueArbitre.LOCAL_JVIA )
+            rightBlur.setRadius(10);
         rightBlur.setRadius(0);
     }
     
@@ -203,7 +205,13 @@ public class PaneToken {
         Label lLadybug = new Label();
         Label lMoskito = new Label();
         Label lWoudlose = new Label();
-        
+        lBee.setTextFill(Color.WHITE);
+        lBeetle.setTextFill(Color.WHITE);
+        lGrasshopper.setTextFill(Color.WHITE);
+        lSpider.setTextFill(Color.WHITE);
+        lLadybug.setTextFill(Color.WHITE);
+        lMoskito.setTextFill(Color.WHITE);
+        lWoudlose.setTextFill(Color.WHITE);
         lBee.setText("" + arbitre.joueur(1).pion(0));
         lBeetle.setText("" + arbitre.joueur(1).pion(1));
         lGrasshopper.setText("" + arbitre.joueur(1).pion(2));
@@ -245,6 +253,18 @@ public class PaneToken {
         
         rightGrid.add(lWoudlose, 0, 7);
         rightGrid.add(bWoodlouse, 1, 7);
+        
+        Image imageHelp = new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Icone/help.png"));
+        Button btHelp = new Button();
+        btHelp.setGraphic(new ImageView(imageHelp));
+        
+        rightGrid.add(btHelp, 1, 8);
+        
+        Image imageAbd = new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Icone/white.png"));
+        Button btAbd = new Button();
+        btAbd.setGraphic(new ImageView(imageAbd));
+        
+        rightGrid.add(btAbd, 0,8);
         
         l[0][0] = lBee;
         l[0][1] = lBeetle;
@@ -364,6 +384,14 @@ public class PaneToken {
         Label lMoskito = new Label();
         Label lWoudlose = new Label();
         
+        lBee.setTextFill(Color.WHITE);
+        lBeetle.setTextFill(Color.WHITE);
+        lGrasshopper.setTextFill(Color.WHITE);
+        lSpider.setTextFill(Color.WHITE);
+        lLadybug.setTextFill(Color.WHITE);
+        lMoskito.setTextFill(Color.WHITE);
+        lWoudlose.setTextFill(Color.WHITE);
+        
         lBee.setText("" + arbitre.joueur(1).pion(0));
         lBeetle.setText("" + arbitre.joueur(1).pion(1));
         lGrasshopper.setText("" + arbitre.joueur(1).pion(2));
@@ -382,6 +410,12 @@ public class PaneToken {
         bMoskito.setOnAction(new ButtonToken(ButtonToken.MOSKITO_BUTTON, lBee, arbitre.joueur(1), arbitre));
         bWoodlouse.setOnAction(new ButtonToken(ButtonToken.WOODLOUSE_BUTTON, lBee, arbitre.joueur(1), arbitre));
         
+        Image imageHelp = new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Icone/help.png"));
+        Button btHelp = new Button();
+        btHelp.setGraphic(new ImageView(imageHelp));
+        Image imageAbd = new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Icone/white.png"));
+        Button btAbd = new Button();
+        btAbd.setGraphic(new ImageView(imageAbd));
         leftGrid.add(bBee, 0, 0);
         leftGrid.add(lBee, 1, 0);
         
@@ -405,6 +439,9 @@ public class PaneToken {
         
         leftGrid.add(lWoudlose, 0, 7);
         leftGrid.add(bWoodlouse, 1, 7);
+        
+        leftGrid.add(btHelp, 0, 8);
+        leftGrid.add(btAbd, 1, 8);
         
         l[1][0] = lBee;
         l[1][1] = lBeetle;
@@ -438,10 +475,10 @@ public class PaneToken {
                     b[i][j].setDisable(true);
             }
         }
-        
+        //if (arbitre.type() == FabriqueArbitre.LOCAL_JVJ || arbitre.type() == FabriqueArbitre.LOCAL_JVIA ) 
         switch (arbitre.jCourant()) {
             case 0:
-                //eftBlur.setRadius(10);
+                //leftBlur.setRadius(10);
                 rightBlur.setRadius(0);
                 break;
             case 1:
