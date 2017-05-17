@@ -128,6 +128,10 @@ public class Pointeur extends Visiteur {
                     System.out.println(c.tete());
                     System.err.println("caca2");
                     arbitre.initDeplacement(c.tete());
+                    List<Case> tchup = arbitre.plateau().aide();
+                    for (Case cas : tchup) {
+                        System.out.println(cas);
+                    }
                     depl = true;
                 }
             }

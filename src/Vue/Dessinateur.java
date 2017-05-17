@@ -10,6 +10,8 @@ import Modele.Arbitres.*;
 import Modele.Case;
 import Modele.Cloporte;
 import Modele.Coccinelle;
+import Modele.Coup;
+import Modele.Deplacement;
 import Modele.Etendeur;
 import Modele.Fourmie;
 import Modele.Insecte;
@@ -78,8 +80,15 @@ public class Dessinateur extends Visiteur{
             gc.setStroke(Color.RED);
             System.out.println(c.position().x() + " " + c.position().y());
         }
-        //if (arbitre.)
-        gc.strokePolygon(coords[0], coords[1], 6);
+        //if (arbitre.initDeplacement() != null && arbitre.initDeplacement() instanceof Cloporte) {
+            //Coup[] coupPossible = arbitre.deplacementPossible(arbitre.initDeplacement());
+            //for (Coup coup : coupPossible) {
+                //Deplacement d = (Deplacement)coup;
+                //if (arbitre.plateau().matrice.get(d.source()).tete() instanceof Cloporte)
+                    //gc.strokePolygon(coords[0], coords[1], 6);
+            //}
+        //} else 
+            gc.strokePolygon(coords[0], coords[1], 6);
         gc.setStroke(Color.BLACK);
         if (c.utilise() && c.estpointe() && !c.insectes().empty() && (c.tete().classement() > 1)) {
                 gc.setFill(Color.WHITESMOKE);
