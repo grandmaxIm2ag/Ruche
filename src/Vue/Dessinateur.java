@@ -41,11 +41,13 @@ public class Dessinateur extends Visiteur{
     static Canvas c;
     Etendeur etendeur;
     GraphicsContext gc;
+    Arbitre arbitre;
     
-    Dessinateur (Canvas c) {
+    Dessinateur (Canvas c, Arbitre a) {
         this.c = c;
         etendeur = new Etendeur();
         gc = c.getGraphicsContext2D();
+        this.arbitre = a;
     }
     
     /**
@@ -76,6 +78,7 @@ public class Dessinateur extends Visiteur{
             gc.setStroke(Color.RED);
             System.out.println(c.position().x() + " " + c.position().y());
         }
+        //if (arbitre.)
         gc.strokePolygon(coords[0], coords[1], 6);
         gc.setStroke(Color.BLACK);
         if (c.utilise() && c.estpointe() && !c.insectes().empty() && (c.tete().classement() > 1)) {

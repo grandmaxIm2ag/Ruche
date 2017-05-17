@@ -7,6 +7,7 @@ package Vue;
 
 import Modele.Arbitres.Arbitre;
 import Modele.Case;
+import Modele.Cloporte;
 import Modele.Deplacement;
 import Modele.Depot;
 import Modele.Etendeur;
@@ -108,7 +109,6 @@ public class Pointeur extends Visiteur {
                             arbitre.joue(new Depot(arbitre.jCourant(), arbitre.initDepot(), c.position()));
                             return true;
                         } else {
-                            
                             PaneToken.getInstance().uncheck();
                             arbitre.joue(new Deplacement(arbitre.jCourant(), arbitre.initDeplacement().position(), c.position()));
                             depl = false;
@@ -119,6 +119,8 @@ public class Pointeur extends Visiteur {
                         System.out.println ("Chocrotte");
                         depl = false;
                         return true;
+                    } else if (arbitre.initDeplacement() instanceof Cloporte) {
+                        System.out.println ("Cacahahaha");
                     }
                 } else if (c.tete().joueur() == arbitre.jCourant()) {
                     
