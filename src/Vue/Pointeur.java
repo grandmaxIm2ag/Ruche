@@ -5,23 +5,38 @@
  */
 package Vue;
 
+import Modele.Araignee;
 import Modele.Arbitres.Arbitre;
 import Modele.Case;
 import Modele.Cloporte;
+import Modele.Coccinelle;
 import Modele.Coup;
 import Modele.Deplacement;
 import Modele.Depot;
 import Modele.Etendeur;
+import Modele.Fourmie;
 import Modele.Insecte;
+import Modele.Moustique;
 import Modele.Plateau;
 import Modele.Point;
+import Modele.Reine;
+import Modele.Sauterelle;
+import Modele.Scarabee;
 import Modele.Visiteur;
 import static Vue.Dessinateur.c;
+import java.io.InputStream;
 import java.util.Iterator;
 import java.util.List;
+import javafx.geometry.Insets;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
 import javafx.stage.Popup;
 
 /**
@@ -34,7 +49,8 @@ public class Pointeur extends Visiteur {
     Arbitre arbitre;
     MouseEvent me;
     private boolean depl = false;
-    Popup popup;
+    public Popup popup;
+    public boolean initPopup;
     
     /**
      *
@@ -73,6 +89,7 @@ public class Pointeur extends Visiteur {
     public boolean visite (Plateau p) {
         etendeur.fixeEchelle(c, p);
         p.depointe();
+        initPopup = false;
         return false;
     }
     
@@ -100,8 +117,8 @@ public class Pointeur extends Visiteur {
         
         if (b) {
             if (me.getEventType() == MouseEvent.MOUSE_MOVED) {
-                if (popup.isShowing())
-                    popup.hide();
+                //if (popup.isShowing())
+                    //popup.hide();
                 //System.out.println("[" + c.position().x()+ ";" + c.position().y()+ "]");
                 c.pointe();
                 if (c.utilise())
@@ -110,13 +127,34 @@ public class Pointeur extends Visiteur {
                 if (c.tete().classement() > 1) {
                     System.err.println("JeanClaudeVanDamn");
                     
-                    Rectangle rect = new Rectangle(100,100);
+                    Rectangle rect = new Rectangle(125,125);
+                    //rect.setWidth(100*c.tete().classement() + 12.5*c.tete().classement());
+                    //rect.setArcWidth(20);
+                    //rect.setArcHeight(20);
+                    rect.setFill(Color.WHITESMOKE);
                     popup.setX(me.getX());
                     popup.setY(me.getY());
-                    popup.getContent().add(rect);
+                    StackPane stack = new StackPane();
+                    HBox box = new HBox();
+                    box.setPadding(new Insets(12.5,12.5,12.5,12.5));
+                    box.setSpacing(12.5);
+                    //Canvas canvas = print(c.tete());
+                    for (Object ins : c.insectes()) {
+                        box.getChildren().add(print (((Insecte) ins)));
+                    }
+                    rect.widthProperty().bind(stack.widthProperty());
+                    stack.getChildren().addAll(rect, box);
+                    popup.getContent().addAll(rect, box);
+                    
+                    
+                    
+                    //rect.setWidth(y2);
+                    
                     popup.show(Interface.stage);
+                    initPopup = true;
                     //popup.show(Interface.scene, me.getX(), me.getY());
-                }
+                } else if (popup.isShowing())
+                    popup.hide();
             } else if (me.getEventType() == MouseEvent.MOUSE_CLICKED) {
 
                 if (arbitre.plateau().deplEntame()) {
@@ -226,4 +264,55 @@ public class Pointeur extends Visiteur {
     public void traiter(){
         me = null;
     }
+    
+    public Canvas print (Insecte i) {
+        Canvas canvas = new Canvas (100,100);
+        GraphicsContext gc = canvas.getGraphicsContext2D();
+        double [][] coords = Interface.hex_corner(50, 50, 50);
+        Color couleur = Color.WHITE;
+        if (i.joueur() == 0)
+            couleur = Color.GREEN;
+        else
+            couleur = Color.CORNFLOWERBLUE;
+        gc.setFill(couleur);
+        gc.fillPolygon(coords[0], coords[1], 6);
+        Image img = img(i);
+        gc.drawImage(img,50-(img.getWidth()/2), 50-(img.getHeight()/2));
+        return canvas;
+    }
+    
+    private Image img (Insecte i) {
+        String s = "";
+        double mod = 0;
+        if (i instanceof Reine) {
+            s = "bee";
+            mod = 1.75;
+        } else if (i instanceof Scarabee) {
+            s = "beetle";
+            mod = 1.5;
+        } else if (i instanceof Coccinelle) {
+            s = "ladybug";
+            mod = 1.6;
+        } else if (i instanceof Moustique) {
+            s = "moskito";
+            mod = 1.75;
+        } else if (i instanceof Cloporte) {
+            s = "woodlouse";
+            mod = 1.75;
+        } else if (i instanceof Fourmie) {
+            s = "ant";
+            mod = 1.75;
+        } else if (i instanceof Araignee) {
+            s = "spider";
+            mod = 1.75;
+        } else if (i instanceof Sauterelle) {
+            s = "grasshopper";
+            mod = 1.75;
+        }
+        InputStream image = null;
+        image =  ClassLoader.getSystemClassLoader().getResourceAsStream("Images/"+s+".png");
+        Image img = new Image(image,((50)*mod),((50)*mod),true, true);
+        return img;
+    }
+    
 }
