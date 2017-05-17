@@ -156,8 +156,8 @@ public class Interface extends Application {
         root = new BorderPane();
         root.getChildren().add(new ImageView(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/fond.jpg"))));
         fabrique = a;
-        fabrique.initType(FabriqueArbitre.LOCAL_JVJ);
-        args2=args;
+        //fabrique.initType(FabriqueArbitre.LOCAL_JVJ);
+        //args2=args;
         launch(args);
 
     }
