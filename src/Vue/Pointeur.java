@@ -126,7 +126,7 @@ public class Pointeur extends Visiteur {
                 //i(c.insectes().)
                 if (c.tete().classement() > 1) {
                     System.err.println("JeanClaudeVanDamn");
-                    
+                    //popup = new Popup();
                     Rectangle rect = new Rectangle(125,125);
                     //rect.setWidth(100*c.tete().classement() + 12.5*c.tete().classement());
                     //rect.setArcWidth(20);
@@ -139,9 +139,15 @@ public class Pointeur extends Visiteur {
                     box.setPadding(new Insets(12.5,12.5,12.5,12.5));
                     box.setSpacing(12.5);
                     //Canvas canvas = print(c.tete());
+                    System.out.println(box);
+                    box.getChildren().clear();
+                    System.out.println(box);
                     for (Object ins : c.insectes()) {
+                        System.out.println(ins);
                         box.getChildren().add(print (((Insecte) ins)));
+                        System.out.println(box);
                     }
+                    System.out.println(box);
                     rect.widthProperty().bind(stack.widthProperty());
                     stack.getChildren().addAll(rect, box);
                     popup.getContent().addAll(rect, box);
@@ -153,8 +159,10 @@ public class Pointeur extends Visiteur {
                     popup.show(Interface.stage);
                     initPopup = true;
                     //popup.show(Interface.scene, me.getX(), me.getY());
-                } else if (popup.isShowing())
+                } else if (popup.isShowing()) {
                     popup.hide();
+                    popup = new Popup();
+                    }
             } else if (me.getEventType() == MouseEvent.MOUSE_CLICKED) {
 
                 if (arbitre.plateau().deplEntame()) {
@@ -313,6 +321,10 @@ public class Pointeur extends Visiteur {
         image =  ClassLoader.getSystemClassLoader().getResourceAsStream("Images/"+s+".png");
         Image img = new Image(image,((50)*mod),((50)*mod),true, true);
         return img;
+    }
+    
+    public void reinitPopup() {
+        popup = new Popup();
     }
     
 }

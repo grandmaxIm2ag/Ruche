@@ -52,10 +52,12 @@ public class SoundEngine {
     private static boolean init () {
         Mixer.Info[] mixInfo = AudioSystem.getMixerInfo();
         try {
-            if (!mixInfo[5].toString().equals("Device [plughw:2,0], version 3.16.0-4-amd64"))
-                throw new EnzoLaptopParameterException();
-            mixer = AudioSystem.getMixer(mixInfo[5]);
-        } catch (ArrayIndexOutOfBoundsException | EnzoLaptopParameterException e) {
+            if (mixInfo[5].toString().equals("Device [plughw:2,0], version 3.16.0-4-amd64"))
+                //throw new EnzoLaptopParameterException();
+                mixer = AudioSystem.getMixer(mixInfo[5]);
+            else 
+                mixer = AudioSystem.getMixer(mixInfo[0]);
+        } catch (ArrayIndexOutOfBoundsException  e) {
             System.err.println ("SoundEngine.init() Error - line 57 - " + e.getMessage() + " - set the index to 0");
         }
         for (int i = 0; i < mixInfo.length; i++) 

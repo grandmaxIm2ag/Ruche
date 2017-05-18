@@ -547,8 +547,10 @@ public class Plateau extends Composant {
         Iterator<Case> it = aide.iterator();
         while(it.hasNext())// && !b)
             b|=it.next().accept(v);
-        if (v instanceof Pointeur && ((Pointeur) v).initPopup == false)
+        if (v instanceof Pointeur && ((Pointeur) v).initPopup == false) {
             ((Pointeur) v).popup.hide();
+            ((Pointeur) v).reinitPopup();
+        }
         return b;
     }
     

@@ -129,7 +129,7 @@ public class Interface extends Application {
     static BorderPane root;
     static Scene scene;
     final static boolean fullScreen = false;
-    final static boolean soundEnabled = false;
+    final static boolean soundEnabled = true;
     static VBox ngBox;
     static VBox loadBox;
     static VBox configBox;
