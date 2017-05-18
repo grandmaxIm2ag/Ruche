@@ -132,26 +132,23 @@ public class Pointeur extends Visiteur {
                     //rect.setArcWidth(20);
                     //rect.setArcHeight(20);
                     rect.setFill(Color.WHITESMOKE);
-                    popup.setX(me.getX());
-                    popup.setY(me.getY());
                     StackPane stack = new StackPane();
                     HBox box = new HBox();
                     box.setPadding(new Insets(12.5,12.5,12.5,12.5));
                     box.setSpacing(12.5);
                     //Canvas canvas = print(c.tete());
-                    System.out.println(box);
                     box.getChildren().clear();
-                    System.out.println(box);
                     for (Object ins : c.insectes()) {
                         System.out.println(ins);
                         box.getChildren().add(print (((Insecte) ins)));
-                        System.out.println(box);
                     }
-                    System.out.println(box);
-                    rect.widthProperty().bind(stack.widthProperty());
+                    //rect.widthProperty().bind(box.widthProperty());
+                    rect.setWidth(12.5*(c.tete().classement()+1) + 100 * c.tete().classement());
                     stack.getChildren().addAll(rect, box);
                     popup.getContent().addAll(rect, box);
                     
+                    popup.setX(me.getScreenX()-rect.widthProperty().doubleValue()/2);
+                    popup.setY(me.getScreenY()-rect.getHeight()-100);
                     
                     
                     //rect.setWidth(y2);
