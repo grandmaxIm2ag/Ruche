@@ -7,6 +7,7 @@ package Vue;
 
 import Controleur.Bouton;
 import Controleur.Choix;
+import Controleur.SoundSlider;
 import Controleur.Souris;
 import Controleur.SourisListe;
 import javafx.application.*;
@@ -18,6 +19,7 @@ import Modele.Arbitres.*;
 import Joueurs.Joueur;
 import Joueurs.Ordinateur;
 import Modele.Point;
+import Son.SoundEngine;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -65,6 +67,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import static javafx.scene.input.DataFormat.URL;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.SwipeEvent;
+import javafx.scene.input.TouchEvent;
 import javafx.scene.layout.Background;
 //import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
@@ -125,6 +129,7 @@ public class Interface extends Application {
     static BorderPane root;
     static Scene scene;
     final static boolean fullScreen = false;
+    final static boolean soundEnabled = false;
     static VBox ngBox;
     static VBox loadBox;
     static VBox configBox;
@@ -147,7 +152,14 @@ public class Interface extends Application {
             scene = new Scene(root, 1000, 800);
         }
         stage.setScene(scene);
-        
+        try {
+            if (soundEnabled)
+                (SoundEngine.getInstance()).play();
+            else 
+                System.err.println("Interface.start() - Warning - Sound is disabled");
+        } catch (RuntimeException e) {
+            System.err.println("Interface.start() - Error while geting SoundEngine - " + e.getMessage());
+        }
         //goMenu();
         goNewGame();
         goLoadGame();
@@ -477,7 +489,7 @@ public class Interface extends Application {
         Label lNG = new Label("Nouvelle Partie");
         lNG.setTextFill(Color.WHITE);
         lNG.setFont(new Font(22));
-
+        
         insideBox.getChildren().addAll(lNG, centerGrid, btBEG);
 
         //root.setCenter(centerBox);
@@ -601,12 +613,23 @@ public class Interface extends Application {
         centerGrid.setAlignment(Pos.CENTER);
 
         Slider sSon = new Slider();
-        sSon.setValue(50);
+        sSon.setValue(100);
         sSon.setShowTickMarks(true);
         sSon.setMajorTickUnit(20);
 
         Slider sMusique = new Slider();
-        sMusique.setValue(50);
+        /*
+        sMusique.valueProperty().addListener(new ChangeListener<Number>() {
+            public void changed(ObservableValue<? extends Number> ov,
+                Number old_val, Number new_val) {
+                    System.out.println(new_val.doubleValue());
+                    //SoundEngine.getInstance().volume(new_val);
+            }
+        });
+        */
+        
+        sMusique.valueProperty().addListener(new SoundSlider(SoundSlider.MUSIC_SLIDER));
+        sMusique.setValue(100);
         sMusique.setShowTickMarks(true);
         sMusique.setMajorTickUnit(20);
 
