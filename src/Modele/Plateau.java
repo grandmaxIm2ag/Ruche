@@ -168,8 +168,9 @@ public class Plateau extends Composant {
     public void premierPion(Insecte e){
         Case c = new Case(0,0, 1, 1);
         c.deposePion(e);
-        if(e.type()==Insecte.REINE)
-            reines[Arbitre.J1] = new Point(0,0);
+        if(e.type()==Insecte.REINE){
+            reines[e.joueur()] = new Point(0,0);
+        }
         matrice.put(new Point(0,0), c);
         utilises.add(new Point(0,0));
         voisins.put(new Point(0,0), new ArrayList());

@@ -38,6 +38,7 @@ public abstract class Arbitre {
      */
     public final static int J2 = 1;
     
+    final static int INITIALISATION = -1;
     final static int ATTENTE_COUP = 0;
     final static int JOUE_EN_COURS = 1;
     final static int A_JOUER = 2;
@@ -494,13 +495,28 @@ public abstract class Arbitre {
         }
     }
     boolean nul(){
-        boolean b1 = true;
-        for(int i=0; i<joueurs[J1].pions().length; i++)
-                    b1 &= joueurs[J1].pions()[i]==0;
-        boolean b2 = true;
-        for(int i=0; i<joueurs[J2].pions().length; i++)
-                    b2 &= joueurs[J2].pions()[i]==0;
-        return plateau.aucunCoup(J1)&&plateau.aucunCoup(J2)&&b1&&b2;
+        boolean b = plateau.estEncerclee(J1)&&plateau.estEncerclee(J2);
+        
+        if(!b){
+            if(historique.size()>=12){
+                Coup[] tmp = new Coup[4];
+                Stack<Coup> c = new Stack();
+                
+                for(int i=0; i<12; i++)
+                    c.push(historique.pop());
+                
+                
+                int i=0;
+                while(!c.isEmpty()){
+                    Coup c1 = c.pop();
+                    historique.push(c1);
+                    b &= tmp[i]==null || tmp[i].equals(c1);
+                    i = ++i % 4;
+                }
+            }
+        }
+        
+        return b;
     }
     
     /**
@@ -595,7 +611,11 @@ public abstract class Arbitre {
      *
      */
     public void go(){
+        Interface.goPartie();
+        
         etat = ATTENTE_COUP;
+        
+        System.out.println("go !!!");
     }
     /*
     @Override

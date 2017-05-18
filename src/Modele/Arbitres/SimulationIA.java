@@ -12,6 +12,7 @@ import Modele.Deplacement;
 import Modele.Depot;
 import Modele.FabriqueInsecte;
 import Modele.Point;
+import Vue.Interface;
 import Vue.PaneToken;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -65,6 +66,7 @@ public class SimulationIA extends Arbitre {
      *
      */
     public void go(){
+        Interface.goPartie();
         if(joueurs[J1] instanceof Ordinateur){
             Ordinateur o = (Ordinateur) joueurs[J1];
             List<Coup[]> tab = new LinkedList();

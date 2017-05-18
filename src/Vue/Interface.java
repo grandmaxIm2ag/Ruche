@@ -267,9 +267,6 @@ public class Interface extends Application {
      *
      */
     public static void goPartie() {
-        arbitre = fabrique.nouveau();
-        
-        arbitre.init();
         //root.setBottom(new Pane());
         Canvas c = new Canvas(500, 500);
         pointeur = new Pointeur(c, arbitre);
@@ -306,7 +303,7 @@ public class Interface extends Application {
         btSuiv.setOnAction(new Bouton(Bouton.BOUTON_DO, arbitre));
         btSave.setOnAction(new Bouton(Bouton.BOUTON_SAUVEGARDER, arbitre));
         btMenu.setOnAction(new Bouton(Bouton.BOUTON_MENU, arbitre));
-         btPause.setOnAction(new Bouton(Bouton.BOUTON_PAUSE, arbitre));
+        btPause.setOnAction(new Bouton(Bouton.BOUTON_PAUSE, arbitre));
 
         GridPane bPion = new GridPane();
         bPion.setHgap(10);
@@ -329,7 +326,7 @@ public class Interface extends Application {
         c.setOnMouseMoved(new Souris(arbitre, Souris.SOURIS_BOUGEE, c));
         c.setOnMouseClicked(new Souris(arbitre, Souris.SOURIS_CLIQUEE, c));
 
-
+        
         Animation anim = new Animation(arbitre, c, cj1, cj2);
         anim.start();
 
@@ -848,6 +845,20 @@ public class Interface extends Application {
         dialog.show();
                 
 		
+    }
+    
+    public static void error(String s1, String s2){
+        Alert alert = new Alert(AlertType.WARNING);
+        alert.setTitle("Erreur");
+        alert.setHeaderText(s1);
+        alert.setContentText(s2);
+        alert.showAndWait();
+    }
+    
+    public static void nouvelArbitre(){
+        arbitre = fabrique.nouveau();
+        arbitre.init();
+        System.out.println("Arbitre créé");
     }
     
 }

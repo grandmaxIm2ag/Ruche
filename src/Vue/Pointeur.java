@@ -163,8 +163,6 @@ public class Pointeur extends Visiteur {
             } else if (me.getEventType() == MouseEvent.MOUSE_CLICKED) {
 
                 if (arbitre.plateau().deplEntame()) {
-                    System.out.println("arbitre.plateau().deplEntame() : " + arbitre.plateau().deplEntame() + "\narbitre.plateau().aide()" + arbitre.plateau().aide());
-                    System.out.println ("c.estJouable() " + c.estJouable());
                     if (c.estJouable()) {
                         if (!depl) {
                             PaneToken.getInstance().uncheck();
@@ -182,7 +180,6 @@ public class Pointeur extends Visiteur {
                         }
 
                     } else if (arbitre.initDeplacement().position().equals(c.position())) {
-                        System.out.println ("Chocrotte");
                         depl = false;
                         return true;
                     } else if (arbitre.initDeplacement() instanceof Cloporte) {
@@ -198,9 +195,6 @@ public class Pointeur extends Visiteur {
                     }
                 } else if (c.tete().joueur() == arbitre.jCourant()) {
                     
-                    System.err.println(arbitre.plateau().aide());
-                    System.out.println(c.tete());
-                    System.err.println("caca2");
                     arbitre.initDeplacement(c.tete());
                     List<Case> tchup = arbitre.plateau().aide();
                     for (Case cas : tchup) {

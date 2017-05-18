@@ -118,7 +118,7 @@ public class Bouton implements EventHandler<ActionEvent>{
                 Interface.goCredits();
                 break;
             case BOUTON_NOUVELLE_PARTIE_COMMENCER:
-                Interface.goPartie();
+                Interface.nouvelArbitre();
                 break;
             
             case BOUTON_CHARGER:
