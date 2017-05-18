@@ -230,41 +230,46 @@ public class PaneToken {
         bMoskito.setOnAction(new ButtonToken(ButtonToken.MOSKITO_BUTTON, lBee, arbitre.joueur(1), arbitre));
         bWoodlouse.setOnAction(new ButtonToken(ButtonToken.WOODLOUSE_BUTTON, lBee, arbitre.joueur(1), arbitre));
         
-        rightGrid.add(bBee, 0, 0);
-        rightGrid.add(lBee, 1, 0);
+        Label joueur = new Label(arbitre.joueur(Arbitre.J1).nom() );
+        joueur.setTextFill(Color.WHITE);
         
-        rightGrid.add(lBeetle, 0, 1);
-        rightGrid.add(bBeetle, 1, 1);
+        rightGrid.add(joueur, 1,0);
         
-        rightGrid.add(bGrasshopper, 0, 2);
-        rightGrid.add(lGrasshopper, 1, 2);
+        rightGrid.add(bBee, 0, 1);
+        rightGrid.add(lBee, 1, 1);
         
-        rightGrid.add(lAnt, 0, 3);
-        rightGrid.add(bAnt, 1, 3);
+        rightGrid.add(lBeetle, 0, 2);
+        rightGrid.add(bBeetle, 1, 2);
         
-        rightGrid.add(bSpider, 0, 4);
-        rightGrid.add(lSpider, 1, 4);
+        rightGrid.add(bGrasshopper, 0, 3);
+        rightGrid.add(lGrasshopper, 1, 3);
         
-        rightGrid.add(lLadybug, 0, 5);
-        rightGrid.add(bLadybug, 1, 5);
+        rightGrid.add(lAnt, 0, 4);
+        rightGrid.add(bAnt, 1, 4);
         
-        rightGrid.add(bMoskito, 0, 6);
-        rightGrid.add(lMoskito, 1, 6);
+        rightGrid.add(bSpider, 0, 5);
+        rightGrid.add(lSpider, 1, 5);
         
-        rightGrid.add(lWoudlose, 0, 7);
-        rightGrid.add(bWoodlouse, 1, 7);
+        rightGrid.add(lLadybug, 0, 6);
+        rightGrid.add(bLadybug, 1, 6);
+        
+        rightGrid.add(bMoskito, 0, 7);
+        rightGrid.add(lMoskito, 1, 7);
+        
+        rightGrid.add(lWoudlose, 0, 8);
+        rightGrid.add(bWoodlouse, 1, 8);
         
         Image imageHelp = new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Icone/help.png"));
         Button btHelp = new Button();
         btHelp.setGraphic(new ImageView(imageHelp));
         
-        rightGrid.add(btHelp, 1, 8);
+        rightGrid.add(btHelp, 1, 9);
         
         Image imageAbd = new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Icone/white.png"));
         Button btAbd = new Button();
         btAbd.setGraphic(new ImageView(imageAbd));
         
-        rightGrid.add(btAbd, 0,8);
+        rightGrid.add(btAbd, 0,9);
         
         l[0][0] = lBee;
         l[0][1] = lBeetle;
@@ -423,32 +428,38 @@ public class PaneToken {
         Image imageAbd = new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Icone/white.png"));
         Button btAbd = new Button();
         btAbd.setGraphic(new ImageView(imageAbd));
-        leftGrid.add(bBee, 0, 0);
-        leftGrid.add(lBee, 1, 0);
         
-        leftGrid.add(lBeetle, 0, 1);
-        leftGrid.add(bBeetle, 1, 1);
+        Label joueur = new Label(arbitre.joueur(Arbitre.J2).nom() );
+        joueur.setTextFill(Color.WHITE);
         
-        leftGrid.add(bGrasshopper, 0, 2);
-        leftGrid.add(lGrasshopper, 1, 2);
+        leftGrid.add(joueur, 0,0);
         
-        leftGrid.add(lAnt, 0, 3);
-        leftGrid.add(bAnt, 1, 3);
+        leftGrid.add(bBee, 0, 1);
+        leftGrid.add(lBee, 1, 1);
         
-        leftGrid.add(bSpider, 0, 4);
-        leftGrid.add(lSpider, 1, 4);
+        leftGrid.add(lBeetle, 0, 2);
+        leftGrid.add(bBeetle, 1, 2);
         
-        leftGrid.add(lLadybug, 0, 5);
-        leftGrid.add(bLadybug, 1, 5);
+        leftGrid.add(bGrasshopper, 0, 3);
+        leftGrid.add(lGrasshopper, 1, 3);
         
-        leftGrid.add(bMoskito, 0, 6);
-        leftGrid.add(lMoskito, 1, 6);
+        leftGrid.add(lAnt, 0, 4);
+        leftGrid.add(bAnt, 1, 4);
         
-        leftGrid.add(lWoudlose, 0, 7);
-        leftGrid.add(bWoodlouse, 1, 7);
+        leftGrid.add(bSpider, 0, 5);
+        leftGrid.add(lSpider, 1, 5);
         
-        leftGrid.add(btHelp, 0, 8);
-        leftGrid.add(btAbd, 1, 8);
+        leftGrid.add(lLadybug, 0, 6);
+        leftGrid.add(bLadybug, 1, 6);
+        
+        leftGrid.add(bMoskito, 0, 7);
+        leftGrid.add(lMoskito, 1, 7);
+        
+        leftGrid.add(lWoudlose, 0, 8);
+        leftGrid.add(bWoodlouse, 1, 8);
+        
+        leftGrid.add(btHelp, 0, 9);
+        leftGrid.add(btAbd, 1, 9);
         
         l[1][0] = lBee;
         l[1][1] = lBeetle;

@@ -63,6 +63,8 @@ public abstract class Arbitre {
     Stack<Coup> historique;
     Stack<Coup> refaire;
     
+    String nom1, nom2;
+    
     int[] nbCoup;
     
     Coup[] deplacements;
@@ -80,7 +82,7 @@ public abstract class Arbitre {
      *
      * @param p
      */
-    public Arbitre(Properties p){
+    public Arbitre(Properties p, String n1, String n2){
         Reglage.init(p);
         prop = p;
         joueurs = new Joueur[2];
@@ -98,6 +100,9 @@ public abstract class Arbitre {
         temps = System.nanoTime();
         temps_ecoule = 0;
         precAucun = false;
+        
+        nom1 = n1;
+        nom2 = n2;
     }
     
     /**

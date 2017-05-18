@@ -6,6 +6,7 @@
 package Vue;
 
 import Controleur.Bouton;
+import Controleur.BoutonCommencer;
 import Controleur.Choix;
 import Controleur.SoundSlider;
 import Controleur.Souris;
@@ -149,7 +150,7 @@ public class Interface extends Application {
             scene = new Scene(root);
             stage.setFullScreen(true);
         } else {
-            scene = new Scene(root, 1000, 800);
+            scene = new Scene(root, 1000, 850);
         }
         stage.setScene(scene);
         try {
@@ -444,9 +445,10 @@ public class Interface extends Application {
 
         TextField tfJ1 = new TextField();
         tfJ1.setPromptText("Nom joueur 1");
-
         TextField tfJ2 = new TextField();
         tfJ2.setPromptText("Nom joueur 2");
+        TextField host = new TextField();
+        host.setPromptText("IP du joueur à rejoindre");
 
         tfJ2.setDisable(true);
 
@@ -454,12 +456,34 @@ public class Interface extends Application {
 
             @Override
             public void changed(ObservableValue ov, Number value, Number newValue) {
-                if (newValue.intValue() >= FabriqueArbitre.RESEAU_CLIENT) {
-                    cbDIFF.setDisable(true);
-                    tfJ2.setDisable(false);
-                } else {
-                    cbDIFF.setDisable(false);
-                    tfJ2.setDisable(true);
+                switch(newValue.intValue()){
+                    case FabriqueArbitre.LOCAL_JVJ:
+                        if( !centerGrid.getChildren().contains(tfJ2) )
+                            centerGrid.add(tfJ2, 2, 2);
+                        tfJ2.setDisable(true);
+                        break;
+                    case FabriqueArbitre.LOCAL_JVIA:
+                        if( !centerGrid.getChildren().contains(tfJ2) )
+                            centerGrid.add(tfJ2, 2, 2);
+                        tfJ2.setDisable(false);
+                        break;
+                    case FabriqueArbitre.SIMULATION:
+                        if( !centerGrid.getChildren().contains(tfJ2) )
+                            centerGrid.add(tfJ2, 2, 2);
+                        tfJ2.setDisable(false);
+                        break;
+                    case FabriqueArbitre.RESEAU_SERVER:
+                        if( !centerGrid.getChildren().contains(tfJ2) )
+                            centerGrid.add(tfJ2, 2, 2);
+                        tfJ2.setDisable(false);
+                        break;
+                    case FabriqueArbitre.RESEAU_CLIENT:
+                        if( !centerGrid.getChildren().contains(host) )
+                            centerGrid.add(host, 2, 2);
+                        host.setDisable(true);
+                        break;
+                    default:
+                        break;
                 }
             }
         });
@@ -479,7 +503,7 @@ public class Interface extends Application {
 
         btBEG.setMinWidth(150);
 
-        btBEG.setOnAction(new Bouton(Bouton.BOUTON_NOUVELLE_PARTIE_COMMENCER, arbitre));
+        btBEG.setOnAction(new BoutonCommencer(tfJ1, tfJ2, host, fabrique));
 
         centerBox.getChildren().add(centerStack);
         centerStack.getChildren().addAll(rectBox, insideBox);//centerGrid);

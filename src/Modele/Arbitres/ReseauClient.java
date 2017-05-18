@@ -58,8 +58,8 @@ public class ReseauClient extends Arbitre{
      *
      * @param p
      */
-    public ReseauClient(Properties p) {
-        super(p);
+    public ReseauClient(Properties p,String n1, String n2 ) {
+        super(p, n1, n2);
         port = 8000;
         host = "127.0.0.1";
         jCourant = J2;
@@ -98,8 +98,8 @@ public class ReseauClient extends Arbitre{
             tabPieces2[6]=(int)Reglage.lis("nbMoustique");  
             tabPieces2[7]=(int)Reglage.lis("nbCloporte");
 
-            joueurs[J1] = new Humain(true, prop, tabPieces, J1);
-            joueurs[J2] = new Humain(true, prop, tabPieces2, J2);
+            joueurs[J1] = new Humain(true, prop, tabPieces, J1, nom1);
+            joueurs[J2] = new Humain(true, prop, tabPieces2, J2, nom2);
             
             prod = new Producteur(actions, out);
             cons = new Consommateur(actions, in);

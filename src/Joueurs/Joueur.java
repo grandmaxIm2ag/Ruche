@@ -31,12 +31,13 @@ public abstract class Joueur {
      * @param tabP
      * @param j
      */
-    public Joueur(boolean m, Properties p, int[] tabP, int j){
+    public Joueur(boolean m, Properties p, int[] tabP, int j, String n){
         main=m;
         prop=p;
         tabPieces=tabP;
         nom = "toto";
         numJoueur=j;
+        nom = n;
     }
     
     /**

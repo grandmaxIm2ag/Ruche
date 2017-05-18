@@ -31,8 +31,8 @@ public class SimulationIA extends Arbitre {
      * @param p
      * @param d
      */
-    public SimulationIA(Properties p, int d) {
-        super(p);
+    public SimulationIA(Properties p, int d,String n1, String n2 ) {
+        super(p, n1, n2);
         difficulte = d;
     }
     
@@ -56,8 +56,8 @@ public class SimulationIA extends Arbitre {
         for(int i=0; i<tabPieces2.length; i++)
             tabPieces2[i]=tabPieces[i];
         
-        joueurs[J1] = new Ordinateur(true,difficulte, prop, tabPieces,J1);
-        joueurs[J2] = new Ordinateur(true,difficulte, prop, tabPieces2,J2);
+        joueurs[J1] = new Ordinateur(true,difficulte, prop, tabPieces,J1, nom1);
+        joueurs[J2] = new Ordinateur(true,difficulte, prop, tabPieces2,J2, nom2);
         
         go();
     }

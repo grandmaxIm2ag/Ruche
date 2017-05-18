@@ -50,8 +50,8 @@ public class Ordinateur extends Joueur{
      * @param tabP
      * @param j
      */
-    public Ordinateur(boolean m, int d, Properties p, int[] tabP, int j) {
-        super(m, p, tabP, j);
+    public Ordinateur(boolean m, int d, Properties p, int[] tabP, int j, String n) {
+        super(m, p, tabP, j, n);
         difficulte = d;
         System.out.println("Joueur "+j+" GRAINE: "+GRAINE);///////////////////////////////////////////////////////////////////////////////
         r= new Random(GRAINE);

@@ -26,11 +26,11 @@ public class FabriqueArbitre {
     /**
     * La valeur de cette constante est {@value}.
     */
-    public final static int LOCAL_JVJ = 0;
+    public final static int LOCAL_JVJ = 1;
     /**
     * La valeur de cette constante est {@value}.
     */
-    public final static int LOCAL_JVIA = 1;
+    public final static int LOCAL_JVIA = 0;
     /**
     * La valeur de cette constante est {@value}.
     */
@@ -76,6 +76,8 @@ public class FabriqueArbitre {
      * Les noms des différentes sauvegardes, ne peut pas être modifié.
      */
     private String[] plateaux;
+    
+    private String nom1, nom2, ip;
     
     private boolean cocc;
     private boolean clop;
@@ -124,6 +126,10 @@ public class FabriqueArbitre {
         clop=false;
         mous=false;
         
+        nom1 = "";
+        nom2="";
+        ip = "";
+        
     }
     
     /**
@@ -138,18 +144,18 @@ public class FabriqueArbitre {
         switch(type){
             case LOCAL_JVJ:
                 if(b)
-                    return new Local(prop, type, difficulte, plateau);
-                return new Local(prop, type, difficulte);
+                    return new Local(prop, type, difficulte, plateau,nom1,nom2);
+                return new Local(prop, type, difficulte,nom1,nom2);
             case LOCAL_JVIA:
                 if(b)
-                    return new Local(prop, type, difficulte, plateau);
-                return new Local(prop, type, difficulte);
+                    return new Local(prop, type, difficulte, plateau,nom1,nom2);
+                return new Local(prop, type, difficulte,nom1,nom2);
             case SIMULATION:
-                return new SimulationIA(prop, difficulte);
+                return new SimulationIA(prop, difficulte,nom1,nom2);
             case RESEAU_CLIENT:
-                return new ReseauClient(prop);
+                return new ReseauClient(prop,nom1,nom2);
             case RESEAU_SERVER:
-                return new ReseauServer(prop);
+                return new ReseauServer(prop,nom1,nom2);
             default:
                 return null;
         }
@@ -185,10 +191,19 @@ public class FabriqueArbitre {
      * @see FabriqueArbitre#plateau
      */
     public void initP(String p){
-        System.err.println("Passé");
+        
         plateau=p;
     }
     
+    public void initN1(String p){
+        System.err.println("Passé");
+        nom1=p;
+    }
+    
+    public void initN2(String p){
+        System.err.println("Passé");
+        nom2=p;
+    }
     /**
      *Getter de l'instance types
      * 
@@ -265,6 +280,14 @@ public class FabriqueArbitre {
             Configuration.chargerProprietes(prop, ClassLoader.getSystemClassLoader().getResourceAsStream("Reglages/defaut.cfg"));
             Reglage.init(prop);
         }
+    }
+    
+    public int type(){
+        return type;
+    }
+    
+    public void initIP(String p){
+        ip = p;
     }
 
 }

@@ -56,8 +56,8 @@ public class ReseauServer extends Arbitre{
      *
      * @param p
      */
-    public ReseauServer(Properties p) {
-        super(p);
+    public ReseauServer(Properties p,String n1, String n2 ) {
+        super(p, n1, n2);
         port = 8000;
         jCourant = 0;
         actions = new File[2];
@@ -95,17 +95,9 @@ public class ReseauServer extends Arbitre{
             tabPieces2[5]=(int)Reglage.lis("nbCoccinelle");
             tabPieces2[6]=(int)Reglage.lis("nbMoustique");  
             tabPieces2[7]=(int)Reglage.lis("nbCloporte");
-
-            switch(type){
-                case FabriqueArbitre.LOCAL_JVJ:
-                    joueurs[J1] = new Humain(true, prop, tabPieces, J1);
-                    joueurs[J2] = new Humain(true, prop, tabPieces2, J2);
-                    break;
-                case FabriqueArbitre.LOCAL_JVIA:
-                    joueurs[J1] = new Humain(true, prop, tabPieces,  J1);
-                    joueurs[J2] = new Ordinateur(true,difficulte, prop, tabPieces2,  J2);
-                    break;
-            }
+            
+            joueurs[J1] = new Humain(true, prop, tabPieces, J1, nom1);
+            joueurs[J2] = new Humain(true, prop, tabPieces2, J2, nom2);
             
             prod = new Producteur(actions, out);
             cons = new Consommateur(actions, in);
