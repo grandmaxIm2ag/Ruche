@@ -480,7 +480,7 @@ public class Interface extends Application {
                     case FabriqueArbitre.RESEAU_CLIENT:
                         if( !centerGrid.getChildren().contains(host) )
                             centerGrid.add(host, 2, 2);
-                        host.setDisable(true);
+                        host.setDisable(false);
                         break;
                     default:
                         break;

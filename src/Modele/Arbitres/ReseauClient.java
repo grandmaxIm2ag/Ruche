@@ -29,6 +29,7 @@ import java.io.PrintWriter;
 import java.net.ConnectException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -53,19 +54,25 @@ public class ReseauClient extends Arbitre{
     File[] actions;
     Producteur prod;
     Consommateur cons;
+    Thread[] threads;
     
     /**
      *
      * @param p
+     * @param n1
+     * @param n2
+     * @param ip
      */
-    public ReseauClient(Properties p,String n1, String n2 ) {
+    public ReseauClient(Properties p,String n1, String n2, String ip ) {
         super(p, n1, n2);
         port = 8000;
-        host = "127.0.0.1";
+        host = ip;
         jCourant = J2;
         actions = new File[2];
         actions[J1]=new File();
         actions[J2]=new File();
+        threads=new Thread[2];
+                
     }
 
     /**
@@ -97,24 +104,33 @@ public class ReseauClient extends Arbitre{
             tabPieces2[5]=(int)Reglage.lis("nbCoccinelle");
             tabPieces2[6]=(int)Reglage.lis("nbMoustique");  
             tabPieces2[7]=(int)Reglage.lis("nbCloporte");
-
+            
+           
+            prod = new Producteur(actions, out);
+            cons = new Consommateur(actions, in);
+            threads[0] = new Thread(prod);
+            threads[0].start();
+            threads[1] = new Thread(cons);
+            threads[1].start();
+            
+            actions[J1].inserer(nom1);
+            nom2 = actions[J2].extraire();
+            
             joueurs[J1] = new Humain(true, prop, tabPieces, J1, nom1);
             joueurs[J2] = new Humain(true, prop, tabPieces2, J2, nom2);
             
-            prod = new Producteur(actions, out);
-            cons = new Consommateur(actions, in);
-            Thread t1 = new Thread(prod);
-            t1.start();
-            Thread t2 = new Thread(cons);
-            t2.start();
+            
             etat = INITIALISATION;
             go();
         }catch(UnknownHostException e1){
-            System.err.println("Impossible de se connecter à "+host+" "+port);
+            Interface.error(e1.toString(), "Adresse "+host+" non résolue");
             etat = FIN;
         }catch(ConnectException e2){
             System.err.println("Connexion refusé à "+host+" "+port);
-            Interface.error(e2.toString(), "Connexion refusé à "+host+" "+port);
+            Interface.error(e2.toString(), "Connexion refusé à l'adresse "+host+", port "+port);
+            etat = FIN;
+        }catch(SocketException e3){
+            Interface.error(e3.toString(), "Mauvais format pour l'adresse "+host);
             etat = FIN;
         }catch(IOException e){
             System.err.println(e);
@@ -270,12 +286,12 @@ public class ReseauClient extends Arbitre{
     @Override
     public void maj(long t){
         if(jCourant==J1)
-        if(Interface.pointeur().event()!=null){
-        boolean b = this.accept(Interface.pointeur());
-        if(b)
-            plateau.clearAide();
-            Interface.pointeur().traiter();
-        }
+            if(Interface.pointeur().event()!=null){
+            boolean b = this.accept(Interface.pointeur());
+            if(b)
+                plateau.clearAide();
+                Interface.pointeur().traiter();
+            }
         long nouv = t-temps;
         temps=t;
         switch(etat){
@@ -285,8 +301,10 @@ public class ReseauClient extends Arbitre{
                 if(jCourant == J2){
                     if(!actions[J2].estVide()){
                         String line = actions[J2].extraire();
-                        System.err.println("(Maj rc) "+"J2 :"+line);
-                        if(line.charAt(0)=='(')
+                        if(line.equals("Abandon")){
+                            etat=FIN;
+                            actions[J1].inserer("Fin");
+                        }else if(line.charAt(0)=='(')
                             joue(new Deplacement(J2,line));
                         else
                             joue(new Depot(J2,line));
@@ -320,8 +338,22 @@ public class ReseauClient extends Arbitre{
                 plateau.clearAide();
                 break;
             case FIN:
+                actions[J1].inserer("Fin");
+                Interface.goTest();
+                out.close();
+                try {
+                    in.close();
+                } catch (IOException ex) {
+                    Logger.getLogger(ReseauClient.class.getName()).log(Level.SEVERE, null, ex);
+                }
                 break;
         }
     }
-
+    
+    @Override
+    public void abandon(){
+        actions[J1].inserer("Abandon");
+        
+        etat=FIN;
+    }
 }

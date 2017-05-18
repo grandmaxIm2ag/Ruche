@@ -24,8 +24,10 @@ public class Producteur implements Runnable{
     }
     @Override
     public void run() {
-        while(true){
+        boolean b = true;
+        while(b){
             String l = actions[Arbitre.J1].extraire();
+            b &= !(l.equals("Fin")||l.equals("Abandon"));
             out.println(l);
         }
     }

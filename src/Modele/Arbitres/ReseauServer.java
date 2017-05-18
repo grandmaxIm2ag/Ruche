@@ -51,7 +51,7 @@ public class ReseauServer extends Arbitre{
     File[] actions;
     Producteur prod;
     Consommateur cons;
-    
+    Thread[] threads;
     /**
      *
      * @param p
@@ -63,6 +63,7 @@ public class ReseauServer extends Arbitre{
         actions = new File[2];
         actions[J1]=new File();
         actions[J2]=new File();
+        threads = new Thread[2];
     }
 
     /**
@@ -96,15 +97,21 @@ public class ReseauServer extends Arbitre{
             tabPieces2[6]=(int)Reglage.lis("nbMoustique");  
             tabPieces2[7]=(int)Reglage.lis("nbCloporte");
             
-            joueurs[J1] = new Humain(true, prop, tabPieces, J1, nom1);
-            joueurs[J2] = new Humain(true, prop, tabPieces2, J2, nom2);
             
             prod = new Producteur(actions, out);
             cons = new Consommateur(actions, in);
-            Thread t1 = new Thread(prod);
-            t1.start();
-            Thread t2 = new Thread(cons);
-            t2.start();
+            threads[0] = new Thread(prod);
+            threads[0].start();
+            threads[1] = new Thread(cons);
+            threads[1].start();
+            
+            actions[J1].inserer(nom1);
+            nom2 = actions[J2].extraire();
+            
+            
+            joueurs[J1] = new Humain(true, prop, tabPieces, J1, nom1);
+            joueurs[J2] = new Humain(true, prop, tabPieces2, J2, nom2);
+            
             etat = INITIALISATION;
             go();
         }catch(IOException e){
@@ -253,12 +260,12 @@ public class ReseauServer extends Arbitre{
     @Override
     public void maj(long t){
         if(jCourant==J1)
-        if(Interface.pointeur().event()!=null){
-        boolean b = this.accept(Interface.pointeur());
-        if(b)
-            plateau.clearAide();
-        Interface.pointeur().traiter();
-        }
+            if(Interface.pointeur().event()!=null){
+            boolean b = this.accept(Interface.pointeur());
+            if(b)
+                plateau.clearAide();
+            Interface.pointeur().traiter();
+            }
         long nouv = t-temps;
         temps=t;
         switch(etat){
@@ -268,7 +275,10 @@ public class ReseauServer extends Arbitre{
                 if(jCourant == J2){
                     if(!actions[J2].estVide()){
                         String line = actions[J2].extraire();
-                        if(line.charAt(0)=='(')
+                        if(line.equals("Abandon" )){
+                            etat=FIN;
+                            actions[J1].inserer("Fin");
+                        }else if(line.charAt(0)=='(')
                             joue(new Deplacement(J2,line));
                         else
                             joue(new Depot(J2,line));
@@ -282,6 +292,7 @@ public class ReseauServer extends Arbitre{
                     temps_ecoule=0;
                     if(enCours!=null){
                         plateau.deplacePion(enCours);
+                        
                         if(!enCoursIt.hasNext()){
                             enCours = null;
                             etat=A_JOUER;
@@ -302,8 +313,24 @@ public class ReseauServer extends Arbitre{
                 plateau.clearAide();
                 break;
             case FIN:
+                actions[J1].inserer("Fin");
+                
+                Interface.goTest();
+                out.close();
+        
+                try {
+                    in.close();
+                } catch (IOException ex) {
+                    Logger.getLogger(ReseauServer.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
                 break;
         }
     }
     
+    @Override
+    public void abandon(){
+        actions[J1].inserer("Abandon");
+        etat=FIN;
+    }
 }

@@ -153,7 +153,7 @@ public class FabriqueArbitre {
             case SIMULATION:
                 return new SimulationIA(prop, difficulte,nom1,nom2);
             case RESEAU_CLIENT:
-                return new ReseauClient(prop,nom1,nom2);
+                return new ReseauClient(prop,nom1,"",ip);
             case RESEAU_SERVER:
                 return new ReseauServer(prop,nom1,nom2);
             default:

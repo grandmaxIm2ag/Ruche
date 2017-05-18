@@ -116,4 +116,8 @@ public abstract class Joueur {
     public int numJ(){
         return numJoueur;
     }
+    
+    public void setNom(String n){
+        nom = n;
+    }
 }

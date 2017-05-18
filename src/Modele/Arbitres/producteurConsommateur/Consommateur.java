@@ -28,11 +28,13 @@ public class Consommateur implements Runnable {
     
     @Override
     public void run() {
+        boolean b = true;
         while(true){
             try {
                 String li = in.readLine();
-                System.out.println("Coup reçu "+ li);
-                actions[Arbitre.J2].inserer(li);
+                b &= li!=null;
+                if(b)
+                    actions[Arbitre.J2].inserer(li);
             } catch (IOException ex) {
                 Logger.getLogger(Consommateur.class.getName()).log(Level.SEVERE, null, ex);
             }

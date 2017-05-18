@@ -103,9 +103,12 @@ public class Bouton implements EventHandler<ActionEvent>{
     public void handle(ActionEvent t) {
         switch(value) {
             case BOUTON_MENU:
+                if(arbitre !=null)
+                    arbitre.abandon();
                 Interface.goMenu();
                 break;
             case BOUTON_QUITTER:
+                arbitre.abandon();
                 System.exit(0);
                 break;
             case BOUTON_NOUVELLE_PARTIE:
