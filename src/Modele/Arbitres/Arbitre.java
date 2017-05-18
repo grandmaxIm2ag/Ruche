@@ -591,7 +591,11 @@ public abstract class Arbitre {
      *
      */
     public void go(){
+        Interface.goPartie();
+        
         etat = ATTENTE_COUP;
+        
+        System.out.println("go !!!");
     }
     /*
     @Override

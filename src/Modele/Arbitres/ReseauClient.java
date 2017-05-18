@@ -23,8 +23,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.net.ConnectException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -87,20 +89,25 @@ public class ReseauClient extends Arbitre{
             tabPieces2[6]=(int)Reglage.lis("nbMoustique");  
             tabPieces2[7]=(int)Reglage.lis("nbCloporte");
 
-            switch(type){
-                case FabriqueArbitre.LOCAL_JVJ:
-                    joueurs[J1] = new Humain(true, prop, tabPieces, J1);
-                    joueurs[J2] = new Humain(true, prop, tabPieces2, J2);
-                    break;
-                case FabriqueArbitre.LOCAL_JVIA:
-                    joueurs[J1] = new Humain(true, prop, tabPieces,  J1);
-                    joueurs[J2] = new Ordinateur(true,difficulte, prop, tabPieces2,  J2);
-                    break;
-        }
-        }catch(Exception e){
+            joueurs[J1] = new Humain(true, prop, tabPieces, J1);
+            joueurs[J2] = new Humain(true, prop, tabPieces2, J2);
             
+            etat = INITIALISATION;
+            go();
+        }catch(UnknownHostException e1){
+            System.err.println("Impossible de se connecter à "+host+" "+port);
+            etat = FIN;
+        }catch(ConnectException e2){
+            System.err.println("Connexion refusé à "+host+" "+port);
+            Interface.error(e2.toString(), "Connexion refusé à "+host+" "+port);
+            etat = FIN;
+        }catch(IOException e){
+            System.err.println(e);
+            etat = FIN;
         }
-        etat = INITIALISATION;
+        
+        
+    
     }
 
     /**
@@ -254,7 +261,6 @@ public class ReseauClient extends Arbitre{
         temps=t;
         switch(etat){
             case INITIALISATION:
-                go();
                 break;
             case ATTENTE_COUP:
                 if(jCourant == J1){
@@ -300,4 +306,5 @@ public class ReseauClient extends Arbitre{
                 break;
         }
     }
+
 }

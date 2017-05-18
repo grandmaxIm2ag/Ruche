@@ -97,10 +97,14 @@ public class ReseauServer extends Arbitre{
                     joueurs[J2] = new Ordinateur(true,difficulte, prop, tabPieces2,  J2);
                     break;
             }
-        }catch(Exception e){
             
+            etat = INITIALISATION;
+            go();
+        }catch(IOException e){
+            System.err.println(e);
+            etat = FIN;
         }
-        etat = INITIALISATION;
+        
     }
 
     /**
@@ -256,7 +260,6 @@ public class ReseauServer extends Arbitre{
         temps=t;
         switch(etat){
             case INITIALISATION:
-                go();
                 break;
             case ATTENTE_COUP:
                 if(jCourant == J2){
