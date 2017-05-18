@@ -11,6 +11,9 @@ import static Modele.Arbitres.Arbitre.ATTENTE_COUP;
 import static Modele.Arbitres.Arbitre.J1;
 import static Modele.Arbitres.Arbitre.J2;
 import static Modele.Arbitres.Arbitre.JOUE_EN_COURS;
+import Modele.Arbitres.producteurConsommateur.Consommateur;
+import Modele.Arbitres.producteurConsommateur.File;
+import Modele.Arbitres.producteurConsommateur.Producteur;
 import Modele.Coup;
 import Modele.Deplacement;
 import Modele.Depot;
@@ -47,6 +50,9 @@ public class ReseauClient extends Arbitre{
     Socket client;
     private PrintWriter out;
     private BufferedReader in;
+    File[] actions;
+    Producteur prod;
+    Consommateur cons;
     
     /**
      *
@@ -56,7 +62,10 @@ public class ReseauClient extends Arbitre{
         super(p);
         port = 8000;
         host = "127.0.0.1";
-        jCourant = J1;
+        jCourant = J2;
+        actions = new File[2];
+        actions[J1]=new File();
+        actions[J2]=new File();
     }
 
     /**
@@ -92,6 +101,12 @@ public class ReseauClient extends Arbitre{
             joueurs[J1] = new Humain(true, prop, tabPieces, J1);
             joueurs[J2] = new Humain(true, prop, tabPieces2, J2);
             
+            prod = new Producteur(actions, out);
+            cons = new Consommateur(actions, in);
+            Thread t1 = new Thread(prod);
+            t1.start();
+            Thread t2 = new Thread(cons);
+            t2.start();
             etat = INITIALISATION;
             go();
         }catch(UnknownHostException e1){
@@ -127,8 +142,8 @@ public class ReseauClient extends Arbitre{
                 refaire.clear();
                 historique.add(d);
                 etat = JOUE_EN_COURS;
-                if(jCourant == J2){
-                    out.println(d.toString());
+                if(jCourant == J1){
+                    actions[J1].inserer(d.toString());
                 }
                 System.err.println(d+" déplacement effectué "+enCours);
             //}else{
@@ -145,18 +160,21 @@ public class ReseauClient extends Arbitre{
      */
     @Override
     public void joue(Depot d){
-        if(nbCoup[jCourant]==0 && jCourant == J1){
+        if(nbCoup[jCourant] + nbCoup[(jCourant+1)%2]==0){
             System.out.println(Arrays.toString(joueurs[J1].pions()));
             System.out.println(Arrays.toString(joueurs[J2].pions()));
             joueurs[d.joueur()].jouer(d.type());
             plateau.premierPion(FabriqueInsecte.creer(d.type(), jCourant, new Point(0,0)));
+            System.out.println("(Vérif dépot) "+d.type()+" "+plateau.reine(jCourant));
             etat=A_JOUER;
             nbCoup[jCourant]++;
             refaire.clear();
             historique.add(d);
             System.err.println("1- Dépot effectué "+d);
-            prochainJoueur();
-        }else if(nbCoup[jCourant]==0 && jCourant == J2){
+            if(jCourant == J1){
+                    actions[J1].inserer(d.toString());
+            }
+        }else if(nbCoup[jCourant]==0){
             if(plateau.premierPionValide(d)){
                 joueurs[jCourant].jouer(d.type());
                 deposePion(d);
@@ -164,8 +182,8 @@ public class ReseauClient extends Arbitre{
                 refaire.clear();
                 historique.add(d);
                 System.err.println("2- Dépot effectué "+d);
-                if(jCourant == J2){
-                    out.println(d.toString());
+                if(jCourant == J1){
+                    actions[J1].inserer(d.toString());
                 }
                 etat=A_JOUER;
             }else{
@@ -180,8 +198,8 @@ public class ReseauClient extends Arbitre{
                 refaire.clear();
                 historique.add(d);
                 System.err.println("3- Dépot effectué "+d);
-                if(jCourant == J2){
-                    out.println(d.toString());
+                if(jCourant == J1){
+                    actions[J1].inserer(d.toString());
                 }
                 etat=A_JOUER;
             }else{
@@ -251,6 +269,7 @@ public class ReseauClient extends Arbitre{
     
     @Override
     public void maj(long t){
+        if(jCourant==J1)
         if(Interface.pointeur().event()!=null){
         boolean b = this.accept(Interface.pointeur());
         if(b)
@@ -263,17 +282,15 @@ public class ReseauClient extends Arbitre{
             case INITIALISATION:
                 break;
             case ATTENTE_COUP:
-                if(jCourant == J1){
-                    String line = "";
-                    try {
-                        line = in.readLine();
-                    } catch (IOException ex) {
-                        Logger.getLogger(ReseauClient.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                    if(line.charAt(0)=='(')
-                        joue(new Deplacement(J1,line));
-                    else
-                        joue(new Depot(J1,line));
+                if(jCourant == J2){
+                    if(!actions[J2].estVide()){
+                        String line = actions[J2].extraire();
+                        System.err.println("(Maj rc) "+"J2 :"+line);
+                        if(line.charAt(0)=='(')
+                            joue(new Deplacement(J2,line));
+                        else
+                            joue(new Depot(J2,line));
+                        }
                 }
                 break;
             case JOUE_EN_COURS:

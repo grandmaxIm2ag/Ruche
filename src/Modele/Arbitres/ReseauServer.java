@@ -11,6 +11,9 @@ import static Modele.Arbitres.Arbitre.ATTENTE_COUP;
 import static Modele.Arbitres.Arbitre.J1;
 import static Modele.Arbitres.Arbitre.J2;
 import static Modele.Arbitres.Arbitre.JOUE_EN_COURS;
+import Modele.Arbitres.producteurConsommateur.Consommateur;
+import Modele.Arbitres.producteurConsommateur.File;
+import Modele.Arbitres.producteurConsommateur.Producteur;
 import Modele.Coup;
 import Modele.Deplacement;
 import Modele.Depot;
@@ -45,6 +48,9 @@ public class ReseauServer extends Arbitre{
     Socket client;
     private PrintWriter out;
     private BufferedReader in;
+    File[] actions;
+    Producteur prod;
+    Consommateur cons;
     
     /**
      *
@@ -54,6 +60,9 @@ public class ReseauServer extends Arbitre{
         super(p);
         port = 8000;
         jCourant = 0;
+        actions = new File[2];
+        actions[J1]=new File();
+        actions[J2]=new File();
     }
 
     /**
@@ -98,6 +107,12 @@ public class ReseauServer extends Arbitre{
                     break;
             }
             
+            prod = new Producteur(actions, out);
+            cons = new Consommateur(actions, in);
+            Thread t1 = new Thread(prod);
+            t1.start();
+            Thread t2 = new Thread(cons);
+            t2.start();
             etat = INITIALISATION;
             go();
         }catch(IOException e){
@@ -113,11 +128,8 @@ public class ReseauServer extends Arbitre{
      */
     @Override
     public void joue(Deplacement d){
-        System.out.println ("J'ai fait caca ici aussi :x" + d);
         if(plateau().reine(jCourant)!=null){
-            System.out.println ("Et là");
             //if(deplacePionValide(d)){
-            System.out.println ("Et là");
                 enCoursIt = d.route().iterator();
                 enCours = new Deplacement(d.joueur(), enCoursIt.next(),enCoursIt.next());
                 nbCoup[jCourant]++;
@@ -125,7 +137,7 @@ public class ReseauServer extends Arbitre{
                 historique.add(d);
                 etat = JOUE_EN_COURS;
                 if(jCourant == J1){
-                    out.println(d.toString());
+                    actions[J1].inserer(d.toString());
                 }
                 System.err.println(d+" déplacement effectué "+enCours);
             //}else{
@@ -142,9 +154,7 @@ public class ReseauServer extends Arbitre{
      */
     @Override
     public void joue(Depot d){
-        if(nbCoup[jCourant]==0 && jCourant == J1){
-            System.out.println(Arrays.toString(joueurs[J1].pions()));
-            System.out.println(Arrays.toString(joueurs[J2].pions()));
+        if(nbCoup[jCourant] + nbCoup[(jCourant+1)%2]==0){
             joueurs[d.joueur()].jouer(d.type());
             plateau.premierPion(FabriqueInsecte.creer(d.type(), jCourant, new Point(0,0)));
             etat=A_JOUER;
@@ -152,10 +162,10 @@ public class ReseauServer extends Arbitre{
             refaire.clear();
             historique.add(d);
             if(jCourant == J1){
-                    out.println(d.toString());
+                actions[J1].inserer(d.toString());
             }
             System.err.println("1- Dépot effectué "+d);
-        }else if(nbCoup[jCourant]==0 && jCourant == J2){
+        }else if(nbCoup[jCourant]==0){
             if(plateau.premierPionValide(d)){
                 joueurs[jCourant].jouer(d.type());
                 deposePion(d);
@@ -165,7 +175,7 @@ public class ReseauServer extends Arbitre{
                 etat=A_JOUER;
                 System.err.println("2- Dépot effectué "+d);
                 if(jCourant == J1){
-                    out.println(d.toString());
+                    actions[J1].inserer(d.toString());
                 }
             }else{
                 System.err.println("Depot impossible");
@@ -181,7 +191,7 @@ public class ReseauServer extends Arbitre{
                 historique.add(d);
                 System.err.println("3- Dépot effectué "+d);
                 if(jCourant == J1){
-                    out.println(d.toString());
+                    actions[J1].inserer(d.toString());
                 }
             }else{
                 System.err.println("Vous devez déposé une reine "+jCourant);
@@ -250,6 +260,7 @@ public class ReseauServer extends Arbitre{
     
     @Override
     public void maj(long t){
+        if(jCourant==J1)
         if(Interface.pointeur().event()!=null){
         boolean b = this.accept(Interface.pointeur());
         if(b)
@@ -263,16 +274,13 @@ public class ReseauServer extends Arbitre{
                 break;
             case ATTENTE_COUP:
                 if(jCourant == J2){
-                    String line="";
-                    try {
-                        line = in.readLine();
-                    } catch (IOException ex) {
-                        Logger.getLogger(ReseauServer.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                    if(line.charAt(0)=='(')
-                        joue(new Deplacement(J2,line));
-                    else
-                        joue(new Depot(J2,line));
+                    if(!actions[J2].estVide()){
+                        String line = actions[J2].extraire();
+                        if(line.charAt(0)=='(')
+                            joue(new Deplacement(J2,line));
+                        else
+                            joue(new Depot(J2,line));
+                        }
                 }
                 break;
             case JOUE_EN_COURS:

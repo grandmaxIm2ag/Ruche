@@ -74,7 +74,6 @@ public class Dessinateur extends Visiteur{
         double [][] coords = Interface.hex_corner(etendeur.x(), etendeur.y(), etendeur.h()/2);
         if (c.estpointe()) {
             gc.setStroke(Color.RED);
-            System.out.println(c.position().x() + " " + c.position().y());
         }
         gc.strokePolygon(coords[0], coords[1], 6);
         gc.setStroke(Color.BLACK);
