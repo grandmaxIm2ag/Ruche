@@ -72,7 +72,7 @@ public class SoundEngine {
     }
     
     public static void play () {
-        System.err.println ("Attention Cette musique est utilisée en attendant d'en avoir une qui convienne");
+        System.err.println ("SoundEngine.play() - Warning - Musique tempraire");
         play("game_ambient");
     }
     
