@@ -7,6 +7,7 @@
 package Modele;
 
 import Modele.Arbitres.Arbitre;
+import Vue.Pointeur;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -546,7 +547,8 @@ public class Plateau extends Composant {
         Iterator<Case> it = aide.iterator();
         while(it.hasNext())// && !b)
             b|=it.next().accept(v);
-            
+        if (v instanceof Pointeur && ((Pointeur) v).initPopup == false)
+            ((Pointeur) v).popup.hide();
         return b;
     }
     

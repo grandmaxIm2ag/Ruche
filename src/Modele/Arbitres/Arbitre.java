@@ -72,6 +72,7 @@ public abstract class Arbitre {
     boolean precAucun;
     
     Insecte initDepl;
+    Insecte initClopDepl;
     int initDepot;
     
     /**
@@ -527,6 +528,7 @@ public abstract class Arbitre {
      * @param ins
      */
     public void dispo(int ins){
+        initClopDepl = null;
         Coup[] c = depotPossible(jCourant, ins);
         List<Case> l = new ArrayList();
         for(int i=0; i<c.length; i++){
@@ -558,17 +560,35 @@ public abstract class Arbitre {
      * @param ins
      */
     public void dispo(Insecte ins){
+        initClopDepl = null;
         Coup[] c = deplacementPossible(ins);
         List<Case> l = new ArrayList();
-        System.out.println("Caca devans la porte" +c);
             if (c != null)
                 for (Coup c1 : c) {
-                System.out.println("Plein de petits cacas");
                 Case c2 = new Case(c1.destination().x(), c1.destination().y(), 1, 1);
                 c2.jouable();
                 l.add(c2);
+                if(ins instanceof Cloporte)
+                    System.out.println(c1+"!!!!!!!!!!!!!!!!"+ins.position());
             }
         plateau.setAide(l);
+    }
+    
+    public void initClopDepl (Insecte i) {
+        initClopDepl = i;
+    }
+    
+    public void reinitClopDepl () {
+        initClopDepl = null;
+    }
+    
+    public Insecte getInitClopDepl () {
+        return initClopDepl;
+    }
+    
+    public void reinitDepl () {
+        initDepl = null;
+        initClopDepl = null;
     }
 
     /**

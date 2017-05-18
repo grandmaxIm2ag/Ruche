@@ -286,6 +286,7 @@ public class PaneToken {
         
         right.getChildren().addAll(centerRect, rightGrid);
         
+        //update();
     }
     
     private void createLeft () {
@@ -357,6 +358,12 @@ public class PaneToken {
         bMoskito.setMaxHeight(50);
         bMoskito.setMinWidth(50);
         bMoskito.setMinHeight(50);
+        
+        bWoodlouse.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Boutons/woodlouse_red.png"))), CornerRadii.EMPTY, Insets.EMPTY)));
+        bWoodlouse.setMaxWidth(50);
+        bWoodlouse.setMaxHeight(50);
+        bWoodlouse.setMinWidth(50);
+        bWoodlouse.setMinHeight(50);
         
         bWoodlouse.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Boutons/woodlouse_red.png"))), CornerRadii.EMPTY, Insets.EMPTY)));
         bWoodlouse.setMaxWidth(50);
@@ -462,6 +469,7 @@ public class PaneToken {
         b[1][7] = bWoodlouse;
         
         left.getChildren().addAll(centerRect, leftGrid);
+        //update();
     }
     
     /**

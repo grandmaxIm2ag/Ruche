@@ -25,7 +25,7 @@ public class Animation extends AnimationTimer{
     Animation (Arbitre a, Canvas c, Canvas cj1, Canvas cj2) {
         arbitre = a;
         can = c;
-        dessinateur = new Dessinateur (c);
+        dessinateur = new Dessinateur (c, arbitre);
         buttonDrawer = new ButtonDrawer(cj1, cj2);
     }
     

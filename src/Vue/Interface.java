@@ -55,6 +55,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.Separator;
 import javafx.scene.control.Slider;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
 import javafx.scene.effect.BlurType;
 import javafx.scene.effect.DropShadow;
@@ -64,7 +66,7 @@ import javafx.scene.image.ImageView;
 import static javafx.scene.input.DataFormat.URL;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
+//import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 //import java.net.URL;
 //import javafx.scene.input.DataFormat.URL;
@@ -121,9 +123,13 @@ public class Interface extends Application {
     static Arbitre arbitre;
     static FabriqueArbitre fabrique;
     static BorderPane root;
-    static Scene s;
+    static Scene scene;
     final static boolean fullScreen = false;
+    static VBox ngBox;
+    static VBox loadBox;
+    static VBox configBox;
     static String[] args2;
+    public static Stage stage;
 
     /**
      *
@@ -132,17 +138,21 @@ public class Interface extends Application {
      */
     @Override
     public void start(Stage stage) throws Exception {
-
+        this.stage = stage;
         stage.setTitle("Ruche");
         if (fullScreen) {
-            s = new Scene(root);
+            scene = new Scene(root);
             stage.setFullScreen(true);
         } else {
-            s = new Scene(root, 1000, 800);
+            scene = new Scene(root, 1000, 800);
         }
-        stage.setScene(s);
+        stage.setScene(scene);
         
-        goMenu();
+        //goMenu();
+        goNewGame();
+        goLoadGame();
+        goConfig();
+        goTest();       
         //goPartie();
         stage.show();
     }
@@ -160,6 +170,43 @@ public class Interface extends Application {
         //args2=args;
         launch(args);
 
+    }
+    
+    public static void goTest () {
+        Rectangle rleft = new Rectangle(100,100);
+        rleft.widthProperty().bind(scene.widthProperty().divide(10));
+        rleft.setOpacity(0);
+        Pane left = new Pane(rleft);
+        root.setLeft(left);
+        Rectangle rright = new Rectangle(100,100);
+        rright.widthProperty().bind(scene.widthProperty().divide(10));
+        rright.setOpacity(0);
+        Pane right = new Pane(rright);
+        root.setRight(right);
+        VBox topBox = new VBox();
+        topBox.setAlignment(Pos.TOP_CENTER);
+        Insets i = new Insets (20,10,20,10);
+        
+        topBox.setPadding(new Insets(20, 10, 20, 10));
+        topBox.setSpacing(10);
+        topBox.getChildren().addAll(title());
+        root.setTop(topBox);
+        final Tab tabNG = new Tab("New Game"); 
+        tabNG.setContent(ngBox);
+        tabNG.setClosable(false);
+        final Tab tabLD = new Tab("Load Game"); 
+        tabLD.setClosable(false);
+        tabLD.setContent(loadBox);
+        final Tab tabCFG = new Tab("Preferences");
+        tabCFG.setClosable(false);
+        tabCFG.setContent(configBox);
+        TabPane tabPane = new TabPane(); 
+        tabPane.getTabs().setAll(tabNG, tabLD, tabCFG);
+        tabPane.setPadding(new Insets(0, 20, 0, 20));
+        
+        //tabPane
+        tabPane.getStylesheets().add("Style/Style.css");
+        root.setCenter(tabPane);
     }
 
     /**
@@ -349,13 +396,18 @@ public class Interface extends Application {
         GridPane centerGrid = new GridPane();
         VBox insideBox = new VBox();
         Rectangle centerRect = new Rectangle();
+        VBox rectBox = new VBox();
+        rectBox.setAlignment(Pos.CENTER);
+        centerBox.setPadding(new Insets(0, 0, 20, 0));
+        rectBox.getChildren().add(centerRect);
+        //centerRect.setX(centerRect.getX()+20);
         centerRect.setOpacity(0.25);
-        centerBox.setPadding(new Insets(20, 20, 20, 0));
+        centerBox.setPadding(new Insets(0, 0, 20, 0));
         centerBox.setAlignment(Pos.TOP_CENTER);
         centerGrid.setHgap(10);
         centerGrid.setVgap(10);
-        centerRect.widthProperty().bind(centerStack.widthProperty());
-        centerRect.heightProperty().bind(centerStack.heightProperty());
+        centerRect.widthProperty().bind(insideBox.widthProperty());
+        centerRect.heightProperty().bind(insideBox.heightProperty());
         centerRect.setArcWidth(20);
         centerRect.setArcHeight(20);
         centerRect.setFill(Color.BLACK);
@@ -421,14 +473,15 @@ public class Interface extends Application {
         btBEG.setOnAction(new Bouton(Bouton.BOUTON_NOUVELLE_PARTIE_COMMENCER, arbitre));
 
         centerBox.getChildren().add(centerStack);
-        centerStack.getChildren().addAll(centerRect, insideBox);//centerGrid);
+        centerStack.getChildren().addAll(rectBox, insideBox);//centerGrid);
         Label lNG = new Label("Nouvelle Partie");
         lNG.setTextFill(Color.WHITE);
         lNG.setFont(new Font(22));
 
         insideBox.getChildren().addAll(lNG, centerGrid, btBEG);
 
-        root.setCenter(centerBox);
+        //root.setCenter(centerBox);
+        ngBox = centerBox;
     }
 
     /**
@@ -440,13 +493,16 @@ public class Interface extends Application {
         GridPane centerGrid = new GridPane();
         VBox insideBox = new VBox();
         Rectangle centerRect = new Rectangle();
+        VBox rectBox = new VBox();
+        rectBox.getChildren().add(centerRect);
+        rectBox.setAlignment(Pos.CENTER);
         centerRect.setOpacity(0.25);
-        centerBox.setPadding(new Insets(20, 20, 20, 0));
+        centerBox.setPadding(new Insets(0, 0, 20, 0));
         centerBox.setAlignment(Pos.TOP_CENTER);
         centerGrid.setHgap(10);
         centerGrid.setVgap(10);
-        centerRect.widthProperty().bind(centerStack.widthProperty());
-        centerRect.heightProperty().bind(centerStack.heightProperty());
+        centerRect.widthProperty().bind(insideBox.widthProperty());
+        centerRect.heightProperty().bind(insideBox.heightProperty());
         centerRect.setArcWidth(20);
         centerRect.setArcHeight(20);
         centerRect.setFill(Color.BLACK);
@@ -465,7 +521,7 @@ public class Interface extends Application {
         btBEG.setOnAction(new Bouton(Bouton.BOUTON_NOUVELLE_PARTIE_COMMENCER, arbitre));
 
         centerBox.getChildren().add(centerStack);
-        centerStack.getChildren().addAll(centerRect, insideBox);//centerGrid);
+        centerStack.getChildren().addAll(rectBox, insideBox);//centerGrid);
         Label lNG = new Label("Charger Partie");
         lNG.setTextFill(Color.WHITE);
         lNG.setFont(new Font(22));
@@ -475,11 +531,15 @@ public class Interface extends Application {
         for(int i=0; i<tmp.length; i++)
             list.getItems().add(tmp[i]);
         list.setOnMouseClicked(new SourisListe(fabrique, CHOIX_PLATEAU, list));
+        
+        list.setMaxWidth(500);
+        list.setMinWidth(500);
         cbMOD.getSelectionModel().selectedIndexProperty().addListener(new Choix(fabrique, Choix.CHOIX_PLATEAU));
         
         insideBox.getChildren().addAll(lNG, centerGrid, list, btBEG);
 
-        root.setCenter(centerBox);
+        //root.setCenter(centerBox);
+        loadBox = centerBox;
     }
 
     /**
@@ -519,13 +579,16 @@ public class Interface extends Application {
         GridPane centerGrid = new GridPane();
         VBox insideBox = new VBox();
         Rectangle centerRect = new Rectangle();
+        VBox rectBox = new VBox();
+        rectBox.getChildren().add(centerRect);
+        rectBox.setAlignment(Pos.CENTER);
         centerRect.setOpacity(0.25);
-        centerBox.setPadding(new Insets(20, 20, 20, 0));
+        centerBox.setPadding(new Insets(0, 20, 0, 0));
         centerBox.setAlignment(Pos.TOP_CENTER);
         centerGrid.setHgap(10);
         centerGrid.setVgap(10);
-        centerRect.widthProperty().bind(centerStack.widthProperty());
-        centerRect.heightProperty().bind(centerStack.heightProperty());
+        centerRect.widthProperty().bind(insideBox.widthProperty());
+        centerRect.heightProperty().bind(insideBox.heightProperty());
         centerRect.setArcWidth(20);
         centerRect.setArcHeight(20);
         centerRect.setFill(Color.BLACK);
@@ -556,7 +619,7 @@ public class Interface extends Application {
         lMusique.setTextFill(Color.WHITE);
         lFullScreen.setTextFill(Color.WHITE);
         centerBox.getChildren().add(centerStack);
-        centerStack.getChildren().addAll(centerRect, insideBox);//centerGrid);
+        centerStack.getChildren().addAll(rectBox, insideBox);//centerGrid);
         Label lNG = new Label("Configuration");
         lNG.setTextFill(Color.WHITE);
         lNG.setFont(new Font(22));
@@ -623,7 +686,8 @@ public class Interface extends Application {
         bCocc.getChildren().addAll(cCocc, cbCocc);
         bInsecte.getChildren().addAll(bMoskito, bClop, bCocc);
         insideBox.getChildren().addAll(lNG, centerGrid, bInsecte);
-        root.setCenter(centerBox);
+        //root.setCenter(centerBox);
+        configBox = centerBox;
     }
 
     /**
