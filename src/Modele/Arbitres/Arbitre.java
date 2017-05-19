@@ -44,6 +44,10 @@ public abstract class Arbitre {
     final static int A_JOUER = 2;
     final static int FIN = 3;
     
+    public final static int GAGNE = 0;
+    public final static int PERDU = 1;
+    public final static int NUL = 2;
+    
     int etat;
     long temps;
     long temps_ecoule;

@@ -24,7 +24,8 @@ public class Ruche {
         // TODO code application logic here
         Properties p = Configuration.proprietes();
         Interface it = new Interface();
-        it.creer(args, new FabriqueArbitre(p));
+        Interface.creer(args, new FabriqueArbitre(p));
+        Interface.goFin("Coucou", Arbitre.GAGNE);
     }
     
 }

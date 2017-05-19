@@ -83,6 +83,10 @@ public class Bouton implements EventHandler<ActionEvent>{
      *
      */
     public final static int BOUTON_PAUSE = 11;
+    /**
+     *
+     */
+    public final static int BOUTON_RECOMMENCER = 12;
     
     
     /**
@@ -108,9 +112,9 @@ public class Bouton implements EventHandler<ActionEvent>{
                 Interface.goMenu();
                 break;
             case BOUTON_QUITTER:
-                arbitre.abandon();
+                if(arbitre!=null)
+                    arbitre.abandon();
                 System.exit(0);
-                break;
             case BOUTON_NOUVELLE_PARTIE:
                 Interface.goNewGame();
                 break;

@@ -885,4 +885,48 @@ public class Interface extends Application {
         System.out.println("Arbitre créé");
     }
     
+    public static void goFin(String joueur, int etat){
+        Label l = new Label();
+        l.setFont(Font.font("Cambria", 32));
+        l.setTextFill(Color.WHITE);
+        switch(etat){
+            case Arbitre.GAGNE:
+                l.setText("Vous avez battu "+joueur);
+                break;
+            case Arbitre.PERDU:
+                l.setText(joueur+" vous a battu");
+                break;
+           case Arbitre.NUL:
+                l.setText("Match null");
+                break;
+        }
+        StackPane centerRoot = new StackPane();
+        centerRoot.setAlignment(Pos.CENTER);
+        Rectangle rleft = new Rectangle();
+        rleft.widthProperty().bind(centerRoot.widthProperty());
+        rleft.heightProperty().bind(centerRoot.heightProperty());
+        rleft.setOpacity(0.25);
+        rleft.setFill(Color.BLACK);
+        rleft.setEffect(new DropShadow());
+        VBox center = new VBox();
+        center.getChildren().add(l);
+        HBox menu = new HBox();
+        center.setSpacing(80);
+        center.setAlignment(Pos.CENTER);
+        menu.setSpacing(30);
+        menu.setAlignment(Pos.CENTER);
+        Button recommencer = new Button("Recommencer");
+        recommencer.setOnAction(new Bouton(Bouton.BOUTON_RECOMMENCER,arbitre) );
+        Button quit = new Button("Quitter");
+        quit.setOnAction(new Bouton(Bouton.BOUTON_QUITTER,arbitre) );
+        Button retMenu = new Button("Menu");
+        retMenu.setOnAction(new Bouton(Bouton.BOUTON_MENU ,arbitre) );
+        menu.getChildren().addAll(recommencer, quit, retMenu);
+        center.getChildren().add(menu);
+        centerRoot.getChildren().addAll(rleft,center);
+
+        root.setCenter(centerRoot);
+        
+        
+    }
 }
