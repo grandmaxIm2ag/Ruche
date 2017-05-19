@@ -40,7 +40,7 @@ public class TestIA extends Arbitre{
      * @param simulations 
      */
     public TestIA(Properties p, int d1, int d2, int simulations){
-        super (p);
+        super (p, "", "");
         difficulteJ1=d1;
         difficulteJ2=d2;
         nbSimulations=simulations;
@@ -117,8 +117,8 @@ public class TestIA extends Arbitre{
         int[] tabPieces2 = new int[8];
         System.arraycopy(tabPieces, 0, tabPieces2, 0, tabPieces2.length);
         
-        joueurs[J1] = new Ordinateur(true,difficulteJ1, prop, tabPieces,J1);
-        joueurs[J2] = new Ordinateur(true,difficulteJ2, prop, tabPieces2,J2);
+        joueurs[J1] = new Ordinateur(true,difficulteJ1, prop, tabPieces, J1, "");
+        joueurs[J2] = new Ordinateur(true,difficulteJ2, prop, tabPieces2, J2, "");
         
         go();
     }

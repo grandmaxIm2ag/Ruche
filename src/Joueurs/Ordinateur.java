@@ -60,6 +60,7 @@ public class Ordinateur extends Joueur{
      * @param p propriétés de la partie
      * @param tabP tableau des pièces que le joueur n'a pas posé
      * @param j indice du joueur (0 ou 1)
+     * @param n nom du joueur/ordinateur
      */
     public Ordinateur(boolean m, int d, Properties p, int[] tabP, int j, String n) {
         super(m, p, tabP, j, n);
@@ -79,10 +80,11 @@ public class Ordinateur extends Joueur{
      * @param p propriétés de la partie
      * @param tabP tableau des pièces que le joueur n'a pas posé
      * @param j indice du joueur (0 ou 1)
+     * @param n nom du joueur
      * @param graine graine de la fonction random
      */
-    public Ordinateur(boolean m, int d, Properties p, int[] tabP, int j, int graine) {
-        super(m, p, tabP, j);
+    public Ordinateur(boolean m, int d, Properties p, int[] tabP, int j, String n, int graine) {
+        super(m, p, tabP, j, n);
         difficulte = d;
         r= new Random(graine);
         configurations = new HashMap();

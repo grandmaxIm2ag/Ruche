@@ -11,6 +11,7 @@ import Modele.Deplacement;
 import Modele.Depot;
 import Modele.FabriqueInsecte;
 import Modele.Point;
+import Vue.Interface;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;

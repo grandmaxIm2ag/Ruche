@@ -49,6 +49,7 @@ public abstract class Joueur {
      * @param p propriétés de la partie
      * @param tabP tableau des pièces que le joueur n'a pas posé
      * @param j indice du joueur (0 ou 1)
+     * @param n nom du joueur
      */
     public Joueur(boolean m, Properties p, int[] tabP, int j, String n){
         main=m;
