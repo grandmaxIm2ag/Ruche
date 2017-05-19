@@ -7,9 +7,11 @@ package ruche;
 
 //http://www.redblobgames.com/grids/hexagons/
 
+import Joueurs.Ordinateur;
 import Modele.Arbitres.*;
 import Modele.Arbitres.SimulationIA;
 import Modele.Arbitres.TestArbitre;
+import Modele.Arbitres.TestIA;
 import Vue.Interface;
 import java.util.Properties;
 
@@ -25,6 +27,8 @@ public class Ruche {
     public static void main(String[] args) {
         // TODO code application logic here
         Properties p = Configuration.proprietes();
+        //TestIA t=new TestIA(p,Ordinateur.FACILE_HEURISTIQUE,Ordinateur.FACILE_ALEATOIRE,100);
+        //t.simulation();
         Interface it = new Interface();
         it.creer(args, new FabriqueArbitre(p));
     }

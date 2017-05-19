@@ -43,9 +43,9 @@ public class Ordinateur extends Joueur{
     /** La valeur de la GRAINE dépend du résultat de la fonction System.nanoTime().
     * @see System.nanoTime()
     */
-    public final static long GRAINE = (long)System.nanoTime();
-    //public final static long GRAINE =19783713274596L;
-    //19783713274596 //bug de superposition
+    
+    public long GRAINE;//utiliser le constructeur pour débugger(graine en paramètre)
+    //19783713274596 //bug de superposition(ou premier coup)
     
     
     Random r;
@@ -64,9 +64,27 @@ public class Ordinateur extends Joueur{
     public Ordinateur(boolean m, int d, Properties p, int[] tabP, int j) {
         super(m, p, tabP, j);
         difficulte = d;
+        GRAINE=(long)System.nanoTime();
         System.out.println("Joueur "+j+" GRAINE: "+GRAINE);///////////////////////////////////////////////////////////////////////////////
         r= new Random(GRAINE);
 
+        configurations = new HashMap();
+    }
+    
+    /**Constructeur
+     * Utilise le constructeur de la classe Joueur
+     * Constructeur de test: avec une graine choissie en paramètre
+     * @param m true ssi c'est le tour du joueur
+     * @param d indice de la difficulté de l'ordinateur
+     * @param p propriétés de la partie
+     * @param tabP tableau des pièces que le joueur n'a pas posé
+     * @param j indice du joueur (0 ou 1)
+     * @param graine graine de la fonction random
+     */
+    public Ordinateur(boolean m, int d, Properties p, int[] tabP, int j, int graine) {
+        super(m, p, tabP, j);
+        difficulte = d;
+        r= new Random(graine);
         configurations = new HashMap();
     }
     
