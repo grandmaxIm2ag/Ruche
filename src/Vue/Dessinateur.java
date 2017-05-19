@@ -87,13 +87,14 @@ public class Dessinateur extends Visiteur{
         }
         if (arbitre.initDeplacement() != null && arbitre.initDeplacement() instanceof Cloporte) {
             Coup[] coupPossible = arbitre.deplacementPossible(arbitre.initDeplacement());
-            for (Coup coup : coupPossible) {
-                Deplacement d = (Deplacement)coup;
-                if (d.source().equals(arbitre.initDeplacement().position()) && c.position().equals(d.destination())) 
-                    gc.strokePolygon(coords[0], coords[1], 6);
-                else if (arbitre.getInitClopDepl() != null && d.source().equals(arbitre.getInitClopDepl().position()) && c.position().equals(d.destination()))
-                    gc.strokePolygon(coords[0], coords[1], 6);
-            }
+            if(coupPossible !=null)
+                for (Coup coup : coupPossible) {
+                    Deplacement d = (Deplacement)coup;
+                    if (d.source().equals(arbitre.initDeplacement().position()) && c.position().equals(d.destination())) 
+                        gc.strokePolygon(coords[0], coords[1], 6);
+                    else if (arbitre.getInitClopDepl() != null && d.source().equals(arbitre.getInitClopDepl().position()) && c.position().equals(d.destination()))
+                        gc.strokePolygon(coords[0], coords[1], 6);
+                }
         } else
             gc.strokePolygon(coords[0], coords[1], 6);
         gc.setStroke(Color.BLACK);

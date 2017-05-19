@@ -99,15 +99,14 @@ public class Local extends Arbitre{
     public void joue(Deplacement d){
         System.out.println ("J'ai fait caca ici aussi :x" + d);
         if(plateau().reine(jCourant)!=null){
-            System.out.println ("Et là");
-            //if(deplacePionValide(d)){
-            System.out.println ("Et là");
+                //if(deplacePionValide(d)){
                 enCoursIt = d.route().iterator();
                 enCours = new Deplacement(d.joueur(), enCoursIt.next(),enCoursIt.next());
                 nbCoup[jCourant]++;
                 refaire.clear();
                 historique.add(d);
                 etat = JOUE_EN_COURS;
+                temps_ecoule=0;
                 System.err.println(d+" déplacement effectué "+enCours);
             //}else{
                 //System.err.println("Deplacement impossible "+d);

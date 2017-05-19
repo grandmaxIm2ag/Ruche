@@ -6,6 +6,7 @@
 package Modele.Arbitres;
 
 import Joueurs.Joueur;
+import Joueurs.Ordinateur;
 import java.io.File;
 import java.io.*;
 import java.io.IOException;
@@ -20,7 +21,9 @@ import Vue.PaneToken;
 import Vue.Pointeur;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.Scanner;
+import javafx.scene.input.MouseEvent;
 
 /**
  *
@@ -43,12 +46,14 @@ public abstract class Arbitre {
     final static int JOUE_EN_COURS = 1;
     final static int A_JOUER = 2;
     final static int FIN = 3;
+    final static int AIDE = 4;
     
     public final static int GAGNE = 0;
     public final static int PERDU = 1;
     public final static int NUL = 2;
     
     int etat;
+    boolean aide;
     long temps;
     long temps_ecoule;
     
@@ -62,6 +67,7 @@ public abstract class Arbitre {
     Joueur[] joueurs;
     int jCourant, type, difficulte;
     Plateau plateau;
+    Plateau plateauAide;
     String pla;
     Chargeur chargeur;
     Stack<Coup> historique;
@@ -93,7 +99,7 @@ public abstract class Arbitre {
         jCourant = J1;
         historique = new Stack();
         refaire = new Stack();
-        plateau = new Plateau(0,0,Reglage.lis("nbPiece"),Reglage.lis("nbPiece"),p);
+        plateau = new Plateau(0,0,Reglage.lis("lPlateau")*2*Reglage.lis("nbPiece"),Reglage.lis("hPlateau")*2*Reglage.lis("nbPiece"),p);
         
         chargeur = new Chargeur();
         
@@ -207,6 +213,8 @@ public abstract class Arbitre {
             return null;
         else{
             List<Coup> l = plateau.deplacementPossible(e);
+            if(l==null)
+                return null;
             Coup[] res = new Coup[l.size()];
             for(int i=0; i<l.size(); i++)
                 res[i]=l.get(i);
@@ -245,9 +253,10 @@ public abstract class Arbitre {
      *
      */
     public void nouvellePartie(){
-        plateau = new Plateau(0,0,Reglage.lis("nbPiece"),Reglage.lis("nbPiece"),prop);
+        plateau = new Plateau(0,0,Reglage.lis("lPlateau")*2*Reglage.lis("nbPiece"),Reglage.lis("hPlateau")*2*Reglage.lis("nbPiece"),prop);
         nbCoup[0]=0; nbCoup[1]=0;
         jCourant = 0;
+        chargement = false;
         init();
     }
     
@@ -393,6 +402,44 @@ public abstract class Arbitre {
         /*
         A faire dès que les IA seront opérationnels
         */
+        etat = AIDE;
+        temps_ecoule = 0;
+        plateauAide = plateau.clone();
+        Ordinateur o = new Ordinateur(true,Ordinateur.FACILE_HEURISTIQUE , prop, Arrays.copyOf(joueurs[jCourant].pions(), joueurs[jCourant].pions().length) ,  jCourant, nom2);
+        
+        List<Coup[]> tab = new LinkedList();
+        for(int i=0; i<joueurs[jCourant].pions().length; i++){
+            if(joueurs[jCourant].pions()[i]!=0){
+                Coup[] tmp = depotPossible(jCourant, i);
+                if(tmp!=null)
+                    tab.add(tmp);
+            }
+        }
+        Coup[] tmp;
+        if((tmp=deplacementPossible(jCourant))!=null)
+            tab.add(tmp);
+        int taille= 0;
+        Iterator<Coup[]> it = tab.iterator();
+        while(it.hasNext())
+            taille+=it.next().length;
+        it = tab.iterator();
+        System.out.println(nbCoup[J1]+" "+nbCoup[J2]);
+        coups = new Coup[taille];
+        int i=0;
+        while(it.hasNext()){
+            Coup[] x = it.next();
+            int j;
+            for(j=0; j<x.length; j++){
+                coups[i+j]=x[j];
+            }
+             i+=j;
+        }
+        
+        Coup c = o.coup(this, coups);
+        if(c instanceof Deplacement)
+            plateauAide.deplacePion((Deplacement)c);
+        else
+            plateauAide.deposePion((Depot)c);
     }
 
     /**
@@ -400,7 +447,15 @@ public abstract class Arbitre {
      * @param dessinateur
      */
     public boolean accept(Visiteur dessinateur) {
-        return plateau.accept(dessinateur);
+        if(!aide){
+            
+            return plateau.accept(dessinateur);
+        }
+        else{
+            System.err.println("Ici");
+            return plateauAide.accept(dessinateur);
+        }
+           
     }
     
     /**
@@ -462,22 +517,38 @@ public abstract class Arbitre {
      */
     public void maj(long t){
         if(Interface.pointeur().event()!=null){
-        boolean b = this.accept(Interface.pointeur());
-        if(b)
-            plateau.clearAide();
-        Interface.pointeur().traiter();
+            boolean b = this.accept(Interface.pointeur());
+            if(b)
+                plateau.clearAide();
+                if(Interface.pointeur().event().getEventType() == MouseEvent.MOUSE_CLICKED && etat == AIDE){
+                    etat = ATTENTE_COUP;
+                    aide = false;
+                }
+            Interface.pointeur().traiter();
         }
         long nouv = t-temps;
         temps=t;
+        System.out.println("JOue en cours ? "+(JOUE_EN_COURS==etat));
         switch(etat){
-            case ATTENTE_COUP:
+            case AIDE:
+                temps_ecoule+=nouv;
+                if(temps_ecoule>=1000000000){
+                    temps_ecoule=0;
+                    aide = !aide;
+                }
                 break;
+            case ATTENTE_COUP:
+                aide = false;
+                break;
+            
             case JOUE_EN_COURS:
                 temps_ecoule+=nouv;
                 if(temps_ecoule>=100000000){
                     System.out.println("Joue déplacement "+enCours);
                     temps_ecoule=0;
+                    System.out.println(enCours);
                     if(enCours!=null){
+                        
                         plateau.deplacePion(enCours);
                         if(!enCoursIt.hasNext()){
                             enCours = null;
@@ -594,8 +665,9 @@ public abstract class Arbitre {
                 l.add(c2);
                 if(ins instanceof Cloporte)
                     System.out.println(c1+"!!!!!!!!!!!!!!!!"+ins.position());
+                plateau.setAide(l);
             }
-        plateau.setAide(l);
+        
     }
     
     public void initClopDepl (Insecte i) {

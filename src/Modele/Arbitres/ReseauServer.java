@@ -36,6 +36,7 @@ import java.util.Properties;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.scene.input.MouseEvent;
 import ruche.Reglage;
 
 /**
@@ -261,14 +262,26 @@ public class ReseauServer extends Arbitre{
     public void maj(long t){
         if(jCourant==J1)
             if(Interface.pointeur().event()!=null){
-            boolean b = this.accept(Interface.pointeur());
-            if(b)
-                plateau.clearAide();
-            Interface.pointeur().traiter();
+                boolean b = this.accept(Interface.pointeur());
+                if(b)
+                    plateau.clearAide();
+                    if(Interface.pointeur().event().getEventType() == MouseEvent.MOUSE_CLICKED && etat == AIDE){
+                        etat = ATTENTE_COUP;
+                        aide = false;
+                    }
+                Interface.pointeur().traiter();
             }
         long nouv = t-temps;
         temps=t;
+        System.out.println("JOue en cours ? "+(JOUE_EN_COURS==etat));
         switch(etat){
+            case AIDE:
+                temps_ecoule+=nouv;
+                if(temps_ecoule>=1000000000){
+                    temps_ecoule=0;
+                    aide = !aide;
+                }
+                break;
             case INITIALISATION:
                 break;
             case ATTENTE_COUP:

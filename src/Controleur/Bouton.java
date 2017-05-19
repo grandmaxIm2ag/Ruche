@@ -113,9 +113,7 @@ public class Bouton implements EventHandler<ActionEvent>{
                 Interface.goMenu();
                 break;
             case BOUTON_QUITTER:
-                if(arbitre!=null)
-                    arbitre.abandon();
-                System.exit(0);
+                Interface.quitter();
             case BOUTON_NOUVELLE_PARTIE:
                 Interface.goNewGame();
                 break;
@@ -146,6 +144,12 @@ public class Bouton implements EventHandler<ActionEvent>{
                 break;
             case BOUTON_PAUSE:
                 Interface.pause();
+                break;
+            case BOUTON_RECOMMENCER:
+                arbitre.nouvellePartie();
+                break;
+            case BOUTON_AIDE:
+                arbitre.aide();
                 break;
             default:
                 break;

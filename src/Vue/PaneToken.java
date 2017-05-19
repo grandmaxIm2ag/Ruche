@@ -5,6 +5,7 @@
  */
 package Vue;
 
+import Controleur.Bouton;
 import Controleur.ButtonToken;
 import Modele.Arbitres.*;
 import javafx.geometry.Insets;
@@ -261,6 +262,7 @@ public class PaneToken {
         
         Image imageHelp = new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Icone/help.png"));
         Button btHelp = new Button();
+        btHelp.setOnAction(new Bouton(Bouton.BOUTON_AIDE, arbitre));
         btHelp.setGraphic(new ImageView(imageHelp));
         
         rightGrid.add(btHelp, 1, 9);
@@ -424,6 +426,7 @@ public class PaneToken {
         
         Image imageHelp = new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Icone/help.png"));
         Button btHelp = new Button();
+        btHelp.setOnAction(new Bouton(Bouton.BOUTON_AIDE, arbitre));
         btHelp.setGraphic(new ImageView(imageHelp));
         Image imageAbd = new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Icone/white.png"));
         Button btAbd = new Button();

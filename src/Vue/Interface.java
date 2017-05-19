@@ -841,6 +841,15 @@ public class Interface extends Application {
 
         box.getChildren().addAll(play);
         Button restart = new Button("Recommencer");
+        restart.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                arbitre.nouvellePartie();
+                dialog.setResult(Boolean.TRUE);
+                dialog.close();
+                
+            }
+        });
         box.getChildren().addAll(restart);
         Button save = new Button("Sauvegarder");
         save.setOnAction(new Bouton(Bouton.BOUTON_SAUVEGARDER,arbitre) );
@@ -861,7 +870,7 @@ public class Interface extends Application {
         quit.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-                System.exit(0);
+                quitter();
             }
         });
         
@@ -955,6 +964,18 @@ public class Interface extends Application {
         Optional<String> result = Sauv.showAndWait();
         if (result.isPresent()){
             arbitre.sauvegarder(result.get());
+            System.exit(0);
+        }
+    }
+    
+    public static void quitter(){
+        Alert alert = new Alert(AlertType.CONFIRMATION);
+        alert.setTitle("Quitter le jeu");
+        alert.setHeaderText("Vous allez quittez le jeu");
+        alert.setContentText("Êtes vous sûr ?");
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == ButtonType.OK){
             System.exit(0);
         }
     }
