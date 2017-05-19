@@ -124,7 +124,7 @@ public class Pointeur extends Visiteur {
                 if (c.utilise())
                     c.tete().pointe();
                 //i(c.insectes().)
-                if (c.tete().classement() > 1) {
+                if (c.utilise() && c.tete().classement() > 1) {
                     System.err.println("JeanClaudeVanDamn");
                     //popup = new Popup();
                     Rectangle rect = new Rectangle(125,125);

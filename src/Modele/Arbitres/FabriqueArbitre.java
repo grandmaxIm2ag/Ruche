@@ -8,6 +8,8 @@ package Modele.Arbitres;
 import Controleur.Choix;
 import Joueurs.Ordinateur;
 import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Properties;
@@ -104,14 +106,22 @@ public class FabriqueArbitre {
         this.diff[Ordinateur.FACILE_HEURISTIQUE] = "Facile";
         this.diff[Ordinateur.MOYEN] = "Normal";
         this.diff[Ordinateur.DIFFICILE] = "Difficile";
-        
-        Scanner fr =new Scanner(ClassLoader.getSystemClassLoader().getResourceAsStream("Sauvegardes/Sauvegarde"));
-        String str = fr.nextLine();
-        if(str == null || str.equals("")){
-            plateaux = new String[1];
-            plateaux[0] = "(none)";
+        Scanner fr = null;
+        try{
+            fr =new Scanner(new FileInputStream("Sauvegardes/Sauvegarde"));
+        }catch(FileNotFoundException e){
+            
+        }
+        if(fr!=null && fr.hasNext()){
+            String str = fr.nextLine();
+            if(str == null || str.equals("")){
+                plateaux = new String[1];
+                plateaux[0] = "(none)";
+            }else{
+                plateaux = str.split(":");
+            }
         }else{
-            plateaux = str.split(":");
+            plateaux = new String[0];
         }
         
         this.type = SIMULATION;
@@ -126,9 +136,9 @@ public class FabriqueArbitre {
         clop=false;
         mous=false;
         
-        nom1 = "";
-        nom2="";
-        ip = "";
+        nom1 = "Joueur1";
+        nom2="Joueur2";
+        ip = "127.0.0.1";
         
     }
     
@@ -148,8 +158,8 @@ public class FabriqueArbitre {
                 return new Local(prop, type, difficulte,nom1,nom2);
             case LOCAL_JVIA:
                 if(b)
-                    return new Local(prop, type, difficulte, plateau,nom1,nom2);
-                return new Local(prop, type, difficulte,nom1,nom2);
+                    return new Local(prop, type, difficulte, plateau,nom1,"Ordinateur");
+                return new Local(prop, type, difficulte,nom1,"Ordinateur");
             case SIMULATION:
                 return new SimulationIA(prop, difficulte,nom1,nom2);
             case RESEAU_CLIENT:

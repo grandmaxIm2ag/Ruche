@@ -61,6 +61,7 @@ import javafx.scene.control.Slider;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.effect.BlurType;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.GaussianBlur;
@@ -842,8 +843,10 @@ public class Interface extends Application {
         Button restart = new Button("Recommencer");
         box.getChildren().addAll(restart);
         Button save = new Button("Sauvegarder");
+        save.setOnAction(new Bouton(Bouton.BOUTON_SAUVEGARDER,arbitre) );
         box.getChildren().addAll(save);
         Button saveQuit = new Button("Sauvegarder Quitter");
+        saveQuit.setOnAction(new Bouton(Bouton.BOUTON_SAUVEGARDER_QUITTER,arbitre) );
         box.getChildren().addAll(saveQuit);
         Button menu = new Button("Menu pincipal");
         menu.setOnAction(new EventHandler<ActionEvent>() {
@@ -926,7 +929,33 @@ public class Interface extends Application {
         centerRoot.getChildren().addAll(rleft,center);
 
         root.setCenter(centerRoot);
+    }
+    
+    
+    public static void sauvegarder(){
+        TextInputDialog Sauv = new TextInputDialog();
+        Sauv.setTitle("Sauvegarder");
+        Sauv.setHeaderText("Entrez le nom de la sauvegarde, et confirmer");
+        Sauv.setGraphic(new ImageView(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Icone/save.png"))));
+  
         
+        Optional<String> result = Sauv.showAndWait();
+        if (result.isPresent()){
+            arbitre.sauvegarder(result.get());
+        }
+    }
+    
+    public static void sauvegarderQuitter(){
+        TextInputDialog Sauv = new TextInputDialog();
+        Sauv.setTitle("Sauvegarder & Quitter");
+        Sauv.setHeaderText("Entrez le nom de la sauvegarde, et confirmer");
+        Sauv.setGraphic(new ImageView(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Icone/save.png"))));
+  
         
+        Optional<String> result = Sauv.showAndWait();
+        if (result.isPresent()){
+            arbitre.sauvegarder(result.get());
+            System.exit(0);
+        }
     }
 }

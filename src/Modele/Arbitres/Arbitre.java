@@ -355,7 +355,7 @@ public abstract class Arbitre {
             refaire.push(tmp.pop());
         
         try{
-            File f = new File("Ressources/Sauvegardes/"+nomSauv);
+            File f = new File("Sauvegardes/"+nomSauv);
             f.createNewFile();
             FileWriter output = new FileWriter(f);
             output.write(sauv);
@@ -370,16 +370,15 @@ public abstract class Arbitre {
         
         String str = "";
         
-        Scanner fr =new Scanner(ClassLoader.getSystemClassLoader().getResourceAsStream("Sauvegardes/Sauvegarde"));
-        str = fr.nextLine();
-        if(str == null || str.equals("")){
-            str = nomSauv;
-        }else{
-            str += (":"+nomSauv);
-        }
-        
         try{
-            PrintWriter writer = new PrintWriter("Ressources/Sauvegardes/Sauvegarde", "UTF-8");
+            Scanner fr =new Scanner(new FileInputStream("Sauvegardes/Sauvegarde"));
+            str = fr.nextLine();
+            if(str == null || str.equals("")){
+                str = nomSauv;
+            }else{
+                str += (":"+nomSauv);
+            }
+            PrintWriter writer = new PrintWriter("Sauvegardes/Sauvegarde", "UTF-8");
             writer.print(str);
             writer.close();
         }catch(IOException e){

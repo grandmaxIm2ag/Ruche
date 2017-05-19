@@ -88,6 +88,7 @@ public class Bouton implements EventHandler<ActionEvent>{
      */
     public final static int BOUTON_RECOMMENCER = 12;
     
+    public final static int BOUTON_SAUVEGARDER_QUITTER = 13;
     
     /**
      *
@@ -132,7 +133,10 @@ public class Bouton implements EventHandler<ActionEvent>{
                 Interface.goLoadGame();
                 break;
             case BOUTON_SAUVEGARDER:
-                arbitre.sauvegarder("testS");
+                Interface.sauvegarder();
+                break;
+            case BOUTON_SAUVEGARDER_QUITTER:
+                Interface.sauvegarderQuitter();
                 break;
             case BOUTON_UNDO:
                 arbitre.precedent();

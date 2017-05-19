@@ -15,6 +15,7 @@ import Modele.Depot;
 import Modele.FabriqueInsecte;
 import Modele.Insecte;
 import Modele.Point;
+import Vue.Interface;
 import Vue.PaneToken;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -172,14 +173,17 @@ public class Local extends Arbitre{
      */
     @Override
     public void prochainJoueur() {
-        etat = ATTENTE_COUP;
-        PaneToken.getInstance(this).update();
-        jCourant = ++jCourant % 2;
-
+        
         if(plateau.estEncerclee(jCourant)){
             etat=FIN;
-            System.err.println(jCourant+" à perdu");
+            Interface.goFin(joueurs[jCourant].nom(), GAGNE);
+        }else if(plateau.estEncerclee((jCourant+1)%2)){
+            etat=FIN;
+            Interface.goFin(joueurs[jCourant].nom(), PERDU);
         }else{
+            etat = ATTENTE_COUP;
+            PaneToken.getInstance(this).update();
+            jCourant = ++jCourant % 2;
             List<Coup[]> tab = new LinkedList();
             for(int i=0; i<joueurs[jCourant].pions().length; i++){
                 if(joueurs[jCourant].pions()[i]!=0){
