@@ -78,13 +78,13 @@ public class Dessinateur extends Visiteur{
     public boolean visite (Case c) {
         etendeur.fixeComposant(c);
         double [][] coords = Interface.hex_corner(etendeur.x(), etendeur.y(), etendeur.h()/2);
-        if (c.estpointe()) {
-            gc.setStroke(Color.RED);
+        //if (c.estpointe()) {
+            //gc.setStroke(Color.RED);
             //System.out.println(c.position().x() + " " + c.position().y());
             //Popup popup = new Popup();
             //Rectangle rect = new Rectangle(100,100);
             //popup.xProperty().
-        }
+        //}
         if (arbitre.initDeplacement() != null && arbitre.initDeplacement() instanceof Cloporte) {
             Coup[] coupPossible = arbitre.deplacementPossible(arbitre.initDeplacement());
             for (Coup coup : coupPossible) {

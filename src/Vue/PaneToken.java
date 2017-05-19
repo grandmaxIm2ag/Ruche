@@ -6,6 +6,7 @@
 package Vue;
 
 import Controleur.ButtonToken;
+import Controleur.TokenListener;
 import Modele.Arbitres.*;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -79,8 +80,9 @@ public class PaneToken {
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 8; j++) {
                 l[i][j].setText("" + arbitre.joueur(i).pion(j));
-                if (arbitre.joueur(i).pion(j) == 0)
+                if (arbitre.joueur(i).pion(j) == 0 || arbitre.jCourant()!=i)
                     b[i][j].setDisable(true);
+                b[i][j].selectedProperty().addListener(new TokenListener(b[i][j], i, j));
             }
         }
     }
@@ -289,6 +291,8 @@ public class PaneToken {
         b[0][6] = bMoskito;
         b[0][7] = bWoodlouse;
         
+        //bBee.selectedProperty().addListener(listener);
+        
         right.getChildren().addAll(centerRect, rightGrid);
         
         //update();
@@ -490,8 +494,10 @@ public class PaneToken {
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 8; j++) {
                 l[i][j].setText("" + arbitre.joueur(i).pion(j));
-                if (arbitre.joueur(i).pion(j) == 0)
+                if (arbitre.joueur(i).pion(j) == 0 || arbitre.jCourant()==i)
                     b[i][j].setDisable(true);
+                else 
+                    b[i][j].setDisable(false);
             }
         }
         //if (arbitre.type() == FabriqueArbitre.LOCAL_JVJ || arbitre.type() == FabriqueArbitre.LOCAL_JVIA ) 
@@ -509,7 +515,7 @@ public class PaneToken {
         
     }
     
-    private void setDefaultBackground (ToggleButton b, int i, int j) {
+    public void setDefaultBackground (ToggleButton b, int i, int j) {
         String s = "";
         switch (j) {
             case 0:
