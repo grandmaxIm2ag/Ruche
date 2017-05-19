@@ -519,6 +519,13 @@ public abstract class Arbitre {
                     Coup c1 = c.pop();
                     historique.push(c1);
                     b &= tmp[i]==null || tmp[i].equals(c1);
+                    if(c1 instanceof Depot){
+                        Depot d = (Depot)c1;
+                        tmp[i] = new Depot(d.joueur(), d.type(), d.destination());
+                    }else{
+                        Deplacement d = (Deplacement)c1;
+                        tmp[i] = new Deplacement(d.joueur(), d.source(), d.destination());
+                    }
                     i = ++i % 4;
                 }
             }

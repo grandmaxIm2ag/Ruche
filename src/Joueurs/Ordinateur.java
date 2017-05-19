@@ -87,6 +87,7 @@ public class Ordinateur extends Joueur{
         super(m, p, tabP, j, n);
         difficulte = d;
         r= new Random(graine);
+        System.out.println("Joueur "+j+" GRAINE: "+graine);
         configurations = new HashMap();
     }
     

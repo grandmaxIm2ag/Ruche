@@ -7,6 +7,7 @@ package Modele.Arbitres;
 
 import Joueurs.*;
 import Modele.*;
+import java.util.Arrays;
 
 import ruche.Reglage;
 
@@ -57,7 +58,8 @@ public class TestIA extends Arbitre{
         for(int i=0;i<nbSimulations;i=i+1){
             System.err.println("Nouvelle Partie "+i);
             debutPartie=System.nanoTime();
-            nouvellePartie();
+            //nouvellePartie();
+            simulation2();
             victoires[i]=victorieux;
             nbCoupsJouesJ1[i]=nbCoup[victorieux];
             finPartie=System.nanoTime();
@@ -156,11 +158,15 @@ public class TestIA extends Arbitre{
       
     @Override
     public void prochainJoueur() {
+        System.out.println(Arrays.toString(joueurs[J1].pions())+" "+Arrays.toString(joueurs[J2].pions()));
         jCourant = ++jCourant % 2;
-        etat = ATTENTE_COUP;
+        //etat = ATTENTE_COUP;
         if(plateau.estEncerclee(jCourant)){
             etat=FIN;
             victorieux=++jCourant % 2;
+        }else if(nul()) {
+            etat=FIN;
+            victorieux=-1;
         }else{
             List<Coup[]> tab = new LinkedList();
             for(int i=0; i<joueurs[jCourant].pions().length; i++){
@@ -193,7 +199,8 @@ public class TestIA extends Arbitre{
             }
             aucun = coups == null || coups.length<=0;
             if(aucun){
-                prochainJoueur();
+                etat=JOUE_EN_COURS;
+                //prochainJoueur();
             }else if(precAucun && aucun){
                 etat=FIN;
                 victorieux=-1;
@@ -217,7 +224,8 @@ public class TestIA extends Arbitre{
                 deplacePion(d);
                 nbCoup[jCourant]++;
                 historique.add(d);
-                prochainJoueur();     
+                etat = JOUE_EN_COURS;
+//prochainJoueur();     
     }
 
     /**
@@ -249,7 +257,8 @@ public class TestIA extends Arbitre{
         }else{
             System.err.println("Depot impossible");
         }
-        prochainJoueur();
+        //prochainJoueur();
+        etat = JOUE_EN_COURS;
     }
         
     /**
@@ -287,10 +296,34 @@ public class TestIA extends Arbitre{
     
     /**
      *
+     * @return 
      * @returnle niveau de difficulte du joueur 2
      */
     public int difficulteJ2(){
         return difficulteJ2;
+    }
+    
+    public void simulation2(){
+        int joue = 0;
+        int prochain = 1;
+        Coup c;
+        int et = prochain;
+        boolean b = true;
+        nouvellePartie();
+        while(b){
+            switch(etat){
+                case ATTENTE_COUP:
+                    prochainJoueur();
+                    break;
+                case JOUE_EN_COURS:
+                    prochainJoueur();
+                    break;
+                case FIN:
+                    b = false;
+                    break;
+            }
+            
+        }
     }
 
 }
