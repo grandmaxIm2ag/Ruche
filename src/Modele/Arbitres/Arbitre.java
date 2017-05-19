@@ -555,7 +555,7 @@ public abstract class Arbitre {
         initClopDepl = null;
         Coup[] c = depotPossible(jCourant, ins);
         List<Case> l = new ArrayList();
-        for(int i=0; i<c.length; i++){
+        for(int i=0; c!=null && i<c.length; i++){
             Case c2 = new Case(c[i].destination().x(), c[i].destination().y(), 1, 1);
             c2.jouable();
             l.add(c2);
