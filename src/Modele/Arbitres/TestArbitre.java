@@ -23,8 +23,8 @@ public class TestArbitre extends Arbitre {
      *
      * @param p
      */
-    public TestArbitre(Properties p) {
-        super(p);
+    public TestArbitre(Properties p, String n1, String n2) {
+        super(p, n1,n2);
         init();
         plateau.premierPion(new Reine(0,0,1,0));
         plateau.addPion();

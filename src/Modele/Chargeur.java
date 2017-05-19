@@ -5,6 +5,9 @@
  */
 package Modele;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -31,7 +34,11 @@ public class Chargeur {
      * @param plateau
      */
     public void init(Properties p, String plateau){
-        input = new Scanner(ClassLoader.getSystemClassLoader().getResourceAsStream("Sauvegardes/"+plateau));
+        try{
+            input = new Scanner(new FileInputStream("Sauvegardes/"+plateau)) ;
+        }catch(FileNotFoundException e){
+                 
+        }
         prop = p;
     }
     

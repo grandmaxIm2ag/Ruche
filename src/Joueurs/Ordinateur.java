@@ -61,8 +61,8 @@ public class Ordinateur extends Joueur{
      * @param tabP tableau des pièces que le joueur n'a pas posé
      * @param j indice du joueur (0 ou 1)
      */
-    public Ordinateur(boolean m, int d, Properties p, int[] tabP, int j) {
-        super(m, p, tabP, j);
+    public Ordinateur(boolean m, int d, Properties p, int[] tabP, int j, String n) {
+        super(m, p, tabP, j, n);
         difficulte = d;
         GRAINE=(long)System.nanoTime();
         System.out.println("Joueur "+j+" GRAINE: "+GRAINE);///////////////////////////////////////////////////////////////////////////////

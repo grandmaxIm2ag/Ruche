@@ -38,10 +38,15 @@ public abstract class Arbitre {
      */
     public final static int J2 = 1;
     
+    final static int INITIALISATION = -1;
     final static int ATTENTE_COUP = 0;
     final static int JOUE_EN_COURS = 1;
     final static int A_JOUER = 2;
     final static int FIN = 3;
+    
+    public final static int GAGNE = 0;
+    public final static int PERDU = 1;
+    public final static int NUL = 2;
     
     int etat;
     long temps;
@@ -62,6 +67,8 @@ public abstract class Arbitre {
     Stack<Coup> historique;
     Stack<Coup> refaire;
     
+    String nom1, nom2;
+    
     int[] nbCoup;
     
     Coup[] deplacements;
@@ -79,7 +86,7 @@ public abstract class Arbitre {
      *
      * @param p
      */
-    public Arbitre(Properties p){
+    public Arbitre(Properties p, String n1, String n2){
         Reglage.init(p);
         prop = p;
         joueurs = new Joueur[2];
@@ -97,6 +104,9 @@ public abstract class Arbitre {
         temps = System.nanoTime();
         temps_ecoule = 0;
         precAucun = false;
+        
+        nom1 = n1;
+        nom2 = n2;
     }
     
     /**
@@ -345,7 +355,7 @@ public abstract class Arbitre {
             refaire.push(tmp.pop());
         
         try{
-            File f = new File("Ressources/Sauvegardes/"+nomSauv);
+            File f = new File("Sauvegardes/"+nomSauv);
             f.createNewFile();
             FileWriter output = new FileWriter(f);
             output.write(sauv);
@@ -360,16 +370,15 @@ public abstract class Arbitre {
         
         String str = "";
         
-        Scanner fr =new Scanner(ClassLoader.getSystemClassLoader().getResourceAsStream("Sauvegardes/Sauvegarde"));
-        str = fr.nextLine();
-        if(str == null || str.equals("")){
-            str = nomSauv;
-        }else{
-            str += (":"+nomSauv);
-        }
-        
         try{
-            PrintWriter writer = new PrintWriter("Ressources/Sauvegardes/Sauvegarde", "UTF-8");
+            Scanner fr =new Scanner(new FileInputStream("Sauvegardes/Sauvegarde"));
+            str = fr.nextLine();
+            if(str == null || str.equals("")){
+                str = nomSauv;
+            }else{
+                str += (":"+nomSauv);
+            }
+            PrintWriter writer = new PrintWriter("Sauvegardes/Sauvegarde", "UTF-8");
             writer.print(str);
             writer.close();
         }catch(IOException e){
@@ -494,13 +503,28 @@ public abstract class Arbitre {
         }
     }
     boolean nul(){
-        boolean b1 = true;
-        for(int i=0; i<joueurs[J1].pions().length; i++)
-                    b1 &= joueurs[J1].pions()[i]==0;
-        boolean b2 = true;
-        for(int i=0; i<joueurs[J2].pions().length; i++)
-                    b2 &= joueurs[J2].pions()[i]==0;
-        return plateau.aucunCoup(J1)&&plateau.aucunCoup(J2)&&b1&&b2;
+        boolean b = plateau.estEncerclee(J1)&&plateau.estEncerclee(J2);
+        
+        if(!b){
+            if(historique.size()>=12){
+                Coup[] tmp = new Coup[4];
+                Stack<Coup> c = new Stack();
+                
+                for(int i=0; i<12; i++)
+                    c.push(historique.pop());
+                
+                
+                int i=0;
+                while(!c.isEmpty()){
+                    Coup c1 = c.pop();
+                    historique.push(c1);
+                    b &= tmp[i]==null || tmp[i].equals(c1);
+                    i = ++i % 4;
+                }
+            }
+        }
+        
+        return b;
     }
     
     /**
@@ -531,7 +555,7 @@ public abstract class Arbitre {
         initClopDepl = null;
         Coup[] c = depotPossible(jCourant, ins);
         List<Case> l = new ArrayList();
-        for(int i=0; i<c.length; i++){
+        for(int i=0; c!=null && i<c.length; i++){
             Case c2 = new Case(c[i].destination().x(), c[i].destination().y(), 1, 1);
             c2.jouable();
             l.add(c2);
@@ -595,6 +619,7 @@ public abstract class Arbitre {
      *
      */
     public void go(){
+        Interface.goPartie();
         etat = ATTENTE_COUP;
     }
     /*

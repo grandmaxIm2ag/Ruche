@@ -8,6 +8,8 @@ package Modele.Arbitres;
 import Controleur.Choix;
 import Joueurs.Ordinateur;
 import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Properties;
@@ -26,11 +28,11 @@ public class FabriqueArbitre {
     /**
     * La valeur de cette constante est {@value}.
     */
-    public final static int LOCAL_JVJ = 0;
+    public final static int LOCAL_JVJ = 1;
     /**
     * La valeur de cette constante est {@value}.
     */
-    public final static int LOCAL_JVIA = 1;
+    public final static int LOCAL_JVIA = 0;
     /**
     * La valeur de cette constante est {@value}.
     */
@@ -77,6 +79,8 @@ public class FabriqueArbitre {
      */
     private String[] plateaux;
     
+    private String nom1, nom2, ip;
+    
     private boolean cocc;
     private boolean clop;
     private boolean mous;
@@ -102,14 +106,22 @@ public class FabriqueArbitre {
         this.diff[Ordinateur.FACILE_HEURISTIQUE] = "Facile";
         this.diff[Ordinateur.MOYEN] = "Normal";
         this.diff[Ordinateur.DIFFICILE] = "Difficile";
-        
-        Scanner fr =new Scanner(ClassLoader.getSystemClassLoader().getResourceAsStream("Sauvegardes/Sauvegarde"));
-        String str = fr.nextLine();
-        if(str == null || str.equals("")){
-            plateaux = new String[1];
-            plateaux[0] = "(none)";
+        Scanner fr = null;
+        try{
+            fr =new Scanner(new FileInputStream("Sauvegardes/Sauvegarde"));
+        }catch(FileNotFoundException e){
+            
+        }
+        if(fr!=null && fr.hasNext()){
+            String str = fr.nextLine();
+            if(str == null || str.equals("")){
+                plateaux = new String[1];
+                plateaux[0] = "(none)";
+            }else{
+                plateaux = str.split(":");
+            }
         }else{
-            plateaux = str.split(":");
+            plateaux = new String[0];
         }
         
         this.type = SIMULATION;
@@ -123,6 +135,10 @@ public class FabriqueArbitre {
         cocc=false;
         clop=false;
         mous=false;
+        
+        nom1 = "Joueur1";
+        nom2="Joueur2";
+        ip = "127.0.0.1";
         
     }
     
@@ -138,18 +154,18 @@ public class FabriqueArbitre {
         switch(type){
             case LOCAL_JVJ:
                 if(b)
-                    return new Local(prop, type, difficulte, plateau);
-                return new Local(prop, type, difficulte);
+                    return new Local(prop, type, difficulte, plateau,nom1,nom2);
+                return new Local(prop, type, difficulte,nom1,nom2);
             case LOCAL_JVIA:
                 if(b)
-                    return new Local(prop, type, difficulte, plateau);
-                return new Local(prop, type, difficulte);
+                    return new Local(prop, type, difficulte, plateau,nom1,"Ordinateur");
+                return new Local(prop, type, difficulte,nom1,"Ordinateur");
             case SIMULATION:
-                return new SimulationIA(prop, difficulte);
+                return new SimulationIA(prop, difficulte,nom1,nom2);
             case RESEAU_CLIENT:
-                return new ReseauClient(prop);
+                return new ReseauClient(prop,nom1,"",ip);
             case RESEAU_SERVER:
-                return new ReseauServer(prop);
+                return new ReseauServer(prop,nom1,nom2);
             default:
                 return null;
         }
@@ -185,10 +201,19 @@ public class FabriqueArbitre {
      * @see FabriqueArbitre#plateau
      */
     public void initP(String p){
-        System.err.println("Passé");
+        
         plateau=p;
     }
     
+    public void initN1(String p){
+        System.err.println("Passé");
+        nom1=p;
+    }
+    
+    public void initN2(String p){
+        System.err.println("Passé");
+        nom2=p;
+    }
     /**
      *Getter de l'instance types
      * 
@@ -265,6 +290,14 @@ public class FabriqueArbitre {
             Configuration.chargerProprietes(prop, ClassLoader.getSystemClassLoader().getResourceAsStream("Reglages/defaut.cfg"));
             Reglage.init(prop);
         }
+    }
+    
+    public int type(){
+        return type;
+    }
+    
+    public void initIP(String p){
+        ip = p;
     }
 
 }

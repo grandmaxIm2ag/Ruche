@@ -50,12 +50,13 @@ public abstract class Joueur {
      * @param tabP tableau des pièces que le joueur n'a pas posé
      * @param j indice du joueur (0 ou 1)
      */
-    public Joueur(boolean m, Properties p, int[] tabP, int j){
+    public Joueur(boolean m, Properties p, int[] tabP, int j, String n){
         main=m;
         prop=p;
         tabPieces=tabP;
         nom = "toto";
         numJoueur=j;
+        nom = n;
     }
     
     /** Passe la main à l'autre joueur */
@@ -122,5 +123,9 @@ public abstract class Joueur {
      */
     public int numJ(){
         return numJoueur;
+    }
+    
+    public void setNom(String n){
+        nom = n;
     }
 }

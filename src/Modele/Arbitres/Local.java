@@ -15,6 +15,7 @@ import Modele.Depot;
 import Modele.FabriqueInsecte;
 import Modele.Insecte;
 import Modele.Point;
+import Vue.Interface;
 import Vue.PaneToken;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -35,14 +36,14 @@ public class Local extends Arbitre{
      * @param t
      * @param d
      */
-    public Local(Properties p, int t, int d) {
-        super(p);
+    public Local(Properties p, int t, int d, String n1, String n2 ) {
+        super(p, n1, n2);
         difficulte = d;
         type = t;
     }
     
-    public Local(Properties p, int t, int d, String pl) {
-        this(p,t,d);
+    public Local(Properties p, int t, int d, String pl, String n1, String n2 ) {
+        this(p,t,d, n1, n2);
         chargement = true;
         pla = pl;
     }
@@ -75,17 +76,19 @@ public class Local extends Arbitre{
         
         switch(type){
             case FabriqueArbitre.LOCAL_JVJ:
-                joueurs[J1] = new Humain(true, prop, tabPieces, J1);
-                joueurs[J2] = new Humain(true, prop, tabPieces2, J2);
+                joueurs[J1] = new Humain(true, prop, tabPieces, J1, nom1);
+                joueurs[J2] = new Humain(true, prop, tabPieces2, J2, nom2);
                 break;
             case FabriqueArbitre.LOCAL_JVIA:
-                joueurs[J1] = new Humain(true, prop, tabPieces,  J1);
-                joueurs[J2] = new Ordinateur(true,difficulte, prop, tabPieces2,  J2);
+                joueurs[J1] = new Humain(true, prop, tabPieces,  J1, nom1);
+                joueurs[J2] = new Ordinateur(true,difficulte, prop, tabPieces2,  J2, nom2);
                 break;
         }
         
         if(chargement)
             charger(pla);
+        
+        go();
     }
     
     /**
@@ -170,14 +173,17 @@ public class Local extends Arbitre{
      */
     @Override
     public void prochainJoueur() {
-        etat = ATTENTE_COUP;
-        PaneToken.getInstance(this).update();
-        jCourant = ++jCourant % 2;
-
+        
         if(plateau.estEncerclee(jCourant)){
             etat=FIN;
-            System.err.println(jCourant+" à perdu");
+            Interface.goFin(joueurs[jCourant].nom(), GAGNE);
+        }else if(plateau.estEncerclee((jCourant+1)%2)){
+            etat=FIN;
+            Interface.goFin(joueurs[jCourant].nom(), PERDU);
         }else{
+            etat = ATTENTE_COUP;
+            PaneToken.getInstance(this).update();
+            jCourant = ++jCourant % 2;
             List<Coup[]> tab = new LinkedList();
             for(int i=0; i<joueurs[jCourant].pions().length; i++){
                 if(joueurs[jCourant].pions()[i]!=0){

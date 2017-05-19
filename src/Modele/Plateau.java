@@ -168,8 +168,9 @@ public class Plateau extends Composant {
     public void premierPion(Insecte e){
         Case c = new Case(0,0, 1, 1);
         c.deposePion(e);
-        if(e.type()==Insecte.REINE)
-            reines[Arbitre.J1] = new Point(0,0);
+        if(e.type()==Insecte.REINE){
+            reines[e.joueur()] = new Point(0,0);
+        }
         matrice.put(new Point(0,0), c);
         utilises.add(new Point(0,0));
         voisins.put(new Point(0,0), new ArrayList());
@@ -547,8 +548,10 @@ public class Plateau extends Composant {
         Iterator<Case> it = aide.iterator();
         while(it.hasNext())// && !b)
             b|=it.next().accept(v);
-        if (v instanceof Pointeur && ((Pointeur) v).initPopup == false)
+        if (v instanceof Pointeur && ((Pointeur) v).initPopup == false) {
             ((Pointeur) v).popup.hide();
+            ((Pointeur) v).reinitPopup();
+        }
         return b;
     }
     

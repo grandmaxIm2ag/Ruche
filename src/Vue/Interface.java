@@ -6,7 +6,9 @@
 package Vue;
 
 import Controleur.Bouton;
+import Controleur.BoutonCommencer;
 import Controleur.Choix;
+import Controleur.SoundSlider;
 import Controleur.Souris;
 import Controleur.SourisListe;
 import javafx.application.*;
@@ -18,6 +20,7 @@ import Modele.Arbitres.*;
 import Joueurs.Joueur;
 import Joueurs.Ordinateur;
 import Modele.Point;
+import Son.SoundEngine;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -58,6 +61,7 @@ import javafx.scene.control.Slider;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.effect.BlurType;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.GaussianBlur;
@@ -65,6 +69,8 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import static javafx.scene.input.DataFormat.URL;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.input.SwipeEvent;
+import javafx.scene.input.TouchEvent;
 import javafx.scene.layout.Background;
 //import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
@@ -125,6 +131,7 @@ public class Interface extends Application {
     static BorderPane root;
     static Scene scene;
     final static boolean fullScreen = false;
+    final static boolean soundEnabled = true;
     static VBox ngBox;
     static VBox loadBox;
     static VBox configBox;
@@ -144,10 +151,17 @@ public class Interface extends Application {
             scene = new Scene(root);
             stage.setFullScreen(true);
         } else {
-            scene = new Scene(root, 1000, 800);
+            scene = new Scene(root, 1000, 850);
         }
         stage.setScene(scene);
-        
+        try {
+            if (soundEnabled)
+                (SoundEngine.getInstance()).play();
+            else 
+                System.err.println("Interface.start() - Warning - Sound is disabled");
+        } catch (RuntimeException e) {
+            System.err.println("Interface.start() - Error while geting SoundEngine - " + e.getMessage());
+        }
         //goMenu();
         goNewGame();
         goLoadGame();
@@ -255,9 +269,6 @@ public class Interface extends Application {
      *
      */
     public static void goPartie() {
-        arbitre = fabrique.nouveau();
-        
-        arbitre.init();
         //root.setBottom(new Pane());
         Canvas c = new Canvas(500, 500);
         pointeur = new Pointeur(c, arbitre);
@@ -294,7 +305,7 @@ public class Interface extends Application {
         btSuiv.setOnAction(new Bouton(Bouton.BOUTON_DO, arbitre));
         btSave.setOnAction(new Bouton(Bouton.BOUTON_SAUVEGARDER, arbitre));
         btMenu.setOnAction(new Bouton(Bouton.BOUTON_MENU, arbitre));
-         btPause.setOnAction(new Bouton(Bouton.BOUTON_PAUSE, arbitre));
+        btPause.setOnAction(new Bouton(Bouton.BOUTON_PAUSE, arbitre));
 
         GridPane bPion = new GridPane();
         bPion.setHgap(10);
@@ -317,7 +328,7 @@ public class Interface extends Application {
         c.setOnMouseMoved(new Souris(arbitre, Souris.SOURIS_BOUGEE, c));
         c.setOnMouseClicked(new Souris(arbitre, Souris.SOURIS_CLIQUEE, c));
 
-
+        
         Animation anim = new Animation(arbitre, c, cj1, cj2);
         anim.start();
 
@@ -435,9 +446,10 @@ public class Interface extends Application {
 
         TextField tfJ1 = new TextField();
         tfJ1.setPromptText("Nom joueur 1");
-
         TextField tfJ2 = new TextField();
         tfJ2.setPromptText("Nom joueur 2");
+        TextField host = new TextField();
+        host.setPromptText("IP du joueur à rejoindre");
 
         tfJ2.setDisable(true);
 
@@ -445,12 +457,34 @@ public class Interface extends Application {
 
             @Override
             public void changed(ObservableValue ov, Number value, Number newValue) {
-                if (newValue.intValue() >= FabriqueArbitre.RESEAU_CLIENT) {
-                    cbDIFF.setDisable(true);
-                    tfJ2.setDisable(false);
-                } else {
-                    cbDIFF.setDisable(false);
-                    tfJ2.setDisable(true);
+                switch(newValue.intValue()){
+                    case FabriqueArbitre.LOCAL_JVJ:
+                        if( !centerGrid.getChildren().contains(tfJ2) )
+                            centerGrid.add(tfJ2, 2, 2);
+                        tfJ2.setDisable(true);
+                        break;
+                    case FabriqueArbitre.LOCAL_JVIA:
+                        if( !centerGrid.getChildren().contains(tfJ2) )
+                            centerGrid.add(tfJ2, 2, 2);
+                        tfJ2.setDisable(false);
+                        break;
+                    case FabriqueArbitre.SIMULATION:
+                        if( !centerGrid.getChildren().contains(tfJ2) )
+                            centerGrid.add(tfJ2, 2, 2);
+                        tfJ2.setDisable(false);
+                        break;
+                    case FabriqueArbitre.RESEAU_SERVER:
+                        if( !centerGrid.getChildren().contains(tfJ2) )
+                            centerGrid.add(tfJ2, 2, 2);
+                        tfJ2.setDisable(false);
+                        break;
+                    case FabriqueArbitre.RESEAU_CLIENT:
+                        if( !centerGrid.getChildren().contains(host) )
+                            centerGrid.add(host, 2, 2);
+                        host.setDisable(false);
+                        break;
+                    default:
+                        break;
                 }
             }
         });
@@ -470,14 +504,14 @@ public class Interface extends Application {
 
         btBEG.setMinWidth(150);
 
-        btBEG.setOnAction(new Bouton(Bouton.BOUTON_NOUVELLE_PARTIE_COMMENCER, arbitre));
+        btBEG.setOnAction(new BoutonCommencer(tfJ1, tfJ2, host, fabrique));
 
         centerBox.getChildren().add(centerStack);
         centerStack.getChildren().addAll(rectBox, insideBox);//centerGrid);
         Label lNG = new Label("Nouvelle Partie");
         lNG.setTextFill(Color.WHITE);
         lNG.setFont(new Font(22));
-
+        
         insideBox.getChildren().addAll(lNG, centerGrid, btBEG);
 
         //root.setCenter(centerBox);
@@ -601,12 +635,23 @@ public class Interface extends Application {
         centerGrid.setAlignment(Pos.CENTER);
 
         Slider sSon = new Slider();
-        sSon.setValue(50);
+        sSon.setValue(100);
         sSon.setShowTickMarks(true);
         sSon.setMajorTickUnit(20);
 
         Slider sMusique = new Slider();
-        sMusique.setValue(50);
+        /*
+        sMusique.valueProperty().addListener(new ChangeListener<Number>() {
+            public void changed(ObservableValue<? extends Number> ov,
+                Number old_val, Number new_val) {
+                    System.out.println(new_val.doubleValue());
+                    //SoundEngine.getInstance().volume(new_val);
+            }
+        });
+        */
+        
+        sMusique.valueProperty().addListener(new SoundSlider(SoundSlider.MUSIC_SLIDER));
+        sMusique.setValue(100);
         sMusique.setShowTickMarks(true);
         sMusique.setMajorTickUnit(20);
 
@@ -798,8 +843,10 @@ public class Interface extends Application {
         Button restart = new Button("Recommencer");
         box.getChildren().addAll(restart);
         Button save = new Button("Sauvegarder");
+        save.setOnAction(new Bouton(Bouton.BOUTON_SAUVEGARDER,arbitre) );
         box.getChildren().addAll(save);
         Button saveQuit = new Button("Sauvegarder Quitter");
+        saveQuit.setOnAction(new Bouton(Bouton.BOUTON_SAUVEGARDER_QUITTER,arbitre) );
         box.getChildren().addAll(saveQuit);
         Button menu = new Button("Menu pincipal");
         menu.setOnAction(new EventHandler<ActionEvent>() {
@@ -827,4 +874,88 @@ public class Interface extends Application {
 		
     }
     
+    public static void error(String s1, String s2){
+        Alert alert = new Alert(AlertType.WARNING);
+        alert.setTitle("Erreur");
+        alert.setHeaderText(s1);
+        alert.setContentText(s2);
+        alert.showAndWait();
+    }
+    
+    public static void nouvelArbitre(){
+        arbitre = fabrique.nouveau();
+        arbitre.init();
+        System.out.println("Arbitre créé");
+    }
+    
+    public static void goFin(String joueur, int etat){
+        Label l = new Label();
+        l.setFont(Font.font("Cambria", 32));
+        l.setTextFill(Color.WHITE);
+        switch(etat){
+            case Arbitre.GAGNE:
+                l.setText("Vous avez battu "+joueur);
+                break;
+            case Arbitre.PERDU:
+                l.setText(joueur+" vous a battu");
+                break;
+           case Arbitre.NUL:
+                l.setText("Match null");
+                break;
+        }
+        StackPane centerRoot = new StackPane();
+        centerRoot.setAlignment(Pos.CENTER);
+        Rectangle rleft = new Rectangle();
+        rleft.widthProperty().bind(centerRoot.widthProperty());
+        rleft.heightProperty().bind(centerRoot.heightProperty());
+        rleft.setOpacity(0.25);
+        rleft.setFill(Color.BLACK);
+        rleft.setEffect(new DropShadow());
+        VBox center = new VBox();
+        center.getChildren().add(l);
+        HBox menu = new HBox();
+        center.setSpacing(80);
+        center.setAlignment(Pos.CENTER);
+        menu.setSpacing(30);
+        menu.setAlignment(Pos.CENTER);
+        Button recommencer = new Button("Recommencer");
+        recommencer.setOnAction(new Bouton(Bouton.BOUTON_RECOMMENCER,arbitre) );
+        Button quit = new Button("Quitter");
+        quit.setOnAction(new Bouton(Bouton.BOUTON_QUITTER,arbitre) );
+        Button retMenu = new Button("Menu");
+        retMenu.setOnAction(new Bouton(Bouton.BOUTON_MENU ,arbitre) );
+        menu.getChildren().addAll(recommencer, quit, retMenu);
+        center.getChildren().add(menu);
+        centerRoot.getChildren().addAll(rleft,center);
+
+        root.setCenter(centerRoot);
+    }
+    
+    
+    public static void sauvegarder(){
+        TextInputDialog Sauv = new TextInputDialog();
+        Sauv.setTitle("Sauvegarder");
+        Sauv.setHeaderText("Entrez le nom de la sauvegarde, et confirmer");
+        Sauv.setGraphic(new ImageView(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Icone/save.png"))));
+  
+        
+        Optional<String> result = Sauv.showAndWait();
+        if (result.isPresent()){
+            arbitre.sauvegarder(result.get());
+        }
+    }
+    
+    public static void sauvegarderQuitter(){
+        TextInputDialog Sauv = new TextInputDialog();
+        Sauv.setTitle("Sauvegarder & Quitter");
+        Sauv.setHeaderText("Entrez le nom de la sauvegarde, et confirmer");
+        Sauv.setGraphic(new ImageView(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Icone/save.png"))));
+  
+        
+        Optional<String> result = Sauv.showAndWait();
+        if (result.isPresent()){
+            arbitre.sauvegarder(result.get());
+            System.exit(0);
+        }
+    }
 }

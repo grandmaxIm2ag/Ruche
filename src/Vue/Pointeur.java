@@ -124,28 +124,31 @@ public class Pointeur extends Visiteur {
                 if (c.utilise())
                     c.tete().pointe();
                 //i(c.insectes().)
-                if (c.tete().classement() > 1) {
+                if (c.utilise() && c.tete().classement() > 1) {
                     System.err.println("JeanClaudeVanDamn");
-                    
+                    //popup = new Popup();
                     Rectangle rect = new Rectangle(125,125);
                     //rect.setWidth(100*c.tete().classement() + 12.5*c.tete().classement());
                     //rect.setArcWidth(20);
                     //rect.setArcHeight(20);
                     rect.setFill(Color.WHITESMOKE);
-                    popup.setX(me.getX());
-                    popup.setY(me.getY());
                     StackPane stack = new StackPane();
                     HBox box = new HBox();
                     box.setPadding(new Insets(12.5,12.5,12.5,12.5));
                     box.setSpacing(12.5);
                     //Canvas canvas = print(c.tete());
+                    box.getChildren().clear();
                     for (Object ins : c.insectes()) {
+                        System.out.println(ins);
                         box.getChildren().add(print (((Insecte) ins)));
                     }
-                    rect.widthProperty().bind(stack.widthProperty());
+                    //rect.widthProperty().bind(box.widthProperty());
+                    rect.setWidth(12.5*(c.tete().classement()+1) + 100 * c.tete().classement());
                     stack.getChildren().addAll(rect, box);
                     popup.getContent().addAll(rect, box);
                     
+                    popup.setX(me.getScreenX()-rect.widthProperty().doubleValue()/2);
+                    popup.setY(me.getScreenY()-rect.getHeight()-100);
                     
                     
                     //rect.setWidth(y2);
@@ -153,13 +156,13 @@ public class Pointeur extends Visiteur {
                     popup.show(Interface.stage);
                     initPopup = true;
                     //popup.show(Interface.scene, me.getX(), me.getY());
-                } else if (popup.isShowing())
+                } else if (popup.isShowing()) {
                     popup.hide();
+                    popup = new Popup();
+                    }
             } else if (me.getEventType() == MouseEvent.MOUSE_CLICKED) {
 
                 if (arbitre.plateau().deplEntame()) {
-                    System.out.println("arbitre.plateau().deplEntame() : " + arbitre.plateau().deplEntame() + "\narbitre.plateau().aide()" + arbitre.plateau().aide());
-                    System.out.println ("c.estJouable() " + c.estJouable());
                     if (c.estJouable()) {
                         if (!depl) {
                             PaneToken.getInstance().uncheck();
@@ -177,7 +180,6 @@ public class Pointeur extends Visiteur {
                         }
 
                     } else if (arbitre.initDeplacement().position().equals(c.position())) {
-                        System.out.println ("Chocrotte");
                         depl = false;
                         return true;
                     } else if (arbitre.initDeplacement() instanceof Cloporte) {
@@ -193,9 +195,6 @@ public class Pointeur extends Visiteur {
                     }
                 } else if (c.tete().joueur() == arbitre.jCourant()) {
                     
-                    System.err.println(arbitre.plateau().aide());
-                    System.out.println(c.tete());
-                    System.err.println("caca2");
                     arbitre.initDeplacement(c.tete());
                     List<Case> tchup = arbitre.plateau().aide();
                     for (Case cas : tchup) {
@@ -313,6 +312,10 @@ public class Pointeur extends Visiteur {
         image =  ClassLoader.getSystemClassLoader().getResourceAsStream("Images/"+s+".png");
         Image img = new Image(image,((50)*mod),((50)*mod),true, true);
         return img;
+    }
+    
+    public void reinitPopup() {
+        popup = new Popup();
     }
     
 }

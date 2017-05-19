@@ -20,8 +20,8 @@ public class Humain extends Joueur{
      * @param tabP tableau des pièces que le joueur n'a pas posé
      * @param j indice du joueur (0 ou 1)
      */
-    public Humain(boolean m, Properties p, int[] tabP, int j) {
-        super(m, p, tabP, j);
+    public Humain(boolean m, Properties p, int[] tabP, int j, String n) {
+        super(m, p, tabP, j, n);
     }
     
 }
