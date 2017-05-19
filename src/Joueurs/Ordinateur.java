@@ -83,7 +83,7 @@ public class Ordinateur extends Joueur{
      * @param n nom du joueur
      * @param graine graine de la fonction random
      */
-    public Ordinateur(boolean m, int d, Properties p, int[] tabP, int j, String n, int graine) {
+    public Ordinateur(boolean m, int d, Properties p, int[] tabP, int j, String n, long graine) {
         super(m, p, tabP, j, n);
         difficulte = d;
         r= new Random(graine);
