@@ -20,6 +20,7 @@ import Modele.Depot;
 import Modele.FabriqueInsecte;
 import Modele.Insecte;
 import Modele.Point;
+import Vue.Chat;
 import Vue.Interface;
 import Vue.PaneToken;
 import java.io.BufferedReader;
@@ -46,16 +47,10 @@ import ruche.Reglage;
  *
  * @author maxence
  */
-public class ReseauClient extends Arbitre{
+public class ReseauClient extends ArbitreReseau{
     private int port;
     String host;
     Socket client;
-    private PrintWriter out;
-    private BufferedReader in;
-    File[] actions;
-    Producteur prod;
-    Consommateur cons;
-    Thread[] threads;
     
     /**
      *
@@ -69,10 +64,6 @@ public class ReseauClient extends Arbitre{
         port = 8000;
         host = ip;
         jCourant = J2;
-        actions = new File[2];
-        actions[J1]=new File();
-        actions[J2]=new File();
-        threads=new Thread[2];
                 
     }
 
@@ -120,8 +111,10 @@ public class ReseauClient extends Arbitre{
             joueurs[J1] = new Humain(true, prop, tabPieces, J1, nom1);
             joueurs[J2] = new Humain(true, prop, tabPieces2, J2, nom2);
             
+            Chat.creer(this, joueurs[J1].nom());
             
             etat = INITIALISATION;
+            System.out.println("GO !!!!!!!!!!!!!!!!!");
             go();
         }catch(UnknownHostException e1){
             Interface.error(e1.toString(), "Adresse "+host+" non résolue");
@@ -146,7 +139,7 @@ public class ReseauClient extends Arbitre{
      *
      * @param d
      */
-    @Override
+    /*@Override
     public void joue(Deplacement d){
         System.out.println ("J'ai fait caca ici aussi :x" + d);
         if(plateau().reine(jCourant)!=null){
@@ -170,12 +163,12 @@ public class ReseauClient extends Arbitre{
             System.err.println("Déplacement impossible tant que la reine n'a pas été déposée "+jCourant);
         }
     }
-
+*/
     /**
      *
      * @param d
      */
-    @Override
+   /* @Override
     public void joue(Depot d){
         if(nbCoup[jCourant] + nbCoup[(jCourant+1)%2]==0){
             System.out.println(Arrays.toString(joueurs[J1].pions()));
@@ -229,11 +222,11 @@ public class ReseauClient extends Arbitre{
         
 
     }
-
+*/
     /**
      *
      */
-    @Override
+  /*  @Override
     public void prochainJoueur() {
         etat = ATTENTE_COUP;
         PaneToken.getInstance(this).update();
@@ -283,7 +276,7 @@ public class ReseauClient extends Arbitre{
             }
         }
     }
-    
+  */  
     @Override
     public void maj(long t){
         if(jCourant==J1)
@@ -299,7 +292,6 @@ public class ReseauClient extends Arbitre{
             }
         long nouv = t-temps;
         temps=t;
-        System.out.println("JOue en cours ? "+(JOUE_EN_COURS==etat));
         switch(etat){
             case AIDE:
                 temps_ecoule+=nouv;
@@ -314,14 +306,27 @@ public class ReseauClient extends Arbitre{
                 if(jCourant == J2){
                     if(!actions[J2].estVide()){
                         String line = actions[J2].extraire();
-                        if(line.equals("Abandon")){
-                            etat=FIN;
-                            actions[J1].inserer("Fin");
-                        }else if(line.charAt(0)=='(')
-                            joue(new Deplacement(J2,line));
-                        else
-                            joue(new Depot(J2,line));
+                        int option = Integer.parseInt(""+line.charAt(0));
+                        line = line.substring(1);
+                        switch(option){
+                             case MESSAGE:
+                                 Chat.writeMessage(line, nom2);
+                                 break;
+                             case DEPLACEMENT:
+                                 joue(new Deplacement(J2,line));
+                                 break;
+                             case DEPOT:
+                                 joue(new Depot(J2,line));
+                             case PARTIE:
+                                 if(line.equals("Abandon" )){
+                                     etat=FIN;
+                                     actions[J1].inserer("Fin");
+                                 }
+                                 break;
+                             default:
+                                 break;
                         }
+                    }
                 }
                 break;
             case JOUE_EN_COURS:
@@ -365,8 +370,7 @@ public class ReseauClient extends Arbitre{
     
     @Override
     public void abandon(){
-        actions[J1].inserer("Abandon");
-        
+        actions[J1].inserer(PARTIE+"Abandon");
         etat=FIN;
     }
 }
