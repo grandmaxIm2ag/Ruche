@@ -45,7 +45,7 @@ public abstract class Arbitre {
     final static int ATTENTE_COUP = 0;
     final static int JOUE_EN_COURS = 1;
     final static int A_JOUER = 2;
-    final static int FIN = 3;
+    public final static int FIN = 3;
     final static int AIDE = 4;
     
     public final static int GAGNE = 0;

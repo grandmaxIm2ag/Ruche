@@ -14,6 +14,7 @@ import static Modele.Arbitres.Arbitre.JOUE_EN_COURS;
 import Modele.Arbitres.producteurConsommateur.Consommateur;
 import Modele.Arbitres.producteurConsommateur.File;
 import Modele.Arbitres.producteurConsommateur.Producteur;
+import Modele.Arbitres.producteurConsommateur.ThreadServer;
 import Modele.Coup;
 import Modele.Deplacement;
 import Modele.Depot;
@@ -26,6 +27,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import static java.lang.Thread.sleep;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Arrays;
@@ -52,6 +54,7 @@ public class ReseauServer extends Arbitre{
     File[] actions;
     Producteur prod;
     Consommateur cons;
+    Thread accept;
     Thread[] threads;
     /**
      *
@@ -65,6 +68,7 @@ public class ReseauServer extends Arbitre{
         actions[J1]=new File();
         actions[J2]=new File();
         threads = new Thread[2];
+        
     }
 
     /**
@@ -73,11 +77,12 @@ public class ReseauServer extends Arbitre{
     @Override
     public void init() {
         try{
-            ServerSocket serverSocket = new ServerSocket(port);
-            client = serverSocket.accept();
-            out = new PrintWriter(client.getOutputStream(), true);
-            in = new BufferedReader (new InputStreamReader(client.getInputStream()));
+            System.out.println("Ici : "+(serverSocket==null));
+            serverSocket = new ServerSocket(port);
+            accept = new Thread(new ThreadServer(serverSocket, client, this));
+            accept.start();
             
+            System.out.println("Accept : C'est passé");
             int[] tabPieces = new int[8];
             tabPieces[0]=(int)Reglage.lis("nbReine");
             tabPieces[1]=(int)Reglage.lis("nbScarabee");
@@ -97,29 +102,56 @@ public class ReseauServer extends Arbitre{
             tabPieces2[5]=(int)Reglage.lis("nbCoccinelle");
             tabPieces2[6]=(int)Reglage.lis("nbMoustique");  
             tabPieces2[7]=(int)Reglage.lis("nbCloporte");
-            
-            
-            prod = new Producteur(actions, out);
-            cons = new Consommateur(actions, in);
-            threads[0] = new Thread(prod);
-            threads[0].start();
-            threads[1] = new Thread(cons);
-            threads[1].start();
-            
-            actions[J1].inserer(nom1);
-            nom2 = actions[J2].extraire();
-            
-            
+
             joueurs[J1] = new Humain(true, prop, tabPieces, J1, nom1);
             joueurs[J2] = new Humain(true, prop, tabPieces2, J2, nom2);
-            
+        
+            Interface.connexion();
+            System.out.println("Coucou");
+            Interface.goPartie();
             etat = INITIALISATION;
-            go();
-        }catch(IOException e){
+        }catch(Exception e){
             System.err.println(e);
             etat = FIN;
         }
         
+    }
+    
+    public void  accept(Socket c){
+        client = c;
+    }
+    
+    public void annul() {
+        try{
+            serverSocket.close();
+            Interface.error("Youpi", "Ca marche");
+        }catch(IOException e){
+            System.out.println("Bug ???");
+        }
+    }
+    
+    public void launch(){
+        try{
+            out = new PrintWriter(client.getOutputStream(), true);
+            in = new BufferedReader (new InputStreamReader(client.getInputStream()));
+            
+        }catch(Exception e){
+            System.out.println((in == null)+" "+(out==null)+" "+(client == null));
+        }
+        
+        prod = new Producteur(actions, out);
+        cons = new Consommateur(actions, in);
+        threads[0] = new Thread(prod);
+        threads[0].start();
+        threads[1] = new Thread(cons);
+        threads[1].start();
+            
+        nom2 = actions[J2].extraire();
+        actions[J1].inserer(nom1);
+        
+        joueurs[J2].setNom(nom2);
+        etat = INITIALISATION;
+//go();
     }
 
     /**
@@ -273,7 +305,6 @@ public class ReseauServer extends Arbitre{
             }
         long nouv = t-temps;
         temps=t;
-        System.out.println("JOue en cours ? "+(JOUE_EN_COURS==etat));
         switch(etat){
             case AIDE:
                 temps_ecoule+=nouv;
@@ -283,6 +314,11 @@ public class ReseauServer extends Arbitre{
                 }
                 break;
             case INITIALISATION:
+                if(!accept.isAlive()){
+                    Interface.closeConnexion();
+                    Interface.makeChatUI();
+                    etat = ATTENTE_COUP;
+                }
                 break;
             case ATTENTE_COUP:
                 if(jCourant == J2){
@@ -296,6 +332,9 @@ public class ReseauServer extends Arbitre{
                         else
                             joue(new Depot(J2,line));
                         }
+                }else{
+                    if(nbCoup[J1]==0)
+                        PaneToken.getInstance(this).update();
                 }
                 break;
             case JOUE_EN_COURS:
@@ -326,17 +365,26 @@ public class ReseauServer extends Arbitre{
                 plateau.clearAide();
                 break;
             case FIN:
-                actions[J1].inserer("Fin");
-                
-                Interface.goTest();
-                out.close();
-        
-                try {
-                    in.close();
-                } catch (IOException ex) {
-                    Logger.getLogger(ReseauServer.class.getName()).log(Level.SEVERE, null, ex);
+                try{
+                    serverSocket.close();
+                }catch(IOException e){
+                    
                 }
+                
+                if(in != null && out!=null){
+                    System.out.println("Fini");
+                    actions[J1].inserer("Fin");
 
+                    
+                    out.close();
+
+                    try {
+                        in.close();
+                    } catch (IOException ex) {
+                        Logger.getLogger(ReseauServer.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+                Interface.goTest();
                 break;
         }
     }
