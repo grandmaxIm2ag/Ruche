@@ -14,6 +14,7 @@ import Modele.Deplacement;
 import Modele.Depot;
 import Modele.FabriqueInsecte;
 import Modele.Insecte;
+import Modele.Plateau;
 import Modele.Point;
 import Vue.Interface;
 import Vue.PaneToken;
@@ -179,10 +180,19 @@ public class Local extends Arbitre{
         }else if(plateau.estEncerclee((jCourant+1)%2)){
             etat=FIN;
             Interface.goFin(joueurs[jCourant].nom(), PERDU);
+        }else if(configurations.contains(plateau.hashCode())){
+            etat=FIN;
+            System.err.println("Match nul");
         }else{
+            configurations.add(plateau.hashCode());
+            System.err.println(plateau.hashCode());
+            
             etat = ATTENTE_COUP;
             PaneToken.getInstance(this).update();
             jCourant = ++jCourant % 2;
+            plateau.setJoueur(jCourant);
+            configurations.add(plateau.hashCode());
+            System.err.println(plateau.hashCode());
             List<Coup[]> tab = new LinkedList();
             for(int i=0; i<joueurs[jCourant].pions().length; i++){
                 if(joueurs[jCourant].pions()[i]!=0){

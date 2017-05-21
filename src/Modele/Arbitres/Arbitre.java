@@ -21,6 +21,7 @@ import Vue.PaneToken;
 import Vue.Pointeur;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Scanner;
 import javafx.scene.input.MouseEvent;
@@ -88,6 +89,8 @@ public abstract class Arbitre {
     Insecte initClopDepl;
     int initDepot;
     
+    ArrayList<Integer> configurations;
+    
     /**
      *
      * @param p
@@ -113,6 +116,8 @@ public abstract class Arbitre {
         
         nom1 = n1;
         nom2 = n2;
+        
+        configurations = new ArrayList();
     }
     
     /**
@@ -528,7 +533,6 @@ public abstract class Arbitre {
         }
         long nouv = t-temps;
         temps=t;
-        System.out.println("JOue en cours ? "+(JOUE_EN_COURS==etat));
         switch(etat){
             case AIDE:
                 temps_ecoule+=nouv;

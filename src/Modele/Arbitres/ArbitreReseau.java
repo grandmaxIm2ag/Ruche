@@ -25,6 +25,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
+import java.util.Queue;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.scene.input.MouseEvent;
@@ -34,7 +36,7 @@ import javafx.scene.input.MouseEvent;
  * @author maxence
  */
 public abstract class ArbitreReseau extends Arbitre{
-    final static int MESSAGE = 0;
+    public final static int MESSAGE = 0;
     final static int DEPLACEMENT = 1;
     final static int DEPOT=2;
     final static int PARTIE=3;
@@ -45,13 +47,15 @@ public abstract class ArbitreReseau extends Arbitre{
     Producteur prod;
     Consommateur cons;
     Thread[] threads;
-    
+    Queue<Coup> aFaire;
+     
     public ArbitreReseau(Properties p, String n1, String n2) {
         super(p, n1, n2);
         actions = new File[2];
         actions[J1]=new File();
         actions[J2]=new File();
         threads = new Thread[2];
+        aFaire = new LinkedBlockingQueue();
     }
 
     /**

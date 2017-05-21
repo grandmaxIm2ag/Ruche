@@ -154,7 +154,7 @@ public class Interface extends Application {
             scene = new Scene(root);
             stage.setFullScreen(true);
         } else {
-            scene = new Scene(root, 1000, 850);
+            scene = new Scene(root, 1000, 750);
         }
         stage.setScene(scene);
         try {
@@ -207,7 +207,7 @@ public class Interface extends Application {
         
         topBox.setPadding(new Insets(20, 10, 20, 10));
         topBox.setSpacing(10);
-        topBox.getChildren().addAll(title());
+        //topBox.getChildren().addAll(title());
         root.setTop(topBox);
         final Tab tabNG = new Tab("New Game"); 
         tabNG.setContent(ngBox);
@@ -327,7 +327,10 @@ public class Interface extends Application {
         root.setRight(pt.getLeftPane());
         root.setLeft(pt.getRightPane());
 
-        box.getChildren().addAll(btPrec, btPause, btSuiv/*, btSave, btMenu*/);
+        if(arbitre instanceof ArbitreReseau)
+            box.getChildren().addAll(btPause, Chat.creer((ArbitreReseau)arbitre,arbitre.joueur(Arbitre.J1).nom() , stage));
+        else
+            box.getChildren().addAll(btPrec, btPause, btSuiv/*, btSave, btMenu*/);
 
         c.setOnMouseMoved(new Souris(arbitre, Souris.SOURIS_BOUGEE, c));
         c.setOnMouseClicked(new Souris(arbitre, Souris.SOURIS_CLIQUEE, c));

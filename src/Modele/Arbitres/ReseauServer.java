@@ -36,7 +36,10 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
+import java.util.Queue;
 import java.util.Scanner;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.scene.input.MouseEvent;
@@ -51,6 +54,7 @@ public class ReseauServer extends ArbitreReseau{
     private ServerSocket serverSocket;
     Socket client;
     Thread accept;
+   
     /**
      *
      * @param p
@@ -59,6 +63,7 @@ public class ReseauServer extends ArbitreReseau{
         super(p, n1, n2);
         port = 8000;
         jCourant = 0;
+        
     }
 
     /**
@@ -146,6 +151,29 @@ public class ReseauServer extends ArbitreReseau{
 
     @Override
     public void maj(long t){
+        if(!actions[J2].estVide()){
+            String line = actions[J2].extraire();
+            int option = Integer.parseInt(""+line.charAt(0));
+            line = line.substring(1);
+            switch(option){
+                 case MESSAGE:
+                     Chat.writeMessage(line, nom2);
+                     break;
+                 case DEPLACEMENT:
+                     aFaire.add(new Deplacement(J2,line));
+                     break;
+                 case DEPOT:
+                     aFaire.add(new Depot(J2,line));
+                 case PARTIE:
+                     if(line.equals("Abandon" )){
+                         etat=FIN;
+                         actions[J1].inserer("Fin");
+                     }
+                     break;
+                 default:
+                     break;
+            }
+        }
         if(jCourant==J1)
             if(Interface.pointeur().event()!=null){
                 boolean b = this.accept(Interface.pointeur());
@@ -170,36 +198,14 @@ public class ReseauServer extends ArbitreReseau{
             case INITIALISATION:
                 if(!accept.isAlive()){
                     Interface.closeConnexion();
-                    Chat.creer(this, joueurs[J1].nom());
                     //Chat.writeMessage("Test", joueurs[J2].nom());
                     etat = ATTENTE_COUP;
                 }
                 break;
             case ATTENTE_COUP:
                 if(jCourant == J2){
-                    if(!actions[J2].estVide()){
-                        String line = actions[J2].extraire();
-                        int option = Integer.parseInt(""+line.charAt(0));
-                        line = line.substring(1);
-                        switch(option){
-                             case MESSAGE:
-                                 Chat.writeMessage(line, nom2);
-                                 break;
-                             case DEPLACEMENT:
-                                 joue(new Deplacement(J2,line));
-                                 break;
-                             case DEPOT:
-                                 joue(new Depot(J2,line));
-                             case PARTIE:
-                                 if(line.equals("Abandon" )){
-                                     etat=FIN;
-                                     actions[J1].inserer("Fin");
-                                 }
-                                 break;
-                             default:
-                                 break;
-                        }
-                    }
+                    if(!aFaire.isEmpty())
+                        joue(aFaire.poll());
                 }else{
                     if(nbCoup[J1]==0)
                         PaneToken.getInstance(this).update();
