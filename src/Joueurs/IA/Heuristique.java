@@ -26,6 +26,10 @@ public abstract class Heuristique {
         heurs = 0;
     }
     
+    public void SetConf(Map<Plateau, Integer> conf){
+        configurations = conf;
+    }
+    
     public int EvalPlateau(Arbitre a, Coup[] d, Plateau p, Ordinateur me){
         return 0;
     }

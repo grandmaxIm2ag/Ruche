@@ -6,16 +6,19 @@
 package Joueurs.IA;
 
 import Joueurs.Ordinateur;
-import Modele.Arbitres.*;
+import Modele.Arbitres.Arbitre;
 import Modele.Coup;
+import Modele.Plateau;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
  * @author hadjadjl
  */
-public class MinMax extends AI {
+public class AlphaBetaConcurent extends AI {
+    
     Emulateur em;
     Coup[] cps;
     /**
@@ -27,11 +30,13 @@ public class MinMax extends AI {
      * @param maxTimeInMillis
      * @param cp
      */
-    public MinMax(Ordinateur me, Arbitre a, Heuristique heuristicFunction, int searchDepth, int maxTimeInMillis, Coup[] cp) {
+    public AlphaBetaConcurent(Ordinateur me, Arbitre a, Heuristique heuristicFunction, int searchDepth, int maxTimeInMillis, Coup[] cp) {
         super(me, a, heuristicFunction, searchDepth, maxTimeInMillis);
         cps = cp;
        // System.out.println("j0 "+a.joueur(0).pions()[0]);
         em = new Emulateur(a);
+        heurs.SetConf(configurations);
+        em.SetConf(configurations);
     }
     
     
@@ -39,7 +44,6 @@ public class MinMax extends AI {
         int max_poids = AI.MIN;
         int meilleur_coup = 0;
         List<Thread> threads = new ArrayList();   
-        
         
         for(int i = 0; i < cps.length;i++){
             em.joue(cps[i]);

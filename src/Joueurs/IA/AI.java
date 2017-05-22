@@ -8,13 +8,15 @@ package Joueurs.IA;
 import Joueurs.Ordinateur;
 import Modele.Arbitres.*;
 import Modele.Plateau;
+import java.util.Map;
 
 /**
  *
  * @author hadjadjl
  */
 public abstract class AI {
-
+    
+    public Map<Plateau, Integer> configurations;
     /**
      *
      */
@@ -39,7 +41,7 @@ public abstract class AI {
     /**
      *
      */
-        protected Heuristique heurs;
+    protected Heuristique heurs;
 
     /**
      *

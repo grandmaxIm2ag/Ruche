@@ -14,7 +14,7 @@ import Modele.Plateau;
  *
  * @author lies
  */
-public class HeursFacille extends Heuristique{
+public class HeursFacile extends Heuristique{
     
     @Override
     public int EvalPlateau(Arbitre a, Coup[] d, Plateau p, Ordinateur me) {

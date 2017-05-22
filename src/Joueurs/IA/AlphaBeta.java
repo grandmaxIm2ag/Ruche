@@ -6,18 +6,19 @@
 package Joueurs.IA;
 
 import Joueurs.Ordinateur;
-import Modele.Arbitres.*;
+import Modele.Arbitres.Arbitre;
 import Modele.Coup;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  *
  * @author hadjadjl
  */
-public class MinMax extends AI {
+public class AlphaBeta extends AI {
+    
     Emulateur em;
     Coup[] cps;
+    int[] max_poids;
+    int[] min_poids;
     /**
      *
      * @param me
@@ -27,19 +28,22 @@ public class MinMax extends AI {
      * @param maxTimeInMillis
      * @param cp
      */
-    public MinMax(Ordinateur me, Arbitre a, Heuristique heuristicFunction, int searchDepth, int maxTimeInMillis, Coup[] cp) {
+    public AlphaBeta(Ordinateur me, Arbitre a, Heuristique heuristicFunction, int searchDepth, int maxTimeInMillis, Coup[] cp) {
         super(me, a, heuristicFunction, searchDepth, maxTimeInMillis);
         cps = cp;
        // System.out.println("j0 "+a.joueur(0).pions()[0]);
         em = new Emulateur(a);
+        heurs.SetConf(configurations);
+        em.SetConf(configurations);
+        min_poids = new int[searchDepth];
+        min_poids = new int[searchDepth];
     }
     
     
      public Coup nextmove(){
-        int max_poids = AI.MIN;
+        max_poids[0] = AI.MIN;
         int meilleur_coup = 0;
-        List<Thread> threads = new ArrayList();   
-        
+        //List<Thread> threads = new ArrayList();   
         
         for(int i = 0; i < cps.length;i++){
             em.joue(cps[i]);
@@ -51,8 +55,8 @@ public class MinMax extends AI {
                 System.out.println(cpt.length);*/
 
                 int hr = Min(em/*.clone()*/,1, cpt);
-                if(hr > max_poids){
-                    max_poids = hr;
+                if(hr > max_poids[0]){
+                    max_poids[0] = hr;
                     meilleur_coup = i;      
                 }
             }
@@ -65,7 +69,7 @@ public class MinMax extends AI {
        // System.out.println("appel max : "+(profondeur));
         if(searchDepth - profondeur <= 0)
             return heurs.EvalPlateau(emu, d, me);
-        int max_poids = AI.MIN;
+        max_poids[profondeur] = AI.MIN;
         profondeur++;
         for(int i=0;i < d.length;i++){
             //System.out.println("max "+i+" "+d[i]);
@@ -73,20 +77,20 @@ public class MinMax extends AI {
             Coup [] cpt = emu.PossibleMoves();
             if(cpt != null && cpt.length != 0){
                 int tmp = Min(emu/*.clone()*/,profondeur, cpt);
-                if(tmp > max_poids){
-                    max_poids = tmp;
+                if(tmp > max_poids[profondeur-1]){
+                    max_poids[profondeur-1] = tmp;
                 }
             }
             emu.precedent();
         }
-        return max_poids;
+        return max_poids[profondeur-1];
     }
     
     public int Min(Emulateur emu,int profondeur, Coup[] d){
        // System.out.println("appel min : "+ profondeur);
         if(searchDepth - profondeur <= 0)
             return heurs.EvalPlateau(emu, d, me);
-        int min_poids = AI.MAX;
+        min_poids[profondeur] = AI.MAX;
         profondeur++;
         for(int i=0;i < d.length;i++){
             //System.out.println("min "+i+" "+d[i]);
@@ -94,12 +98,12 @@ public class MinMax extends AI {
             Coup [] cpt = emu.PossibleMoves();
             if(cpt != null && cpt.length != 0){
                 int tmp = Max(emu/*.clone()*/,profondeur,cpt);
-                if(tmp < min_poids){
-                    min_poids = tmp;
+                if(tmp < min_poids[profondeur-1]){
+                    min_poids[profondeur-1] = tmp;
                 }
             }
             emu.precedent();
         }
-        return min_poids;
+        return min_poids[profondeur-1];
     }
 }

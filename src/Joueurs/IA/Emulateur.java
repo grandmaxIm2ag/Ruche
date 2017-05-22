@@ -19,6 +19,7 @@ import Modele.Point;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Stack;
 
 /**
@@ -33,6 +34,8 @@ public class Emulateur implements Runnable{
     Joueur[] joueurs;
     Stack<Coup> historique;
     int jCourant;
+    Map<Plateau, Integer> configMin;
+    Map<Plateau, Integer> configMax;
     
     public Emulateur(Arbitre tmp){
         joueurs = new Joueur[2];
@@ -167,9 +170,15 @@ public class Emulateur implements Runnable{
         return coups;
     }
     
+    public void SetConf(Map<Plateau, Integer> conf){
+        conf.putAll(configMin);
+        conf.putAll(configMax);
+    }
+    
     @Override
     public Emulateur clone(){
-        return new Emulateur(nbCoup, joueurs,jCourant,m,historique );
+        Emulateur mm = new Emulateur(nbCoup, joueurs,jCourant,m,historique );
+        return mm;
     }
 
     @Override
