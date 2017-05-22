@@ -125,7 +125,7 @@ public class Pointeur extends Visiteur {
                     c.tete().pointe();
                 //i(c.insectes().)
                 if (c.utilise() && c.tete().classement() > 1) {
-                    System.err.println("JeanClaudeVanDamn");
+                    //System.err.println("JeanClaudeVanDamn");
                     //popup = new Popup();
                     Rectangle rect = new Rectangle(125,125);
                     //rect.setWidth(100*c.tete().classement() + 12.5*c.tete().classement());
@@ -139,7 +139,7 @@ public class Pointeur extends Visiteur {
                     //Canvas canvas = print(c.tete());
                     box.getChildren().clear();
                     for (Object ins : c.insectes()) {
-                        System.out.println(ins);
+                        //System.out.println(ins);
                         box.getChildren().add(print (((Insecte) ins)));
                     }
                     //rect.widthProperty().bind(box.widthProperty());
@@ -183,7 +183,6 @@ public class Pointeur extends Visiteur {
                         depl = false;
                         return true;
                     } else if (arbitre.initDeplacement() instanceof Cloporte) {
-                        System.out.println ("Cacahahaha");
                         Coup[] coups = arbitre.deplacementPossible(arbitre.initDeplacement());
                         for (Coup coup : coups) {
                             Deplacement deplacement = (Deplacement) coup;
@@ -198,7 +197,7 @@ public class Pointeur extends Visiteur {
                     arbitre.initDeplacement(c.tete());
                     List<Case> tchup = arbitre.plateau().aide();
                     for (Case cas : tchup) {
-                        System.out.println(cas);
+                        //System.out.println(cas);
                     }
                     depl = true;
                 }
