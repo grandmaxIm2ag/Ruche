@@ -20,13 +20,13 @@ public class Humain extends Joueur{
      * @param tabP
      * @param j
      */
-    public Humain(boolean m, Properties p, int[] tabP, int j) {
-        super(m, p, tabP, j);
+    public Humain(boolean m, Properties p, int[] tabP, int j, String n) {
+        super(m, p, tabP, j, n);
     }
     
     @Override
     public Humain clone(){
-        Humain jH = new Humain(main, prop, tabPieces.clone(), numJoueur);    
+        Humain jH = new Humain(main, prop, tabPieces.clone(), numJoueur, nom);    
         return jH;
     }
     

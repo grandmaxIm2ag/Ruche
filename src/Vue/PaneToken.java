@@ -5,20 +5,29 @@
  */
 package Vue;
 
+import Controleur.Bouton;
 import Controleur.ButtonToken;
+import Controleur.TokenListener;
 import Modele.Arbitres.*;
 import javafx.geometry.Insets;
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
+import javafx.scene.shape.Rectangle;
 
 /**
  *
@@ -28,11 +37,14 @@ public class PaneToken {
     private Arbitre arbitre;
     private GridPane leftGrid;
     private GridPane rightGrid;
+    private StackPane right;
+    private StackPane left;
     Label[][] l;
     ToggleButton[][] b;
     private static PaneToken INSTANCE = null;
     GaussianBlur leftBlur;
     GaussianBlur rightBlur;
+    static Label nomAdv;
     
     private PaneToken (Arbitre arbitre) {
         this.arbitre = arbitre;
@@ -41,7 +53,10 @@ public class PaneToken {
         leftBlur = new GaussianBlur();
         rightBlur = new GaussianBlur();
         leftBlur.setRadius(0);
-        rightBlur.setRadius(10);
+        if (arbitre.type() == FabriqueArbitre.LOCAL_JVJ || arbitre.type() == FabriqueArbitre.LOCAL_JVIA )
+            rightBlur.setRadius(10);
+        rightBlur.setRadius(0);
+        nomAdv = new Label();
     }
     
     /**
@@ -58,16 +73,20 @@ public class PaneToken {
         }
     }
     
-    /**
-     *
-     * @return
-     */
-    public GridPane getRightPane() {
-        if (rightGrid != null)
-            return rightGrid;
-        else {
-            createRight();
-            return rightGrid;
+    public static PaneToken getInstance () {
+        return INSTANCE;
+    }
+    
+    public void initialize () {
+        createLeft();
+        createRight();
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 8; j++) {
+                l[i][j].setText("" + arbitre.joueur(i).pion(j));
+                if (arbitre.joueur(i).pion(j) == 0 || arbitre.jCourant()!=i)
+                    b[i][j].setDisable(true);
+                b[i][j].selectedProperty().addListener(new TokenListener(b[i][j], i, j));
+            }
         }
     }
     
@@ -75,16 +94,41 @@ public class PaneToken {
      *
      * @return
      */
-    public GridPane getLeftPane() {
-        if (leftGrid != null)
-            return leftGrid;
+    public Pane getRightPane() {
+        if (right != null)
+            return right;
+        else {
+            createRight();
+            return right;
+        }
+    }
+    
+    /**
+     *
+     * @return
+     */
+    public Pane getLeftPane() {
+        if (left != null)
+            return left;
         else {
             createLeft();
-            return leftGrid;
+            return left;
         }
     }
     
     private void createRight () {
+        right = new StackPane();
+        right.setAlignment(Pos.TOP_CENTER );
+        Rectangle centerRect = new Rectangle();
+        centerRect.setOpacity(0.25);
+        centerRect.widthProperty().bind(right.widthProperty());
+        centerRect.heightProperty().bind(right.heightProperty());
+        centerRect.setArcWidth(20);
+        centerRect.setArcHeight(20);
+        centerRect.setFill(Color.BLACK);
+        DropShadow shadow = new DropShadow();
+        centerRect.setEffect(shadow);
+        
         rightGrid = new GridPane ();
         rightGrid.setHgap(30);
         rightGrid.setVgap(20);
@@ -143,6 +187,12 @@ public class PaneToken {
         bMoskito.setMinWidth(50);
         bMoskito.setMinHeight(50);
         
+        bWoodlouse.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Boutons/woodlouse_red.png"))), CornerRadii.EMPTY, Insets.EMPTY)));
+        bWoodlouse.setMaxWidth(50);
+        bWoodlouse.setMaxHeight(50);
+        bWoodlouse.setMinWidth(50);
+        bWoodlouse.setMinHeight(50);
+                
         bBee.setToggleGroup(group);
         bBeetle.setToggleGroup(group);
         bGrasshopper.setToggleGroup(group);
@@ -160,7 +210,13 @@ public class PaneToken {
         Label lLadybug = new Label();
         Label lMoskito = new Label();
         Label lWoudlose = new Label();
-        
+        lBee.setTextFill(Color.WHITE);
+        lBeetle.setTextFill(Color.WHITE);
+        lGrasshopper.setTextFill(Color.WHITE);
+        lSpider.setTextFill(Color.WHITE);
+        lLadybug.setTextFill(Color.WHITE);
+        lMoskito.setTextFill(Color.WHITE);
+        lWoudlose.setTextFill(Color.WHITE);
         lBee.setText("" + arbitre.joueur(1).pion(0));
         lBeetle.setText("" + arbitre.joueur(1).pion(1));
         lGrasshopper.setText("" + arbitre.joueur(1).pion(2));
@@ -179,29 +235,47 @@ public class PaneToken {
         bMoskito.setOnAction(new ButtonToken(ButtonToken.MOSKITO_BUTTON, lBee, arbitre.joueur(1), arbitre));
         bWoodlouse.setOnAction(new ButtonToken(ButtonToken.WOODLOUSE_BUTTON, lBee, arbitre.joueur(1), arbitre));
         
-        rightGrid.add(bBee, 0, 0);
-        rightGrid.add(lBee, 1, 0);
+        Label joueur = new Label(arbitre.joueur(Arbitre.J1).nom() );
+        joueur.setTextFill(Color.WHITE);
         
-        rightGrid.add(lBeetle, 0, 1);
-        rightGrid.add(bBeetle, 1, 1);
+        rightGrid.add(joueur, 1,0);
         
-        rightGrid.add(bGrasshopper, 0, 2);
-        rightGrid.add(lGrasshopper, 1, 2);
+        rightGrid.add(bBee, 0, 1);
+        rightGrid.add(lBee, 1, 1);
         
-        rightGrid.add(lAnt, 0, 3);
-        rightGrid.add(bAnt, 1, 3);
+        rightGrid.add(lBeetle, 0, 2);
+        rightGrid.add(bBeetle, 1, 2);
         
-        rightGrid.add(bSpider, 0, 4);
-        rightGrid.add(lSpider, 1, 4);
+        rightGrid.add(bGrasshopper, 0, 3);
+        rightGrid.add(lGrasshopper, 1, 3);
         
-        rightGrid.add(lLadybug, 0, 5);
-        rightGrid.add(bLadybug, 1, 5);
+        rightGrid.add(lAnt, 0, 4);
+        rightGrid.add(bAnt, 1, 4);
         
-        rightGrid.add(bMoskito, 0, 6);
-        rightGrid.add(lMoskito, 1, 6);
+        rightGrid.add(bSpider, 0, 5);
+        rightGrid.add(lSpider, 1, 5);
         
-        rightGrid.add(lWoudlose, 0, 7);
-        rightGrid.add(bWoodlouse, 1, 7);
+        rightGrid.add(lLadybug, 0, 6);
+        rightGrid.add(bLadybug, 1, 6);
+        
+        rightGrid.add(bMoskito, 0, 7);
+        rightGrid.add(lMoskito, 1, 7);
+        
+        rightGrid.add(lWoudlose, 0, 8);
+        rightGrid.add(bWoodlouse, 1, 8);
+        
+        Image imageHelp = new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Icone/help.png"));
+        Button btHelp = new Button();
+        btHelp.setOnAction(new Bouton(Bouton.BOUTON_AIDE, arbitre));
+        btHelp.setGraphic(new ImageView(imageHelp));
+        
+        rightGrid.add(btHelp, 1, 9);
+        
+        Image imageAbd = new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Icone/white.png"));
+        Button btAbd = new Button();
+        btAbd.setGraphic(new ImageView(imageAbd));
+        
+        rightGrid.add(btAbd, 0,9);
         
         l[0][0] = lBee;
         l[0][1] = lBeetle;
@@ -221,9 +295,25 @@ public class PaneToken {
         b[0][6] = bMoskito;
         b[0][7] = bWoodlouse;
         
+        //bBee.selectedProperty().addListener(listener);
+        
+        right.getChildren().addAll(centerRect, rightGrid);
+        
+        //update();
     }
     
     private void createLeft () {
+        left = new StackPane();
+        left.setAlignment(Pos.TOP_CENTER );
+        Rectangle centerRect = new Rectangle();
+        centerRect.setOpacity(0.25);
+        centerRect.widthProperty().bind(left.widthProperty());
+        centerRect.heightProperty().bind(left.heightProperty());
+        centerRect.setArcWidth(20);
+        centerRect.setArcHeight(20);
+        centerRect.setFill(Color.BLACK);
+        DropShadow shadow = new DropShadow();
+        centerRect.setEffect(shadow);
         leftGrid = new GridPane ();
         leftGrid.setHgap(30);
         leftGrid.setVgap(20);
@@ -282,6 +372,18 @@ public class PaneToken {
         bMoskito.setMinWidth(50);
         bMoskito.setMinHeight(50);
         
+        bWoodlouse.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Boutons/woodlouse_red.png"))), CornerRadii.EMPTY, Insets.EMPTY)));
+        bWoodlouse.setMaxWidth(50);
+        bWoodlouse.setMaxHeight(50);
+        bWoodlouse.setMinWidth(50);
+        bWoodlouse.setMinHeight(50);
+        
+        bWoodlouse.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Boutons/woodlouse_red.png"))), CornerRadii.EMPTY, Insets.EMPTY)));
+        bWoodlouse.setMaxWidth(50);
+        bWoodlouse.setMaxHeight(50);
+        bWoodlouse.setMinWidth(50);
+        bWoodlouse.setMinHeight(50);
+        
         //bMoskito
         
         bBee.setToggleGroup(group);
@@ -302,6 +404,14 @@ public class PaneToken {
         Label lMoskito = new Label();
         Label lWoudlose = new Label();
         
+        lBee.setTextFill(Color.WHITE);
+        lBeetle.setTextFill(Color.WHITE);
+        lGrasshopper.setTextFill(Color.WHITE);
+        lSpider.setTextFill(Color.WHITE);
+        lLadybug.setTextFill(Color.WHITE);
+        lMoskito.setTextFill(Color.WHITE);
+        lWoudlose.setTextFill(Color.WHITE);
+        
         lBee.setText("" + arbitre.joueur(1).pion(0));
         lBeetle.setText("" + arbitre.joueur(1).pion(1));
         lGrasshopper.setText("" + arbitre.joueur(1).pion(2));
@@ -320,29 +430,45 @@ public class PaneToken {
         bMoskito.setOnAction(new ButtonToken(ButtonToken.MOSKITO_BUTTON, lBee, arbitre.joueur(1), arbitre));
         bWoodlouse.setOnAction(new ButtonToken(ButtonToken.WOODLOUSE_BUTTON, lBee, arbitre.joueur(1), arbitre));
         
-        leftGrid.add(bBee, 0, 0);
-        leftGrid.add(lBee, 1, 0);
+        Image imageHelp = new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Icone/help.png"));
+        Button btHelp = new Button();
+        btHelp.setOnAction(new Bouton(Bouton.BOUTON_AIDE, arbitre));
+        btHelp.setGraphic(new ImageView(imageHelp));
+        Image imageAbd = new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Icone/white.png"));
+        Button btAbd = new Button();
+        btAbd.setGraphic(new ImageView(imageAbd));
         
-        leftGrid.add(lBeetle, 0, 1);
-        leftGrid.add(bBeetle, 1, 1);
+        nomAdv.setText(arbitre.joueur(Arbitre.J2).nom() );
+        nomAdv.setTextFill(Color.WHITE);
         
-        leftGrid.add(bGrasshopper, 0, 2);
-        leftGrid.add(lGrasshopper, 1, 2);
+        leftGrid.add(nomAdv, 0,0);
         
-        leftGrid.add(lAnt, 0, 3);
-        leftGrid.add(bAnt, 1, 3);
+        leftGrid.add(bBee, 0, 1);
+        leftGrid.add(lBee, 1, 1);
         
-        leftGrid.add(bSpider, 0, 4);
-        leftGrid.add(lSpider, 1, 4);
+        leftGrid.add(lBeetle, 0, 2);
+        leftGrid.add(bBeetle, 1, 2);
         
-        leftGrid.add(lLadybug, 0, 5);
-        leftGrid.add(bLadybug, 1, 5);
+        leftGrid.add(bGrasshopper, 0, 3);
+        leftGrid.add(lGrasshopper, 1, 3);
         
-        leftGrid.add(bMoskito, 0, 6);
-        leftGrid.add(lMoskito, 1, 6);
+        leftGrid.add(lAnt, 0, 4);
+        leftGrid.add(bAnt, 1, 4);
         
-        leftGrid.add(lWoudlose, 0, 7);
-        leftGrid.add(bWoodlouse, 1, 7);
+        leftGrid.add(bSpider, 0, 5);
+        leftGrid.add(lSpider, 1, 5);
+        
+        leftGrid.add(lLadybug, 0, 6);
+        leftGrid.add(bLadybug, 1, 6);
+        
+        leftGrid.add(bMoskito, 0, 7);
+        leftGrid.add(lMoskito, 1, 7);
+        
+        leftGrid.add(lWoudlose, 0, 8);
+        leftGrid.add(bWoodlouse, 1, 8);
+        
+        leftGrid.add(btHelp, 0, 9);
+        leftGrid.add(btAbd, 1, 9);
         
         l[1][0] = lBee;
         l[1][1] = lBeetle;
@@ -362,31 +488,82 @@ public class PaneToken {
         b[1][6] = bMoskito;
         b[1][7] = bWoodlouse;
         
+        left.getChildren().addAll(centerRect, leftGrid);
+        //update();
     }
     
     /**
      *
      */
     public void update () {
+        setNomAdv(arbitre.joueur(Arbitre.J2).nom());
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 8; j++) {
                 l[i][j].setText("" + arbitre.joueur(i).pion(j));
-                if (arbitre.joueur(i).pion(j) == 0)
+                if (arbitre.joueur(i).pion(j) == 0 || arbitre.jCourant()==i)
                     b[i][j].setDisable(true);
+                else 
+                    b[i][j].setDisable(false);
             }
         }
-        
+        //if (arbitre.type() == FabriqueArbitre.LOCAL_JVJ || arbitre.type() == FabriqueArbitre.LOCAL_JVIA ) 
         switch (arbitre.jCourant()) {
             case 0:
-                leftBlur.setRadius(10);
+                //leftBlur.setRadius(10);
                 rightBlur.setRadius(0);
                 break;
             case 1:
                 leftBlur.setRadius(0);
-                rightBlur.setRadius(10);
+                //rightBlur.setRadius(10);
                 break;
             default:
         }
         
+    }
+    
+    public void setDefaultBackground (ToggleButton b, int i, int j) {
+        String s = "";
+        switch (j) {
+            case 0:
+                s = "bee";
+                break;
+            case 1:
+                s = "beetle";
+                break;
+            case 2:
+                s = "grasshopper";
+                break;
+            case 3:
+                s = "ant";
+                break;
+            case 4:
+                s = "spider";
+                break;
+            case 5:
+                s = "ladybug";
+                break;
+            case 6:
+                s = "moskito";
+                break;
+            case 7:
+                s = "woodlouse";
+                break;
+            default:
+        }
+        b.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Boutons/" + s + "_red.png"))), CornerRadii.EMPTY, Insets.EMPTY)));
+    }
+    
+    public void uncheck () {
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 8; j++) {
+                b[i][j].setSelected(false);
+                setDefaultBackground(b[i][j], i, j);
+            }
+        }
+        
+    }
+    
+    public static void setNomAdv(String adv){
+        nomAdv.setText(adv);
     }
 }

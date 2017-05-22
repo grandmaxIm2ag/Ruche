@@ -34,10 +34,12 @@ public class Ordinateur extends Joueur{
     public final static int MOYEN=2;
     public final static int DIFFICILE=3;
     
-    
-    public final static long GRAINE = (long)System.nanoTime();
-    //public final static long GRAINE =26043607173097L;
-    //22115700504483L;
+    /**
+     *
+     */
+    public final static long GRAINE = 19783713274596L;//(long)System.nanoTime();
+    //public final static long GRAINE =22115700504483L;
+    //;
     Random r;
     
     Map<Plateau, Integer> configurations;
@@ -50,8 +52,8 @@ public class Ordinateur extends Joueur{
      * @param tabP
      * @param j
      */
-    public Ordinateur(boolean m, int d, Properties p, int[] tabP, int j) {
-        super(m, p, tabP, j);
+    public Ordinateur(boolean m, int d, Properties p, int[] tabP, int j, String n) {
+        super(m, p, tabP, j, n);
         difficulte = d;
        // System.out.println("Joueur "+j+" GRAINE: "+GRAINE);///////////////////////////////////////////////////////////////////////////////
         r= new Random(GRAINE);
@@ -60,7 +62,7 @@ public class Ordinateur extends Joueur{
     }
     
     public Ordinateur(boolean m, Properties p, int[] tabP, int j) {
-        super(m, p, tabP, j);
+        super(m, p, tabP, j, null);
     }
     
     //renvoie un coup aléatoire parmi le tableau d des coups possibles

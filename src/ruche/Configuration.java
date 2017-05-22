@@ -21,7 +21,7 @@ public class Configuration {
         System.exit(1);
     }
 
-    static void chargerProprietes(Properties p, InputStream in) {
+    public static void chargerProprietes(Properties p, InputStream in) {
         try {
             p.load(in);
         } catch (IOException e) {
@@ -35,7 +35,7 @@ public class Configuration {
      */
     public static Properties proprietes() {
         Properties p;
-    InputStream in = ClassLoader.getSystemClassLoader().getResourceAsStream("Reglages/defaut.cfg");
+        InputStream in = ClassLoader.getSystemClassLoader().getResourceAsStream("Reglages/defaut.cfg");
         Properties defaut = new Properties();
         chargerProprietes(defaut, in);
         return defaut;

@@ -14,9 +14,15 @@ import javafx.beans.value.ObservableValue;
  * @author grandmax
  */
 public class Choix implements ChangeListener<Number>{
-    Arbitre a;
+    public final static int CHOIX_MODE = 0;
+    public final static int CHOIX_PLATEAU = 1;
+    public final static int CHOIX_DIFFICULTE = 2;
+    
     int value;
 
+    public Choix(int v){
+        value = v;
+    }
     /**
      *
      * @param ov
@@ -25,7 +31,7 @@ public class Choix implements ChangeListener<Number>{
      */
     @Override
     public void changed(ObservableValue<? extends Number> ov, Number t, Number t1) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        FabriqueArbitre.setInit(value, (int) t1);
     }
     
 }

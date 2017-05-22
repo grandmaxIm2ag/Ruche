@@ -28,6 +28,7 @@ public class ButtonToken implements EventHandler<ActionEvent> {
     Joueur player;
     Arbitre arbitre;
     int[] tab;
+    
 
     /**
      *
@@ -70,6 +71,7 @@ public class ButtonToken implements EventHandler<ActionEvent> {
         this.label = label;
         this.player = player;
         this.arbitre = arbitre;
+        
     }
     
     /**
@@ -104,17 +106,18 @@ public class ButtonToken implements EventHandler<ActionEvent> {
                 case MOSKITO_BUTTON:
                     s = "moskito";
                     break;
+                case WOODLOUSE_BUTTON:
+                    s = "woodlouse";
+                    break;
                 default:
             
                     
             }
                 if (((ToggleButton) e.getSource()).isSelected()) {
                     arbitre.initDepot(type);
-                    if (type != WOODLOUSE_BUTTON)
                     ((ToggleButton) e.getSource()).setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Boutons/" + s + "_grey.png"))), CornerRadii.EMPTY, Insets.EMPTY)));
                 } else {
                     arbitre.plateau().clearAide();
-                    if (type != WOODLOUSE_BUTTON)
                     ((ToggleButton) e.getSource()).setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Boutons/"+s+"_red.png"))), CornerRadii.EMPTY, Insets.EMPTY)));
                 }
                 //break;

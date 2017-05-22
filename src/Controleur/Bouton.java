@@ -79,6 +79,16 @@ public class Bouton implements EventHandler<ActionEvent>{
      *
      */
     public final static int BOUTON_NOUVELLE_PARTIE_COMMENCER = 10;
+    /**
+     *
+     */
+    public final static int BOUTON_PAUSE = 11;
+    /**
+     *
+     */
+    public final static int BOUTON_RECOMMENCER = 12;
+    
+    public final static int BOUTON_SAUVEGARDER_QUITTER = 13;
     
     /**
      *
@@ -98,13 +108,13 @@ public class Bouton implements EventHandler<ActionEvent>{
     public void handle(ActionEvent t) {
         switch(value) {
             case BOUTON_MENU:
-                Interface.goMenu();
+                if(arbitre !=null)
+                    arbitre.abandon();
+                Interface.goTest();
                 break;
             case BOUTON_QUITTER:
-                System.exit(0);
-                break;
+                Interface.quitter();
             case BOUTON_NOUVELLE_PARTIE:
-                //Interface.goPartie();
                 Interface.goNewGame();
                 break;
             case BOUTON_CONFIG:
@@ -114,10 +124,28 @@ public class Bouton implements EventHandler<ActionEvent>{
                 Interface.goCredits();
                 break;
             case BOUTON_NOUVELLE_PARTIE_COMMENCER:
-                Interface.goPartie();
+                Interface.nouvelArbitre();
                 break;
-            case BOUTON_CHARGER:
-                Interface.goLoadGame();
+            case BOUTON_SAUVEGARDER:
+                Interface.sauvegarder();
+                break;
+            case BOUTON_SAUVEGARDER_QUITTER:
+                Interface.sauvegarderQuitter();
+                break;
+            case BOUTON_UNDO:
+                arbitre.precedent();
+                break;
+            case BOUTON_DO:
+                arbitre.refaire();
+                break;
+            case BOUTON_PAUSE:
+                Interface.pause();
+                break;
+            case BOUTON_RECOMMENCER:
+                arbitre.nouvellePartie();
+                break;
+            case BOUTON_AIDE:
+                arbitre.aide();
                 break;
             default:
                 break;

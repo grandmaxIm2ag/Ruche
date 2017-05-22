@@ -9,6 +9,10 @@ package ruche;
 
 import Modele.Arbitres.*;
 import Vue.Interface;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.Properties;
 
 /**
@@ -19,12 +23,24 @@ public class Ruche {
 
     /**
      * @param args the command line arguments
+     * @throws java.io.FileNotFoundException
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws FileNotFoundException, IOException {
         // TODO code application logic here
+        
+        File rep = new File("Sauvegardes");
+        if(!(rep.exists() && rep.isDirectory())){
+            rep.mkdir();
+        }
+        File sauv = new File("Sauvegardes/Sauvegarde");
+        if (!sauv.exists()) {
+            new FileOutputStream(sauv).close();
+        }
         Properties p = Configuration.proprietes();
         Interface it = new Interface();
-        it.creer(args, new FabriqueArbitre(p));
+        FabriqueArbitre.init(p);
+        Interface.creer(args);
+        Interface.goFin("Coucou", Arbitre.GAGNE);
     }
     
 }

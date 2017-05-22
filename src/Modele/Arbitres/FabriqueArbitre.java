@@ -5,8 +5,19 @@
  */
 package Modele.Arbitres;
 
+import Controleur.Choix;
 import Joueurs.Ordinateur;
+import Modele.Chargeur;
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.Arrays;
 import java.util.Properties;
+import java.util.Scanner;
+import ruche.Configuration;
+import ruche.Reglage;
 
 /**
  *<b>FabriqueArbitre est la classe représentant le pattern Fabrique pour les Arbitres </b>
@@ -19,11 +30,11 @@ public class FabriqueArbitre {
     /**
     * La valeur de cette constante est {@value}.
     */
-    public final static int LOCAL_JVJ = 0;
+    public final static int LOCAL_JVJ = 1;
     /**
     * La valeur de cette constante est {@value}.
     */
-    public final static int LOCAL_JVIA = 1;
+    public final static int LOCAL_JVIA = 0;
     /**
     * La valeur de cette constante est {@value}.
     */
@@ -40,36 +51,41 @@ public class FabriqueArbitre {
     /**
      * Les propriétés de la partie.
      */
-    Properties prop;
+    static Properties prop;
     
     /**
      * La représentation du type d'arbitre qui va être fabriquée, peut être modifié.
      * @see FabriqueArbitre#initType(int) 
      */ 
-    private int type;
+    private static int type;
     /**
      * La représentation de la difficulté donné à l'arbitre qui va être favriquée, peut être modifié.
      * @see FabriqueArbitre#initDiff(int) 
      */
-    private int difficulte;
+    private static int difficulte;
     /**
      * Le nom de la sauvegarde donné à l'arbitre qui va être favriquée, peut être modifié.
      * @see FabriqueArbitre#initP(java.lang.String) 
      */
-    private String plateau;
+    private static String plateau;
     /**
      * Les représentations textuelles des différentes difficulté, ne peut pas être modifié.
      */
-    private final String[] diff;
+    private static String[] diff;
     /**
      * Les représentations textuelles des différents types d'Arbitres, ne peut pas être modifié.
      */
-    private final String[] types;
+    private static String[] types;
     /**
      * Les noms des différentes sauvegardes, ne peut pas être modifié.
      */
-    private String[] plateaux;
+    private static String[] plateaux;
     
+    private static String nom1, nom2, ip;
+    
+    private static boolean cocc;
+    private static boolean clop;
+    private static boolean mous;
     /**
      * Constructeur FabriqueArbitre
      * <p>
@@ -83,20 +99,51 @@ public class FabriqueArbitre {
      * @see FabriqueArbitre#difficulte
      * @see FabriqueArbitre#type
      */
-    public FabriqueArbitre(Properties p){
-        this.prop = p;
+    public static void init(Properties p){
+        prop = p;
         
-        this.difficulte = Ordinateur.MOYEN;
-        this.diff = new String[4];
-        this.diff[Ordinateur.FACILE_ALEATOIRE] = "Très Facile";
-        this.diff[Ordinateur.FACILE_HEURISTIQUE] = "Facile";
-        this.diff[Ordinateur.MOYEN] = "Normal";
-        this.diff[Ordinateur.DIFFICILE] = "Difficile";
+        difficulte = Ordinateur.MOYEN;
+        diff = new String[4];
+        diff[Ordinateur.FACILE_ALEATOIRE] = "Très Facile";
+        diff[Ordinateur.FACILE_HEURISTIQUE] = "Facile";
+        diff[Ordinateur.MOYEN] = "Normal";
+        diff[Ordinateur.DIFFICILE] = "Difficile";
+        Scanner fr = null;
+        try{
+            fr =new Scanner(new FileInputStream("Sauvegardes/Sauvegarde"));
+        }catch(FileNotFoundException e){
+            
+        }
+        if(fr!=null && fr.hasNext()){
+            String str = fr.nextLine();
+            if(str == null || str.equals("")){
+                plateaux = new String[1];
+                plateaux[0] = "(none)";
+            }else{
+                plateaux = str.split(":");
+            }
+        }else{
+            plateaux = new String[0];
+        }
         
-        this.type = SIMULATION;
-        this.types = new String[4];
-        this.types[LOCAL_JVJ] = "Joueur vs Joueur";
-        this.types[LOCAL_JVIA] = "Joueur vs IA";
+        //System.err.println(Arrays.toString(plateaux));
+        
+        type = SIMULATION;
+        types = new String[5];
+        types[LOCAL_JVJ] = "Joueur vs Joueur";
+        types[LOCAL_JVIA] = "Joueur vs IA";
+        types[SIMULATION] = "Simulation";
+        types[RESEAU_SERVER] = "Créer une partie en ligne";
+        types[RESEAU_CLIENT] = "Réjoindre un Hôte";
+        
+        cocc=false;
+        clop=false;
+        mous=false;
+        
+        nom1 = "Joueur1";
+        nom2="Joueur2";
+        ip = "127.0.0.1";
+        
     }
     
     /**
@@ -105,21 +152,28 @@ public class FabriqueArbitre {
      * @return l'Arbitre fabriqué.
      *  
      */
-    public Arbitre nouveau(){
-      /*  switch(type){
+    public static Arbitre nouveau(){
+        System.out.println(plateau+" "+Arrays.toString(plateaux) );
+        boolean b = plateau != null && !plateau.equals("(none)");
+        initConf();
+        switch(type){
             case LOCAL_JVJ:
-                return new Local(prop, type, difficulte);
+                if(b)
+                    return new Local(prop, type, difficulte, plateau,nom1,nom2);
+                return new Local(prop, type, difficulte,nom1,nom2);
             case LOCAL_JVIA:
-                return new Local(prop, type, difficulte);
-            case SIMULATION:*/
-                return new SimulationIA(prop, difficulte);
-         /*   case RESEAU_CLIENT:
-                return new ReseauClient(prop);
+                if(b)
+                    return new Local(prop, type, difficulte, plateau,nom1,"Ordinateur");
+                return new Local(prop, type, difficulte,nom1,"Ordinateur");
+            case SIMULATION:
+                return new SimulationIA(prop, difficulte,nom1,nom2);
+            case RESEAU_CLIENT:
+                return new ReseauClient(prop,nom1,"",ip);
             case RESEAU_SERVER:
-                return new ReseauServer(prop);
+                return new ReseauServer(prop,nom1,nom2);
             default:
                 return null;
-        }*/
+        }
     }
     
     /**
@@ -129,7 +183,7 @@ public class FabriqueArbitre {
      * 
      * @see FabriqueArbitre#type
      */
-    public void initType(int t){
+    public static void initType(int t){
         type = t;
     }
 
@@ -140,7 +194,7 @@ public class FabriqueArbitre {
      *
      * @see FabriqueArbitre#difficulte
      */
-    public void initDiff(int t){
+    public static void initDiff(int t){
         difficulte = t;
     }
 
@@ -151,10 +205,20 @@ public class FabriqueArbitre {
      * 
      * @see FabriqueArbitre#plateau
      */
-    public void initP(String p){
+    public static void initP(String p){
+        
         plateau=p;
     }
     
+    public static void initN1(String p){
+        System.err.println("Passé");
+        nom1=p;
+    }
+    
+    public static void initN2(String p){
+        System.err.println("Passé");
+        nom2=p;
+    }
     /**
      *Getter de l'instance types
      * 
@@ -162,7 +226,7 @@ public class FabriqueArbitre {
      * 
      * @see FabriqueArbitre#types
      */
-    public String[] types(){
+    public static String[] types(){
         return types;
     }
 
@@ -173,7 +237,7 @@ public class FabriqueArbitre {
      * 
      * @see FabriqueArbitre#diff
      */
-    public String[] difficultes(){
+    public static String[] difficultes(){
         return diff;
     }
 
@@ -184,8 +248,67 @@ public class FabriqueArbitre {
      * 
      * @see FabriqueArbitre#plateaux
      */
-    public String[] plateaux(){
+    public static String[] plateaux(){
         return plateaux;
     }
     
+    public static void setInit(int c,int i){
+        
+        switch(c){
+            case Choix.CHOIX_MODE:
+                initType(i);
+                break;
+            case Choix.CHOIX_DIFFICULTE:
+                initDiff(i);
+                break;
+            case Choix.CHOIX_PLATEAU:
+                initP(plateaux[i]);
+                break;
+            default:
+                break;
+        }
+        System.err.println(Arrays.toString(plateaux)+" "+plateau+" "+i+" "+c);
+    }
+
+    
+    public static void initConf(){
+        if(cocc && mous && clop){
+            Configuration.chargerProprietes(prop, ClassLoader.getSystemClassLoader().getResourceAsStream("Reglages/conf213.cfg"));
+            Reglage.init(prop);
+        }else if(cocc && mous){
+            Configuration.chargerProprietes(prop, ClassLoader.getSystemClassLoader().getResourceAsStream("Reglages/conf32.cfg"));
+            Reglage.init(prop);
+        }else if(cocc && clop){
+            Configuration.chargerProprietes(prop, ClassLoader.getSystemClassLoader().getResourceAsStream("Reglages/conf21.cfg"));
+            Reglage.init(prop);
+        }else if(mous && clop){
+            Configuration.chargerProprietes(prop, ClassLoader.getSystemClassLoader().getResourceAsStream("Reglages/conf31.cfg"));
+            Reglage.init(prop);
+        }else if(cocc){
+            Configuration.chargerProprietes(prop, ClassLoader.getSystemClassLoader().getResourceAsStream("Reglages/conf2.cfg"));
+            Reglage.init(prop);
+        }else if(mous){
+            Configuration.chargerProprietes(prop, ClassLoader.getSystemClassLoader().getResourceAsStream("Reglages/conf3.cfg"));
+            Reglage.init(prop);
+        }else if(clop){
+            Configuration.chargerProprietes(prop, ClassLoader.getSystemClassLoader().getResourceAsStream("Reglages/conf1.cfg"));
+            Reglage.init(prop);
+        }else{
+            Configuration.chargerProprietes(prop, ClassLoader.getSystemClassLoader().getResourceAsStream("Reglages/defaut.cfg"));
+            Reglage.init(prop);
+        }
+    }
+    
+    public static int type(){
+        return type;
+    }
+    
+    public static void initIP(String p){
+        ip = p;
+    }
+    
+    public static void initChargeur(){
+        Chargeur.init(prop);
+    }
+
 }

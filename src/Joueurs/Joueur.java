@@ -30,13 +30,15 @@ public abstract class Joueur {
      * @param p
      * @param tabP
      * @param j
+     * @param n
      */
-    public Joueur(boolean m, Properties p, int[] tabP, int j){
+    public Joueur(boolean m, Properties p, int[] tabP, int j, String n){
         main=m;
         prop=p;
         tabPieces=tabP;
         nom = "toto";
         numJoueur=j;
+        nom = n;
     }
     
     /**
@@ -122,5 +124,9 @@ public abstract class Joueur {
     @Override
     public Joueur clone(){
         return null;
+    }
+    
+    public void setNom(String n){
+        nom = n;
     }
 }

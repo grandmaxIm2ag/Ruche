@@ -23,7 +23,7 @@ public class TestFabriqueArbitre {
      * @param p
      */
     public TestFabriqueArbitre(Properties p) {
-        fab = new FabriqueArbitre(p);
+      //  fab = new FabriqueArbitre(p);
     }
     
     /**

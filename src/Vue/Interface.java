@@ -5,8 +5,13 @@
  */
 package Vue;
 
+import javafx.stage.Popup;
 import Controleur.Bouton;
+import Controleur.BoutonCommencer;
+import Controleur.Choix;
+import Controleur.SoundSlider;
 import Controleur.Souris;
+import Controleur.SourisListe;
 import javafx.application.*;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
@@ -15,15 +20,20 @@ import javafx.scene.layout.BorderPane;
 import Modele.Arbitres.*;
 import Joueurs.Joueur;
 import Joueurs.Ordinateur;
+import Modele.Chargeur;
 import Modele.Point;
+import Son.SoundEngine;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.Duration;
+import java.util.Arrays;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.animation.RotateTransition;
+import static javafx.application.Application.launch;
 import javafx.beans.binding.Bindings;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.LongProperty;
@@ -32,27 +42,41 @@ import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.*;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Group;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonBar.ButtonData;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.Separator;
 import javafx.scene.control.Slider;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.effect.BlurType;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import static javafx.scene.input.DataFormat.URL;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.input.SwipeEvent;
+import javafx.scene.input.TouchEvent;
 import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
+//import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 //import java.net.URL;
 //import javafx.scene.input.DataFormat.URL;
@@ -69,6 +93,9 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
+import javafx.stage.Modality;
+import javafx.stage.StageStyle;
+import javafx.util.Callback;
 import javax.imageio.ImageIO;
 
 /**
@@ -102,12 +129,19 @@ public class Interface extends Application {
      */
     public final static int CHOIX_PLATEAU = 2;
 
+    static Pointeur pointeur;
     static Arbitre arbitre;
-    static FabriqueArbitre fabrique;
     static BorderPane root;
-    static Scene s;
+    static Scene scene;
     final static boolean fullScreen = false;
-
+    final static boolean soundEnabled = true;
+    static VBox ngBox;
+    static VBox loadBox;
+    static VBox configBox;
+    static String[] args2;
+    public static Stage stage;
+    static Stage dialogConn;
+    static Animation anim;
     /**
      *
      * @param stage
@@ -115,16 +149,28 @@ public class Interface extends Application {
      */
     @Override
     public void start(Stage stage) throws Exception {
-
+        this.stage = stage;
         stage.setTitle("Ruche");
         if (fullScreen) {
-            s = new Scene(root);
+            scene = new Scene(root);
             stage.setFullScreen(true);
         } else {
-            s = new Scene(root, 800, 600);
+            scene = new Scene(root, 1000, 750);
         }
-        stage.setScene(s);
-        goMenu();
+        stage.setScene(scene);
+        try {
+            if (soundEnabled)
+                (SoundEngine.getInstance()).play();
+            else 
+                System.err.println("Interface.start() - Warning - Sound is disabled");
+        } catch (RuntimeException e) {
+            System.err.println("Interface.start() - Error while geting SoundEngine - " + e.getMessage());
+        }
+        //goMenu();
+        goNewGame();
+        FabriqueArbitre.initChargeur();
+        goConfig();
+        goTest();       
         //goPartie();
         stage.show();
     }
@@ -134,12 +180,51 @@ public class Interface extends Application {
      * @param args
      * @param a
      */
-    public static void creer(String[] args, FabriqueArbitre a) {
+    public static void creer(String[] args) {
         root = new BorderPane();
-        fabrique = a;
-        fabrique.initType(FabriqueArbitre.LOCAL_JVJ);
+        root.getChildren().add(new ImageView(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/fond.jpg"))));
+        FabriqueArbitre.initType(FabriqueArbitre.LOCAL_JVJ);
+        args2=args;
+        //dialogConn = new Dialog<>();
         launch(args);
 
+    }
+    
+    public static void goTest () {
+        Rectangle rleft = new Rectangle(100,100);
+        rleft.widthProperty().bind(scene.widthProperty().divide(10));
+        rleft.setOpacity(0);
+        Pane left = new Pane(rleft);
+        root.setLeft(left);
+        Rectangle rright = new Rectangle(100,100);
+        rright.widthProperty().bind(scene.widthProperty().divide(10));
+        rright.setOpacity(0);
+        Pane right = new Pane(rright);
+        root.setRight(right);
+        VBox topBox = new VBox();
+        topBox.setAlignment(Pos.TOP_CENTER);
+        Insets i = new Insets (20,10,20,10);
+        
+        topBox.setPadding(new Insets(20, 10, 20, 10));
+        topBox.setSpacing(10);
+        //topBox.getChildren().addAll(title());
+        root.setTop(topBox);
+        final Tab tabNG = new Tab("New Game"); 
+        tabNG.setContent(ngBox);
+        tabNG.setClosable(false);
+        final Tab tabLD = new Tab("Load Game"); 
+        tabLD.setClosable(false);
+        tabLD.setContent(loadBox);
+        final Tab tabCFG = new Tab("Preferences");
+        tabCFG.setClosable(false);
+        tabCFG.setContent(configBox);
+        TabPane tabPane = new TabPane(); 
+        tabPane.getTabs().setAll(tabNG, tabLD, tabCFG);
+        tabPane.setPadding(new Insets(0, 20, 0, 20));
+        
+        //tabPane
+        tabPane.getStylesheets().add("Style/Style.css");
+        root.setCenter(tabPane);
     }
 
     /**
@@ -181,27 +266,38 @@ public class Interface extends Application {
         return c;
     }
 
+    public static Pointeur pointeur(){
+        return pointeur;
+    }
     /**
      *
      */
     public static void goPartie() {
-        arbitre = fabrique.nouveau();
-        arbitre.init();
         //root.setBottom(new Pane());
         Canvas c = new Canvas(500, 500);
+        pointeur = new Pointeur(c, arbitre);
         Pane stack = new Pane(c);
         root.setCenter(stack);
 
         c.widthProperty().bind(stack.widthProperty());
         c.heightProperty().bind(stack.heightProperty().subtract(50));
 
-        VBox box = new VBox();
+        HBox box = new HBox();
         box.setAlignment(Pos.TOP_CENTER);
-        box.setPadding(new Insets(20, 10, 20, 10));
+        box.setPadding(new Insets(0, 10, 20, 10));
         box.setSpacing(20);
         root.setBottom(box);
-        Button btPrec = new Button("Précédent");
-        Button btSuiv = new Button("Suivant");
+        Image imageUndo = new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Icone/left.png"));
+        Button btPrec = new Button();
+        btPrec.setGraphic(new ImageView(imageUndo));
+        Image imageDo = new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Icone/droite.png"));
+        Button btSuiv = new Button();
+        btSuiv.setGraphic(new ImageView(imageDo));
+        Image imagePause = new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Icone/play.png"));
+        Button btPause = new Button();
+
+        btPause.setGraphic(new ImageView(imagePause));
+        
         Button btSave = new Button("Sauvegarder");
         Button btMenu = new Button("Menu principal");
         btPrec.setMaxWidth(150);
@@ -213,6 +309,7 @@ public class Interface extends Application {
         btSuiv.setOnAction(new Bouton(Bouton.BOUTON_DO, arbitre));
         btSave.setOnAction(new Bouton(Bouton.BOUTON_SAUVEGARDER, arbitre));
         btMenu.setOnAction(new Bouton(Bouton.BOUTON_MENU, arbitre));
+        btPause.setOnAction(new Bouton(Bouton.BOUTON_PAUSE, arbitre));
 
         GridPane bPion = new GridPane();
         bPion.setHgap(10);
@@ -226,17 +323,22 @@ public class Interface extends Application {
         //root.setRight(bPion);
         PaneToken pt = PaneToken.getInstance(arbitre);
         //PaneToken pt = new PaneToken(arbitre);
-        root.setRight(pt.getRightPane());
-        root.setLeft(pt.getLeftPane());
+        pt.initialize();
+        root.setRight(pt.getLeftPane());
+        root.setLeft(pt.getRightPane());
 
-        box.getChildren().addAll(btPrec, btSuiv, btSave, btMenu);
+        if(arbitre instanceof ArbitreReseau)
+            box.getChildren().addAll(btPause, Chat.creer((ArbitreReseau)arbitre,arbitre.joueur(Arbitre.J1).nom() , stage));
+        else
+            box.getChildren().addAll(btPrec, btPause, btSuiv/*, btSave, btMenu*/);
 
         c.setOnMouseMoved(new Souris(arbitre, Souris.SOURIS_BOUGEE, c));
         c.setOnMouseClicked(new Souris(arbitre, Souris.SOURIS_CLIQUEE, c));
 
-
-        Animation anim = new Animation(arbitre, c, cj1, cj2);
+        
+        anim = new Animation(arbitre, c, cj1, cj2);
         anim.start();
+        
 
     }
 
@@ -256,18 +358,20 @@ public class Interface extends Application {
      */
     public static void goMenu() {
         root.setRight(new Pane());
+        root.setBottom(new Pane());
         VBox topBox = new VBox();
         topBox.setAlignment(Pos.TOP_CENTER);
         topBox.setPadding(new Insets(20, 10, 20, 10));
         topBox.setSpacing(10);
-        topBox.getChildren().addAll(title(), titleSect("Accueil"));
+        topBox.getChildren().addAll(title());
         root.setTop(topBox);
 
         StackPane leftStack = new StackPane();
         Rectangle leftRect = new Rectangle();
+        leftRect.setOpacity(0.25);
         leftRect.widthProperty().bind(leftStack.widthProperty());
         leftRect.heightProperty().bind(leftStack.heightProperty());
-        leftRect.setFill(Color.WHITESMOKE);
+        leftRect.setFill(Color.BLACK);
         leftRect.setArcWidth(20);
         leftRect.setArcHeight(20);
         DropShadow shadow = new DropShadow();
@@ -295,28 +399,8 @@ public class Interface extends Application {
         btCFG.setOnAction(new Bouton(Bouton.BOUTON_CONFIG, arbitre));
         btQUIT.setOnAction(new Bouton(Bouton.BOUTON_QUITTER, arbitre));
 
-        Button b = new Button();
-        b.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/woodlouse.png"))), CornerRadii.EMPTY, Insets.EMPTY)));
         
-        b.setMinWidth(100);
-        b.setMinHeight(200);
-        
-        b.setOnAction(new Bouton(Bouton.BOUTON_QUITTER, arbitre));
-        
-        Button bTest = new Button("test");
-        Label tTest = new Label();
-        //tTest.textProperty().bind(i.asString());
-        tTest.textProperty().bind(Bindings.createStringBinding(() -> "" + i.get(), i));
-        
-        bTest.setOnAction(new EventHandler<ActionEvent> () {
-            @Override
-            public void handle (ActionEvent e) {
-                i.set(i.get() +1);
-                System.out.println(i);
-            }
-        });
-        
-        leftBox.getChildren().addAll(btNG, btLD, btCFG, btQUIT, b, bTest, tTest);
+        leftBox.getChildren().addAll(btNG, btLD, btCFG, btQUIT);
 
         root.setLeft(box);
         goNewGame();
@@ -331,24 +415,37 @@ public class Interface extends Application {
         GridPane centerGrid = new GridPane();
         VBox insideBox = new VBox();
         Rectangle centerRect = new Rectangle();
-        centerBox.setPadding(new Insets(20, 20, 20, 0));
+        VBox rectBox = new VBox();
+        rectBox.setAlignment(Pos.CENTER);
+        centerBox.setPadding(new Insets(0, 0, 20, 0));
+        rectBox.getChildren().add(centerRect);
+        //centerRect.setX(centerRect.getX()+20);
+        centerRect.setOpacity(0.25);
+        centerBox.setPadding(new Insets(0, 0, 20, 0));
         centerBox.setAlignment(Pos.TOP_CENTER);
         centerGrid.setHgap(10);
         centerGrid.setVgap(10);
-        centerRect.widthProperty().bind(centerStack.widthProperty());
-        centerRect.heightProperty().bind(centerStack.heightProperty());
+        centerRect.widthProperty().bind(insideBox.widthProperty());
+        centerRect.heightProperty().bind(insideBox.heightProperty());
         centerRect.setArcWidth(20);
         centerRect.setArcHeight(20);
-        centerRect.setFill(Color.WHITESMOKE);
+        centerRect.setFill(Color.BLACK);
         insideBox.setPadding(new Insets(70, 30, 70, 30));
         insideBox.setSpacing(30);
         insideBox.setAlignment(Pos.CENTER);
         DropShadow shadow = new DropShadow();
         centerRect.setEffect(shadow);
 
-        ChoiceBox cbMOD = new ChoiceBox(FXCollections.observableArrayList("Contre IA", "Contre Joueur", "En Ligne"));
-        ChoiceBox cbDIFF = new ChoiceBox(FXCollections.observableArrayList("Facile", "Moyen", "Difficile"));
-
+        ChoiceBox cbMOD = new ChoiceBox();
+        String[] tmp = FabriqueArbitre.types();
+        for(int i=0; i<tmp.length; i++)
+            cbMOD.getItems().add(tmp[i]);
+        cbMOD.getSelectionModel().selectedIndexProperty().addListener(new Choix( Choix.CHOIX_MODE));
+        ChoiceBox cbDIFF = new ChoiceBox();
+        tmp = FabriqueArbitre.difficultes();
+        for(int i=0; i<tmp.length; i++)
+            cbDIFF.getItems().add(tmp[i]);
+        cbDIFF.getSelectionModel().selectedIndexProperty().addListener(new Choix( Choix.CHOIX_DIFFICULTE));
         cbMOD.getSelectionModel().selectFirst();
         cbDIFF.getSelectionModel().selectFirst();
 
@@ -357,9 +454,10 @@ public class Interface extends Application {
 
         TextField tfJ1 = new TextField();
         tfJ1.setPromptText("Nom joueur 1");
-
         TextField tfJ2 = new TextField();
         tfJ2.setPromptText("Nom joueur 2");
+        TextField host = new TextField();
+        host.setPromptText("IP du joueur à rejoindre");
 
         tfJ2.setDisable(true);
 
@@ -367,56 +465,94 @@ public class Interface extends Application {
 
             @Override
             public void changed(ObservableValue ov, Number value, Number newValue) {
-                if (newValue.intValue() >= 1) {
-                    cbDIFF.setDisable(true);
-                    tfJ2.setDisable(false);
-                } else {
-                    cbDIFF.setDisable(false);
-                    tfJ2.setDisable(true);
+                switch(newValue.intValue()){
+                    case FabriqueArbitre.LOCAL_JVJ:
+                        if( !centerGrid.getChildren().contains(tfJ2) )
+                            centerGrid.add(tfJ2, 2, 2);
+                        tfJ2.setDisable(true);
+                        break;
+                    case FabriqueArbitre.LOCAL_JVIA:
+                        if( !centerGrid.getChildren().contains(tfJ2) )
+                            centerGrid.add(tfJ2, 2, 2);
+                        tfJ2.setDisable(false);
+                        break;
+                    case FabriqueArbitre.SIMULATION:
+                        if( !centerGrid.getChildren().contains(tfJ2) )
+                            centerGrid.add(tfJ2, 2, 2);
+                        tfJ2.setDisable(false);
+                        break;
+                    case FabriqueArbitre.RESEAU_SERVER:
+                        if( !centerGrid.getChildren().contains(tfJ2) )
+                            centerGrid.add(tfJ2, 2, 2);
+                        tfJ2.setDisable(false);
+                        break;
+                    case FabriqueArbitre.RESEAU_CLIENT:
+                        if( !centerGrid.getChildren().contains(host) )
+                            centerGrid.add(host, 2, 2);
+                        host.setDisable(false);
+                        break;
+                    default:
+                        break;
                 }
             }
         });
+        // Pour ajouter les boutons de couleur
+        ColorChoice cc = ColorChoice.getInstance();
 
         centerGrid.add(cbMOD, 0, 0);
         centerGrid.add(cbDIFF, 2, 0);
         centerGrid.add(tfJ1, 0, 2);
         centerGrid.add(tfJ2, 2, 2);
+        // pour mettre les gridpane dans le menu
+        centerGrid.add(cc.getPlayer1(), 0, 4);
+        centerGrid.add(cc.getPlayer2(), 2, 4);
         centerGrid.setAlignment(Pos.CENTER);
 
         Button btBEG = new Button("Commencer");
 
         btBEG.setMinWidth(150);
 
-        btBEG.setOnAction(new Bouton(Bouton.BOUTON_NOUVELLE_PARTIE_COMMENCER, arbitre));
+        btBEG.setOnAction(new BoutonCommencer(tfJ1, tfJ2, host));
 
         centerBox.getChildren().add(centerStack);
-        centerStack.getChildren().addAll(centerRect, insideBox);//centerGrid);
+        centerStack.getChildren().addAll(rectBox, insideBox);//centerGrid);
         Label lNG = new Label("Nouvelle Partie");
+        lNG.setTextFill(Color.WHITE);
         lNG.setFont(new Font(22));
+        
+        Label lTest = new Label ();
+        lTest.setMaxWidth(300);
+        lTest.setWrapText(true);
+        lTest.setText("bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla ");
+        
+        insideBox.getChildren().addAll(lNG, centerGrid, btBEG, lTest);
 
-        insideBox.getChildren().addAll(lNG, centerGrid, btBEG);
-
-        root.setCenter(centerBox);
+        //root.setCenter(centerBox);
+        ngBox = centerBox;
     }
 
     /**
      *
      */
-    public static void goLoadGame() {
+    public static void goLoadGame(String[] plateaux) {
         VBox centerBox = new VBox();
         StackPane centerStack = new StackPane();
         GridPane centerGrid = new GridPane();
         VBox insideBox = new VBox();
         Rectangle centerRect = new Rectangle();
-        centerBox.setPadding(new Insets(20, 20, 20, 0));
+        VBox rectBox = new VBox();
+        rectBox.getChildren().add(centerRect);
+        rectBox.setAlignment(Pos.CENTER);
+        centerRect.setOpacity(0.25);
+        centerBox.setPadding(new Insets(0, 0, 20, 0));
         centerBox.setAlignment(Pos.TOP_CENTER);
         centerGrid.setHgap(10);
         centerGrid.setVgap(10);
-        centerRect.widthProperty().bind(centerStack.widthProperty());
-        centerRect.heightProperty().bind(centerStack.heightProperty());
+        centerRect.widthProperty().bind(insideBox.widthProperty());
+        centerRect.heightProperty().bind(insideBox.heightProperty());
         centerRect.setArcWidth(20);
         centerRect.setArcHeight(20);
-        centerRect.setFill(Color.WHITESMOKE);
+        centerRect.setFill(Color.BLACK);
         insideBox.setPadding(new Insets(70, 30, 70, 30));
         insideBox.setSpacing(30);
         insideBox.setAlignment(Pos.CENTER);
@@ -432,13 +568,23 @@ public class Interface extends Application {
         btBEG.setOnAction(new Bouton(Bouton.BOUTON_NOUVELLE_PARTIE_COMMENCER, arbitre));
 
         centerBox.getChildren().add(centerStack);
-        centerStack.getChildren().addAll(centerRect, insideBox);//centerGrid);
+        centerStack.getChildren().addAll(rectBox, insideBox);//centerGrid);
         Label lNG = new Label("Charger Partie");
+        lNG.setTextFill(Color.WHITE);
         lNG.setFont(new Font(22));
+        ChoiceBox cbMOD = new ChoiceBox();
+        ListView<String> list = new ListView<>();
+        list.getItems().addAll(Arrays.asList(plateaux));
+        list.setOnMouseClicked(new SourisListe( CHOIX_PLATEAU, list));
+        
+        list.setMaxWidth(500);
+        list.setMinWidth(500);
+        cbMOD.getSelectionModel().selectedIndexProperty().addListener(new Choix( Choix.CHOIX_PLATEAU));
+        
+        insideBox.getChildren().addAll(lNG, centerGrid, list, btBEG);
 
-        insideBox.getChildren().addAll(lNG, centerGrid, btBEG);
-
-        root.setCenter(centerBox);
+        //root.setCenter(centerBox);
+        loadBox = centerBox;
     }
 
     /**
@@ -478,15 +624,19 @@ public class Interface extends Application {
         GridPane centerGrid = new GridPane();
         VBox insideBox = new VBox();
         Rectangle centerRect = new Rectangle();
-        centerBox.setPadding(new Insets(20, 20, 20, 0));
+        VBox rectBox = new VBox();
+        rectBox.getChildren().add(centerRect);
+        rectBox.setAlignment(Pos.CENTER);
+        centerRect.setOpacity(0.25);
+        centerBox.setPadding(new Insets(0, 20, 0, 0));
         centerBox.setAlignment(Pos.TOP_CENTER);
         centerGrid.setHgap(10);
         centerGrid.setVgap(10);
-        centerRect.widthProperty().bind(centerStack.widthProperty());
-        centerRect.heightProperty().bind(centerStack.heightProperty());
+        centerRect.widthProperty().bind(insideBox.widthProperty());
+        centerRect.heightProperty().bind(insideBox.heightProperty());
         centerRect.setArcWidth(20);
         centerRect.setArcHeight(20);
-        centerRect.setFill(Color.WHITESMOKE);
+        centerRect.setFill(Color.BLACK);
         insideBox.setPadding(new Insets(70, 30, 70, 30));
         insideBox.setSpacing(30);
         insideBox.setAlignment(Pos.CENTER);
@@ -496,12 +646,23 @@ public class Interface extends Application {
         centerGrid.setAlignment(Pos.CENTER);
 
         Slider sSon = new Slider();
-        sSon.setValue(50);
+        sSon.setValue(100);
         sSon.setShowTickMarks(true);
         sSon.setMajorTickUnit(20);
 
         Slider sMusique = new Slider();
-        sMusique.setValue(50);
+        /*
+        sMusique.valueProperty().addListener(new ChangeListener<Number>() {
+            public void changed(ObservableValue<? extends Number> ov,
+                Number old_val, Number new_val) {
+                    System.out.println(new_val.doubleValue());
+                    //SoundEngine.getInstance().volume(new_val);
+            }
+        });
+        */
+        
+        sMusique.valueProperty().addListener(new SoundSlider(SoundSlider.MUSIC_SLIDER));
+        sMusique.setValue(100);
         sMusique.setShowTickMarks(true);
         sMusique.setMajorTickUnit(20);
 
@@ -510,10 +671,13 @@ public class Interface extends Application {
         Label lSon = new Label("Son");
         Label lMusique = new Label("Musique");
         Label lFullScreen = new Label("Plein Ecran");
-
+        lSon.setTextFill(Color.WHITE);
+        lMusique.setTextFill(Color.WHITE);
+        lFullScreen.setTextFill(Color.WHITE);
         centerBox.getChildren().add(centerStack);
-        centerStack.getChildren().addAll(centerRect, insideBox);//centerGrid);
-        Label lNG = new Label("Parametres");
+        centerStack.getChildren().addAll(rectBox, insideBox);//centerGrid);
+        Label lNG = new Label("Configuration");
+        lNG.setTextFill(Color.WHITE);
         lNG.setFont(new Font(22));
 
         centerGrid.add(lSon, 0, 0);
@@ -578,7 +742,8 @@ public class Interface extends Application {
         bCocc.getChildren().addAll(cCocc, cbCocc);
         bInsecte.getChildren().addAll(bMoskito, bClop, bCocc);
         insideBox.getChildren().addAll(lNG, centerGrid, bInsecte);
-        root.setCenter(centerBox);
+        //root.setCenter(centerBox);
+        configBox = centerBox;
     }
 
     /**
@@ -654,4 +819,236 @@ public class Interface extends Application {
     public static void initChoix(ChoiceBox cb, int c) {
 
     }
+
+
+    public static void pause(){
+        // Custom dialog
+        Dialog<Boolean> dialog = new Dialog<>();
+        
+        dialog.setTitle("Pause");
+        dialog.setResizable(false);
+        dialog.initStyle(StageStyle.UNDECORATED);
+
+
+        // Create layout and add to dialog
+        VBox box = new VBox();
+        box.setSpacing(30);
+        box.setAlignment(Pos.CENTER);
+        dialog.getDialogPane().setContent(box);
+        
+        Label l = new Label("Pause");
+        l.setGraphic(new ImageView(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Icone/play.png"))));
+        l.setFont(new Font("Arial", 30));
+        l.setTextFill(Color.RED);
+        box.getChildren().add(l);
+        Button play = new Button("Continuer");
+        play.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                dialog.setResult(Boolean.TRUE);
+                dialog.close();
+            }
+        });
+
+        box.getChildren().addAll(play);
+        Button restart = new Button("Recommencer");
+        restart.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                arbitre.nouvellePartie();
+                dialog.setResult(Boolean.TRUE);
+                dialog.close();
+                
+            }
+        });
+        box.getChildren().addAll(restart);
+        Button save = new Button("Sauvegarder");
+        save.setOnAction(new Bouton(Bouton.BOUTON_SAUVEGARDER,arbitre) );
+        box.getChildren().addAll(save);
+        Button saveQuit = new Button("Sauvegarder Quitter");
+        saveQuit.setOnAction(new Bouton(Bouton.BOUTON_SAUVEGARDER_QUITTER,arbitre) );
+        box.getChildren().addAll(saveQuit);
+        Button menu = new Button("Menu pincipal");
+        menu.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                dialog.setResult(Boolean.TRUE);
+                dialog.close();
+                if(arbitre!=null)
+                    arbitre.abandon();
+                goTest();
+            }
+        });
+        Button quit = new Button("Quitter");
+        quit.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                quitter();
+            }
+        });
+        
+        
+        //
+        box.getChildren().addAll(menu);
+        box.getChildren().addAll(quit);
+        dialog.show();
+                
+		
+    }
+    
+    public static void error(String s1, String s2){
+        Alert alert = new Alert(AlertType.WARNING);
+        alert.setTitle("Erreur");
+        alert.setHeaderText(s1);
+        alert.setContentText(s2);
+        alert.showAndWait();
+    }
+    
+    public static void nouvelArbitre(){
+        arbitre = FabriqueArbitre.nouveau();
+        arbitre.init();
+        System.out.println("Arbitre créé");
+    }
+    
+    public static void goFin(String joueur, int etat){
+        Label l = new Label();
+        l.setFont(Font.font("Cambria", 32));
+        l.setTextFill(Color.WHITE);
+        switch(etat){
+            case Arbitre.GAGNE:
+                l.setText("Vous avez battu "+joueur);
+                break;
+            case Arbitre.PERDU:
+                l.setText(joueur+" vous a battu");
+                break;
+           case Arbitre.NUL:
+                l.setText("Match null");
+                break;
+        }
+        StackPane centerRoot = new StackPane();
+        centerRoot.setAlignment(Pos.CENTER);
+        Rectangle rleft = new Rectangle();
+        rleft.widthProperty().bind(centerRoot.widthProperty());
+        rleft.heightProperty().bind(centerRoot.heightProperty());
+        rleft.setOpacity(0.25);
+        rleft.setFill(Color.BLACK);
+        rleft.setEffect(new DropShadow());
+        VBox center = new VBox();
+        center.getChildren().add(l);
+        HBox menu = new HBox();
+        center.setSpacing(80);
+        center.setAlignment(Pos.CENTER);
+        menu.setSpacing(30);
+        menu.setAlignment(Pos.CENTER);
+        Button recommencer = new Button("Recommencer");
+        recommencer.setOnAction(new Bouton(Bouton.BOUTON_RECOMMENCER,arbitre) );
+        Button quit = new Button("Quitter");
+        quit.setOnAction(new Bouton(Bouton.BOUTON_QUITTER,arbitre) );
+        Button retMenu = new Button("Menu");
+        retMenu.setOnAction(new Bouton(Bouton.BOUTON_MENU ,arbitre) );
+        menu.getChildren().addAll(recommencer, quit, retMenu);
+        center.getChildren().add(menu);
+        centerRoot.getChildren().addAll(rleft,center);
+
+        root.setCenter(centerRoot);
+    }
+    
+    
+    public static void sauvegarder(){
+        TextInputDialog Sauv = new TextInputDialog();
+        Sauv.setTitle("Sauvegarder");
+        Sauv.setHeaderText("Entrez le nom de la sauvegarde, et confirmer");
+        Sauv.setGraphic(new ImageView(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Icone/save.png"))));
+  
+        
+        Optional<String> result = Sauv.showAndWait();
+        if (result.isPresent()){
+            arbitre.sauvegarder(result.get());
+        }
+    }
+    
+    public static void sauvegarderQuitter(){
+        TextInputDialog Sauv = new TextInputDialog();
+        Sauv.setTitle("Sauvegarder & Quitter");
+        Sauv.setHeaderText("Entrez le nom de la sauvegarde, et confirmer");
+        Sauv.setGraphic(new ImageView(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Icone/save.png"))));
+  
+        
+        Optional<String> result = Sauv.showAndWait();
+        if (result.isPresent()){
+            arbitre.sauvegarder(result.get());
+            System.exit(0);
+        }
+    }
+    
+    public static void quitter(){
+        Alert alert = new Alert(AlertType.CONFIRMATION);
+        alert.setTitle("Quitter le jeu");
+        alert.setHeaderText("Vous allez quittez le jeu");
+        alert.setContentText("Êtes vous sûr ?");
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == ButtonType.OK){
+            System.exit(0);
+        }
+    }
+    public static void closeConnexion(){
+        if(dialogConn != null)
+            dialogConn.close();
+    }
+    public static void connexion(){
+        /*
+        dialogConn = new Dialog<>();
+        dialogConn.initModality(Modality.NONE);
+        dialogConn.setTitle("En attente de Connexion");
+        dialogConn.setHeaderText("En attente d'un nouveau joueur");
+        dialogConn.setResizable(true);
+        dialogConn.setGraphic(new ImageView(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Icone/wait.gif"))));
+        ButtonType buttonTypeOk = new ButtonType("Annuler", ButtonData.OK_DONE);
+
+        dialogConn.getDialogPane().getButtonTypes().add(buttonTypeOk);
+        dialogConn.setResultConverter(new Callback<ButtonType, Boolean>() {
+            @Override
+            public Boolean call(ButtonType param) {
+                arbitre.setEtat(Arbitre.FIN);
+                return true;
+                //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+
+        });
+        
+        dialogConn.showAndWait();
+*/
+        GridPane grid = new GridPane();
+	grid.setAlignment(Pos.CENTER);
+	grid.setHgap(10);
+	grid.setVgap(10);
+	grid.setPadding(new Insets(10));
+	
+	Text text = new Text("En attente du nouveau joueur");
+	grid.add(text, 0, 0);
+        grid.add(new ImageView(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Icone/wait.gif"))), 1,1);
+	Button bnOK = new Button("Annuler");
+	grid.add(bnOK, 0, 2);
+	
+	Scene dialog = new Scene(grid);
+	
+	dialogConn = new Stage();
+	dialogConn.setScene(dialog);
+	
+	bnOK.setOnAction((e)-> {
+                arbitre.setEtat(Arbitre.FIN);
+		dialogConn.close();
+                
+	});
+
+	dialogConn.show();
+	dialogConn.setAlwaysOnTop(true);
+	dialogConn.toFront();
+    }
+    
+    public static void fin(){
+        anim.stop();
+    }
+    
 }

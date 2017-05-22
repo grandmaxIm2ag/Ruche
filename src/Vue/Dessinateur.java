@@ -10,6 +10,8 @@ import Modele.Arbitres.*;
 import Modele.Case;
 import Modele.Cloporte;
 import Modele.Coccinelle;
+import Modele.Coup;
+import Modele.Deplacement;
 import Modele.Etendeur;
 import Modele.Fourmie;
 import Modele.Insecte;
@@ -30,7 +32,9 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
+import javafx.stage.Popup;
 
 /**
  *
@@ -41,11 +45,13 @@ public class Dessinateur extends Visiteur{
     static Canvas c;
     Etendeur etendeur;
     GraphicsContext gc;
+    Arbitre arbitre;
     
-    Dessinateur (Canvas c) {
+    Dessinateur (Canvas c, Arbitre a) {
         this.c = c;
         etendeur = new Etendeur();
         gc = c.getGraphicsContext2D();
+        this.arbitre = a;
     }
     
     /**
@@ -58,7 +64,6 @@ public class Dessinateur extends Visiteur{
         //etendeur.fixeEchelle(c.getWidth()/arbitre.plateau().l(), c.getHeight()/arbitre.plateau().h(), c.getWidth()/2, c.getHeight()/2);
         etendeur.fixeEchelle(c, p);
         gc.clearRect(0, 0, c.getWidth(), c.getHeight());
-        gc.strokeRect(0, 0, c.getWidth(), c.getHeight());
         
         
         return false;
@@ -73,11 +78,25 @@ public class Dessinateur extends Visiteur{
     public boolean visite (Case c) {
         etendeur.fixeComposant(c);
         double [][] coords = Interface.hex_corner(etendeur.x(), etendeur.y(), etendeur.h()/2);
-        if (c.estpointe()) {
-            gc.setStroke(Color.RED);
-            System.out.println(c.position().x() + " " + c.position().y());
-        }
-        gc.strokePolygon(coords[0], coords[1], 6);
+        //if (c.estpointe()) {
+            //gc.setStroke(Color.RED);
+            //System.out.println(c.position().x() + " " + c.position().y());
+            //Popup popup = new Popup();
+            //Rectangle rect = new Rectangle(100,100);
+            //popup.xProperty().
+        //}
+        if (arbitre.initDeplacement() != null && arbitre.initDeplacement() instanceof Cloporte) {
+            Coup[] coupPossible = arbitre.deplacementPossible(arbitre.initDeplacement());
+            if(coupPossible !=null)
+                for (Coup coup : coupPossible) {
+                    Deplacement d = (Deplacement)coup;
+                    if (d.source().equals(arbitre.initDeplacement().position()) && c.position().equals(d.destination())) 
+                        gc.strokePolygon(coords[0], coords[1], 6);
+                    else if (arbitre.getInitClopDepl() != null && d.source().equals(arbitre.getInitClopDepl().position()) && c.position().equals(d.destination()))
+                        gc.strokePolygon(coords[0], coords[1], 6);
+                }
+        } else
+            gc.strokePolygon(coords[0], coords[1], 6);
         gc.setStroke(Color.BLACK);
         if (c.utilise() && c.estpointe() && !c.insectes().empty() && (c.tete().classement() > 1)) {
                 gc.setFill(Color.WHITESMOKE);
