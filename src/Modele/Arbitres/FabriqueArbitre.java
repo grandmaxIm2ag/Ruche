@@ -7,11 +7,13 @@ package Modele.Arbitres;
 
 import Controleur.Choix;
 import Joueurs.Ordinateur;
+import Modele.Chargeur;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Properties;
 import java.util.Scanner;
 import ruche.Configuration;
@@ -49,41 +51,41 @@ public class FabriqueArbitre {
     /**
      * Les propriétés de la partie.
      */
-    Properties prop;
+    static Properties prop;
     
     /**
      * La représentation du type d'arbitre qui va être favriquée, peut être modifié.
      * @see FabriqueArbitre#initType(int) 
      */ 
-    private int type;
+    private static int type;
     /**
      * La représentation de la difficulté donné à l'arbitre qui va être favriquée, peut être modifié.
      * @see FabriqueArbitre#initDiff(int) 
      */
-    private int difficulte;
+    private static int difficulte;
     /**
      * Le nom de la sauvegarde donné à l'arbitre qui va être favriquée, peut être modifié.
      * @see FabriqueArbitre#initP(java.lang.String) 
      */
-    private String plateau;
+    private static String plateau;
     /**
      * Les représentations textuelles des différentes difficulté, ne peut pas être modifié.
      */
-    private final String[] diff;
+    private static String[] diff;
     /**
      * Les représentations textuelles des différents types d'Arbitres, ne peut pas être modifié.
      */
-    private final String[] types;
+    private static String[] types;
     /**
      * Les noms des différentes sauvegardes, ne peut pas être modifié.
      */
-    private String[] plateaux;
+    private static String[] plateaux;
     
-    private String nom1, nom2, ip;
+    private static String nom1, nom2, ip;
     
-    private boolean cocc;
-    private boolean clop;
-    private boolean mous;
+    private static boolean cocc;
+    private static boolean clop;
+    private static boolean mous;
     /**
      * Constructeur FabriqueArbitre
      * <p>
@@ -97,15 +99,15 @@ public class FabriqueArbitre {
      * @see FabriqueArbitre#difficulte
      * @see FabriqueArbitre#type
      */
-    public FabriqueArbitre(Properties p){
-        this.prop = p;
+    public static void init(Properties p){
+        prop = p;
         
-        this.difficulte = Ordinateur.MOYEN;
-        this.diff = new String[4];
-        this.diff[Ordinateur.FACILE_ALEATOIRE] = "Très Facile";
-        this.diff[Ordinateur.FACILE_HEURISTIQUE] = "Facile";
-        this.diff[Ordinateur.MOYEN] = "Normal";
-        this.diff[Ordinateur.DIFFICILE] = "Difficile";
+        difficulte = Ordinateur.MOYEN;
+        diff = new String[4];
+        diff[Ordinateur.FACILE_ALEATOIRE] = "Très Facile";
+        diff[Ordinateur.FACILE_HEURISTIQUE] = "Facile";
+        diff[Ordinateur.MOYEN] = "Normal";
+        diff[Ordinateur.DIFFICILE] = "Difficile";
         Scanner fr = null;
         try{
             fr =new Scanner(new FileInputStream("Sauvegardes/Sauvegarde"));
@@ -124,13 +126,15 @@ public class FabriqueArbitre {
             plateaux = new String[0];
         }
         
-        this.type = SIMULATION;
-        this.types = new String[5];
-        this.types[LOCAL_JVJ] = "Joueur vs Joueur";
-        this.types[LOCAL_JVIA] = "Joueur vs IA";
-        this.types[SIMULATION] = "Simulation";
-        this.types[RESEAU_SERVER] = "Créer une partie en ligne";
-        this.types[RESEAU_CLIENT] = "Réjoindre un Hôte";
+        //System.err.println(Arrays.toString(plateaux));
+        
+        type = SIMULATION;
+        types = new String[5];
+        types[LOCAL_JVJ] = "Joueur vs Joueur";
+        types[LOCAL_JVIA] = "Joueur vs IA";
+        types[SIMULATION] = "Simulation";
+        types[RESEAU_SERVER] = "Créer une partie en ligne";
+        types[RESEAU_CLIENT] = "Réjoindre un Hôte";
         
         cocc=false;
         clop=false;
@@ -148,7 +152,8 @@ public class FabriqueArbitre {
      * @return l'Arbitre fabriqué.
      *  
      */
-    public Arbitre nouveau(){
+    public static Arbitre nouveau(){
+        System.out.println(plateau+" "+Arrays.toString(plateaux) );
         boolean b = plateau != null && !plateau.equals("(none)");
         initConf();
         switch(type){
@@ -178,7 +183,7 @@ public class FabriqueArbitre {
      * 
      * @see FabriqueArbitre#type
      */
-    public void initType(int t){
+    public static void initType(int t){
         type = t;
     }
 
@@ -189,7 +194,7 @@ public class FabriqueArbitre {
      *
      * @see FabriqueArbitre#difficulte
      */
-    public void initDiff(int t){
+    public static void initDiff(int t){
         difficulte = t;
     }
 
@@ -200,17 +205,17 @@ public class FabriqueArbitre {
      * 
      * @see FabriqueArbitre#plateau
      */
-    public void initP(String p){
+    public static void initP(String p){
         
         plateau=p;
     }
     
-    public void initN1(String p){
+    public static void initN1(String p){
         System.err.println("Passé");
         nom1=p;
     }
     
-    public void initN2(String p){
+    public static void initN2(String p){
         System.err.println("Passé");
         nom2=p;
     }
@@ -221,7 +226,7 @@ public class FabriqueArbitre {
      * 
      * @see FabriqueArbitre#types
      */
-    public String[] types(){
+    public static String[] types(){
         return types;
     }
 
@@ -232,7 +237,7 @@ public class FabriqueArbitre {
      * 
      * @see FabriqueArbitre#diff
      */
-    public String[] difficultes(){
+    public static String[] difficultes(){
         return diff;
     }
 
@@ -243,11 +248,12 @@ public class FabriqueArbitre {
      * 
      * @see FabriqueArbitre#plateaux
      */
-    public String[] plateaux(){
+    public static String[] plateaux(){
         return plateaux;
     }
     
-    public void setInit(int c,int i){
+    public static void setInit(int c,int i){
+        
         switch(c){
             case Choix.CHOIX_MODE:
                 initType(i);
@@ -261,10 +267,11 @@ public class FabriqueArbitre {
             default:
                 break;
         }
+        System.err.println(Arrays.toString(plateaux)+" "+plateau+" "+i+" "+c);
     }
 
     
-    public void initConf(){
+    public static void initConf(){
         if(cocc && mous && clop){
             Configuration.chargerProprietes(prop, ClassLoader.getSystemClassLoader().getResourceAsStream("Reglages/conf213.cfg"));
             Reglage.init(prop);
@@ -292,12 +299,16 @@ public class FabriqueArbitre {
         }
     }
     
-    public int type(){
+    public static int type(){
         return type;
     }
     
-    public void initIP(String p){
+    public static void initIP(String p){
         ip = p;
+    }
+    
+    public static void initChargeur(){
+        Chargeur.init(prop);
     }
 
 }

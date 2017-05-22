@@ -270,6 +270,7 @@ public abstract class Arbitre {
      */
     public void precedent(){
         if(!historique.isEmpty()){
+            configurations.remove(configurations.size()-1);
             Coup c = historique.pop();
             refaire.push(c);
             if(c instanceof Deplacement){
@@ -315,14 +316,14 @@ public abstract class Arbitre {
      * @param plateau
      */
     public void charger(String plateau){
-        chargeur.init(prop);
-        this.plateau = chargeur.charger();
-        type = chargeur.type();
-        difficulte = chargeur.difficulte();
-        historique = chargeur.historique();
-        refaire = chargeur.refaire();
+        Chargeur.init(prop);
+        this.plateau = Chargeur.charger(plateau);
+        type = Chargeur.type();
+        difficulte = Chargeur.difficulte();
+        historique = Chargeur.historique();
+        refaire = Chargeur.refaire();
         
-        String[] str = chargeur.joueur();
+        String[] str = Chargeur.joueur();
         joueurs[J1].nom = str[J1].split("=")[0];
         String[] str2 = str[J1].split("=")[1].split(":");
         System.err.println(Arrays.toString(str2));
@@ -346,6 +347,17 @@ public abstract class Arbitre {
     public void sauvegarder(String nomSauv){
         String sauv = "";
         
+        switch(type){
+            case FabriqueArbitre.LOCAL_JVJ:
+                sauv = type+"::"+joueurs[J1].nom()+"::"+joueurs[J1].nom()+"\n";
+                break;
+            case FabriqueArbitre.LOCAL_JVIA:
+                sauv = type+"::"+joueurs[J1].nom()+"::"+difficulte+"\n";
+                break;
+            case FabriqueArbitre.SIMULATION:
+                sauv = type+"::"+difficulte+"\n";
+                break;
+        }
         sauv += type+":"+difficulte+":"+nbCoup[J1]+":"+nbCoup[J1]+":"+jCourant+"\n";
         sauv += joueurs[J1]+"\n";
         sauv += joueurs[J2]+"\n";
@@ -374,7 +386,6 @@ public abstract class Arbitre {
             FileWriter output = new FileWriter(f);
             output.write(sauv);
             output.close();
-                //MaJ BDD
         
         }catch(FileNotFoundException e){
             System.err.println("Impossible de sauvegarder, fichier introuvable "+nomSauv);
@@ -392,12 +403,15 @@ public abstract class Arbitre {
             }else{
                 str += (":"+nomSauv);
             }
+            fr.close();
             PrintWriter writer = new PrintWriter("Sauvegardes/Sauvegarde", "UTF-8");
             writer.print(str);
             writer.close();
         }catch(IOException e){
             System.err.println("Echec de la saucegarde "+e);
         }
+        
+        FabriqueArbitre.initChargeur();
     }
     
     /**

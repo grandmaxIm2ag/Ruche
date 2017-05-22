@@ -180,6 +180,7 @@ public class Local extends Arbitre{
             Interface.goFin(joueurs[jCourant].nom(), PERDU);
         }else if(configurations.contains(plateau.hashCode())){
             etat=FIN;
+            System.out.println(configurations.toString()+" "+plateau.hashCode());
             System.err.println("Match nul");
         }else{
             configurations.add(plateau.hashCode());
@@ -189,7 +190,7 @@ public class Local extends Arbitre{
             PaneToken.getInstance(this).update();
             jCourant = ++jCourant % 2;
             plateau.setJoueur(jCourant);
-            configurations.add(plateau.hashCode());
+            //configurations.add(plateau.hashCode());
             //System.err.println(plateau.hashCode());
             List<Coup[]> tab = new LinkedList();
             for(int i=0; i<joueurs[jCourant].pions().length; i++){
@@ -220,13 +221,14 @@ public class Local extends Arbitre{
                 }
                  i+=j;
             }
-            aucun = coups == null || coups.length<=0;
+            System.out.println(aucun);
+            aucun = (coups == null || coups.length<=0);
             if(aucun){
                 prochainJoueur();
-            }else if(precAucun && aucun){
+            }/*else if(precAucun && aucun){
                 etat=FIN;
                 System.err.println("Match nul");
-            }else{
+            }*/else{
                 if(joueurs[jCourant] instanceof Ordinateur){
                     Ordinateur o = (Ordinateur) joueurs[jCourant];
                     precAucun = aucun;
