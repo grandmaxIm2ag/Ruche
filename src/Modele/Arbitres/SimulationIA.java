@@ -166,7 +166,7 @@ public class SimulationIA extends Arbitre {
                 nbCoup[jCourant]++;
                 refaire.clear();
                 historique.add(d);
-                System.err.println(d+" déplacement effectué par "+jCourant);
+                //System.err.println(d+" déplacement effectué par "+jCourant);
                 etat=JOUE_EN_COURS;
          
     }
@@ -183,7 +183,7 @@ public class SimulationIA extends Arbitre {
             nbCoup[jCourant]++;
             refaire.clear();
             historique.add(d);
-            System.err.println("1- Dépot effectué par "+jCourant+" "+d);
+            //System.err.println("1- Dépot effectué par "+jCourant+" "+d);
             etat=JOUE_EN_COURS;
         }else if(nbCoup[jCourant]==0 && jCourant == J2){
             if(plateau.premierPionValide(d)){
@@ -193,10 +193,10 @@ public class SimulationIA extends Arbitre {
                 refaire.clear();
                 historique.add(d);
                 joueurs[jCourant].jouer(d.type());
-                System.err.println("2- Dépot effectué "+d);
+                //System.err.println("2- Dépot effectué "+d);
                 etat=JOUE_EN_COURS;
             }else{
-                System.err.println("Depot impossible");
+                //System.err.println("Depot impossible");
             }
         }else if(deposePionValide(d) && joueurs[jCourant].pion(d.type())>0){
             
@@ -205,11 +205,11 @@ public class SimulationIA extends Arbitre {
             nbCoup[jCourant]++;
             refaire.clear();
             historique.add(d);
-            System.err.println("3- Dépot effectué "+d);
+            //System.err.println("3- Dépot effectué "+d);
             etat=JOUE_EN_COURS;
             
         }else{
-            System.err.println("Depot impossible");
+            //System.err.println("Depot impossible");
         }
     }
 }

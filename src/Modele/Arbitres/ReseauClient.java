@@ -6,38 +6,26 @@
 package Modele.Arbitres;
 
 import Joueurs.Humain;
-import Joueurs.Ordinateur;
 import static Modele.Arbitres.Arbitre.ATTENTE_COUP;
 import static Modele.Arbitres.Arbitre.J1;
 import static Modele.Arbitres.Arbitre.J2;
 import static Modele.Arbitres.Arbitre.JOUE_EN_COURS;
 import Modele.Arbitres.producteurConsommateur.Consommateur;
-import Modele.Arbitres.producteurConsommateur.File;
 import Modele.Arbitres.producteurConsommateur.Producteur;
-import Modele.Coup;
 import Modele.Deplacement;
 import Modele.Depot;
-import Modele.FabriqueInsecte;
-import Modele.Insecte;
 import Modele.Point;
 import Vue.Chat;
 import Vue.Interface;
-import Vue.PaneToken;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ConnectException;
-import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 import java.net.UnknownHostException;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Properties;
-import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.scene.input.MouseEvent;
@@ -189,7 +177,7 @@ public class ReseauClient extends ArbitreReseau{
             case JOUE_EN_COURS:
                 temps_ecoule+=nouv;
                 if(temps_ecoule>=100000000){
-                    System.out.println("Joue déplacement "+enCours);
+                    //System.out.println("Joue déplacement "+enCours);
                     temps_ecoule=0;
                     if(enCours!=null){
                         plateau.deplacePion(enCours);

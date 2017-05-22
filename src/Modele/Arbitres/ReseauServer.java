@@ -102,11 +102,10 @@ public class ReseauServer extends ArbitreReseau{
             joueurs[J2] = new Humain(true, prop, tabPieces2, J2, nom2);
         
             Interface.connexion();
-            System.out.println("Coucou");
             Interface.goPartie();
             etat = INITIALISATION;
         }catch(Exception e){
-            System.err.println(e);
+            System.err.println("Erreur init reseaux"+e);
             etat = FIN;
         }
         
@@ -214,7 +213,7 @@ public class ReseauServer extends ArbitreReseau{
             case JOUE_EN_COURS:
                 temps_ecoule+=nouv;
                 if(temps_ecoule>=100000000){
-                    System.out.println("Joue déplacement "+enCours);
+                    //System.out.println("Joue déplacement "+enCours);
                     temps_ecoule=0;
                     if(enCours!=null){
                         plateau.deplacePion(enCours);

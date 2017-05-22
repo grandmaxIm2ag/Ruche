@@ -253,7 +253,7 @@ public class Plateau extends Composant {
             //System.out.println("coucou");
         Coup[] coups = e.deplacementValide(clone());
             for (Coup coup : coups) {
-                System.out.println(coup + " " + d.equals(coup));
+                //System.out.println(coup + " " + d.equals(coup));
                 b |= d.equals(coup);
             }
         }

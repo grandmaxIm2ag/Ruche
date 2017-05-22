@@ -238,8 +238,8 @@ public abstract class Arbitre {
             joue((Deplacement)d);
         else if(d instanceof Depot)
             joue((Depot)d);
-        else
-            System.err.println("Coup Inconnu "+d);
+        //else
+            //System.err.println("Coup Inconnu "+d);
     }
     
     /**
@@ -396,7 +396,7 @@ public abstract class Arbitre {
             writer.print(str);
             writer.close();
         }catch(IOException e){
-            System.err.println("Echec de la saucegarde "+e);
+            System.err.println("Echec de la sauvegarde "+e);
         }
     }
     
@@ -428,7 +428,7 @@ public abstract class Arbitre {
         while(it.hasNext())
             taille+=it.next().length;
         it = tab.iterator();
-        System.out.println(nbCoup[J1]+" "+nbCoup[J2]);
+        //System.out.println(nbCoup[J1]+" "+nbCoup[J2]);
         coups = new Coup[taille];
         int i=0;
         while(it.hasNext()){
@@ -457,7 +457,7 @@ public abstract class Arbitre {
             return plateau.accept(dessinateur);
         }
         else{
-            System.err.println("Ici");
+            //System.err.println("Ici");
             return plateauAide.accept(dessinateur);
         }
            
@@ -674,8 +674,8 @@ public abstract class Arbitre {
                 Case c2 = new Case(c1.destination().x(), c1.destination().y(), 1, 1);
                 c2.jouable();
                 l.add(c2);
-                if(ins instanceof Cloporte)
-                    System.out.println(c1+"!!!!!!!!!!!!!!!!"+ins.position());
+                //if(ins instanceof Cloporte)
+                    //System.out.println(c1+"!!!!!!!!!!!!!!!!"+ins.position());
                 plateau.setAide(l);
             }
         

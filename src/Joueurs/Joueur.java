@@ -115,7 +115,6 @@ public abstract class Joueur {
      * @param t Type de l'insecte joué
      */
     public void jouer(int t){
-        System.err.println("coucou"+" "+numJoueur);
         tabPieces[t]--;
     }
     

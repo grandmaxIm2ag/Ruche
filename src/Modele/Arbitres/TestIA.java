@@ -7,7 +7,6 @@ package Modele.Arbitres;
 
 import Joueurs.*;
 import Modele.*;
-import java.util.Arrays;
 
 import ruche.Reglage;
 
@@ -33,6 +32,8 @@ public class TestIA extends Arbitre{
     String resultatsBrut;
     String resultatMoyenne;
     
+    boolean dejaVu;////////////////////////////////////////////////////////////////////////
+    
     /**
      * 
      * @param p
@@ -49,6 +50,7 @@ public class TestIA extends Arbitre{
         nbCoupsJouesJ1= new int[nbSimulations];
         victoires=new int[nbSimulations];
         nom=d1+"::"+d2+"_"+nbSimulations;
+        dejaVu=false;///////////////////////////////////////////////////////////////////////////////
     }
     
     public int[] simulation(){
@@ -56,12 +58,14 @@ public class TestIA extends Arbitre{
         long finPartie;
         String res="";
         for(int i=0;i<nbSimulations;i=i+1){
-            System.err.println("Nouvelle Partie "+i);
+            //System.err.println("Nouvelle Partie "+i);
+            configurations.clear();
+            dejaVu=false;
             debutPartie=System.nanoTime();
             //nouvellePartie();
             simulation2();
             victoires[i]=victorieux;
-            nbCoupsJouesJ1[i]=nbCoup[victorieux];
+            nbCoupsJouesJ1[i]=nbCoup[0];
             finPartie=System.nanoTime();
             tempsParties[i]=finPartie-debutPartie;
             
@@ -158,16 +162,20 @@ public class TestIA extends Arbitre{
       
     @Override
     public void prochainJoueur() {
-        System.out.println(Arrays.toString(joueurs[J1].pions())+" "+Arrays.toString(joueurs[J2].pions()));
-        jCourant = ++jCourant % 2;
-        //etat = ATTENTE_COUP;
+        //System.out.println(Arrays.toString(joueurs[J1].pions())+" "+Arrays.toString(joueurs[J2].pions()));
         if(plateau.estEncerclee(jCourant)){
             etat=FIN;
             victorieux=++jCourant % 2;
-        }else if(nul()) {
+        }else if(configurations.contains(plateau.hashCode()) && dejaVu){
             etat=FIN;
+            System.err.println("Match nul");
             victorieux=-1;
         }else{
+            if(configurations.contains(plateau.hashCode())){
+                dejaVu=true;
+            }
+            configurations.add(plateau.hashCode());
+            jCourant = ++jCourant % 2;
             List<Coup[]> tab = new LinkedList();
             for(int i=0; i<joueurs[jCourant].pions().length; i++){
                 if(joueurs[jCourant].pions()[i]!=0){
@@ -186,7 +194,7 @@ public class TestIA extends Arbitre{
             while(it.hasNext())
                 taille+=it.next().length;
             it = tab.iterator();
-            System.out.println(nbCoup[J1]+" "+nbCoup[J2]);
+            System.err.println(nbCoup[J1]+" "+nbCoup[J2]);
             coups = new Coup[taille];
             int i=0;
             while(it.hasNext()){
@@ -200,7 +208,6 @@ public class TestIA extends Arbitre{
             aucun = coups == null || coups.length<=0;
             if(aucun){
                 etat=JOUE_EN_COURS;
-                //prochainJoueur();
             }else if(precAucun && aucun){
                 etat=FIN;
                 victorieux=-1;
@@ -225,7 +232,6 @@ public class TestIA extends Arbitre{
                 nbCoup[jCourant]++;
                 historique.add(d);
                 etat = JOUE_EN_COURS;
-//prochainJoueur();     
     }
 
     /**
@@ -247,7 +253,7 @@ public class TestIA extends Arbitre{
                 historique.add(d);
                 joueurs[jCourant].jouer(d.type());
             }else{
-                System.err.println("Depot impossible");
+                //System.err.println("Depot impossible");
             }
         }else if(deposePionValide(d) && joueurs[jCourant].pion(d.type())>0){
             joueurs[jCourant].jouer(d.type());
@@ -255,9 +261,8 @@ public class TestIA extends Arbitre{
             nbCoup[jCourant]++;
             historique.add(d);
         }else{
-            System.err.println("Depot impossible");
+            //System.err.println("Depot impossible");
         }
-        //prochainJoueur();
         etat = JOUE_EN_COURS;
     }
         
