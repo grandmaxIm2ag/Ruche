@@ -23,7 +23,10 @@ import java.util.Properties;
 public class Ruche {
 
     /**
+     * 
      * @param args the command line arguments
+     * @throws FileNotFoundException
+     * @throws IOException 
      */
     public static void main(String[] args) throws FileNotFoundException, IOException {
         // TODO code application logic here
@@ -37,7 +40,7 @@ public class Ruche {
             new FileOutputStream(sauv).close();
         }
         Properties p = Configuration.proprietes();
-        //TestIA t=new TestIA(p,Ordinateur.FACILE_HEURISTIQUE,Ordinateur.FACILE_ALEATOIRE,100);
+        //TestIA t=new TestIA(p,Ordinateur.FACILE_HEURISTIQUE,Ordinateur.FACILE_HEURISTIQUE,100);
         //t.simulation();
         Interface it = new Interface();
         Interface.creer(args, new FabriqueArbitre(p));
