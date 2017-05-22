@@ -213,6 +213,7 @@ public class ReseauClient extends ArbitreReseau{
                 plateau.clearAide();
                 break;
             case FIN:
+                Interface.fin();
                 actions[J1].inserer("Fin");
                 Interface.goTest();
                 out.close();

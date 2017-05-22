@@ -315,7 +315,7 @@ public abstract class Arbitre {
      * @param plateau
      */
     public void charger(String plateau){
-        chargeur.init(prop, plateau);
+        chargeur.init(prop);
         this.plateau = chargeur.charger();
         type = chargeur.type();
         difficulte = chargeur.difficulte();
@@ -574,6 +574,7 @@ public abstract class Arbitre {
                 plateau.clearAide();
                 break;
             case FIN:
+                Interface.fin();
                 break;
         }
     }

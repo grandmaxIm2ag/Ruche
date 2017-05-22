@@ -239,8 +239,10 @@ public class ReseauServer extends ArbitreReseau{
                 plateau.clearAide();
                 break;
             case FIN:
+                Interface.fin();
                 try{
                     serverSocket.close();
+                    System.out.println(accept.isAlive());
                 }catch(IOException e){
                     
                 }
@@ -259,6 +261,7 @@ public class ReseauServer extends ArbitreReseau{
                     }
                 }
                 Interface.goTest();
+                
                 break;
         }
     }

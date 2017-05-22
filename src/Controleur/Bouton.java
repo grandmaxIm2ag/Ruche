@@ -110,7 +110,7 @@ public class Bouton implements EventHandler<ActionEvent>{
             case BOUTON_MENU:
                 if(arbitre !=null)
                     arbitre.abandon();
-                Interface.goMenu();
+                Interface.goTest();
                 break;
             case BOUTON_QUITTER:
                 Interface.quitter();

@@ -140,7 +140,7 @@ public class Interface extends Application {
     static String[] args2;
     public static Stage stage;
     static Stage dialogConn;
-
+    static Animation anim;
     /**
      *
      * @param stage
@@ -336,8 +336,9 @@ public class Interface extends Application {
         c.setOnMouseClicked(new Souris(arbitre, Souris.SOURIS_CLIQUEE, c));
 
         
-        Animation anim = new Animation(arbitre, c, cj1, cj2);
+        anim = new Animation(arbitre, c, cj1, cj2);
         anim.start();
+        
 
     }
 
@@ -870,7 +871,9 @@ public class Interface extends Application {
             public void handle(ActionEvent actionEvent) {
                 dialog.setResult(Boolean.TRUE);
                 dialog.close();
-                goMenu();
+                if(arbitre!=null)
+                    arbitre.abandon();
+                goTest();
             }
         });
         Button quit = new Button("Quitter");
@@ -1033,6 +1036,7 @@ public class Interface extends Application {
 	bnOK.setOnAction((e)-> {
                 arbitre.setEtat(Arbitre.FIN);
 		dialogConn.close();
+                
 	});
 
 	dialogConn.show();
@@ -1040,6 +1044,8 @@ public class Interface extends Application {
 	dialogConn.toFront();
     }
     
-    
+    public static void fin(){
+        anim.stop();
+    }
     
 }

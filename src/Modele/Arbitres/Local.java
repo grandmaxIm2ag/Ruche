@@ -125,8 +125,6 @@ public class Local extends Arbitre{
     public void joue(Depot d){
         System.err.println("caca" + d.joueur());
         if(nbCoup[jCourant]==0 && jCourant == J1){
-            System.out.println(Arrays.toString(joueurs[J1].pions()));
-            System.out.println(Arrays.toString(joueurs[J2].pions()));
             joueurs[d.joueur()].jouer(d.type());
             plateau.premierPion(FabriqueInsecte.creer(d.type(), jCourant, new Point(0,0)));
             etat=A_JOUER;
@@ -185,14 +183,14 @@ public class Local extends Arbitre{
             System.err.println("Match nul");
         }else{
             configurations.add(plateau.hashCode());
-            System.err.println(plateau.hashCode());
+            //System.err.println(plateau.hashCode());
             
             etat = ATTENTE_COUP;
             PaneToken.getInstance(this).update();
             jCourant = ++jCourant % 2;
             plateau.setJoueur(jCourant);
             configurations.add(plateau.hashCode());
-            System.err.println(plateau.hashCode());
+            //System.err.println(plateau.hashCode());
             List<Coup[]> tab = new LinkedList();
             for(int i=0; i<joueurs[jCourant].pions().length; i++){
                 if(joueurs[jCourant].pions()[i]!=0){
