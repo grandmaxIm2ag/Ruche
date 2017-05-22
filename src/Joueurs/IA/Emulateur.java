@@ -25,7 +25,7 @@ import java.util.Stack;
  *
  * @author lies
  */
-public class Emulateur {
+public class Emulateur implements Runnable{
     long temps;
     long temps_ecoule;
     Plateau m;
@@ -74,16 +74,18 @@ public class Emulateur {
     
     public void joue(Deplacement d){
                 historique.add(d);
-                System.err.println(d+" déplacement effectué par "+jCourant);     
+                nbCoup[jCourant]++;
+                m.deplacePion(d);
+               // System.err.println(d+" déplacement effectué par "+jCourant);     
     }
-    
+
     public void joue(Depot d){
         if(nbCoup[jCourant]==0 && jCourant == J1){
             joueurs[jCourant].jouer(d.type());
             m.premierPion(FabriqueInsecte.creer(d.type(), jCourant, new Point(0,0)));
             nbCoup[jCourant]++;
             historique.add(d);
-            System.err.println(jCourant + " - 1st Dépot effectué "+d);
+           // System.err.println(jCourant + " - 1st Dépot effectué "+d);
         }else if(nbCoup[jCourant]==0 && jCourant == J2){
             if(m.premierPionValide(d)){
                 joueurs[jCourant].jouer(d.type());
@@ -91,7 +93,7 @@ public class Emulateur {
                 nbCoup[jCourant]++;
                 historique.add(d);
                 joueurs[jCourant].jouer(d.type());
-                System.err.println(jCourant + " - 1st Dépot effectué "+d);
+               // System.err.println(jCourant + " - 1st Dépot effectué "+d);
             }else{
                 System.err.println(jCourant + " - Depot invalide");
             }
@@ -100,9 +102,9 @@ public class Emulateur {
             m.deposePion(d);
             nbCoup[jCourant]++;
             historique.add(d);
-            System.err.println(jCourant + " - Dépot effectué "+d);
+          //  System.err.println(jCourant + " - Dépot effectué "+d);
         }else{
-            System.err.println(jCourant + " - Depot impossible "+d);
+          //  System.err.println(jCourant + " - Depot impossible "+d);
         }
     }
     
@@ -168,5 +170,10 @@ public class Emulateur {
     @Override
     public Emulateur clone(){
         return new Emulateur(nbCoup, joueurs,jCourant,m,historique );
+    }
+
+    @Override
+    public void run() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
