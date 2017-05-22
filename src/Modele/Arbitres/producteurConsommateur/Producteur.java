@@ -6,6 +6,7 @@
 package Modele.Arbitres.producteurConsommateur;
 
 import Modele.Arbitres.Arbitre;
+import Modele.Arbitres.ArbitreReseau;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -27,7 +28,8 @@ public class Producteur implements Runnable{
         boolean b = true;
         while(b){
             String l = actions[Arbitre.J1].extraire();
-            b &= !(l.equals("Fin")||l.equals("Abandon"));
+            System.err.println(l);
+            b &= !(l.substring(1).equals("Fin")||l.equals("Abandon"));
             out.println(l);
         }
     }

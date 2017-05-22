@@ -5,6 +5,7 @@
  */
 package Vue;
 
+import Controleur.Bouton;
 import Controleur.ButtonToken;
 import Modele.Arbitres.*;
 import javafx.geometry.Insets;
@@ -42,6 +43,7 @@ public class PaneToken {
     private static PaneToken INSTANCE = null;
     GaussianBlur leftBlur;
     GaussianBlur rightBlur;
+    static Label nomAdv;
     
     private PaneToken (Arbitre arbitre) {
         this.arbitre = arbitre;
@@ -53,6 +55,7 @@ public class PaneToken {
         if (arbitre.type() == FabriqueArbitre.LOCAL_JVJ || arbitre.type() == FabriqueArbitre.LOCAL_JVIA )
             rightBlur.setRadius(10);
         rightBlur.setRadius(0);
+        nomAdv = new Label();
     }
     
     /**
@@ -261,6 +264,7 @@ public class PaneToken {
         
         Image imageHelp = new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Icone/help.png"));
         Button btHelp = new Button();
+        btHelp.setOnAction(new Bouton(Bouton.BOUTON_AIDE, arbitre));
         btHelp.setGraphic(new ImageView(imageHelp));
         
         rightGrid.add(btHelp, 1, 9);
@@ -424,15 +428,16 @@ public class PaneToken {
         
         Image imageHelp = new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Icone/help.png"));
         Button btHelp = new Button();
+        btHelp.setOnAction(new Bouton(Bouton.BOUTON_AIDE, arbitre));
         btHelp.setGraphic(new ImageView(imageHelp));
         Image imageAbd = new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Icone/white.png"));
         Button btAbd = new Button();
         btAbd.setGraphic(new ImageView(imageAbd));
         
-        Label joueur = new Label(arbitre.joueur(Arbitre.J2).nom() );
-        joueur.setTextFill(Color.WHITE);
+        nomAdv.setText(arbitre.joueur(Arbitre.J2).nom() );
+        nomAdv.setTextFill(Color.WHITE);
         
-        leftGrid.add(joueur, 0,0);
+        leftGrid.add(nomAdv, 0,0);
         
         leftGrid.add(bBee, 0, 1);
         leftGrid.add(lBee, 1, 1);
@@ -487,6 +492,7 @@ public class PaneToken {
      *
      */
     public void update () {
+        setNomAdv(arbitre.joueur(Arbitre.J2).nom());
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 8; j++) {
                 l[i][j].setText("" + arbitre.joueur(i).pion(j));
@@ -549,5 +555,9 @@ public class PaneToken {
             }
         }
         
+    }
+    
+    public static void setNomAdv(String adv){
+        nomAdv.setText(adv);
     }
 }

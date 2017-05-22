@@ -45,6 +45,7 @@ public class BoutonCommencer implements EventHandler<ActionEvent> {
                 break;
             case FabriqueArbitre.RESEAU_SERVER:
                 fab.initN1(text1.getText());
+                //Interface.connexion();
                 Interface.nouvelArbitre();
                 break;
             case FabriqueArbitre.RESEAU_CLIENT:
