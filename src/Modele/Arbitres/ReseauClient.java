@@ -20,6 +20,7 @@ import Modele.Depot;
 import Modele.FabriqueInsecte;
 import Modele.Insecte;
 import Modele.Point;
+import Vue.Chat;
 import Vue.Interface;
 import Vue.PaneToken;
 import java.io.BufferedReader;
@@ -39,22 +40,17 @@ import java.util.Properties;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.scene.input.MouseEvent;
 import ruche.Reglage;
 
 /**
  *
  * @author maxence
  */
-public class ReseauClient extends Arbitre{
+public class ReseauClient extends ArbitreReseau{
     private int port;
     String host;
     Socket client;
-    private PrintWriter out;
-    private BufferedReader in;
-    File[] actions;
-    Producteur prod;
-    Consommateur cons;
-    Thread[] threads;
     
     /**
      *
@@ -68,10 +64,6 @@ public class ReseauClient extends Arbitre{
         port = 8000;
         host = ip;
         jCourant = J2;
-        actions = new File[2];
-        actions[J1]=new File();
-        actions[J2]=new File();
-        threads=new Thread[2];
                 
     }
 
@@ -118,8 +110,6 @@ public class ReseauClient extends Arbitre{
             
             joueurs[J1] = new Humain(true, prop, tabPieces, J1, nom1);
             joueurs[J2] = new Humain(true, prop, tabPieces2, J2, nom2);
-            
-            
             etat = INITIALISATION;
             go();
         }catch(UnknownHostException e1){
@@ -141,174 +131,59 @@ public class ReseauClient extends Arbitre{
     
     }
 
-    /**
-     *
-     * @param d
-     */
-    @Override
-    public void joue(Deplacement d){
-        System.out.println ("J'ai fait caca ici aussi :x" + d);
-        if(plateau().reine(jCourant)!=null){
-            System.out.println ("Et là");
-            //if(deplacePionValide(d)){
-            System.out.println ("Et là");
-                enCoursIt = d.route().iterator();
-                enCours = new Deplacement(d.joueur(), enCoursIt.next(),enCoursIt.next());
-                nbCoup[jCourant]++;
-                refaire.clear();
-                historique.add(d);
-                etat = JOUE_EN_COURS;
-                if(jCourant == J1){
-                    actions[J1].inserer(d.toString());
-                }
-                System.err.println(d+" déplacement effectué "+enCours);
-            //}else{
-                //System.err.println("Deplacement impossible "+d);
-            //}
-        }else{
-            System.err.println("Déplacement impossible tant que la reine n'a pas été déposée "+jCourant);
-        }
-    }
-
-    /**
-     *
-     * @param d
-     */
-    @Override
-    public void joue(Depot d){
-        if(nbCoup[jCourant] + nbCoup[(jCourant+1)%2]==0){
-            System.out.println(Arrays.toString(joueurs[J1].pions()));
-            System.out.println(Arrays.toString(joueurs[J2].pions()));
-            joueurs[d.joueur()].jouer(d.type());
-            plateau.premierPion(FabriqueInsecte.creer(d.type(), jCourant, new Point(0,0)));
-            System.out.println("(Vérif dépot) "+d.type()+" "+plateau.reine(jCourant));
-            etat=A_JOUER;
-            nbCoup[jCourant]++;
-            refaire.clear();
-            historique.add(d);
-            System.err.println("1- Dépot effectué "+d);
-            if(jCourant == J1){
-                    actions[J1].inserer(d.toString());
-            }
-        }else if(nbCoup[jCourant]==0){
-            if(plateau.premierPionValide(d)){
-                joueurs[jCourant].jouer(d.type());
-                deposePion(d);
-                nbCoup[jCourant]++;
-                refaire.clear();
-                historique.add(d);
-                System.err.println("2- Dépot effectué "+d);
-                if(jCourant == J1){
-                    actions[J1].inserer(d.toString());
-                }
-                etat=A_JOUER;
-            }else{
-                System.err.println("Depot impossible");
-            }
-        }else if(deposePionValide(d) && joueurs[jCourant].pion(d.type())>0){
-            
-            if((plateau.reine(jCourant)==null && (d.type()==Insecte.REINE || nbCoup[jCourant]<3)) || plateau.reine(jCourant)!=null){
-                joueurs[jCourant].jouer(d.type());
-                deposePion(d);
-                nbCoup[jCourant]++;
-                refaire.clear();
-                historique.add(d);
-                System.err.println("3- Dépot effectué "+d);
-                if(jCourant == J1){
-                    actions[J1].inserer(d.toString());
-                }
-                etat=A_JOUER;
-            }else{
-                System.err.println("Vous devez déposé une reine "+jCourant);
-            }
-        }else{
-            System.err.println("Depot impossible");
-        }
-        
-        
-
-    }
-
-    /**
-     *
-     */
-    @Override
-    public void prochainJoueur() {
-        etat = ATTENTE_COUP;
-        PaneToken.getInstance(this).update();
-        jCourant = ++jCourant % 2;
-
-        if(plateau.estEncerclee(jCourant)){
-            etat=FIN;
-            System.err.println(jCourant+" à perdu");
-        }else{
-            List<Coup[]> tab = new LinkedList();
-            for(int i=0; i<joueurs[jCourant].pions().length; i++){
-                if(joueurs[jCourant].pions()[i]!=0){
-                    Coup[] tmp = depotPossible(jCourant, i);
-                    if(tmp!=null)
-                        tab.add(tmp);
-                }
-            }
-
-            Coup[] tmp;
-            if((tmp=deplacementPossible(jCourant))!=null)
-                tab.add(tmp);
-
-            int taille= 0;
-            Iterator<Coup[]> it = tab.iterator();
-            while(it.hasNext())
-                taille+=it.next().length;
-            it = tab.iterator();
-            System.out.println(nbCoup[J1]+" "+nbCoup[J2]);
-            coups = new Coup[taille];
-            int i=0;
-            while(it.hasNext()){
-                Coup[] x = it.next();
-                int j;
-                for(j=0; j<x.length; j++){
-                    coups[i+j]=x[j];
-                }
-                 i+=j;
-            }
-            aucun = coups == null || coups.length<=0;
-            if(aucun){
-                prochainJoueur();
-            }else if(precAucun && aucun){
-                etat=FIN;
-                System.err.println("Match nul");
-            }else{
-                
-            }
-        }
-    }
-    
     @Override
     public void maj(long t){
+        if(!actions[J2].estVide()){
+            String line = actions[J2].extraire();
+            int option = Integer.parseInt(""+line.charAt(0));
+            line = line.substring(1);
+            switch(option){
+                 case MESSAGE:
+                     Chat.writeMessage(line, nom2);
+                     break;
+                 case DEPLACEMENT:
+                     aFaire.add(new Deplacement(J2,line));
+                     break;
+                 case DEPOT:
+                     aFaire.add(new Depot(J2,line));
+                 case PARTIE:
+                     if(line.equals("Abandon" )){
+                         etat=FIN;
+                         actions[J1].inserer("Fin");
+                     }
+                     break;
+                 default:
+                     break;
+            }
+        }
         if(jCourant==J1)
             if(Interface.pointeur().event()!=null){
-            boolean b = this.accept(Interface.pointeur());
-            if(b)
-                plateau.clearAide();
+                boolean b = this.accept(Interface.pointeur());
+                if(b)
+                    plateau.clearAide();
+                    if(Interface.pointeur().event().getEventType() == MouseEvent.MOUSE_CLICKED && etat == AIDE){
+                        etat = ATTENTE_COUP;
+                        aide = false;
+                    }
                 Interface.pointeur().traiter();
             }
         long nouv = t-temps;
         temps=t;
         switch(etat){
+            case AIDE:
+                temps_ecoule+=nouv;
+                if(temps_ecoule>=1000000000){
+                    temps_ecoule=0;
+                    aide = !aide;
+                }
+                break;
             case INITIALISATION:
                 break;
             case ATTENTE_COUP:
                 if(jCourant == J2){
-                    if(!actions[J2].estVide()){
-                        String line = actions[J2].extraire();
-                        if(line.equals("Abandon")){
-                            etat=FIN;
-                            actions[J1].inserer("Fin");
-                        }else if(line.charAt(0)=='(')
-                            joue(new Deplacement(J2,line));
-                        else
-                            joue(new Depot(J2,line));
-                        }
+                    if(!aFaire.isEmpty()){
+                        joue(aFaire.poll());
+                    }
                 }
                 break;
             case JOUE_EN_COURS:
@@ -338,6 +213,7 @@ public class ReseauClient extends Arbitre{
                 plateau.clearAide();
                 break;
             case FIN:
+                Interface.fin();
                 actions[J1].inserer("Fin");
                 Interface.goTest();
                 out.close();
@@ -352,8 +228,7 @@ public class ReseauClient extends Arbitre{
     
     @Override
     public void abandon(){
-        actions[J1].inserer("Abandon");
-        
+        actions[J1].inserer(PARTIE+"Abandon");
         etat=FIN;
     }
 }

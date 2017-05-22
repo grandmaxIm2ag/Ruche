@@ -9,6 +9,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
 import java.util.Scanner;
@@ -27,15 +28,18 @@ public class Chargeur {
     int[] n = {0,0};
     String[] joueurs = {"null", "null"};
     Stack<Coup> h, r, r2;
+    HashMap<String, String> propSauvegarde;
     
     /**
      *
      * @param p
      * @param plateau
      */
-    public void init(Properties p, String plateau){
+    public void init(Properties p){
         try{
-            input = new Scanner(new FileInputStream("Sauvegardes/"+plateau)) ;
+             input = new Scanner(new FileInputStream("Sauvegardes/Sauvegarde")) ;
+             String[] plateaux = input.nextLine().split(":");
+             input.close();
         }catch(FileNotFoundException e){
                  
         }

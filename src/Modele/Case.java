@@ -195,4 +195,9 @@ public class Case extends Composant{
         }
         return str;
     }
+    
+    @Override
+    public int hashCode(){
+        return toString().hashCode();
+    }
 }

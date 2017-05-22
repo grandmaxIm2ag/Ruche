@@ -179,7 +179,7 @@ public class Pointeur extends Visiteur {
                             return true;
                         }
 
-                    } else if (arbitre.initDeplacement().position().equals(c.position())) {
+                    } else if (arbitre.initDeplacement()!=null && arbitre.initDeplacement().position().equals(c.position())) {
                         depl = false;
                         return true;
                     } else if (arbitre.initDeplacement() instanceof Cloporte) {

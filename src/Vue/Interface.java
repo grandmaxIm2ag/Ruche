@@ -5,6 +5,7 @@
  */
 package Vue;
 
+import javafx.stage.Popup;
 import Controleur.Bouton;
 import Controleur.BoutonCommencer;
 import Controleur.Choix;
@@ -50,6 +51,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
@@ -137,7 +139,8 @@ public class Interface extends Application {
     static VBox configBox;
     static String[] args2;
     public static Stage stage;
-
+    static Stage dialogConn;
+    static Animation anim;
     /**
      *
      * @param stage
@@ -151,7 +154,7 @@ public class Interface extends Application {
             scene = new Scene(root);
             stage.setFullScreen(true);
         } else {
-            scene = new Scene(root, 1000, 850);
+            scene = new Scene(root, 1000, 750);
         }
         stage.setScene(scene);
         try {
@@ -182,6 +185,7 @@ public class Interface extends Application {
         fabrique = a;
         fabrique.initType(FabriqueArbitre.LOCAL_JVJ);
         args2=args;
+        //dialogConn = new Dialog<>();
         launch(args);
 
     }
@@ -203,7 +207,7 @@ public class Interface extends Application {
         
         topBox.setPadding(new Insets(20, 10, 20, 10));
         topBox.setSpacing(10);
-        topBox.getChildren().addAll(title());
+        //topBox.getChildren().addAll(title());
         root.setTop(topBox);
         final Tab tabNG = new Tab("New Game"); 
         tabNG.setContent(ngBox);
@@ -323,14 +327,18 @@ public class Interface extends Application {
         root.setRight(pt.getLeftPane());
         root.setLeft(pt.getRightPane());
 
-        box.getChildren().addAll(btPrec, btPause, btSuiv/*, btSave, btMenu*/);
+        if(arbitre instanceof ArbitreReseau)
+            box.getChildren().addAll(btPause, Chat.creer((ArbitreReseau)arbitre,arbitre.joueur(Arbitre.J1).nom() , stage));
+        else
+            box.getChildren().addAll(btPrec, btPause, btSuiv/*, btSave, btMenu*/);
 
         c.setOnMouseMoved(new Souris(arbitre, Souris.SOURIS_BOUGEE, c));
         c.setOnMouseClicked(new Souris(arbitre, Souris.SOURIS_CLIQUEE, c));
 
         
-        Animation anim = new Animation(arbitre, c, cj1, cj2);
+        anim = new Animation(arbitre, c, cj1, cj2);
         anim.start();
+        
 
     }
 
@@ -841,6 +849,15 @@ public class Interface extends Application {
 
         box.getChildren().addAll(play);
         Button restart = new Button("Recommencer");
+        restart.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                arbitre.nouvellePartie();
+                dialog.setResult(Boolean.TRUE);
+                dialog.close();
+                
+            }
+        });
         box.getChildren().addAll(restart);
         Button save = new Button("Sauvegarder");
         save.setOnAction(new Bouton(Bouton.BOUTON_SAUVEGARDER,arbitre) );
@@ -854,14 +871,16 @@ public class Interface extends Application {
             public void handle(ActionEvent actionEvent) {
                 dialog.setResult(Boolean.TRUE);
                 dialog.close();
-                goMenu();
+                if(arbitre!=null)
+                    arbitre.abandon();
+                goTest();
             }
         });
         Button quit = new Button("Quitter");
         quit.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
-                System.exit(0);
+                quitter();
             }
         });
         
@@ -958,4 +977,75 @@ public class Interface extends Application {
             System.exit(0);
         }
     }
+    
+    public static void quitter(){
+        Alert alert = new Alert(AlertType.CONFIRMATION);
+        alert.setTitle("Quitter le jeu");
+        alert.setHeaderText("Vous allez quittez le jeu");
+        alert.setContentText("Êtes vous sûr ?");
+
+        Optional<ButtonType> result = alert.showAndWait();
+        if (result.get() == ButtonType.OK){
+            System.exit(0);
+        }
+    }
+    public static void closeConnexion(){
+        if(dialogConn != null)
+            dialogConn.close();
+    }
+    public static void connexion(){
+        /*
+        dialogConn = new Dialog<>();
+        dialogConn.initModality(Modality.NONE);
+        dialogConn.setTitle("En attente de Connexion");
+        dialogConn.setHeaderText("En attente d'un nouveau joueur");
+        dialogConn.setResizable(true);
+        dialogConn.setGraphic(new ImageView(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Icone/wait.gif"))));
+        ButtonType buttonTypeOk = new ButtonType("Annuler", ButtonData.OK_DONE);
+
+        dialogConn.getDialogPane().getButtonTypes().add(buttonTypeOk);
+        dialogConn.setResultConverter(new Callback<ButtonType, Boolean>() {
+            @Override
+            public Boolean call(ButtonType param) {
+                arbitre.setEtat(Arbitre.FIN);
+                return true;
+                //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            }
+
+        });
+        
+        dialogConn.showAndWait();
+*/
+        GridPane grid = new GridPane();
+	grid.setAlignment(Pos.CENTER);
+	grid.setHgap(10);
+	grid.setVgap(10);
+	grid.setPadding(new Insets(10));
+	
+	Text text = new Text("En attente du nouveau joueur");
+	grid.add(text, 0, 0);
+        grid.add(new ImageView(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Icone/wait.gif"))), 1,1);
+	Button bnOK = new Button("Annuler");
+	grid.add(bnOK, 0, 2);
+	
+	Scene dialog = new Scene(grid);
+	
+	dialogConn = new Stage();
+	dialogConn.setScene(dialog);
+	
+	bnOK.setOnAction((e)-> {
+                arbitre.setEtat(Arbitre.FIN);
+		dialogConn.close();
+                
+	});
+
+	dialogConn.show();
+	dialogConn.setAlwaysOnTop(true);
+	dialogConn.toFront();
+    }
+    
+    public static void fin(){
+        anim.stop();
+    }
+    
 }
