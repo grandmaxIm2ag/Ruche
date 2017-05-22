@@ -178,8 +178,8 @@ public class Ordinateur extends Joueur{
         if(d==null || d.length<= 0)
             return null;
         
-        HeuristiqueV2 heurs = new HeuristiqueV2();
-        MinMax mx = new MinMax(this,a,heurs,3,0,d);
+        HeuristiqueV1 heurs = new HeuristiqueV1();
+        MinMax mx = new MinMax(this,a,heurs,2,0,d);
        
         /* Affichage des coups possibles.
         System.out.println("Appel nextmove avec les coups:");

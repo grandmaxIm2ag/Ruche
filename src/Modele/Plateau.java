@@ -943,8 +943,6 @@ public class Plateau extends Composant {
             nouv.put(p,c);
         });
         
-        for(Map.Entry<Point, Case> entry : nouv.entrySet())
-            System.out.println(entry.getKey()+" "+entry.getValue());
         
         return nouv.hashCode();
     }

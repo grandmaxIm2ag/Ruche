@@ -34,7 +34,7 @@ public class AlphaBetaConcurent extends AI {
         super(me, a, heuristicFunction, searchDepth, maxTimeInMillis);
         cps = cp;
        // System.out.println("j0 "+a.joueur(0).pions()[0]);
-        em = new Emulateur(a);
+        em = new Emulateur(a, me.numJ());
         heurs.SetConf(configurations);
         em.SetConf(configurations);
     }

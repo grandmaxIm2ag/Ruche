@@ -10,6 +10,8 @@ import Modele.Arbitres.*;
 import Modele.Coup;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -31,34 +33,52 @@ public class MinMax extends AI {
         super(me, a, heuristicFunction, searchDepth, maxTimeInMillis);
         cps = cp;
        // System.out.println("j0 "+a.joueur(0).pions()[0]);
-        em = new Emulateur(a);
+        em = new Emulateur(a, me.numJ());
     }
     
     
      public Coup nextmove(){
         int max_poids = AI.MIN;
         int meilleur_coup = 0;
-        List<Thread> threads = new ArrayList();   
+        Thread[] threads = new Thread[cps.length];   
         
+        HeurPartage h = new HeurPartage(false);
         
         for(int i = 0; i < cps.length;i++){
             em.joue(cps[i]);
             Coup [] cpt = em.PossibleMoves();
-            if(cpt != null && cpt.length != 0){
+            
+            threads[i] = new Thread(new Emulateur(false, i, searchDepth, h ,cpt, em.nbCoup,em.joueurs,em.jCourant(),em.m,em.historique, em.me, heurs));
+            threads[i].start();
+            try {
+                threads[i].join();
+            } catch (InterruptedException ex) {
+                Logger.getLogger(MinMax.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            /*if(cpt != null && cpt.length != 0){
                 /* Affichage des coups possibles.
                 for(int k = 0; k < cpt.length;k++)
                  System.out.print(cpt[k]+"  ");
                 System.out.println(cpt.length);*/
 
-                int hr = Min(em/*.clone()*/,1, cpt);
+               /* int hr = Min(em/*.clone()*,1, cpt);
                 if(hr > max_poids){
                     max_poids = hr;
                     meilleur_coup = i;      
                 }
-            }
+            }*/
+            
             em.precedent();
         }
-        return cps[meilleur_coup];
+        System.out.println(threads.length+" threads créés");
+        boolean b = true;
+        while(b){
+            b=false;
+            for(int i=0; i<threads.length; i++)
+                b|=threads[i].isAlive();
+        }
+        return cps[h.indCoup()];
+        
     }
     
     public int Max(Emulateur emu,int profondeur, Coup[] d){
