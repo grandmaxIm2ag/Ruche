@@ -12,11 +12,15 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
 
@@ -27,54 +31,79 @@ import javafx.stage.Stage;
 public class Chat {
     static ArbitreReseau arbitre;
     static String joueur;
-    static ListView<String> board;
+    static ListView<VBox> board;
     static boolean hide;
+    static String lastName = "";
+    static double width;
+    static Button show;
     
     public static Button creer(ArbitreReseau a, String j, Stage s){
         hide = true;
         arbitre = a;
         joueur = j;
-        GridPane rootPane = new GridPane();
-        rootPane.setPadding(new Insets(20));
+        VBox rootBox = new VBox();
+        rootBox.setSpacing(10);
+        rootBox.setPadding(new Insets (10, 10, 10, 10));
+        HBox rootPane = new HBox();
+        rootPane.setPadding(new Insets(0));
         rootPane.setAlignment(Pos.CENTER);
-        rootPane.setHgap(10);
-        rootPane.setVgap(10);
+        rootPane.setSpacing(10);
 
-        board = new ListView<String>();
+        board = new ListView<VBox>();
         
         TextField chatTextField = new TextField();
-        rootPane.add(board, 0, 0);
-        rootPane.add(chatTextField, 0, 1);
+        rootBox.getChildren().addAll(board, rootPane);
+        width = 235;
+        //rootPane.add(board, 0, 0);
+        //rootPane.add(chatTextField, 0, 0);
 
         Stage chat = new Stage();
-        chat.setScene(new Scene(rootPane, 400, 400));
+        chat.setScene(new Scene(rootBox, 400, 400));
         Popup disc = new Popup();
         disc.setX(200); disc.setY(200);
-        disc.getContent().add(rootPane);
+        disc.getContent().add(rootBox);
         chatTextField.setOnAction((ActionEvent event) -> {
             String reply = chatTextField.getText();
-            board.getItems().add(joueur+": "+reply);
+            Bulle b = new Bulle (joueur, reply, Color.AQUAMARINE, !lastName.equals(joueur), width);
+            board.getItems().add(b.getBulle());
+            lastName = joueur;
             arbitre.newMessage(reply);
             chatTextField.clear();
         });
         
         chat.setAlwaysOnTop(true);
         
-        Button show = new Button();
+        show = new Button();
         show.setGraphic(new ImageView(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Icone/chat.png"))));
         show.setOnAction((ActionEvent event) -> {
-            disc.show(s);
+            hide = !disc.isShowing();
+            if (!disc.isShowing()) {
+                disc.show(s);
+                show.setGraphic(new ImageView(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Icone/chat.png"))));
+            } else
+                disc.hide();
+            hide = !disc.isShowing();
         });
         
-        Button hide = new Button("Cacher");
+        Button hide = new Button("Envoyer");
         hide.setOnAction((ActionEvent event) -> {
-            disc.hide();
+            String reply = chatTextField.getText();
+            Bulle b = new Bulle (joueur, reply, Color.AQUAMARINE, !lastName.equals(joueur), width);
+            board.getItems().add(b.getBulle());
+            lastName = joueur;
+            arbitre.newMessage(reply);
+            chatTextField.clear();
         });
-        rootPane.add(hide, 1, 1);
+        //rootPane.add(hide, 1, 0);
+        rootPane.getChildren().addAll(chatTextField, hide);
         return show;
     }
     
     public static void writeMessage(String mess, String nom){
-        board.getItems().add(nom+": "+mess);
+        Bulle b = new Bulle (nom, mess, Color.CHARTREUSE, !lastName.equals(nom), 235);
+        board.getItems().add(b.getBulle());
+        lastName = nom;
+        if(hide)
+            show.setGraphic(new ImageView(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Icone/help.png"))));
     }
 }

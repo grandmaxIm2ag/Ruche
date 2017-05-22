@@ -520,7 +520,12 @@ public class Interface extends Application {
         lNG.setTextFill(Color.WHITE);
         lNG.setFont(new Font(22));
         
-        insideBox.getChildren().addAll(lNG, centerGrid, btBEG);
+        Label lTest = new Label ();
+        lTest.setMaxWidth(300);
+        lTest.setWrapText(true);
+        lTest.setText("bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla ");
+        
+        insideBox.getChildren().addAll(lNG, centerGrid, btBEG, lTest);
 
         //root.setCenter(centerBox);
         ngBox = centerBox;
