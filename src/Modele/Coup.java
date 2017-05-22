@@ -40,4 +40,9 @@ public abstract class Coup {
     public int joueur(){
         return joueur;
     }
+    
+    @Override
+    public Coup clone(){
+        return null;
+    }
 }

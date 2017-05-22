@@ -43,7 +43,7 @@ public class FabriqueArbitre {
     Properties prop;
     
     /**
-     * La représentation du type d'arbitre qui va être favriquée, peut être modifié.
+     * La représentation du type d'arbitre qui va être fabriquée, peut être modifié.
      * @see FabriqueArbitre#initType(int) 
      */ 
     private int type;
@@ -106,20 +106,20 @@ public class FabriqueArbitre {
      *  
      */
     public Arbitre nouveau(){
-        switch(type){
+      /*  switch(type){
             case LOCAL_JVJ:
                 return new Local(prop, type, difficulte);
             case LOCAL_JVIA:
                 return new Local(prop, type, difficulte);
-            case SIMULATION:
+            case SIMULATION:*/
                 return new SimulationIA(prop, difficulte);
-            case RESEAU_CLIENT:
+         /*   case RESEAU_CLIENT:
                 return new ReseauClient(prop);
             case RESEAU_SERVER:
                 return new ReseauServer(prop);
             default:
                 return null;
-        }
+        }*/
     }
     
     /**

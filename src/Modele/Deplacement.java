@@ -93,10 +93,8 @@ public class Deplacement extends Coup{
     
     public Deplacement clone(){
         Deplacement nouv = new Deplacement(joueur, new Point(source.x(), source.y()), new Point(destination.x(), destination.y()));
-        
         nouv.route.clear();
-        nouv.route = cloneList(route);
-        
+        nouv.route = cloneList(route);      
         return nouv;
     }
     

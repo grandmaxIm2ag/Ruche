@@ -18,7 +18,7 @@ import java.util.Map;
  *
  * @author hadjadjl
  */
-public class HeuristiqueV1 extends Heuristique {
+public class HeuristiqueV2 extends Heuristique {
     
     private int freeBugs(Plateau m,int numJoueur) {
         int fr=0;
@@ -88,9 +88,9 @@ public class HeuristiqueV1 extends Heuristique {
         } else if(otherWon) {
             return AI.MIN;
         }
-      /*  if(configurations.get(p)!=null){
+        if(configurations.get(p)!=null){
             return configurations.get(p);
-        } */
+        } 
         heurs = 0;
         int mePossibleDepl = d.length;
         int meTokensOnBoard = freeBugs(p,me.numJ());
@@ -101,9 +101,9 @@ public class HeuristiqueV1 extends Heuristique {
         int otherHexesFilledAroundOpposingQueen = me.nbLiberteesReine(p, me.numJ());
 
         heurs = 10*( otherHexesFilledAroundOpposingQueen - meHexesFilledAroundOpposingQueen)
-               /* + 2*(mePossibleDepl - otherPossibleDepl)*/
+                /*+ 2*(mePossibleDepl - otherPossibleDepl)*/
                 + 1*(meTokensOnBoard - otherTokensOnBoard);
-       // configurations.put(p, heurs);
+        configurations.put(p, heurs);
         return heurs;
     }
     
@@ -126,9 +126,9 @@ public class HeuristiqueV1 extends Heuristique {
         } else if(otherWon) {
             return AI.MIN;
         }
-      /*  if(configurations.get(p)!=null){
-            return configurations.get(p);
-        } */
+        if(configurations.get(a.m)!=null){
+            return configurations.get(a.m);
+        } 
         heurs = 0;
         int mePossibleDepl = d.length;
         int meTokensOnBoard = freeBugs(a.m,me.numJ());
@@ -139,9 +139,9 @@ public class HeuristiqueV1 extends Heuristique {
         int otherHexesFilledAroundOpposingQueen = me.nbLiberteesReine(a.m, me.numJ());
 
         heurs = 10*( otherHexesFilledAroundOpposingQueen - meHexesFilledAroundOpposingQueen)
-               /* + 2*(mePossibleDepl - otherPossibleDepl)*/
+                /*+ 2*(mePossibleDepl - otherPossibleDepl)*/
                 + 1*(meTokensOnBoard - otherTokensOnBoard);
-       // configurations.put(p, heurs);
+        configurations.put(a.m, heurs);
         return heurs;
     }
 }

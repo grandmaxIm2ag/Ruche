@@ -107,6 +107,23 @@ public abstract class Arbitre {
 
     /**
      *
+     * @return
+     */
+    public Stack<Coup> historique(){
+        return historique;
+    }
+    
+    /**
+     *
+     * @param joueur
+     * @return
+     */
+    public int nbcoups(int joueur){
+        return nbCoup[joueur];
+    }
+    
+    /**
+     *
      * @param i
      * @return
      */
@@ -134,7 +151,7 @@ public abstract class Arbitre {
         for (Coup deplacement : deplacements) {
             b |= d.equals(deplacement);
         }
-        
+ 
         return b;
     }
 
@@ -539,7 +556,4 @@ public abstract class Arbitre {
     public void go(){
         etat = ATTENTE_COUP;
     }
-    /*
-    @Override
-    public abstract Arbitre clone();*/
 }

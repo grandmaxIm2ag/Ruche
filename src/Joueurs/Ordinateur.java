@@ -7,6 +7,8 @@ package Joueurs;
 
 import Joueurs.IA.AI;
 import Joueurs.IA.HeuristiqueV1;
+import Joueurs.IA.HeuristiqueV2;
+import Joueurs.IA.MinMax;
 import Modele.Arbitres.*;
 import Modele.Case;
 import Modele.Coup;
@@ -51,10 +53,14 @@ public class Ordinateur extends Joueur{
     public Ordinateur(boolean m, int d, Properties p, int[] tabP, int j) {
         super(m, p, tabP, j);
         difficulte = d;
-        System.out.println("Joueur "+j+" GRAINE: "+GRAINE);///////////////////////////////////////////////////////////////////////////////
+       // System.out.println("Joueur "+j+" GRAINE: "+GRAINE);///////////////////////////////////////////////////////////////////////////////
         r= new Random(GRAINE);
 
         configurations = new HashMap();
+    }
+    
+    public Ordinateur(boolean m, Properties p, int[] tabP, int j) {
+        super(m, p, tabP, j);
     }
     
     //renvoie un coup aléatoire parmi le tableau d des coups possibles
@@ -67,8 +73,8 @@ public class Ordinateur extends Joueur{
                 return heuristiqueSurUnSeulCoup(a, d);
             case MOYEN:
                 return IA_Middle(a, d);
-            case 3:
-                return null;   
+            case DIFFICILE:
+                return IA_Hard(a, d);   
             default:        
                 return null;
         }
@@ -166,6 +172,20 @@ public class Ordinateur extends Joueur{
         }
     }
     
+    public Coup IA_Hard(Arbitre a, Coup[] d){
+        if(d==null || d.length<= 0)
+            return null;
+        
+        HeuristiqueV2 heurs = new HeuristiqueV2();
+        MinMax mx = new MinMax(this,a,heurs,2,0,d);
+       
+        /* Affichage des coups possibles.
+        System.out.println("Appel nextmove avec les coups:");
+        for(int k = 0; k < d.length;k++)
+            System.out.print(d[k]+"  ");
+        System.out.println(d.length);*/
+        return mx.nextmove();
+    }
     
     //retourne l'heuristique de la configuration du plateau p
     //pour la difficultée FACILE_HEURISTIQUE
@@ -181,7 +201,7 @@ public class Ordinateur extends Joueur{
             return Integer.MAX_VALUE;
         }else{
             if(!reineLibre(p,numJoueur, d)){
-                heuristique=heuristique-2;
+                heuristique=heuristique-2;                                  
             }else{
                 heuristique=heuristique+2;
             }
@@ -209,7 +229,7 @@ public class Ordinateur extends Joueur{
     //renvoie vrai ssi: aucune pièce n'est posée au dessus de la reine du joueur d'indice "joueur" et 
     //que la reine peut se déplacer sur une case voisine
     //p: Plateau du jeu, joueur: indice du joueur (celui qui doit jouer), d: tableau des coups possibles
-    private boolean reineLibre(Plateau p, int joueur, Coup[] d){
+    public boolean reineLibre(Plateau p, int joueur, Coup[] d){
         if(p.reine(joueur)==null){
             return true;
         }
@@ -235,6 +255,12 @@ public class Ordinateur extends Joueur{
         }else{
             return 0;
         }
+    }
+        
+    @Override
+    public Ordinateur clone(){
+        Ordinateur jH = new Ordinateur(main, prop, tabPieces.clone(), numJoueur);    
+        return jH;
     }
     
 }//fin de la classe

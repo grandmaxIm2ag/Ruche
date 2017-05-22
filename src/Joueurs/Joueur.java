@@ -107,11 +107,20 @@ public abstract class Joueur {
         tabPieces[t]--;
     }
     
+    public void pred(int t){
+        tabPieces[t]++;
+    }
+    
     /**
      *
      * @return
      */
     public int numJ(){
         return numJoueur;
+    }
+    
+    @Override
+    public Joueur clone(){
+        return null;
     }
 }

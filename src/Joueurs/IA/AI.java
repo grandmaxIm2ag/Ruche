@@ -7,6 +7,7 @@ package Joueurs.IA;
 
 import Joueurs.Ordinateur;
 import Modele.Arbitres.*;
+import Modele.Plateau;
 
 /**
  *
@@ -70,6 +71,10 @@ public abstract class AI {
         this.searchDepth = searchDepth;
         this.maxTimeInMillis = maxTimeInMillis;
         
+    }   
+        
+    public boolean existConfig(Plateau p){
+        return heurs.configurations.get(p)!=null;
     }
     
 }

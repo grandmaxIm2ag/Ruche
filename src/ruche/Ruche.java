@@ -8,8 +8,6 @@ package ruche;
 //http://www.redblobgames.com/grids/hexagons/
 
 import Modele.Arbitres.*;
-import Modele.Arbitres.SimulationIA;
-import Modele.Arbitres.TestArbitre;
 import Vue.Interface;
 import java.util.Properties;
 

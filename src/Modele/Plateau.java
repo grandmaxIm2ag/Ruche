@@ -210,7 +210,7 @@ public class Plateau extends Composant {
      * @return
      */
     public boolean premierPionValide(Depot d){
-        return !(d.destination().x < -1 || d.destination().y < -1 || d.destination().x > 1 || d.destination().y > 1 || (d.destination().x == -1 && d.destination().y == -1 )
+        return !(d.destination().x < -1 || (d.destination.x == 0 && d.destination.y == 0) || d.destination().y < -1 || d.destination().x > 1 || d.destination().y > 1 || (d.destination().x == -1 && d.destination().y == -1 )
                 || (d.destination().x == 1 && d.destination().y == 1 ));
     }
 
@@ -248,10 +248,9 @@ public class Plateau extends Composant {
         }
         if(b){
             b=false;
-            System.out.println("coucou");
         Coup[] coups = e.deplacementValide(clone().matrice);
             for (Coup coup : coups) {
-                System.out.println(coup + " " + d.equals(coup));
+               // System.out.println(coup + " " + d.equals(coup));
                 b |= d.equals(coup);
             }
         }
@@ -263,6 +262,7 @@ public class Plateau extends Composant {
      * @param d
      */
     public void deplacePion(Deplacement d){
+
         if(matrice.get(d.source()).tete().position().equals(reines[d.joueur()]) && matrice.get(d.source()).tete().type()==Insecte.REINE)
             reines[d.joueur()] = d.destination();
         
@@ -317,7 +317,7 @@ public class Plateau extends Composant {
      * @param source
      */
     public void majGraphe(Point source){
-        if(matrice.get(source)==null){
+        if(!matrice.containsKey(source)){
            voisins.remove(source);
            utilises.remove(source);
            for(Map.Entry<Point, List<Point> >  entry : voisins.entrySet()){
@@ -333,7 +333,6 @@ public class Plateau extends Composant {
      * @param d
      */
     public void majGraphe(Deplacement d){
-        //System.out.println(!matrice.containsKey(d.source()));
         if(!matrice.containsKey(d.source())){
            voisins.remove(d.source());
            utilises.remove(d.source());
@@ -421,8 +420,12 @@ public class Plateau extends Composant {
      * @return
      */
     public boolean estEncerclee(int j){
+       // System.out.println("Joueur"+j);
+       /// System.out.println(voisins);
         if(reines[j]==null)
             return false;
+      //  System.out.println("J"+j+" "+reines[j]);
+       // System.out.println("c voisins "+voisins.get(reines[j]));
         return voisins.get(reines[j]).size()>=6;
     }
     
@@ -689,7 +692,7 @@ public class Plateau extends Composant {
                             ))
                         b = true;
                 
-                if(!b && !b2){
+                if(b && !b2){
                     RechercheConcurente rc = new RechercheConcurente(clone(), c2, e.clone());
                     threads.add(new Thread(rc));
                 }else if(b && !b2){
@@ -834,6 +837,8 @@ public class Plateau extends Composant {
      */
     public void retirerPion(Point pos){
         Case c = matrice.get(pos);
+        if(c.tete().type()==Insecte.REINE)
+            reines[c.tete().joueur()]=null;
         c.retirePion();
         if(!c.utilise()){
             matrice.remove(c.position());
@@ -842,6 +847,8 @@ public class Plateau extends Composant {
         }else{
             matrice.put(pos, c);
         }
+        
+        majGraphe(pos);
     }
     
     /**

@@ -57,4 +57,8 @@ public class Depot extends Coup {
     public String toString(){
         return type+":"+destination;
     }
+    @Override
+    public Depot clone(){
+        return new Depot(joueur, type, destination.clone());
+    }
 }
