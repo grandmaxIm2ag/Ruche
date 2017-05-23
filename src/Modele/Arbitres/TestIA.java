@@ -32,7 +32,6 @@ public class TestIA extends Arbitre{
     String resultatsBrut;
     String resultatMoyenne;
     
-    boolean dejaVu;////////////////////////////////////////////////////////////////////////
     
     /**
      * 
@@ -50,7 +49,6 @@ public class TestIA extends Arbitre{
         nbCoupsJouesJ1= new int[nbSimulations];
         victoires=new int[nbSimulations];
         nom=d1+"::"+d2+"_"+nbSimulations;
-        dejaVu=false;///////////////////////////////////////////////////////////////////////////////
     }
     
     public int[] simulation(){
@@ -60,7 +58,6 @@ public class TestIA extends Arbitre{
         for(int i=0;i<nbSimulations;i=i+1){
             System.err.println("Nouvelle Partie "+i);
             configurations.clear();
-            dejaVu=false;
             debutPartie=System.nanoTime();
             simulation2();
             victoires[i]=victorieux;
@@ -163,14 +160,11 @@ public class TestIA extends Arbitre{
         if(plateau.estEncerclee(jCourant)){
             etat=FIN;
             victorieux=++jCourant % 2;
-        }else if(configurations.contains(plateau.hashCode()) && dejaVu){
+        }else if(configurations.contains(plateau.hashCode())){
             etat=FIN;
             System.err.println("Match nul");
             victorieux=-1;
         }else{
-            if(configurations.contains(plateau.hashCode())){
-                dejaVu=true;
-            }
             configurations.add(plateau.hashCode());
             jCourant = ++jCourant % 2;
             List<Coup[]> tab = new LinkedList();

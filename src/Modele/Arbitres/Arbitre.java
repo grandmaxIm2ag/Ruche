@@ -326,7 +326,7 @@ public abstract class Arbitre {
         String[] str = Chargeur.joueur();
         joueurs[J1].nom = str[J1].split("=")[0];
         String[] str2 = str[J1].split("=")[1].split(":");
-        System.err.println(Arrays.toString(str2));
+        //System.err.println(Arrays.toString(str2));
         int[] tab = new int[str2.length];
         for(int i=0; i<str2.length; i++)
             tab[i]=Integer.parseInt(str2[i]);
@@ -562,9 +562,9 @@ public abstract class Arbitre {
             case JOUE_EN_COURS:
                 temps_ecoule+=nouv;
                 if(temps_ecoule>=100000000){
-                    System.out.println("Joue déplacement "+enCours);
+                    //System.out.println("Joue déplacement "+enCours);
                     temps_ecoule=0;
-                    System.out.println(enCours);
+                    //System.out.println(enCours);
                     if(enCours!=null){
                         
                         plateau.deplacePion(enCours);
