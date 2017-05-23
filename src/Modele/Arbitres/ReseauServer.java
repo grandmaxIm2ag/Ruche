@@ -203,10 +203,7 @@ public class ReseauServer extends ArbitreReseau{
                 if(!accept.isAlive()){
             try {
                 Interface.closeConnexion();
-                serverSocket.close();
-                //Chat.writeMessage("Test", joueurs[J2].nom());
-                etat = FIN;
-            } catch (IOException ex) {
+            } catch (Exception ex) {
                 Logger.getLogger(ReseauServer.class.getName()).log(Level.SEVERE, null, ex);
             }
                 }

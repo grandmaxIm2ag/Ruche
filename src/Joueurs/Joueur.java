@@ -119,4 +119,8 @@ public abstract class Joueur {
     public void setNom(String n){
         nom = n;
     }
+    
+    public void addPion(int t){
+        tabPieces[t]++;
+    }
 }

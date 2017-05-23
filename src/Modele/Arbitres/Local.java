@@ -81,8 +81,8 @@ public class Local extends Arbitre{
                 joueurs[J2] = new Humain(true, prop, tabPieces2, J2, nom2);
                 break;
             case FabriqueArbitre.LOCAL_JVIA:
-                joueurs[J1] = new Humain(true, prop, tabPieces,  J1, nom1);
-                joueurs[J2] = new Ordinateur(true,difficulte, prop, tabPieces2,  J2, nom2);
+                joueurs[J2] = new Humain(true, prop, tabPieces,  J2, nom1);
+                joueurs[J1] = new Ordinateur(true,Ordinateur.MOYEN, prop, tabPieces2,  J1, nom2);
                 break;
         }
         

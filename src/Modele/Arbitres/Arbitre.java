@@ -269,20 +269,29 @@ public abstract class Arbitre {
      *
      */
     public void precedent(){
+        
+        
         if(!historique.isEmpty()){
             configurations.remove(configurations.size()-1);
             Coup c = historique.pop();
+            System.out.println(c+" "+(c==null));
             refaire.push(c);
             if(c instanceof Deplacement){
                 Deplacement d = (Deplacement) c;
                 plateau.deplacePion(new Deplacement(d.joueur(),d.destination(), d.source()));
+                nbCoup[d.joueur()]--;
             }else if(c instanceof Depot){
                 Depot d = (Depot) c;
                 plateau.retirerPion(d.destination());
+                nbCoup[d.joueur()]--;
+                joueurs[d.joueur()].addPion(d.type());
             }
         }else{
             System.err.println("Aucun coup précedent");
         }
+        PaneToken.getInstance(this).update();
+        jCourant = (jCourant+1)%2;
+        
     }
 
     /**
@@ -291,13 +300,9 @@ public abstract class Arbitre {
     public void refaire(){
         if(!refaire.isEmpty()){
             Coup c = refaire.pop();
+            System.out.println(c+" "+(c==null));
             historique.push(c);
-            if(c instanceof Depot)
-                plateau.deposePion((Depot)c );
-            else{
-                Deplacement d = (Deplacement) c;
-                plateau.deplacePion(d);
-            }
+            joue(c);
         }else{
             System.out.println("Aucun coup à refaire");
         }
@@ -540,7 +545,7 @@ public abstract class Arbitre {
             boolean b = this.accept(Interface.pointeur());
             if(b)
                 plateau.clearAide();
-                if(Interface.pointeur().event().getEventType() == MouseEvent.MOUSE_CLICKED && etat == AIDE){
+                if((Interface.pointeur().event().getEventType() == MouseEvent.MOUSE_CLICKED) && (etat == AIDE)){
                     etat = ATTENTE_COUP;
                     aide = false;
                 }
@@ -709,8 +714,37 @@ public abstract class Arbitre {
      *
      */
     public void go(){
+        configurations.clear();
         Interface.goPartie();
-        etat = ATTENTE_COUP;
+        if(joueurs[J1] instanceof Ordinateur){
+            Ordinateur o = (Ordinateur) joueurs[J1];
+            List<Coup[]> tab = new LinkedList();
+                for(int i=0; i<joueurs[jCourant].pions().length; i++){
+                    if(joueurs[jCourant].pions()[i]!=0){
+                        Coup[] tmp = depotPossible(jCourant, i);
+                        if(tmp!=null)
+                            tab.add(tmp);
+                    }
+                        
+                }
+                   
+                Coup[] tmp;
+                if((tmp=deplacementPossible(jCourant))!=null)
+                    tab.add(tmp);
+
+                int taille= 0;
+                Iterator<Coup[]> it = tab.iterator();
+                while(it.hasNext())
+                    taille+=it.next().length;
+                it = tab.iterator();
+                coups= new Coup[taille];
+                for(int i=0; i<taille;i++){
+                    Coup[] x = it.next();
+                    for(int j=0; j<x.length; j++)
+                        coups[i+j]=x[j];
+                }
+                joue(o.coup(this, coups));
+        }
     }
     /*
     @Override
