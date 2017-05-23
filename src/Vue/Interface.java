@@ -497,7 +497,7 @@ public class Interface extends Application {
 
         //btBEG.setOnAction(new BoutonCommencer(tfJ1, tfJ2, cbJ1, cbJ2 fabrique));
 
-        btBEG.setOnAction(new NewGameHandler (cbJ1, cbJ2, tfJ1, tfJ2, fabrique));
+        btBEG.setOnAction(new NewGameHandler (cbJ1, cbJ2, tfJ1, tfJ2));
         
         centerBox.getChildren().add(centerStack);
         centerStack.getChildren().addAll(rectBox, insideBox);//centerGrid);

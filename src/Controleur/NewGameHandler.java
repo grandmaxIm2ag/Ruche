@@ -33,49 +33,49 @@ public class NewGameHandler implements EventHandler<ActionEvent> {
     
     private FabriqueArbitre fabrique;
     
-    public NewGameHandler (ChoiceBox cbJ1, ChoiceBox cbJ2, TextField tfJ1, TextField tfJ2, FabriqueArbitre fabrique) {
+    public NewGameHandler (ChoiceBox cbJ1, ChoiceBox cbJ2, TextField tfJ1, TextField tfJ2) {
         this.cbJ1 = cbJ1;
         this.cbJ2 = cbJ2;
         this.tfJ1 = tfJ1;
         this.tfJ2 = tfJ2;
-        this.fabrique = fabrique;
     }
     
-    public NewGameHandler (TextField tfJ1, TextField tfHost, FabriqueArbitre fabrique) {
+    public NewGameHandler (TextField tfJ1, TextField tfHost) {
         this.tfJ1 = tfJ1;
         this.tfJ2 = tfHost;
-        this.fabrique = fabrique;
     }
     
     @Override
     public void handle(ActionEvent event) {
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        boolean pass = true;
         if (cbJ1 != null && cbJ2 != null) {
             if (cbJ1.getSelectionModel().getSelectedIndex() == 0 && cbJ2.getSelectionModel().getSelectedIndex() == 0) {
-                fabrique.initType(FabriqueArbitre.LOCAL_JVJ);
-                fabrique.initN1(tfJ1.getText());
-                fabrique.initN2(tfJ2.getText());
+                pass = false;
+                FabriqueArbitre.initType(FabriqueArbitre.LOCAL_JVJ);
+                FabriqueArbitre.initN1(tfJ1.getText());
+                FabriqueArbitre.initN2(tfJ2.getText());
                 Interface.nouvelArbitre();
             }
             if (cbJ1.getSelectionModel().getSelectedIndex() != 0) {
-                fabrique.initDiff(cbJ1.getSelectionModel().getSelectedIndex()-1);
+                FabriqueArbitre.initDiff(cbJ1.getSelectionModel().getSelectedIndex()-1);
             } else {
-                fabrique.initDiff(0);
+                FabriqueArbitre.initDiff(0);
             }
             if (cbJ2.getSelectionModel().getSelectedIndex() != 0) {
-                fabrique.initDiff2(cbJ2.getSelectionModel().getSelectedIndex()-1);
+                FabriqueArbitre.initDiff2(cbJ2.getSelectionModel().getSelectedIndex()-1);
             } else {
-                fabrique.initDiff2(0);
+                FabriqueArbitre.initDiff2(0);
             }
             if (cbJ1.getSelectionModel().getSelectedIndex() != 0 && cbJ2.getSelectionModel().getSelectedIndex() != 0) {
-                fabrique.initType(FabriqueArbitre.SIMULATION);
+                FabriqueArbitre.initType(FabriqueArbitre.SIMULATION);
                 Interface.nouvelArbitre();
-            } else {
-                fabrique.initType(FabriqueArbitre.LOCAL_JVIA);
+            } else if(pass) {
+                FabriqueArbitre.initType(FabriqueArbitre.LOCAL_JVIA);
                 if (cbJ1.getSelectionModel().getSelectedIndex() == 0)
-                    fabrique.initN1(tfJ1.getText());
+                    FabriqueArbitre.initN1(tfJ1.getText());
                 else
-                    fabrique.initN1(tfJ2.getText());
+                    FabriqueArbitre.initN1(tfJ2.getText());
                 Interface.nouvelArbitre();
             }
         }

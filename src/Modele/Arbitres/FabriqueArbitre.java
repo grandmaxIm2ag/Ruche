@@ -7,6 +7,7 @@ package Modele.Arbitres;
 
 import Controleur.Choix;
 import Joueurs.Ordinateur;
+import Modele.Chargeur;
 import Vue.Interface;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -62,8 +63,8 @@ public class FabriqueArbitre {
      * La représentation de la difficulté donné à l'arbitre qui va être favriquée, peut être modifié.
      * @see FabriqueArbitre#initDiff(int) 
      */
-    private int difficulte;
-    private int difficulte2;
+    private static int difficulte;
+    private static int difficulte2;
     /**
      * Le nom de la sauvegarde donné à l'arbitre qui va être favriquée, peut être modifié.
      * @see FabriqueArbitre#initP(java.lang.String) 
@@ -202,7 +203,7 @@ public class FabriqueArbitre {
         difficulte = t;
     }
     
-    public void initDiff2(int t){
+    public static void initDiff2(int t){
         difficulte2 = t;
     }
 
