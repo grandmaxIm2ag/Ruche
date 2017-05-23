@@ -40,6 +40,7 @@ public class ThreadServer implements Runnable{
     @Override
     public void run() {
         try{
+            serverSocket.setSoTimeout(10000);
             Socket c = serverSocket.accept();
             System.out.println("ThreadServer Accepté");
             arbitre.accept(c);
