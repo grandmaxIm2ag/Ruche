@@ -128,7 +128,6 @@ public class SimulationIA extends Arbitre {
             while(it.hasNext())
                 taille+=it.next().length;
             it = tab.iterator();
-            System.out.println(nbCoup[J1]+" "+nbCoup[J2]);
             coups = new Coup[taille];
             int i=0;
             while(it.hasNext()){

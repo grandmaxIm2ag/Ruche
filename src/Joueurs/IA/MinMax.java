@@ -25,30 +25,35 @@ public class MinMax extends AI {
      */
     public MinMax(Ordinateur me, Arbitre a, Heuristique heuristicFunction, int searchDepth, int maxTimeInMillis) {
         super(me, a, heuristicFunction, searchDepth, maxTimeInMillis);
+        cps = cp;
+        em = new Emulateur(a);
     }
     
-    /*
-     public Coup nextmove(int profondeur){
-        int max_poids = -10000;
-        int meilleur_coup = 1;
-        int hauteur = profondeur;
-     
-        for(int i = 1; i < casesJouables.size();i++){
-            LinkedList<Integer> casestmp = (LinkedList<Integer>) casesJouables.clone();
-            coupIA(casesJouables.get(i));
-            int tmp = Min(profondeur -1, hauteur);
-            if(tmp > max_poids){
-                max_poids = tmp;
-                meilleur_coup = i;
-                
+    
+    @Override
+     public Coup nextmove(){
+        start = System.currentTimeMillis(); 
+        int max_poids = AI.MIN;
+        int meilleur_coup = 0;
+           
+        for(int i = 0; i < cps.length;i++){
+            em.joue(cps[i]);
+            Coup [] cpt = em.PossibleMoves();
+            if(cpt != null && cpt.length != 0){
+                /* Affichage des coups possibles.
+                for(int k = 0; k < cpt.length;k++)
+                 System.out.print(cpt[k]+"  ");
+                System.out.println(cpt.length);*/
+                 
+                int hr = Min(em/*.clone()*/,1, cpt);
+                if(hr > max_poids){
+                    max_poids = hr;
+                    meilleur_coup = i;      
+                }
             }
-            casesJouables =  casestmp;
-            meilleur_coup = casesJouables.get(i);
+            em.precedent();
         }
-        Point res = convertToPoint(meilleur_coup);
-        res.fixe((int)res.y(),(int) res.x());
-        System.out.println("coup choisi : "+meilleur_coup+" , "+res);
-        return res;
+        return cps[meilleur_coup];
     }
     
     public int Max(int profondeur,int hauteur){
@@ -84,5 +89,4 @@ public class MinMax extends AI {
         }
         return min_poids;
     }
-    */
 }

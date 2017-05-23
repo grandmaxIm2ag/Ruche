@@ -18,7 +18,7 @@ import java.util.Map;
  *
  * @author hadjadjl
  */
-public class HeuristiqueV1 extends Heuristique {
+public class HeuristiqueV2 extends Heuristique {
     
     private int freeBugs(Plateau m,int numJoueur) {
         int fr=0;
@@ -44,11 +44,32 @@ public class HeuristiqueV1 extends Heuristique {
                    depl = m.depotPossible(numJoueur, i);
                    if(depl != null)
                        dpl += depl.length;
-                }     
-            }       
+                }
+                
+            }
+        
         return dpl;
     }
     
+    private int depl(Emulateur a, Plateau m, int numJoueur) {
+        Coup [] depl = m.deplacementPossible(numJoueur);
+        int dpl = 0;
+        if(depl != null)
+            dpl = depl.length;
+        
+        for(int i=0; i<a.joueur(numJoueur).pions().length; i++){
+                if(a.joueur(numJoueur).pions()[i]!=0){
+                   depl = m.depotPossible(numJoueur, i);
+                   if(depl != null)
+                       dpl += depl.length;
+                }
+                
+            }
+        
+        return dpl;
+    }
+    
+    @Override
     public int EvalPlateau(Arbitre a, Coup[] d, Plateau p, Ordinateur me) {
         
         // Un null est considérer comme une défaite
@@ -67,7 +88,10 @@ public class HeuristiqueV1 extends Heuristique {
         } else if(otherWon) {
             return AI.MIN;
         }
-
+        if(configurations.get(p)!=null){
+            return configurations.get(p);
+        } 
+        heurs = 0;
         int mePossibleDepl = d.length;
         int meTokensOnBoard = freeBugs(p,me.numJ());
         int meHexesFilledAroundOpposingQueen = me.nbLiberteesReine(p, me.numAdversaire());
@@ -77,7 +101,7 @@ public class HeuristiqueV1 extends Heuristique {
         int otherHexesFilledAroundOpposingQueen = me.nbLiberteesReine(p, me.numJ());
 
         heurs = 10*( otherHexesFilledAroundOpposingQueen - meHexesFilledAroundOpposingQueen)
-               /* + 2*(mePossibleDepl - otherPossibleDepl)*/
+                /*+ 2*(mePossibleDepl - otherPossibleDepl)*/
                 + 1*(meTokensOnBoard - otherTokensOnBoard);
         configurations.put(p, heurs);
         return heurs;
@@ -102,10 +126,9 @@ public class HeuristiqueV1 extends Heuristique {
         } else if(otherWon) {
             return AI.MIN;
         }
-        
         if(configurations.get(a.m)!=null){
             return configurations.get(a.m);
-        }
+        } 
         heurs = 0;
         int mePossibleDepl = d.length;
         int meTokensOnBoard = freeBugs(a.m,me.numJ());
@@ -115,7 +138,7 @@ public class HeuristiqueV1 extends Heuristique {
         int otherTokensOnBoard = freeBugs(a.m,me.numAdversaire());
         int otherHexesFilledAroundOpposingQueen = me.nbLiberteesReine(a.m, me.numJ());
 
-        heurs = 10*( otherHexesFilledAroundOpposingQueen - meHexesFilledAroundOpposingQueen)
+        heurs = 7*( otherHexesFilledAroundOpposingQueen - meHexesFilledAroundOpposingQueen)
                 + 2*(mePossibleDepl - otherPossibleDepl)
                 + 1*(meTokensOnBoard - otherTokensOnBoard);
         configurations.put(a.m, heurs);

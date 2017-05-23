@@ -7,6 +7,9 @@ package Joueurs.IA;
 
 import Joueurs.Ordinateur;
 import Modele.Arbitres.*;
+import Modele.Coup;
+import Modele.Plateau;
+import java.util.Map;
 
 /**
  *
@@ -72,4 +75,8 @@ public abstract class AI {
         
     }
     
+    public Coup nextmove(){
+        start = System.currentTimeMillis();
+        return null;
+    }
 }

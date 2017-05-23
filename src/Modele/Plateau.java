@@ -250,10 +250,8 @@ public class Plateau extends Composant {
         }
         if(b){
             b=false;
-            //System.out.println("coucou");
         Coup[] coups = e.deplacementValide(clone());
             for (Coup coup : coups) {
-                //System.out.println(coup + " " + d.equals(coup));
                 b |= d.equals(coup);
             }
         }
@@ -797,16 +795,10 @@ public class Plateau extends Composant {
     public Coup[] depotPossible(int joueur, int t){
         
         if(utilises.isEmpty()){
-            if(joueur == 1){
-                //System.err.println("coucou");
-            }
             Coup[] res = new Coup[1];
             res[0] = new Depot(joueur, t, new Point(0,0));
             return res;
         }else if(utilises.size()==1){
-            if(joueur == 1){
-                //System.err.println("coucou 2 "+utilises.get(0));
-            }
             List<Coup> c = new ArrayList();
             for(int i=xMin-1; i<=xMax+1; i++)
                 for(int j=yMin-1; j<=yMax+1; j++){
