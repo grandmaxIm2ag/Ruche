@@ -119,7 +119,6 @@ public class Ordinateur extends Joueur{
             int choix= r.nextInt(res.size());
             return res.get(choix);
         }else{
-            System.err.println("BUG");
             return null;
         }
     }

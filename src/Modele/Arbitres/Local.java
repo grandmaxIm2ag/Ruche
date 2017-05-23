@@ -98,7 +98,6 @@ public class Local extends Arbitre{
      */
     @Override
     public void joue(Deplacement d){
-        System.out.println ("J'ai fait caca ici aussi :x" + d);
         if(plateau().reine(jCourant)!=null){
                 //if(deplacePionValide(d)){
                 enCoursIt = d.route().iterator();
@@ -123,7 +122,6 @@ public class Local extends Arbitre{
      */
     @Override
     public void joue(Depot d){
-        System.err.println("caca" + d.joueur());
         if(nbCoup[jCourant]==0 && jCourant == J1){
             joueurs[d.joueur()].jouer(d.type());
             plateau.premierPion(FabriqueInsecte.creer(d.type(), jCourant, new Point(0,0)));
@@ -180,18 +178,16 @@ public class Local extends Arbitre{
             Interface.goFin(joueurs[jCourant].nom(), PERDU);
         }else if(configurations.contains(plateau.hashCode())){
             etat=FIN;
-            System.out.println(configurations.toString()+" "+plateau.hashCode());
+            //System.out.println(configurations.toString()+" "+plateau.hashCode());
+            Interface.goFin(nom1, NUL);
             System.err.println("Match nul");
         }else{
             configurations.add(plateau.hashCode());
-            //System.err.println(plateau.hashCode());
             
             etat = ATTENTE_COUP;
             PaneToken.getInstance(this).update();
             jCourant = ++jCourant % 2;
             plateau.setJoueur(jCourant);
-            //configurations.add(plateau.hashCode());
-            //System.err.println(plateau.hashCode());
             List<Coup[]> tab = new LinkedList();
             for(int i=0; i<joueurs[jCourant].pions().length; i++){
                 if(joueurs[jCourant].pions()[i]!=0){
@@ -210,7 +206,7 @@ public class Local extends Arbitre{
             while(it.hasNext())
                 taille+=it.next().length;
             it = tab.iterator();
-            System.out.println(nbCoup[J1]+" "+nbCoup[J2]);
+            //System.out.println(nbCoup[J1]+" "+nbCoup[J2]);
             coups = new Coup[taille];
             int i=0;
             while(it.hasNext()){
@@ -221,7 +217,6 @@ public class Local extends Arbitre{
                 }
                  i+=j;
             }
-            System.out.println(aucun);
             aucun = (coups == null || coups.length<=0);
             if(aucun){
                 prochainJoueur();

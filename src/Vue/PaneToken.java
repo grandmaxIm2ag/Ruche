@@ -566,4 +566,8 @@ public class PaneToken {
     public static void setNomAdv(String adv){
         nomAdv.setText(adv);
     }
+    
+    public static void reset(){
+        INSTANCE = null;
+    }
 }

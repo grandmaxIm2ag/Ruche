@@ -146,6 +146,9 @@ public class FabriqueArbitre {
         
     }
     
+    public static  void init(){
+        init(prop);
+    }
     /**
      * Créer un nouvel Arbitre.
      * 

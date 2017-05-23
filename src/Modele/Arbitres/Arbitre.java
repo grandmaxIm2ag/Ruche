@@ -102,7 +102,7 @@ public abstract class Arbitre {
         jCourant = J1;
         historique = new Stack();
         refaire = new Stack();
-        plateau = new Plateau(0,0,Reglage.lis("lPlateau")*2*Reglage.lis("nbPiece"),Reglage.lis("hPlateau")*2*Reglage.lis("nbPiece"),p);
+        plateau = new Plateau(0,0,Reglage.lis("lPlateau")*Reglage.lis("nbPiece"),Reglage.lis("hPlateau")*Reglage.lis("nbPiece"),p);
         
         chargeur = new Chargeur();
         
@@ -535,6 +535,7 @@ public abstract class Arbitre {
      * @param t
      */
     public void maj(long t){
+        //System.gc();
         if(Interface.pointeur().event()!=null){
             boolean b = this.accept(Interface.pointeur());
             if(b)
@@ -562,9 +563,7 @@ public abstract class Arbitre {
             case JOUE_EN_COURS:
                 temps_ecoule+=nouv;
                 if(temps_ecoule>=100000000){
-                    System.out.println("Joue déplacement "+enCours);
                     temps_ecoule=0;
-                    System.out.println(enCours);
                     if(enCours!=null){
                         
                         plateau.deplacePion(enCours);

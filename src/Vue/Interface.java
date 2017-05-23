@@ -191,6 +191,7 @@ public class Interface extends Application {
     }
     
     public static void goTest () {
+        FabriqueArbitre.init();
         Rectangle rleft = new Rectangle(100,100);
         rleft.widthProperty().bind(scene.widthProperty().divide(10));
         rleft.setOpacity(0);
@@ -335,8 +336,9 @@ public class Interface extends Application {
         c.setOnMouseMoved(new Souris(arbitre, Souris.SOURIS_BOUGEE, c));
         c.setOnMouseClicked(new Souris(arbitre, Souris.SOURIS_CLIQUEE, c));
 
+      //  if(anim==null)
+            anim = new Animation(arbitre, c, cj1, cj2);
         
-        anim = new Animation(arbitre, c, cj1, cj2);
         anim.start();
         
 
@@ -906,6 +908,7 @@ public class Interface extends Application {
     
     public static void nouvelArbitre(){
         arbitre = FabriqueArbitre.nouveau();
+        System.out.println((arbitre instanceof SimulationIA));
         arbitre.init();
         System.out.println("Arbitre créé");
     }
@@ -1037,7 +1040,7 @@ public class Interface extends Application {
 	dialogConn.setScene(dialog);
 	
 	bnOK.setOnAction((e)-> {
-                arbitre.setEtat(Arbitre.FIN);
+                arbitre.setEtat(ReseauServer.ANNUL);
 		dialogConn.close();
                 
 	});
@@ -1048,7 +1051,9 @@ public class Interface extends Application {
     }
     
     public static void fin(){
+        System.gc();
         anim.stop();
+        PaneToken.reset();
     }
     
 }

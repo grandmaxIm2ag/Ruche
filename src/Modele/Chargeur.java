@@ -41,57 +41,59 @@ public class Chargeur {
     public static void init(Properties p){
         try{
              input = new Scanner(new FileInputStream("Sauvegardes/Sauvegarde")) ;
-             String[] plateaux = input.nextLine().split(":");
-             String[] format = new String[plateaux.length];
-             input.close();
-             propSauvegarde = new HashMap();
-             sauvegardes = new HashMap();
-            for (int i=0; i<plateaux.length; i++) {
-                String plateaux1 = plateaux[i];
-                input = new Scanner(new FileInputStream("Sauvegardes/"+plateaux1)) ;
-                String pl = input.nextLine();
-                String[] str = pl.split("::");
-                
-                switch(Integer.parseInt(str[0])){
-                    case FabriqueArbitre.LOCAL_JVJ:
-                        format[i] = String.format("%12s %12s %12s",plateaux1, str[2], str[3]);
-                        break;
-                    case FabriqueArbitre.LOCAL_JVIA:
-                        switch(Integer.parseInt(str[2])){
-                            case Ordinateur.FACILE_ALEATOIRE:
-                                format[i] = String.format("%-20s %-20s %-20s",plateaux1, str[1], "Très Facile");
-                                break;
-                            case Ordinateur.FACILE_HEURISTIQUE:
-                                format[i] = String.format("%-20s %-20s %-20s",plateaux1, str[1], "Facile");
-                                break;
-                            case Ordinateur.MOYEN:
-                                format[i] = String.format("%-20s %-20s %-20s",plateaux1, str[1], "Moyen");
-                                break;
-                            case Ordinateur.DIFFICILE:
-                                format[i] = String.format("%-20s %-20s %-20s",plateaux1, str[1], "Difficile");
-                                break;
-                            
-                        }
-                        break;
-                    case FabriqueArbitre.SIMULATION:
-                        
-                        break;
-                        
-                }
-                
-                sauvegardes.put(plateaux1, pl);
-                String sauv = "";
-                while(input.hasNext()){
-                    pl = input.nextLine();
-                    if(input.hasNext())
-                        sauv += (pl+"\n");
-                    else
-                        sauv+=pl;
-                }
-                sauvegardes.put(plateaux1, sauv);
-                
-            }
-            Interface.goLoadGame(format);
+             if(input.hasNext()){
+                String[] plateaux = input.nextLine().split(":");
+                String[] format = new String[plateaux.length];
+                input.close();
+                propSauvegarde = new HashMap();
+                sauvegardes = new HashMap();
+                for (int i=0; i<plateaux.length; i++) {
+                    String plateaux1 = plateaux[i];
+                    input = new Scanner(new FileInputStream("Sauvegardes/"+plateaux1)) ;
+                    String pl = input.nextLine();
+                    String[] str = pl.split("::");
+
+                    switch(Integer.parseInt(str[0])){
+                        case FabriqueArbitre.LOCAL_JVJ:
+                            format[i] = String.format("%12s %12s %12s",plateaux1, str[2], str[3]);
+                            break;
+                        case FabriqueArbitre.LOCAL_JVIA:
+                            switch(Integer.parseInt(str[2])){
+                                case Ordinateur.FACILE_ALEATOIRE:
+                                    format[i] = String.format("%-20s %-20s %-20s",plateaux1, str[1], "Très Facile");
+                                    break;
+                                case Ordinateur.FACILE_HEURISTIQUE:
+                                    format[i] = String.format("%-20s %-20s %-20s",plateaux1, str[1], "Facile");
+                                    break;
+                                case Ordinateur.MOYEN:
+                                    format[i] = String.format("%-20s %-20s %-20s",plateaux1, str[1], "Moyen");
+                                    break;
+                                case Ordinateur.DIFFICILE:
+                                    format[i] = String.format("%-20s %-20s %-20s",plateaux1, str[1], "Difficile");
+                                    break;
+
+                            }
+                            break;
+                        case FabriqueArbitre.SIMULATION:
+
+                            break;
+
+                    }
+
+                   sauvegardes.put(plateaux1, pl);
+                   String sauv = "";
+                   while(input.hasNext()){
+                       pl = input.nextLine();
+                       if(input.hasNext())
+                           sauv += (pl+"\n");
+                       else
+                           sauv+=pl;
+                   }
+                   sauvegardes.put(plateaux1, sauv);
+
+               }
+               Interface.goLoadGame(format);
+             }
         }catch(FileNotFoundException e){
                  
         }
