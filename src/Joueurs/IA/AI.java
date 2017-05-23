@@ -64,14 +64,14 @@ public abstract class AI {
      * @param a
      * @param heuristicFunction
      * @param searchDepth
-     * @param maxTimeInMillis
+     * @param start
      */
-    public AI(Ordinateur me, Arbitre a, Heuristique heuristicFunction, int searchDepth, int maxTimeInMillis) {
+    public AI(Ordinateur me, Arbitre a, Heuristique heuristicFunction, int searchDepth, long start) {
         this.me = me;
         this.arb = a;
         this.heurs = heuristicFunction;
         this.searchDepth = searchDepth;
-        this.maxTimeInMillis = maxTimeInMillis;
+        this.start = start;
         
     }   
         

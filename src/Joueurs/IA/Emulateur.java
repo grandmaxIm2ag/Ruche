@@ -7,7 +7,6 @@
 package Joueurs.IA;
 
 import Joueurs.Joueur;
-import Joueurs.Ordinateur;
 import Modele.Arbitres.Arbitre;
 import static Modele.Arbitres.Arbitre.J1;
 import static Modele.Arbitres.Arbitre.J2;
@@ -27,7 +26,7 @@ import java.util.Stack;
  *
  * @author lies
  */
-public class Emulateur implements Runnable{
+public class Emulateur {
     long temps;
     long temps_ecoule;
     Plateau m;
@@ -37,15 +36,8 @@ public class Emulateur implements Runnable{
     int jCourant;
     Map<Plateau, Integer> configMin;
     Map<Plateau, Integer> configMax;
-    boolean min;
-    Heuristique heurs;
-    int me;
-    int searchDepth;
-    HeurPartage h;
-    int idx;
-    Coup[] coups;
     
-    public Emulateur(Arbitre tmp, int j){
+    public Emulateur(Arbitre tmp){
         joueurs = new Joueur[2];
         nbCoup = new int[2];
         nbCoup[0] = tmp.nbcoups(0);
@@ -57,17 +49,6 @@ public class Emulateur implements Runnable{
         historique = (Stack<Coup>) tmp.historique().clone();
         temps = System.nanoTime();
         temps_ecoule = 0;
-        me = j;
-    }
-    public Emulateur(boolean b, int i, int pronf, HeurPartage h2, Coup[] d2, int[] nbCp, Joueur[] jr,int jC,Plateau pl,Stack<Coup> hist, int j, Heuristique h3){
-        this(nbCp, jr, jC,pl,hist);
-        idx = i;
-        searchDepth = pronf;
-        h = h2;
-        coups = d2;
-        min = b;
-        me = j;
-        heurs = h3;
     }
     
     public Emulateur( int[] nbCp, Joueur[] jr,int jC,Plateau pl,Stack<Coup> hist ){
@@ -199,59 +180,5 @@ public class Emulateur implements Runnable{
     public Emulateur clone(){
         Emulateur mm = new Emulateur(nbCoup, joueurs,jCourant,m,historique );
         return mm;
-    }
-    
-    public int Max(int profondeur, Coup[] d){
-        if(searchDepth - profondeur <= 0)
-            return heurs.EvalPlateau(this, d, (Ordinateur)joueurs[me]);
-        
-        int max_poids = AI.MIN;
-        profondeur++;
-        for(int i=0;i < d.length;i++){
-            //System.out.println("max "+i+" "+d[i]);
-            joue(d[i]);
-            Coup [] cpt = PossibleMoves();
-            if(cpt != null && cpt.length != 0){
-                int tmp = Min(profondeur, cpt);
-                if(tmp > max_poids){
-                    max_poids = tmp;
-                }
-            }
-            precedent();
-        }
-        return max_poids;
-    }
-    
-    public int Min(int profondeur, Coup[] d){
-       // System.out.println("appel min : "+ profondeur);
-        if(searchDepth - profondeur <= 0)
-            return heurs.EvalPlateau(this, d,(Ordinateur)joueurs[me]);
-        int min_poids = AI.MAX;
-        //profondeur++;
-        for(int i=0;i < d.length;i++){
-            //System.out.println("min "+i+" "+d[i]);
-            joue(d[i]);
-            Coup [] cpt = PossibleMoves();
-            if(cpt != null && cpt.length != 0){
-                int tmp = Max(profondeur+1,cpt);
-                if(tmp < min_poids){
-                    min_poids = tmp;
-                } 
-            }
-            precedent();
-        }
-        return min_poids;
-    }
-    
-
-    @Override
-    public void run() {
-        System.out.println(idx+" commence");
-        if(min){
-            h.ajout(idx, Max(1, coups));
-        }else{
-            h.ajout(idx, Max(1, coups));
-        }
-        System.out.println(idx+" fini");
     }
 }

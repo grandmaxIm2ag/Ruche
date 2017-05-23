@@ -8,10 +8,8 @@ package Joueurs.IA;
 import Joueurs.Ordinateur;
 import Modele.Arbitres.Arbitre;
 import Modele.Coup;
-import Modele.Plateau;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  *
@@ -34,7 +32,7 @@ public class AlphaBetaConcurent extends AI {
         super(me, a, heuristicFunction, searchDepth, maxTimeInMillis);
         cps = cp;
        // System.out.println("j0 "+a.joueur(0).pions()[0]);
-        em = new Emulateur(a, me.numJ());
+        em = new Emulateur(a);
         heurs.SetConf(configurations);
         em.SetConf(configurations);
     }

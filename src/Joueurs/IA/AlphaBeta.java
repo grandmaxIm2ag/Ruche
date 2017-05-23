@@ -25,14 +25,14 @@ public class AlphaBeta extends AI {
      * @param a
      * @param heuristicFunction
      * @param searchDepth
-     * @param maxTimeInMillis
+     * @param start
      * @param cp
      */
-    public AlphaBeta(Ordinateur me, Arbitre a, Heuristique heuristicFunction, int searchDepth, int maxTimeInMillis, Coup[] cp) {
-        super(me, a, heuristicFunction, searchDepth, maxTimeInMillis);
+    public AlphaBeta(Ordinateur me, Arbitre a, Heuristique heuristicFunction, int searchDepth, long start, Coup[] cp) {
+        super(me, a, heuristicFunction, searchDepth, start);
         cps = cp;
        // System.out.println("j0 "+a.joueur(0).pions()[0]);
-        em = new Emulateur(a, me.numJ());
+        em = new Emulateur(a);
         heurs.SetConf(configurations);
         em.SetConf(configurations);
         min_poids = new int[searchDepth];

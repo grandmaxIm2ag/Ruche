@@ -138,8 +138,8 @@ public class HeuristiqueV2 extends Heuristique {
         int otherTokensOnBoard = freeBugs(a.m,me.numAdversaire());
         int otherHexesFilledAroundOpposingQueen = me.nbLiberteesReine(a.m, me.numJ());
 
-        heurs = 10*( otherHexesFilledAroundOpposingQueen - meHexesFilledAroundOpposingQueen)
-                /*+ 2*(mePossibleDepl - otherPossibleDepl)*/
+        heurs = 7*( otherHexesFilledAroundOpposingQueen - meHexesFilledAroundOpposingQueen)
+                + 2*(mePossibleDepl - otherPossibleDepl)
                 + 1*(meTokensOnBoard - otherTokensOnBoard);
         configurations.put(a.m, heurs);
         return heurs;

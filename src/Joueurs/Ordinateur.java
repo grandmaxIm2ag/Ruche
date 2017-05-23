@@ -9,6 +9,7 @@ import Joueurs.IA.AI;
 import Joueurs.IA.HeuristiqueV1;
 import Joueurs.IA.HeuristiqueV2;
 import Joueurs.IA.MinMax;
+import Joueurs.IA.MinMaxConcurent;
 import Modele.Arbitres.*;
 import Modele.Case;
 import Modele.Coup;
@@ -51,6 +52,7 @@ public class Ordinateur extends Joueur{
      * @param p
      * @param tabP
      * @param j
+     * @param n
      */
     public Ordinateur(boolean m, int d, Properties p, int[] tabP, int j, String n) {
         super(m, p, tabP, j, n);
@@ -178,9 +180,9 @@ public class Ordinateur extends Joueur{
         if(d==null || d.length<= 0)
             return null;
         
-        HeuristiqueV1 heurs = new HeuristiqueV1();
-        MinMax mx = new MinMax(this,a,heurs,2,0,d);
-       
+        HeuristiqueV2 heurs = new HeuristiqueV2();
+        //MinMaxConcurent mx = new MinMaxConcurent(this,a,heurs,2, System.nanoTime(),d);
+        MinMax mx = new MinMax(this,a,heurs,2, System.nanoTime(),d);
         /* Affichage des coups possibles.
         System.out.println("Appel nextmove avec les coups:");
         for(int k = 0; k < d.length;k++)
