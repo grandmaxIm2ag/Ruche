@@ -110,7 +110,7 @@ public class Bouton implements EventHandler<ActionEvent>{
             case BOUTON_MENU:
                 if(arbitre !=null)
                     arbitre.abandon();
-                Interface.goMenu();
+                Interface.goTest();
                 break;
             case BOUTON_QUITTER:
                 Interface.quitter();
@@ -125,10 +125,6 @@ public class Bouton implements EventHandler<ActionEvent>{
                 break;
             case BOUTON_NOUVELLE_PARTIE_COMMENCER:
                 Interface.nouvelArbitre();
-                break;
-            
-            case BOUTON_CHARGER:
-                Interface.goLoadGame();
                 break;
             case BOUTON_SAUVEGARDER:
                 Interface.sauvegarder();

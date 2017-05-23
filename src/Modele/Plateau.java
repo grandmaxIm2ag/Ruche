@@ -926,7 +926,7 @@ public class Plateau extends Composant {
         matrice.entrySet().stream().forEach((entry) -> {
             Point p = new Point(entry.getKey().x() + diffx, entry.getKey().y() + diffy );
             Case c = entry.getValue().clone();
-            c.position().fixe(c.position().x()+diffx, c.position().x()+diffx);
+            c.position().fixe(c.position().x()+diffx, c.position().y()+diffy);
             Iterator<Insecte> it = c.insectes().iterator();
             while(it.hasNext()){
                 Insecte e = it.next();
@@ -934,6 +934,9 @@ public class Plateau extends Composant {
             }
             nouv.put(p,c);
         });
+        
+        for(Map.Entry<Point, Case> entry : nouv.entrySet())
+            System.out.println(entry.getKey()+" "+entry.getValue());
         
         return nouv.hashCode();
     }

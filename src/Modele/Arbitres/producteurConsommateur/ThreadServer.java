@@ -16,6 +16,9 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -37,15 +40,17 @@ public class ThreadServer implements Runnable{
     @Override
     public void run() {
         try{
+            serverSocket.setSoTimeout(10000);
             Socket c = serverSocket.accept();
             System.out.println("ThreadServer Accepté");
             arbitre.accept(c);
             arbitre.launch();
-        }catch(IOException e){
-            System.err.println(e);
+        }catch(SocketException e){
+            System.err.println("Annulation");
+        } catch (IOException ex) {
+            Logger.getLogger(ThreadServer.class.getName()).log(Level.SEVERE, null, ex);
         }
         System.out.println("Fin du thread");
-        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }

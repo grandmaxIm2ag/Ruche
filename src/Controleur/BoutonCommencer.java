@@ -17,10 +17,8 @@ import javafx.scene.control.TextField;
  */
 public class BoutonCommencer implements EventHandler<ActionEvent> {
     TextField text1, text2, text3;
-    FabriqueArbitre fab;
     
-    public BoutonCommencer(TextField t1, TextField t2, TextField t3, FabriqueArbitre f){
-        fab = f;
+    public BoutonCommencer(TextField t1, TextField t2, TextField t3){
         text1 = t1;
         text2 = t2;
         text3 = t3;
@@ -28,29 +26,29 @@ public class BoutonCommencer implements EventHandler<ActionEvent> {
 
     @Override
     public void handle(ActionEvent event) {
-        switch(fab.type()){
+        switch(FabriqueArbitre.type()){
             case FabriqueArbitre.LOCAL_JVJ:
                 System.out.println("Handle BoutComm test1");
-                fab.initN1(text1.getText());
-                fab.initN2(text2.getText());
+                FabriqueArbitre.initN1(text1.getText());
+                FabriqueArbitre.initN2(text2.getText());
                 Interface.nouvelArbitre();
                 break;
             case FabriqueArbitre.LOCAL_JVIA:
                 System.out.println("Handle BoutComm test2");
-                fab.initN1(text1.getText());
+                FabriqueArbitre.initN1(text1.getText());
                 Interface.nouvelArbitre();
                 break;
             case FabriqueArbitre.SIMULATION:
                 Interface.nouvelArbitre();
                 break;
             case FabriqueArbitre.RESEAU_SERVER:
-                fab.initN1(text1.getText());
+                FabriqueArbitre.initN1(text1.getText());
                 //Interface.connexion();
                 Interface.nouvelArbitre();
                 break;
             case FabriqueArbitre.RESEAU_CLIENT:
-                fab.initN1(text1.getText());
-                fab.initIP(text3.getText());
+                FabriqueArbitre.initN1(text1.getText());
+                FabriqueArbitre.initIP(text3.getText());
                 Interface.nouvelArbitre();
                 break;
             default:

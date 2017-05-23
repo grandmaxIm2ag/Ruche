@@ -123,8 +123,6 @@ public class Local extends Arbitre{
     @Override
     public void joue(Depot d){
         if(nbCoup[jCourant]==0 && jCourant == J1){
-            //System.out.println(Arrays.toString(joueurs[J1].pions()));
-            //System.out.println(Arrays.toString(joueurs[J2].pions()));
             joueurs[d.joueur()].jouer(d.type());
             plateau.premierPion(FabriqueInsecte.creer(d.type(), jCourant, new Point(0,0)));
             etat=A_JOUER;
@@ -189,7 +187,7 @@ public class Local extends Arbitre{
             PaneToken.getInstance(this).update();
             jCourant = ++jCourant % 2;
             plateau.setJoueur(jCourant);
-            configurations.add(plateau.hashCode());
+            //configurations.add(plateau.hashCode());
             //System.err.println(plateau.hashCode());
             List<Coup[]> tab = new LinkedList();
             for(int i=0; i<joueurs[jCourant].pions().length; i++){
@@ -220,13 +218,14 @@ public class Local extends Arbitre{
                 }
                  i+=j;
             }
-            aucun = coups == null || coups.length<=0;
+            System.out.println(aucun);
+            aucun = (coups == null || coups.length<=0);
             if(aucun){
                 prochainJoueur();
-            }else if(precAucun && aucun){
+            }/*else if(precAucun && aucun){
                 etat=FIN;
                 System.err.println("Match nul");
-            }else{
+            }*/else{
                 if(joueurs[jCourant] instanceof Ordinateur){
                     Ordinateur o = (Ordinateur) joueurs[jCourant];
                     precAucun = aucun;

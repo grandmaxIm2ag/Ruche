@@ -43,7 +43,8 @@ public class Ruche {
         //TestIA t=new TestIA(p,Ordinateur.FACILE_ALEATOIRE,Ordinateur.FACILE_HEURISTIQUE,100);
         //t.simulation();
         Interface it = new Interface();
-        Interface.creer(args, new FabriqueArbitre(p));
+        FabriqueArbitre.init(p);
+        Interface.creer(args);
         Interface.goFin("Coucou", Arbitre.GAGNE);
     }
     
