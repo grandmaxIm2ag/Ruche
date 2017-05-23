@@ -45,6 +45,9 @@ public class PaneToken {
     GaussianBlur leftBlur;
     GaussianBlur rightBlur;
     static Label nomAdv;
+    private static String colorJ1;
+    private static String colorJ2;
+    private static final String [] colorString = {"hotpink", "limegreen", "whitesmoke", "orangered", "steelblue", "darkgoldenrod", "darkmagenta", "midnightblue", "maroon"};
     
     private PaneToken (Arbitre arbitre) {
         this.arbitre = arbitre;
@@ -57,6 +60,23 @@ public class PaneToken {
             rightBlur.setRadius(10);
         rightBlur.setRadius(0);
         nomAdv = new Label();
+        colorJ1 = colorToString(0);
+        colorJ2 = colorToString(1);
+        
+    }
+    
+    private String colorToString (int p) {
+        int c = 0;
+        switch (p) {
+            case 0:
+                c = Interface.getColorP1();
+                break;
+            case 1:
+                c = Interface.getColorP2();
+                break;
+            default:
+        }
+        return colorString[c];
     }
     
     /**
@@ -117,6 +137,7 @@ public class PaneToken {
     }
     
     private void createRight () {
+        String p = colorToString(0);
         right = new StackPane();
         right.setAlignment(Pos.TOP_CENTER );
         Rectangle centerRect = new Rectangle();
@@ -145,49 +166,49 @@ public class PaneToken {
         ToggleButton bMoskito = new ToggleButton("Moskito");
         ToggleButton bWoodlouse = new ToggleButton("Woodlouse");
         
-        bBee.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Boutons/bee_red.png"))), CornerRadii.EMPTY, Insets.EMPTY)));
+        bBee.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Boutons/bee_"+p+".png"))), CornerRadii.EMPTY, Insets.EMPTY)));
         bBee.setMaxWidth(50);
         bBee.setMaxHeight(50);
         bBee.setMinWidth(50);
         bBee.setMinHeight(50);
         
-        bBeetle.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Boutons/beetle_red.png"))), CornerRadii.EMPTY, Insets.EMPTY)));
+        bBeetle.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Boutons/beetle_"+p+".png"))), CornerRadii.EMPTY, Insets.EMPTY)));
         bBeetle.setMaxWidth(50);
         bBeetle.setMaxHeight(50);
         bBeetle.setMinWidth(50);
         bBeetle.setMinHeight(50);
         
-        bGrasshopper.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Boutons/grasshopper_red.png"))), CornerRadii.EMPTY, Insets.EMPTY)));
+        bGrasshopper.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Boutons/grasshopper_"+p+".png"))), CornerRadii.EMPTY, Insets.EMPTY)));
         bGrasshopper.setMaxWidth(50);
         bGrasshopper.setMaxHeight(50);
         bGrasshopper.setMinWidth(50);
         bGrasshopper.setMinHeight(50);
         
-        bAnt.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Boutons/ant_red.png"))), CornerRadii.EMPTY, Insets.EMPTY)));
+        bAnt.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Boutons/ant_"+p+".png"))), CornerRadii.EMPTY, Insets.EMPTY)));
         bAnt.setMaxWidth(50);
         bAnt.setMaxHeight(50);
         bAnt.setMinWidth(50);
         bAnt.setMinHeight(50);
         
-        bSpider.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Boutons/spider_red.png"))), CornerRadii.EMPTY, Insets.EMPTY)));
+        bSpider.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Boutons/spider_"+p+".png"))), CornerRadii.EMPTY, Insets.EMPTY)));
         bSpider.setMaxWidth(50);
         bSpider.setMaxHeight(50);
         bSpider.setMinWidth(50);
         bSpider.setMinHeight(50);
         
-        bLadybug.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Boutons/ladybug_red.png"))), CornerRadii.EMPTY, Insets.EMPTY)));
+        bLadybug.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Boutons/ladybug_"+p+".png"))), CornerRadii.EMPTY, Insets.EMPTY)));
         bLadybug.setMaxWidth(50);
         bLadybug.setMaxHeight(50);
         bLadybug.setMinWidth(50);
         bLadybug.setMinHeight(50);
         
-        bMoskito.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Boutons/moskito_red.png"))), CornerRadii.EMPTY, Insets.EMPTY)));
+        bMoskito.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Boutons/moskito_"+p+".png"))), CornerRadii.EMPTY, Insets.EMPTY)));
         bMoskito.setMaxWidth(50);
         bMoskito.setMaxHeight(50);
         bMoskito.setMinWidth(50);
         bMoskito.setMinHeight(50);
         
-        bWoodlouse.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Boutons/woodlouse_red.png"))), CornerRadii.EMPTY, Insets.EMPTY)));
+        bWoodlouse.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Boutons/woodlouse_"+p+".png"))), CornerRadii.EMPTY, Insets.EMPTY)));
         bWoodlouse.setMaxWidth(50);
         bWoodlouse.setMaxHeight(50);
         bWoodlouse.setMinWidth(50);
@@ -303,6 +324,7 @@ public class PaneToken {
     }
     
     private void createLeft () {
+        String p = colorToString(1);
         left = new StackPane();
         left.setAlignment(Pos.TOP_CENTER );
         Rectangle centerRect = new Rectangle();
@@ -330,55 +352,55 @@ public class PaneToken {
         ToggleButton bMoskito = new ToggleButton("Moskito");
         ToggleButton bWoodlouse = new ToggleButton("Woodlouse");
         
-        bBee.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Boutons/bee_red.png"))), CornerRadii.EMPTY, Insets.EMPTY)));
+        bBee.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Boutons/bee_"+p+".png"))), CornerRadii.EMPTY, Insets.EMPTY)));
         bBee.setMaxWidth(50);
         bBee.setMaxHeight(50);
         bBee.setMinWidth(50);
         bBee.setMinHeight(50);
         
-        bBeetle.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Boutons/beetle_red.png"))), CornerRadii.EMPTY, Insets.EMPTY)));
+        bBeetle.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Boutons/beetle_"+p+".png"))), CornerRadii.EMPTY, Insets.EMPTY)));
         bBeetle.setMaxWidth(50);
         bBeetle.setMaxHeight(50);
         bBeetle.setMinWidth(50);
         bBeetle.setMinHeight(50);
         
-        bGrasshopper.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Boutons/grasshopper_red.png"))), CornerRadii.EMPTY, Insets.EMPTY)));
+        bGrasshopper.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Boutons/grasshopper_"+p+".png"))), CornerRadii.EMPTY, Insets.EMPTY)));
         bGrasshopper.setMaxWidth(50);
         bGrasshopper.setMaxHeight(50);
         bGrasshopper.setMinWidth(50);
         bGrasshopper.setMinHeight(50);
         
-        bAnt.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Boutons/ant_red.png"))), CornerRadii.EMPTY, Insets.EMPTY)));
+        bAnt.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Boutons/ant_"+p+".png"))), CornerRadii.EMPTY, Insets.EMPTY)));
         bAnt.setMaxWidth(50);
         bAnt.setMaxHeight(50);
         bAnt.setMinWidth(50);
         bAnt.setMinHeight(50);
         
-        bSpider.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Boutons/spider_red.png"))), CornerRadii.EMPTY, Insets.EMPTY)));
+        bSpider.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Boutons/spider_"+p+".png"))), CornerRadii.EMPTY, Insets.EMPTY)));
         bSpider.setMaxWidth(50);
         bSpider.setMaxHeight(50);
         bSpider.setMinWidth(50);
         bSpider.setMinHeight(50);
         
-        bLadybug.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Boutons/ladybug_red.png"))), CornerRadii.EMPTY, Insets.EMPTY)));
+        bLadybug.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Boutons/ladybug_"+p+".png"))), CornerRadii.EMPTY, Insets.EMPTY)));
         bLadybug.setMaxWidth(50);
         bLadybug.setMaxHeight(50);
         bLadybug.setMinWidth(50);
         bLadybug.setMinHeight(50);
         
-        bMoskito.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Boutons/moskito_red.png"))), CornerRadii.EMPTY, Insets.EMPTY)));
+        bMoskito.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Boutons/moskito_"+p+".png"))), CornerRadii.EMPTY, Insets.EMPTY)));
         bMoskito.setMaxWidth(50);
         bMoskito.setMaxHeight(50);
         bMoskito.setMinWidth(50);
         bMoskito.setMinHeight(50);
         
-        bWoodlouse.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Boutons/woodlouse_red.png"))), CornerRadii.EMPTY, Insets.EMPTY)));
+        bWoodlouse.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Boutons/woodlouse_"+p+".png"))), CornerRadii.EMPTY, Insets.EMPTY)));
         bWoodlouse.setMaxWidth(50);
         bWoodlouse.setMaxHeight(50);
         bWoodlouse.setMinWidth(50);
         bWoodlouse.setMinHeight(50);
         
-        bWoodlouse.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Boutons/woodlouse_red.png"))), CornerRadii.EMPTY, Insets.EMPTY)));
+        bWoodlouse.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Boutons/woodlouse_"+p+".png"))), CornerRadii.EMPTY, Insets.EMPTY)));
         bWoodlouse.setMaxWidth(50);
         bWoodlouse.setMaxHeight(50);
         bWoodlouse.setMinWidth(50);
@@ -523,6 +545,7 @@ public class PaneToken {
     
     public void setDefaultBackground (ToggleButton b, int i, int j) {
         String s = "";
+        String p = colorToString(i);
         switch (j) {
             case 0:
                 s = "bee";
@@ -550,7 +573,7 @@ public class PaneToken {
                 break;
             default:
         }
-        b.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Boutons/" + s + "_red.png"))), CornerRadii.EMPTY, Insets.EMPTY)));
+        b.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Boutons/" + s + "_"+p+".png"))), CornerRadii.EMPTY, Insets.EMPTY)));
     }
     
     public void uncheck () {

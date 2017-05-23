@@ -132,7 +132,7 @@ public class Interface extends Application {
     static FabriqueArbitre fabrique;
     static BorderPane root;
     static Scene scene;
-    final static boolean fullScreen = false;
+    final static boolean fullScreen = true;
     final static boolean soundEnabled = true;
     static VBox ngBox;
     static VBox loadBox;
@@ -141,6 +141,8 @@ public class Interface extends Application {
     public static Stage stage;
     static Stage dialogConn;
     static Animation anim;
+    static int colorP1;
+    static int colorP2;
     /**
      *
      * @param stage
@@ -504,8 +506,8 @@ public class Interface extends Application {
         centerGrid.add(tfJ1, 0, 2);
         centerGrid.add(tfJ2, 2, 2);
         // pour mettre les gridpane dans le menu
-        centerGrid.add(cc.getPlayer1(), 0, 4);
-        centerGrid.add(cc.getPlayer2(), 2, 4);
+        centerGrid.add(cc.getPlayer2(), 0, 4);
+        centerGrid.add(cc.getPlayer1(), 2, 4);
         centerGrid.setAlignment(Pos.CENTER);
 
         Button btBEG = new Button("Commencer");
@@ -1053,4 +1055,19 @@ public class Interface extends Application {
         anim.stop();
     }
     
+    public static void setColorP1 (int color) {
+        colorP1 = color;
+    }    
+    
+    public static void setColorP2 (int color) {
+        colorP2 = color;
+    }    
+    
+    public static int getColorP1 () {
+        return colorP1;
+    }
+    
+    public static int getColorP2 () {
+        return colorP2;
+    }
 }

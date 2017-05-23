@@ -46,6 +46,7 @@ public class Dessinateur extends Visiteur{
     Etendeur etendeur;
     GraphicsContext gc;
     Arbitre arbitre;
+    private static final Color [] colorTable = {Color.HOTPINK, Color.LIMEGREEN, Color.WHITESMOKE, Color.ORANGERED, Color.STEELBLUE, Color.DARKGOLDENROD, Color.DARKMAGENTA, Color.MIDNIGHTBLUE, Color.MAROON};
     
     Dessinateur (Canvas c, Arbitre a) {
         this.c = c;
@@ -122,11 +123,7 @@ public class Dessinateur extends Visiteur{
     public boolean visite (Reine i) {
         etendeur.fixeComposant(i);
         double [][] coords = Interface.hex_corner(etendeur.x(), etendeur.y(), etendeur.h()/2);
-        Color couleur = Color.WHITE;
-        if (i.joueur() == 0)
-            couleur = Color.GREEN;
-        else
-            couleur = Color.CORNFLOWERBLUE;
+        Color couleur = getColor(i.joueur());
         if (i.estpointe())
             couleur = Color.RED;
         gc.setFill(couleur);
@@ -147,11 +144,7 @@ public class Dessinateur extends Visiteur{
     public boolean visite (Scarabee i) {
         etendeur.fixeComposant(i);
         double [][] coords = Interface.hex_corner(etendeur.x(), etendeur.y(), etendeur.h()/2);
-        Color couleur = Color.WHITE;
-        if (i.joueur() == Arbitre.J1)
-            couleur = Color.GREEN;
-        else
-            couleur = Color.CORNFLOWERBLUE;
+        Color couleur = getColor(i.joueur());
         if (i.estpointe())
             couleur = Color.RED;
         gc.setFill(couleur);
@@ -177,11 +170,7 @@ public class Dessinateur extends Visiteur{
     public boolean visite (Coccinelle i) {
         etendeur.fixeComposant(i);
         double [][] coords = Interface.hex_corner(etendeur.x(), etendeur.y(), etendeur.h()/2);
-        Color couleur = Color.WHITE;
-        if (i.joueur() == 0)
-            couleur = Color.GREEN;
-        else
-            couleur = Color.CORNFLOWERBLUE;
+        Color couleur = getColor(i.joueur());
         if (i.estpointe())
             couleur = Color.RED;
         gc.setFill(couleur);
@@ -207,11 +196,7 @@ public class Dessinateur extends Visiteur{
     public boolean visite (Moustique i) {
         etendeur.fixeComposant(i);
         double [][] coords = Interface.hex_corner(etendeur.x(), etendeur.y(), etendeur.h()/2);
-        Color couleur = Color.WHITE;
-        if (i.joueur() == 0)
-            couleur = Color.GREEN;
-        else
-            couleur = Color.CORNFLOWERBLUE;
+        Color couleur = getColor(i.joueur());
         if (i.estpointe())
             couleur = Color.RED;
         gc.setFill(couleur);        
@@ -237,11 +222,7 @@ public class Dessinateur extends Visiteur{
     public boolean visite (Cloporte i) {
         etendeur.fixeComposant(i);
         double [][] coords = Interface.hex_corner(etendeur.x(), etendeur.y(), etendeur.h()/2);
-        Color couleur = Color.WHITE;
-        if (i.joueur() == 0)
-            couleur = Color.GREEN;
-        else
-            couleur = Color.CORNFLOWERBLUE;
+        Color couleur = getColor(i.joueur());
         if (i.estpointe())
             couleur = Color.RED;
         gc.setFill(couleur);
@@ -262,11 +243,7 @@ public class Dessinateur extends Visiteur{
     public boolean visite (Fourmie i) {
         etendeur.fixeComposant(i);
         double [][] coords = Interface.hex_corner(etendeur.x(), etendeur.y(), etendeur.h()/2);
-        Color couleur = Color.WHITE;
-        if (i.joueur() == 0)
-            couleur = Color.GREEN;
-        else
-            couleur = Color.CORNFLOWERBLUE;
+        Color couleur = getColor(i.joueur());
         if (i.estpointe())
             couleur = Color.RED;
         gc.setFill(couleur);
@@ -287,11 +264,7 @@ public class Dessinateur extends Visiteur{
     public boolean visite (Araignee i) {
         etendeur.fixeComposant(i);
         double [][] coords = Interface.hex_corner(etendeur.x(), etendeur.y(), etendeur.h()/2);
-        Color couleur = Color.WHITE;
-        if (i.joueur() == 0)
-            couleur = Color.GREEN;
-        else
-            couleur = Color.CORNFLOWERBLUE;
+        Color couleur = getColor(i.joueur());
         if (i.estpointe())
             couleur = Color.RED;
         gc.setFill(couleur);
@@ -312,11 +285,7 @@ public class Dessinateur extends Visiteur{
     public boolean visite (Sauterelle i) {
         etendeur.fixeComposant(i);
         double [][] coords = Interface.hex_corner(etendeur.x(), etendeur.y(), etendeur.h()/2);
-        Color couleur = Color.WHITE;
-        if (i.joueur() == 0)
-            couleur = Color.GREEN;
-        else
-            couleur = Color.CORNFLOWERBLUE;
+        Color couleur = getColor(i.joueur());
         if (i.estpointe())
             couleur = Color.RED;
         gc.setFill(couleur);
@@ -336,11 +305,7 @@ public class Dessinateur extends Visiteur{
     public boolean print (Reine i) {
         etendeur.fixeComposant(i);
         double [][] coords = Interface.hex_corner(etendeur.x(), etendeur.y(), etendeur.h()/2);
-        Color couleur = Color.WHITE;
-        if (i.joueur() == 0)
-            couleur = Color.GREEN;
-        else
-            couleur = Color.CORNFLOWERBLUE;
+        Color couleur = getColor(i.joueur());
         if (i.estpointe())
             couleur = Color.RED;
         gc.setFill(couleur);
@@ -356,11 +321,7 @@ public class Dessinateur extends Visiteur{
     public boolean print (Scarabee i) {
         etendeur.fixeComposant(i);
         double [][] coords = Interface.hex_corner(etendeur.x(), etendeur.y(), etendeur.h()/2);
-        Color couleur = Color.WHITE;
-        if (i.joueur() == Arbitre.J1)
-            couleur = Color.GREEN;
-        else
-            couleur = Color.CORNFLOWERBLUE;
+        Color couleur = getColor(i.joueur());
         if (i.estpointe())
             couleur = Color.RED;
         gc.setFill(couleur);
@@ -381,11 +342,7 @@ public class Dessinateur extends Visiteur{
     public boolean print (Coccinelle i) {
         etendeur.fixeComposant(i);
         double [][] coords = Interface.hex_corner(etendeur.x(), etendeur.y(), etendeur.h()/2);
-        Color couleur = Color.WHITE;
-        if (i.joueur() == 0)
-            couleur = Color.GREEN;
-        else
-            couleur = Color.CORNFLOWERBLUE;
+        Color couleur = getColor(i.joueur());
         if (i.estpointe())
             couleur = Color.RED;
         gc.setFill(couleur);
@@ -406,11 +363,7 @@ public class Dessinateur extends Visiteur{
     public boolean print (Moustique i) {
         etendeur.fixeComposant(i);
         double [][] coords = Interface.hex_corner(etendeur.x(), etendeur.y(), etendeur.h()/2);
-        Color couleur = Color.WHITE;
-        if (i.joueur() == 0)
-            couleur = Color.GREEN;
-        else
-            couleur = Color.CORNFLOWERBLUE;
+        Color couleur = getColor(i.joueur());
         if (i.estpointe())
             couleur = Color.RED;
         gc.setFill(couleur);        
@@ -431,11 +384,7 @@ public class Dessinateur extends Visiteur{
     public boolean print (Cloporte i) {
         etendeur.fixeComposant(i);
         double [][] coords = Interface.hex_corner(etendeur.x(), etendeur.y(), etendeur.h()/2);
-        Color couleur = Color.WHITE;
-        if (i.joueur() == 0)
-            couleur = Color.GREEN;
-        else
-            couleur = Color.CORNFLOWERBLUE;
+        Color couleur = getColor(i.joueur());
         if (i.estpointe())
             couleur = Color.RED;
         gc.setFill(couleur);
@@ -451,11 +400,7 @@ public class Dessinateur extends Visiteur{
     public boolean print (Fourmie i) {
         etendeur.fixeComposant(i);
         double [][] coords = Interface.hex_corner(etendeur.x(), etendeur.y(), etendeur.h()/2);
-        Color couleur = Color.WHITE;
-        if (i.joueur() == 0)
-            couleur = Color.GREEN;
-        else
-            couleur = Color.CORNFLOWERBLUE;
+        Color couleur = getColor(i.joueur());
         if (i.estpointe())
             couleur = Color.RED;
         gc.setFill(couleur);
@@ -471,11 +416,7 @@ public class Dessinateur extends Visiteur{
     public boolean print (Araignee i) {
         etendeur.fixeComposant(i);
         double [][] coords = Interface.hex_corner(etendeur.x(), etendeur.y(), etendeur.h()/2);
-        Color couleur = Color.WHITE;
-        if (i.joueur() == 0)
-            couleur = Color.GREEN;
-        else
-            couleur = Color.CORNFLOWERBLUE;
+        Color couleur = getColor(i.joueur());
         if (i.estpointe())
             couleur = Color.RED;
         gc.setFill(couleur);
@@ -491,11 +432,7 @@ public class Dessinateur extends Visiteur{
     public boolean print (Sauterelle i) {
         etendeur.fixeComposant(i);
         double [][] coords = Interface.hex_corner(etendeur.x(), etendeur.y(), etendeur.h()/2);
-        Color couleur = Color.WHITE;
-        if (i.joueur() == 0)
-            couleur = Color.GREEN;
-        else
-            couleur = Color.CORNFLOWERBLUE;
+        Color couleur = getColor(i.joueur());
         if (i.estpointe())
             couleur = Color.RED;
         gc.setFill(couleur);
@@ -505,5 +442,19 @@ public class Dessinateur extends Visiteur{
         Image img = new Image(image,((etendeur.h()/2)*1.75),((etendeur.h()/2)*1.75),true, true);
         gc.drawImage(img,etendeur.x()-(img.getWidth()/2), etendeur.y()-(img.getHeight()/2));
         return false;
+    }
+    
+    private Color getColor (int p) {
+        int c = 0;
+        switch (p) {
+            case 0:
+                c = Interface.getColorP1();
+                break;
+            case 1:
+                c = Interface.getColorP2();
+                break;
+            default:
+        }
+        return colorTable[c];
     }
 }
