@@ -24,18 +24,20 @@ public class MinMaxConcurent extends AI {
      * @param a
      * @param heuristicFunction
      * @param searchDepth
-     * @param start
+     * @param maxTimeInMillis
      * @param cp
      */
-    public MinMaxConcurent(Ordinateur me, Arbitre a, Heuristique heuristicFunction, int searchDepth, long start, Coup[] cp) {
-        super(me, a, heuristicFunction, searchDepth, start);
+    public MinMaxConcurent(Ordinateur me, Arbitre a, Heuristique heuristicFunction, int searchDepth, int maxTimeInMillis, Coup[] cp) {
+        super(me, a, heuristicFunction, searchDepth, maxTimeInMillis);
         cps = cp;
         this.am = me.numJ();
         em = new Emulateur(a);
     }
     
     
+    @Override
      public Coup nextmove(){
+        start = System.currentTimeMillis(); 
         int max_poids = AI.MIN;
         int meilleur_coup = 0;
         Thread[] threads = new Thread[cps.length];           

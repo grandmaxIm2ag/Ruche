@@ -7,6 +7,7 @@ package Joueurs.IA;
 
 import Joueurs.Ordinateur;
 import Modele.Arbitres.*;
+import Modele.Coup;
 import Modele.Plateau;
 import java.util.Map;
 
@@ -64,14 +65,14 @@ public abstract class AI {
      * @param a
      * @param heuristicFunction
      * @param searchDepth
-     * @param start
+     * @param maxTimeInMillis
      */
-    public AI(Ordinateur me, Arbitre a, Heuristique heuristicFunction, int searchDepth, long start) {
+    public AI(Ordinateur me, Arbitre a, Heuristique heuristicFunction, int searchDepth, int maxTimeInMillis) {
         this.me = me;
         this.arb = a;
         this.heurs = heuristicFunction;
         this.searchDepth = searchDepth;
-        this.start = start;
+        this.maxTimeInMillis = maxTimeInMillis;
         
     }   
         
@@ -79,4 +80,8 @@ public abstract class AI {
         return heurs.configurations.get(p)!=null;
     }
     
+    public Coup nextmove(){
+        start = System.currentTimeMillis();
+        return null;
+    }
 }

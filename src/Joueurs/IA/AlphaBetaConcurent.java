@@ -38,7 +38,9 @@ public class AlphaBetaConcurent extends AI {
     }
     
     
+    @Override
      public Coup nextmove(){
+        start = System.currentTimeMillis();
         int max_poids = AI.MIN;
         int meilleur_coup = 0;
         List<Thread> threads = new ArrayList();   

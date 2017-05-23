@@ -25,11 +25,11 @@ public class AlphaBeta extends AI {
      * @param a
      * @param heuristicFunction
      * @param searchDepth
-     * @param start
+     * @param maxTimeInMillis
      * @param cp
      */
-    public AlphaBeta(Ordinateur me, Arbitre a, Heuristique heuristicFunction, int searchDepth, long start, Coup[] cp) {
-        super(me, a, heuristicFunction, searchDepth, start);
+    public AlphaBeta(Ordinateur me, Arbitre a, Heuristique heuristicFunction, int searchDepth, int maxTimeInMillis, Coup[] cp) {
+        super(me, a, heuristicFunction, searchDepth, maxTimeInMillis);
         cps = cp;
        // System.out.println("j0 "+a.joueur(0).pions()[0]);
         em = new Emulateur(a);
@@ -40,7 +40,9 @@ public class AlphaBeta extends AI {
     }
     
     
+    @Override
      public Coup nextmove(){
+        start = System.currentTimeMillis(); 
         max_poids[0] = AI.MIN;
         int meilleur_coup = 0;
         //List<Thread> threads = new ArrayList();   

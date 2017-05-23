@@ -22,17 +22,19 @@ public class MinMax extends AI {
      * @param a
      * @param heuristicFunction
      * @param searchDepth
-     * @param start
+     * @param maxTimeInMillis
      * @param cp
      */
-    public MinMax(Ordinateur me, Arbitre a, Heuristique heuristicFunction, int searchDepth, long start, Coup[] cp) {
-        super(me, a, heuristicFunction, searchDepth, start);
+    public MinMax(Ordinateur me, Arbitre a, Heuristique heuristicFunction, int searchDepth, int maxTimeInMillis, Coup[] cp) {
+        super(me, a, heuristicFunction, searchDepth, maxTimeInMillis);
         cps = cp;
         em = new Emulateur(a);
     }
     
     
+    @Override
      public Coup nextmove(){
+        start = System.currentTimeMillis(); 
         int max_poids = AI.MIN;
         int meilleur_coup = 0;
            

@@ -182,7 +182,7 @@ public class Ordinateur extends Joueur{
         
         HeuristiqueV2 heurs = new HeuristiqueV2();
         //MinMaxConcurent mx = new MinMaxConcurent(this,a,heurs,2, System.nanoTime(),d);
-        MinMax mx = new MinMax(this,a,heurs,2, System.nanoTime(),d);
+        MinMax mx = new MinMax(this,a,heurs,2, 0,d);
         /* Affichage des coups possibles.
         System.out.println("Appel nextmove avec les coups:");
         for(int k = 0; k < d.length;k++)
