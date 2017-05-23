@@ -40,7 +40,7 @@ public class Ruche {
             new FileOutputStream(sauv).close();
         }
         Properties p = Configuration.proprietes();
-        //TestIA t=new TestIA(p,Ordinateur.FACILE_HEURISTIQUE,Ordinateur.FACILE_HEURISTIQUE,1000);
+        //TestIA t=new TestIA(p,Ordinateur.FACILE_ALEATOIRE,Ordinateur.FACILE_ALEATOIRE,1000);
         //t.simulation();
         Interface it = new Interface();
         FabriqueArbitre.init(p);
