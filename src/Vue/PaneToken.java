@@ -103,8 +103,8 @@ public class PaneToken {
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 8; j++) {
                 l[i][j].setText("" + arbitre.joueur(i).pion(j));
-                if (arbitre.joueur(i).pion(j) == 0 || arbitre.jCourant()!=i)
-                    b[i][j].setDisable(true);
+                //if (arbitre.joueur(i).pion(j) == 0 || arbitre.jCourant()!=i)
+                    //b[i][j].setDisable(true);
                 b[i][j].selectedProperty().addListener(new TokenListener(b[i][j], i, j));
             }
         }

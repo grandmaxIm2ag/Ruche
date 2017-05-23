@@ -25,15 +25,18 @@ import ruche.Reglage;
  * @author grandmax
  */
 public class SimulationIA extends Arbitre {
-
+    int diff1;
+    int diff2;
     /**
      *
      * @param p
      * @param d
      */
-    public SimulationIA(Properties p, int d,String n1, String n2 ) {
+    public SimulationIA(Properties p, int diff1, int diff2,String n1, String n2 ) {
         super(p, n1, n2);
-        difficulte = d;
+        //difficulte = d;
+        this.diff1 = diff1;
+        this.diff2 = diff2;
     }
     
     /**
@@ -56,8 +59,8 @@ public class SimulationIA extends Arbitre {
         for(int i=0; i<tabPieces2.length; i++)
             tabPieces2[i]=tabPieces[i];
         
-        joueurs[J1] = new Ordinateur(true,difficulte, prop, tabPieces,J1, nom1);
-        joueurs[J2] = new Ordinateur(true,difficulte, prop, tabPieces2,J2, nom2);
+        joueurs[J1] = new Ordinateur(true,diff1, prop, tabPieces,J1, nom1);
+        joueurs[J2] = new Ordinateur(true,diff2, prop, tabPieces2,J2, nom2);
         
         go();
     }

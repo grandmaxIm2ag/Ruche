@@ -77,6 +77,7 @@ public class Dessinateur extends Visiteur{
      */
     @Override
     public boolean visite (Case c) {
+        System.out.println(c);
         etendeur.fixeComposant(c);
         double [][] coords = Interface.hex_corner(etendeur.x(), etendeur.y(), etendeur.h()/2);
         //if (c.estpointe()) {
@@ -97,7 +98,7 @@ public class Dessinateur extends Visiteur{
                         gc.strokePolygon(coords[0], coords[1], 6);
                 }
         } else
-            gc.strokePolygon(coords[0], coords[1], 6);
+            gc.fillPolygon(coords[0], coords[1], 6);
         gc.setStroke(Color.BLACK);
         if (c.utilise() && c.estpointe() && !c.insectes().empty() && (c.tete().classement() > 1)) {
                 gc.setFill(Color.WHITESMOKE);

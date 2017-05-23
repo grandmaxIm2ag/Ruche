@@ -7,6 +7,7 @@ package Modele.Arbitres;
 
 import Controleur.Choix;
 import Joueurs.Ordinateur;
+import Vue.Interface;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -61,6 +62,7 @@ public class FabriqueArbitre {
      * @see FabriqueArbitre#initDiff(int) 
      */
     private int difficulte;
+    private int difficulte2;
     /**
      * Le nom de la sauvegarde donné à l'arbitre qui va être favriquée, peut être modifié.
      * @see FabriqueArbitre#initP(java.lang.String) 
@@ -158,10 +160,10 @@ public class FabriqueArbitre {
                 return new Local(prop, type, difficulte,nom1,nom2);
             case LOCAL_JVIA:
                 if(b)
-                    return new Local(prop, type, difficulte, plateau,nom1,"Ordinateur");
-                return new Local(prop, type, difficulte,nom1,"Ordinateur");
+                    return new Local(prop, type, difficulte | difficulte2, plateau,nom1,"Ordinateur");
+                return new Local(prop, type, difficulte | difficulte2,nom1,"Ordinateur");
             case SIMULATION:
-                return new SimulationIA(prop, difficulte,nom1,nom2);
+                return new SimulationIA(prop, difficulte, difficulte2,nom1,nom2);
             case RESEAU_CLIENT:
                 return new ReseauClient(prop,nom1,"",ip);
             case RESEAU_SERVER:
@@ -191,6 +193,10 @@ public class FabriqueArbitre {
      */
     public void initDiff(int t){
         difficulte = t;
+    }
+    
+    public void initDiff2(int t){
+        difficulte2 = t;
     }
 
     /**
