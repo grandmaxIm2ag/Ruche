@@ -102,7 +102,7 @@ public abstract class Arbitre {
         jCourant = J1;
         historique = new Stack();
         refaire = new Stack();
-        plateau = new Plateau(0,0,Reglage.lis("lPlateau")*2*Reglage.lis("nbPiece"),Reglage.lis("hPlateau")*2*Reglage.lis("nbPiece"),p);
+        plateau = new Plateau(0,0,Reglage.lis("lPlateau")*Reglage.lis("nbPiece"),Reglage.lis("hPlateau")*Reglage.lis("nbPiece"),p);
         
         chargeur = new Chargeur();
         
@@ -523,6 +523,7 @@ public abstract class Arbitre {
     public void maj(long t){
         if(Interface.pointeur().event()!=null){
             boolean b = this.accept(Interface.pointeur());
+            //System.out.println(b);
             if(b)
                 plateau.clearAide();
                 if(Interface.pointeur().event().getEventType() == MouseEvent.MOUSE_CLICKED && etat == AIDE){
@@ -630,6 +631,7 @@ public abstract class Arbitre {
     public void dispo(int ins){
         initClopDepl = null;
         Coup[] c = depotPossible(jCourant, ins);
+        System.out.println(jCourant+" "+ins+" "+Arrays.toString(c));
         List<Case> l = new ArrayList();
         for(int i=0; c!=null && i<c.length; i++){
             Case c2 = new Case(c[i].destination().x(), c[i].destination().y(), 1, 1);
