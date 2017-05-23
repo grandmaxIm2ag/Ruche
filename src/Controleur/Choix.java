@@ -18,11 +18,9 @@ public class Choix implements ChangeListener<Number>{
     public final static int CHOIX_PLATEAU = 1;
     public final static int CHOIX_DIFFICULTE = 2;
     
-    FabriqueArbitre fabrique;
     int value;
 
-    public Choix(FabriqueArbitre fab, int v){
-        fabrique = fab;
+    public Choix(int v){
         value = v;
     }
     /**
@@ -33,7 +31,7 @@ public class Choix implements ChangeListener<Number>{
      */
     @Override
     public void changed(ObservableValue<? extends Number> ov, Number t, Number t1) {
-        fabrique.setInit(value, (int) t1);
+        FabriqueArbitre.setInit(value, (int) t1);
     }
     
 }

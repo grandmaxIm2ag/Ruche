@@ -69,6 +69,7 @@ public class SimulationIA extends Arbitre {
      *
      */
     public void go(){
+        configurations.clear();
         Interface.goPartie();
         if(joueurs[J1] instanceof Ordinateur){
             Ordinateur o = (Ordinateur) joueurs[J1];
@@ -106,13 +107,21 @@ public class SimulationIA extends Arbitre {
      */
     @Override
     public void prochainJoueur() {
-        jCourant = ++jCourant % 2;
         etat = ATTENTE_COUP;
         PaneToken.getInstance(this).update();
         if(plateau.estEncerclee(jCourant)){
             etat=FIN;
-            System.err.println(jCourant+" à perdu");
+            Interface.goFin(joueurs[jCourant].nom(), GAGNE);
+        }else if(plateau.estEncerclee((jCourant+1)%2)){
+            etat=FIN;
+            Interface.goFin(joueurs[jCourant].nom(), PERDU);
+        }else if(configurations.contains(plateau.hashCode())){
+            etat=FIN;
+            Interface.goFin(nom1, NUL);
         }else{
+            configurations.add(plateau.hashCode());
+            jCourant = ++jCourant % 2;
+            plateau.setJoueur(jCourant);
             List<Coup[]> tab = new LinkedList();
             for(int i=0; i<joueurs[jCourant].pions().length; i++){
                 if(joueurs[jCourant].pions()[i]!=0){
@@ -147,7 +156,7 @@ public class SimulationIA extends Arbitre {
                 prochainJoueur();
             }else if(precAucun && aucun){
                 etat=FIN;
-                System.err.println("Match nul");
+                Interface.goFin(nom1, NUL);
             }else{
                 if(joueurs[jCourant] instanceof Ordinateur){
                     Ordinateur o = (Ordinateur) joueurs[jCourant];

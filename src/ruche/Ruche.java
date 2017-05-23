@@ -38,7 +38,8 @@ public class Ruche {
         }
         Properties p = Configuration.proprietes();
         Interface it = new Interface();
-        Interface.creer(args, new FabriqueArbitre(p));
+        FabriqueArbitre.init(p);
+        Interface.creer(args);
         Interface.goFin("Coucou", Arbitre.GAGNE);
     }
     

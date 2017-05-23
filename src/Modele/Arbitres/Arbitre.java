@@ -269,19 +269,29 @@ public abstract class Arbitre {
      *
      */
     public void precedent(){
+        
+        
         if(!historique.isEmpty()){
+            configurations.remove(configurations.size()-1);
             Coup c = historique.pop();
+            System.out.println(c+" "+(c==null));
             refaire.push(c);
             if(c instanceof Deplacement){
                 Deplacement d = (Deplacement) c;
                 plateau.deplacePion(new Deplacement(d.joueur(),d.destination(), d.source()));
+                nbCoup[d.joueur()]--;
             }else if(c instanceof Depot){
                 Depot d = (Depot) c;
                 plateau.retirerPion(d.destination());
+                nbCoup[d.joueur()]--;
+                joueurs[d.joueur()].addPion(d.type());
             }
         }else{
             System.err.println("Aucun coup précedent");
         }
+        PaneToken.getInstance(this).update();
+        jCourant = (jCourant+1)%2;
+        
     }
 
     /**
@@ -290,13 +300,9 @@ public abstract class Arbitre {
     public void refaire(){
         if(!refaire.isEmpty()){
             Coup c = refaire.pop();
+            System.out.println(c+" "+(c==null));
             historique.push(c);
-            if(c instanceof Depot)
-                plateau.deposePion((Depot)c );
-            else{
-                Deplacement d = (Deplacement) c;
-                plateau.deplacePion(d);
-            }
+            joue(c);
         }else{
             System.out.println("Aucun coup à refaire");
         }
@@ -315,14 +321,14 @@ public abstract class Arbitre {
      * @param plateau
      */
     public void charger(String plateau){
-        chargeur.init(prop);
-        this.plateau = chargeur.charger();
-        type = chargeur.type();
-        difficulte = chargeur.difficulte();
-        historique = chargeur.historique();
-        refaire = chargeur.refaire();
+        Chargeur.init(prop);
+        this.plateau = Chargeur.charger(plateau);
+        type = Chargeur.type();
+        difficulte = Chargeur.difficulte();
+        historique = Chargeur.historique();
+        refaire = Chargeur.refaire();
         
-        String[] str = chargeur.joueur();
+        String[] str = Chargeur.joueur();
         joueurs[J1].nom = str[J1].split("=")[0];
         String[] str2 = str[J1].split("=")[1].split(":");
         System.err.println(Arrays.toString(str2));
@@ -346,6 +352,17 @@ public abstract class Arbitre {
     public void sauvegarder(String nomSauv){
         String sauv = "";
         
+        switch(type){
+            case FabriqueArbitre.LOCAL_JVJ:
+                sauv = type+"::"+joueurs[J1].nom()+"::"+joueurs[J1].nom()+"\n";
+                break;
+            case FabriqueArbitre.LOCAL_JVIA:
+                sauv = type+"::"+joueurs[J1].nom()+"::"+difficulte+"\n";
+                break;
+            case FabriqueArbitre.SIMULATION:
+                sauv = type+"::"+difficulte+"\n";
+                break;
+        }
         sauv += type+":"+difficulte+":"+nbCoup[J1]+":"+nbCoup[J1]+":"+jCourant+"\n";
         sauv += joueurs[J1]+"\n";
         sauv += joueurs[J2]+"\n";
@@ -374,7 +391,6 @@ public abstract class Arbitre {
             FileWriter output = new FileWriter(f);
             output.write(sauv);
             output.close();
-                //MaJ BDD
         
         }catch(FileNotFoundException e){
             System.err.println("Impossible de sauvegarder, fichier introuvable "+nomSauv);
@@ -392,12 +408,15 @@ public abstract class Arbitre {
             }else{
                 str += (":"+nomSauv);
             }
+            fr.close();
             PrintWriter writer = new PrintWriter("Sauvegardes/Sauvegarde", "UTF-8");
             writer.print(str);
             writer.close();
         }catch(IOException e){
             System.err.println("Echec de la saucegarde "+e);
         }
+        
+        FabriqueArbitre.initChargeur();
     }
     
     /**
@@ -521,12 +540,13 @@ public abstract class Arbitre {
      * @param t
      */
     public void maj(long t){
+        //System.gc();
         if(Interface.pointeur().event()!=null){
             boolean b = this.accept(Interface.pointeur());
             //System.out.println(b);
             if(b)
                 plateau.clearAide();
-                if(Interface.pointeur().event().getEventType() == MouseEvent.MOUSE_CLICKED && etat == AIDE){
+                if((Interface.pointeur().event().getEventType() == MouseEvent.MOUSE_CLICKED) && (etat == AIDE)){
                     etat = ATTENTE_COUP;
                     aide = false;
                 }
@@ -549,9 +569,7 @@ public abstract class Arbitre {
             case JOUE_EN_COURS:
                 temps_ecoule+=nouv;
                 if(temps_ecoule>=100000000){
-                    System.out.println("Joue déplacement "+enCours);
                     temps_ecoule=0;
-                    System.out.println(enCours);
                     if(enCours!=null){
                         
                         plateau.deplacePion(enCours);
@@ -698,8 +716,37 @@ public abstract class Arbitre {
      *
      */
     public void go(){
+        configurations.clear();
         Interface.goPartie();
-        etat = ATTENTE_COUP;
+        if(joueurs[J1] instanceof Ordinateur){
+            Ordinateur o = (Ordinateur) joueurs[J1];
+            List<Coup[]> tab = new LinkedList();
+                for(int i=0; i<joueurs[jCourant].pions().length; i++){
+                    if(joueurs[jCourant].pions()[i]!=0){
+                        Coup[] tmp = depotPossible(jCourant, i);
+                        if(tmp!=null)
+                            tab.add(tmp);
+                    }
+                        
+                }
+                   
+                Coup[] tmp;
+                if((tmp=deplacementPossible(jCourant))!=null)
+                    tab.add(tmp);
+
+                int taille= 0;
+                Iterator<Coup[]> it = tab.iterator();
+                while(it.hasNext())
+                    taille+=it.next().length;
+                it = tab.iterator();
+                coups= new Coup[taille];
+                for(int i=0; i<taille;i++){
+                    Coup[] x = it.next();
+                    for(int j=0; j<x.length; j++)
+                        coups[i+j]=x[j];
+                }
+                joue(o.coup(this, coups));
+        }
     }
     /*
     @Override

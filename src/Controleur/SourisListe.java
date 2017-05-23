@@ -19,15 +19,14 @@ public class SourisListe implements EventHandler<MouseEvent>{
     FabriqueArbitre fabrique;
     ListView<String> list;
     
-    public SourisListe(FabriqueArbitre f, int v, ListView<String> l){
-        fabrique=f; 
+    public SourisListe(int v, ListView<String> l){
         value = v;
         list=l;
     }
 
     @Override
     public void handle(MouseEvent t) {
-        fabrique.initP(list.getSelectionModel().getSelectedItem());
+        FabriqueArbitre.initP(list.getSelectionModel().getSelectedItem().split(" ")[0]);
     }
     
     

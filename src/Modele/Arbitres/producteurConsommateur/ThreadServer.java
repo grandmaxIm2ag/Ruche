@@ -17,6 +17,7 @@ import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
+import java.net.SocketTimeoutException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -40,11 +41,14 @@ public class ThreadServer implements Runnable{
     @Override
     public void run() {
         try{
+            serverSocket.setSoTimeout(10000);
             Socket c = serverSocket.accept();
             System.out.println("ThreadServer Accepté");
             arbitre.accept(c);
             arbitre.launch();
         }catch(SocketException e){
+            System.err.println("Annulation");
+        }catch(SocketTimeoutException e2){
             System.err.println("Annulation");
         } catch (IOException ex) {
             Logger.getLogger(ThreadServer.class.getName()).log(Level.SEVERE, null, ex);

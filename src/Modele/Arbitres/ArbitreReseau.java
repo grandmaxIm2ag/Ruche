@@ -147,12 +147,21 @@ public abstract class ArbitreReseau extends Arbitre{
     public void prochainJoueur() {
         etat = ATTENTE_COUP;
         PaneToken.getInstance(this).update();
-        jCourant = ++jCourant % 2;
+        
 
         if(plateau.estEncerclee(jCourant)){
             etat=FIN;
-            System.err.println(jCourant+" à perdu");
+            Interface.goFin(joueurs[jCourant].nom(), GAGNE);
+        }else if(plateau.estEncerclee((jCourant+1)%2)){
+            etat=FIN;
+            Interface.goFin(joueurs[jCourant].nom(), PERDU);
+        }else if(configurations.contains(plateau.hashCode())){
+            etat=FIN;
+            Interface.goFin(nom1, NUL);
         }else{
+            configurations.add(plateau.hashCode());
+            jCourant = ++jCourant % 2;
+            plateau.setJoueur(jCourant);
             List<Coup[]> tab = new LinkedList();
             for(int i=0; i<joueurs[jCourant].pions().length; i++){
                 if(joueurs[jCourant].pions()[i]!=0){
@@ -187,7 +196,7 @@ public abstract class ArbitreReseau extends Arbitre{
                 prochainJoueur();
             }else if(precAucun && aucun){
                 etat=FIN;
-                System.err.println("Match nul");
+                Interface.goFin(nom1, NUL);
             }else{
                 
             }

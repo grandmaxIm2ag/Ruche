@@ -21,6 +21,7 @@ import javafx.scene.layout.BorderPane;
 import Modele.Arbitres.*;
 import Joueurs.Joueur;
 import Joueurs.Ordinateur;
+import Modele.Chargeur;
 import Modele.Point;
 import Son.SoundEngine;
 import java.io.File;
@@ -28,6 +29,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.Duration;
+import java.util.Arrays;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -130,7 +132,6 @@ public class Interface extends Application {
 
     static Pointeur pointeur;
     static Arbitre arbitre;
-    static FabriqueArbitre fabrique;
     static BorderPane root;
     static Scene scene;
     final static boolean fullScreen = false;
@@ -171,7 +172,7 @@ public class Interface extends Application {
         }
         //goMenu();
         goNewGame();
-        goLoadGame();
+        FabriqueArbitre.initChargeur();
         goConfig();
         goTest();       
         //goPartie();
@@ -183,11 +184,10 @@ public class Interface extends Application {
      * @param args
      * @param a
      */
-    public static void creer(String[] args, FabriqueArbitre a) {
+    public static void creer(String[] args) {
         root = new BorderPane();
         root.getChildren().add(new ImageView(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/fond.jpg"))));
-        fabrique = a;
-        fabrique.initType(FabriqueArbitre.LOCAL_JVJ);
+        FabriqueArbitre.initType(FabriqueArbitre.LOCAL_JVJ);
         args2=args;
         //dialogConn = new Dialog<>();
         launch(args);
@@ -195,6 +195,7 @@ public class Interface extends Application {
     }
     
     public static void goTest () {
+        FabriqueArbitre.init();
         Rectangle rleft = new Rectangle(100,100);
         rleft.widthProperty().bind(scene.widthProperty().divide(10));
         rleft.setOpacity(0);
@@ -339,8 +340,9 @@ public class Interface extends Application {
         c.setOnMouseMoved(new Souris(arbitre, Souris.SOURIS_BOUGEE, c));
         c.setOnMouseClicked(new Souris(arbitre, Souris.SOURIS_CLIQUEE, c));
 
+      //  if(anim==null)
+            anim = new Animation(arbitre, c, cj1, cj2);
         
-        anim = new Animation(arbitre, c, cj1, cj2);
         anim.start();
         
 
@@ -564,7 +566,7 @@ public class Interface extends Application {
 
         btBEG.setMinWidth(150);
 
-        btBEG.setOnAction(new BoutonCommencer(tfJ1, tfJ2, host, fabrique));
+        btBEG.setOnAction(new BoutonCommencer(tfJ1, tfJ2, host));
 
         centerBox.getChildren().add(centerStack);
         centerStack.getChildren().addAll(rectBox, insideBox);//centerGrid);
@@ -581,7 +583,7 @@ public class Interface extends Application {
     /**
      *
      */
-    public static void goLoadGame() {
+    public static void goLoadGame(String[] plateaux) {
         VBox centerBox = new VBox();
         StackPane centerStack = new StackPane();
         GridPane centerGrid = new GridPane();
@@ -620,15 +622,13 @@ public class Interface extends Application {
         lNG.setTextFill(Color.WHITE);
         lNG.setFont(new Font(22));
         ChoiceBox cbMOD = new ChoiceBox();
-        String[] tmp = fabrique.plateaux();
-        ListView<String> list = new ListView<String>();
-        for(int i=0; i<tmp.length; i++)
-            list.getItems().add(tmp[i]);
-        list.setOnMouseClicked(new SourisListe(fabrique, CHOIX_PLATEAU, list));
+        ListView<String> list = new ListView<>();
+        list.getItems().addAll(Arrays.asList(plateaux));
+        list.setOnMouseClicked(new SourisListe( CHOIX_PLATEAU, list));
         
         list.setMaxWidth(500);
         list.setMinWidth(500);
-        cbMOD.getSelectionModel().selectedIndexProperty().addListener(new Choix(fabrique, Choix.CHOIX_PLATEAU));
+        cbMOD.getSelectionModel().selectedIndexProperty().addListener(new Choix( Choix.CHOIX_PLATEAU));
         
         insideBox.getChildren().addAll(lNG, centerGrid, list, btBEG);
 
@@ -954,7 +954,8 @@ public class Interface extends Application {
     }
     
     public static void nouvelArbitre(){
-        arbitre = fabrique.nouveau();
+        arbitre = FabriqueArbitre.nouveau();
+        System.out.println((arbitre instanceof SimulationIA));
         arbitre.init();
         System.out.println("Arbitre créé");
     }
@@ -1086,7 +1087,7 @@ public class Interface extends Application {
 	dialogConn.setScene(dialog);
 	
 	bnOK.setOnAction((e)-> {
-                arbitre.setEtat(Arbitre.FIN);
+                arbitre.setEtat(ReseauServer.ANNUL);
 		dialogConn.close();
                 
 	});
@@ -1097,7 +1098,9 @@ public class Interface extends Application {
     }
     
     public static void fin(){
+        System.gc();
         anim.stop();
+        PaneToken.reset();
     }
     
     public static void setColorP1 (int color) {

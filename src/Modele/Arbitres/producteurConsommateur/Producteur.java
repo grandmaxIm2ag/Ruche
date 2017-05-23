@@ -28,10 +28,13 @@ public class Producteur implements Runnable{
         boolean b = true;
         while(b){
             String l = actions[Arbitre.J1].extraire();
-            System.err.println(l);
-            b &= !(l.substring(1).equals("Fin")||l.equals("Abandon"));
-            out.println(l);
+            System.err.println("test:"+l);
+            if(!"".equals(l)){
+                b &= !(l.substring(1).equals("Fin")||l.substring(1).equals("Abandon"));
+                out.println(l);
+            }
         }
+        out.close();
     }
     
 }

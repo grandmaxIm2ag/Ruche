@@ -81,8 +81,8 @@ public class Local extends Arbitre{
                 joueurs[J2] = new Humain(true, prop, tabPieces2, J2, nom2);
                 break;
             case FabriqueArbitre.LOCAL_JVIA:
-                joueurs[J1] = new Humain(true, prop, tabPieces,  J1, nom1);
-                joueurs[J2] = new Ordinateur(true,difficulte, prop, tabPieces2,  J2, nom2);
+                joueurs[J2] = new Humain(true, prop, tabPieces,  J2, nom1);
+                joueurs[J1] = new Ordinateur(true,Ordinateur.MOYEN, prop, tabPieces2,  J1, nom2);
                 break;
         }
         
@@ -98,7 +98,6 @@ public class Local extends Arbitre{
      */
     @Override
     public void joue(Deplacement d){
-        System.out.println ("J'ai fait caca ici aussi :x" + d);
         if(plateau().reine(jCourant)!=null){
                 //if(deplacePionValide(d)){
                 enCoursIt = d.route().iterator();
@@ -123,7 +122,6 @@ public class Local extends Arbitre{
      */
     @Override
     public void joue(Depot d){
-        System.err.println("caca" + d.joueur());
         if(nbCoup[jCourant]==0 && jCourant == J1){
             joueurs[d.joueur()].jouer(d.type());
             plateau.premierPion(FabriqueInsecte.creer(d.type(), jCourant, new Point(0,0)));
@@ -180,17 +178,16 @@ public class Local extends Arbitre{
             Interface.goFin(joueurs[jCourant].nom(), PERDU);
         }else if(configurations.contains(plateau.hashCode())){
             etat=FIN;
+            //System.out.println(configurations.toString()+" "+plateau.hashCode());
+            Interface.goFin(nom1, NUL);
             System.err.println("Match nul");
         }else{
             configurations.add(plateau.hashCode());
-            //System.err.println(plateau.hashCode());
             
             etat = ATTENTE_COUP;
             PaneToken.getInstance(this).update();
             jCourant = ++jCourant % 2;
             plateau.setJoueur(jCourant);
-            configurations.add(plateau.hashCode());
-            //System.err.println(plateau.hashCode());
             List<Coup[]> tab = new LinkedList();
             for(int i=0; i<joueurs[jCourant].pions().length; i++){
                 if(joueurs[jCourant].pions()[i]!=0){
@@ -209,7 +206,7 @@ public class Local extends Arbitre{
             while(it.hasNext())
                 taille+=it.next().length;
             it = tab.iterator();
-            System.out.println(nbCoup[J1]+" "+nbCoup[J2]);
+            //System.out.println(nbCoup[J1]+" "+nbCoup[J2]);
             coups = new Coup[taille];
             int i=0;
             while(it.hasNext()){
@@ -220,13 +217,13 @@ public class Local extends Arbitre{
                 }
                  i+=j;
             }
-            aucun = coups == null || coups.length<=0;
+            aucun = (coups == null || coups.length<=0);
             if(aucun){
                 prochainJoueur();
-            }else if(precAucun && aucun){
+            }/*else if(precAucun && aucun){
                 etat=FIN;
                 System.err.println("Match nul");
-            }else{
+            }*/else{
                 if(joueurs[jCourant] instanceof Ordinateur){
                     Ordinateur o = (Ordinateur) joueurs[jCourant];
                     precAucun = aucun;
