@@ -49,6 +49,25 @@ public class HeuristiqueV1 extends Heuristique {
         return dpl;
     }
     
+    private int depl(Emulateur a, Plateau m, int numJoueur) {
+        Coup [] depl = m.deplacementPossible(numJoueur);
+        int dpl = 0;
+        if(depl != null)
+            dpl = depl.length;
+        
+        for(int i=0; i<a.joueur(numJoueur).pions().length; i++){
+                if(a.joueur(numJoueur).pions()[i]!=0){
+                   depl = m.depotPossible(numJoueur, i);
+                   if(depl != null)
+                       dpl += depl.length;
+                }
+                
+            }
+        
+        return dpl;
+    }
+    
+    @Override
     public int EvalPlateau(Arbitre a, Coup[] d, Plateau p, Ordinateur me) {
         
         // Un null est considérer comme une défaite
@@ -67,7 +86,10 @@ public class HeuristiqueV1 extends Heuristique {
         } else if(otherWon) {
             return AI.MIN;
         }
-
+        if(configurations.get(p)!=null){
+            return configurations.get(p);
+        } 
+        heurs = 0;
         int mePossibleDepl = d.length;
         int meTokensOnBoard = freeBugs(p,me.numJ());
         int meHexesFilledAroundOpposingQueen = me.nbLiberteesReine(p, me.numAdversaire());

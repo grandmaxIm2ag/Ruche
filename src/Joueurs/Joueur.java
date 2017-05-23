@@ -128,4 +128,13 @@ public abstract class Joueur {
     public void setNom(String n){
         nom = n;
     }
+    
+    @Override
+    public Joueur clone(){
+        return null;
+    }
+        
+    public void pred(int t){
+        tabPieces[t]++;
+    }
 }

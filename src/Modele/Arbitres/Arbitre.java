@@ -720,6 +720,14 @@ public abstract class Arbitre {
         Interface.goPartie();
         etat = ATTENTE_COUP;
     }
+    
+    public Stack<Coup> historique(){
+        return historique;
+    }
+    
+    public int nbcoups(int j){
+        return nbCoup[j];
+    }
     /*
     @Override
     public abstract Arbitre clone();*/

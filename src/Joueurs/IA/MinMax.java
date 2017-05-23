@@ -14,7 +14,8 @@ import Modele.Coup;
  * @author hadjadjl
  */
 public class MinMax extends AI {
-
+    Emulateur em;
+    Coup[] cps;
     /**
      *
      * @param me
@@ -22,8 +23,9 @@ public class MinMax extends AI {
      * @param heuristicFunction
      * @param searchDepth
      * @param maxTimeInMillis
+     * @param cp
      */
-    public MinMax(Ordinateur me, Arbitre a, Heuristique heuristicFunction, int searchDepth, int maxTimeInMillis) {
+    public MinMax(Ordinateur me, Arbitre a, Heuristique heuristicFunction, int searchDepth, int maxTimeInMillis, Coup[] cp) {
         super(me, a, heuristicFunction, searchDepth, maxTimeInMillis);
         cps = cp;
         em = new Emulateur(a);
@@ -56,36 +58,44 @@ public class MinMax extends AI {
         return cps[meilleur_coup];
     }
     
-    public int Max(int profondeur,int hauteur){
-        if(profondeur == 0)
-            return testconfig(hauteur - profondeur);
-        int max_poids = -100000;
-        
-        for(int i=0;i<casesJouables.size();i++){
-            LinkedList<Integer> casestmp = (LinkedList<Integer>) casesJouables.clone();
-            coupIA(casesJouables.get(i));
-            int tmp = Min(profondeur-1, hauteur);
-            if(tmp > max_poids){
-                max_poids = tmp;
+    public int Max(Emulateur emu,int profondeur, Coup[] d){
+       // System.out.println("appel max : "+(profondeur));
+        if(searchDepth - profondeur <= 0)
+            return heurs.EvalPlateau(emu, d, me);
+        int max_poids = AI.MIN;
+        profondeur++;
+        for(int i=0;i < d.length;i++){
+            //System.out.println("max "+i+" "+d[i]);
+            emu.joue(d[i]);
+            Coup [] cpt = emu.PossibleMoves();
+            if(cpt != null && cpt.length != 0){
+                int tmp = Min(emu/*.clone()*/,profondeur, cpt);
+                if(tmp > max_poids){
+                    max_poids = tmp;
+                }
             }
-            casesJouables = casestmp;
+            emu.precedent();
         }
         return max_poids;
     }
     
-    public int Min(int profondeur,int hauteur){
-        if(profondeur == 0)
-            return testconfig(hauteur - profondeur);
-        int min_poids = 100000;
-        
-        for(int i=0;i<casesJouables.size();i++){
-            LinkedList<Integer> casestmp = (LinkedList<Integer>) casesJouables.clone();
-            coupIA(casesJouables.get(i));
-            int tmp = Max(profondeur-1, hauteur);
-            if(tmp < min_poids){
-                min_poids = tmp;
+    public int Min(Emulateur emu,int profondeur, Coup[] d){
+       // System.out.println("appel min : "+ profondeur);
+        if(searchDepth - profondeur <= 0)
+            return heurs.EvalPlateau(emu, d, me);
+        int min_poids = AI.MAX;
+        profondeur++;
+        for(int i=0;i < d.length;i++){
+            //System.out.println("min "+i+" "+d[i]);
+            emu.joue(d[i]);
+            Coup [] cpt = emu.PossibleMoves();
+            if(cpt != null && cpt.length != 0){
+                int tmp = Max(emu/*.clone()*/,profondeur,cpt);
+                if(tmp < min_poids){
+                    min_poids = tmp;
+                }
             }
-            casesJouables = casestmp;
+            emu.precedent();
         }
         return min_poids;
     }

@@ -16,7 +16,8 @@ import java.util.Map;
  * @author hadjadjl
  */
 public abstract class AI {
-
+    
+    public Map<Plateau, Integer> configurations;
     /**
      *
      */
@@ -41,7 +42,7 @@ public abstract class AI {
     /**
      *
      */
-        protected Heuristique heurs;
+    protected Heuristique heurs;
 
     /**
      *
@@ -73,6 +74,10 @@ public abstract class AI {
         this.searchDepth = searchDepth;
         this.maxTimeInMillis = maxTimeInMillis;
         
+    }   
+        
+    public boolean existConfig(Plateau p){
+        return heurs.configurations.get(p)!=null;
     }
     
     public Coup nextmove(){
