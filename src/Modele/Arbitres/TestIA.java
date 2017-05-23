@@ -58,11 +58,10 @@ public class TestIA extends Arbitre{
         long finPartie;
         String res="";
         for(int i=0;i<nbSimulations;i=i+1){
-            //System.err.println("Nouvelle Partie "+i);
+            System.err.println("Nouvelle Partie "+i);
             configurations.clear();
             dejaVu=false;
             debutPartie=System.nanoTime();
-            //nouvellePartie();
             simulation2();
             victoires[i]=victorieux;
             nbCoupsJouesJ1[i]=nbCoup[0];
@@ -79,7 +78,6 @@ public class TestIA extends Arbitre{
             res=res+", temps:"+tempsParties[i]+"(en nanosec)\n";
         }
         resultatsBrut=res;
-        //System.out.println(Arrays.toString(victoires));
         System.out.println(resultatsBrut);
         calcul();
         System.out.println(resultatMoyenne);
@@ -162,7 +160,6 @@ public class TestIA extends Arbitre{
       
     @Override
     public void prochainJoueur() {
-        //System.out.println(Arrays.toString(joueurs[J1].pions())+" "+Arrays.toString(joueurs[J2].pions()));
         if(plateau.estEncerclee(jCourant)){
             etat=FIN;
             victorieux=++jCourant % 2;
@@ -194,7 +191,7 @@ public class TestIA extends Arbitre{
             while(it.hasNext())
                 taille+=it.next().length;
             it = tab.iterator();
-            System.out.println(nbCoup[J1]+" "+nbCoup[J2]);
+            //System.out.println(nbCoup[J1]+" "+nbCoup[J2]);
             coups = new Coup[taille];
             int i=0;
             while(it.hasNext()){
