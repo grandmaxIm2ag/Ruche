@@ -45,6 +45,8 @@ public class Ordinateur extends Joueur{
     
     /** La valeur de cette constante est {@value}. */
     public final static int DIFFICILE=3;
+    /** La valeur de cette constante est {@value}. */
+    public final static int END_GAME=4;
     
     /** La valeur de la GRAINE dépend du résultat de la fonction System.nanoTime().
     * @see System.nanoTime()
@@ -110,7 +112,9 @@ public class Ordinateur extends Joueur{
             case MOYEN:
                 return IA_Middle(a, d);
             case DIFFICILE:
-                return IA_Hard(a, d);   
+                return IA_Hard(a, d);
+            case END_GAME:
+                return IA_End_Game(a, d); 
             default:        
                 return null;
         }
@@ -246,6 +250,23 @@ public class Ordinateur extends Joueur{
         //MinMaxConcurent mx = new MinMaxConcurent(this,a,heurs,2,0,d);
         //MinMax mx = new MinMax(this,a,heurs,2,0,d);
         AlphaBeta mx = new AlphaBeta(this,a,heurs,3, 0,d);
+        //AlphaBetaConcurent mx = new AlphaBetaConcurent(this,a,heurs,3, 0,d);
+        /* Affichage des coups possibles.
+        System.out.println("Appel nextmove avec les coups:");
+        for(int k = 0; k < d.length;k++)
+            System.out.print(d[k]+"  ");
+        System.out.println(d.length);*/
+        return mx.nextmove();
+    }
+    
+    public Coup IA_End_Game(Arbitre a, Coup[] d){
+        if(d==null || d.length<= 0)
+            return null;
+        
+        HeuristiqueV2 heurs = new HeuristiqueV2();
+        //MinMaxConcurent mx = new MinMaxConcurent(this,a,heurs,2,0,d);
+        //MinMax mx = new MinMax(this,a,heurs,2,0,d);
+        AlphaBeta mx = new AlphaBeta(this,a,heurs,6, 0,d);
         //AlphaBetaConcurent mx = new AlphaBetaConcurent(this,a,heurs,3, 0,d);
         /* Affichage des coups possibles.
         System.out.println("Appel nextmove avec les coups:");

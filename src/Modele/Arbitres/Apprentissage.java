@@ -43,6 +43,7 @@ public class Apprentissage extends Arbitre{
     HashMap<Integer, Integer> hDiff;
     HashMap<Integer, Integer> hMoy;
     HashMap<Integer, Coup> hashCoup;
+    boolean end = false;
     
     boolean heur;
     /**
@@ -113,6 +114,34 @@ public class Apprentissage extends Arbitre{
             Logger.getLogger(Apprentissage.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+    
+    public void apprentissageEndGame(){
+        try {
+            for(int i=0; i<nbSimulations; i++){
+                System.err.println("Nouvelle Partie "+i);
+                configurations.clear();
+                simulation2();
+                for(int j=0; j<10; j++){
+                    precedent();
+                }
+                etat = ATTENTE_COUP;
+                end = true;
+                hashCoup = new HashMap();
+                joueurs[J1] = new Ordinateur( true,Ordinateur.DIFFICILE, prop, joueurs[J1].pions(), J1, "");
+                joueurs[J2] = new Ordinateur( true,Ordinateur.DIFFICILE, prop, joueurs[J2].pions(), J2, "");
+                simulation2();
+            }
+            File f = new File("Ressources/Simulations/Apprentissage/endGame");
+            f.createNewFile();
+            bdd = new PrintWriter(f);
+            for(Map.Entry<Integer, Coup> entry : hashCoup.entrySet() ){
+                bdd.println(entry.getKey()+"::"+entry.getValue());
+            }
+            bdd.close();
+        } catch (IOException ex) {
+            Logger.getLogger(Apprentissage.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
             
     
     @Override
@@ -132,10 +161,10 @@ public class Apprentissage extends Arbitre{
         
         if(heur){
             joueurs[J1] = new Ordinateur(true,Ordinateur.FACILE_ALEATOIRE, prop, tabPieces, J1, "");
-            joueurs[J2] = new Ordinateur(true,Ordinateur.FACILE_ALEATOIRE, prop, tabPieces2, J2, "");
+            joueurs[J2] = new Ordinateur(false,Ordinateur.FACILE_ALEATOIRE, prop, tabPieces2, J2, "");
         }else{
             joueurs[J1] = new Ordinateur(true,difficulte, prop, tabPieces, J1, "");
-            joueurs[J2] = new Ordinateur(true,difficulte, prop, tabPieces2, J2, "");
+            joueurs[J2] = new Ordinateur(false,difficulte, prop, tabPieces2, J2, "");
         }
         go();
     }
@@ -235,7 +264,7 @@ public class Apprentissage extends Arbitre{
                     precAucun = aucun;
                     if(heur || plateau.reine(jCourant)==null)
                         joue(o.coup(this, coups));
-                    else{
+                    else if(!heur || end){
                         Coup c = o.coup(this, coups);
                         //System.out.println(c+" "+translateConcreteToAbstract(c, jCourant, plateau)+" "+translateAbstractToConcrete(translateConcreteToAbstract(c, jCourant, plateau), jCourant, plateau) );
                         hashCoup.put(plateau.hashCode(),translateConcreteToAbstract(c, jCourant, plateau));
