@@ -71,11 +71,26 @@ public class NewGameHandler implements EventHandler<ActionEvent> {
                 FabriqueArbitre.initType(FabriqueArbitre.SIMULATION);
                 Interface.nouvelArbitre();
             } else if(pass) {
-                FabriqueArbitre.initType(FabriqueArbitre.LOCAL_JVIA);
+                if (cbJ2.getSelectionModel().getSelectedIndex() != 0)
+                    FabriqueArbitre.initType(FabriqueArbitre.LOCAL_JVIA);
+                else
+                    FabriqueArbitre.initType(FabriqueArbitre.LOCAL_IAVJ);
                 if (cbJ1.getSelectionModel().getSelectedIndex() == 0)
                     FabriqueArbitre.initN1(tfJ1.getText());
                 else
                     FabriqueArbitre.initN1(tfJ2.getText());
+                Interface.nouvelArbitre();
+            }
+        }else if(cbJ2 == null && cbJ1 != null ){
+            if (cbJ1.getSelectionModel().getSelectedIndex() == 0) {
+                pass = false;
+                FabriqueArbitre.initType(FabriqueArbitre.RESEAU_SERVER);
+                FabriqueArbitre.initN1(tfJ1.getText());
+                Interface.nouvelArbitre();
+            }else{
+                pass = false;
+                FabriqueArbitre.initType(FabriqueArbitre.RESEAU_CLIENT);
+                FabriqueArbitre.initN1(tfJ1.getText());
                 Interface.nouvelArbitre();
             }
         }

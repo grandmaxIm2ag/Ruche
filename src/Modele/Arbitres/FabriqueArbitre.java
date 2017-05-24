@@ -8,6 +8,7 @@ package Modele.Arbitres;
 import Controleur.Choix;
 import Joueurs.Ordinateur;
 import Modele.Chargeur;
+import Modele.Insecte;
 import Vue.Interface;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -36,6 +37,10 @@ public class FabriqueArbitre {
     * La valeur de cette constante est {@value}.
     */
     public final static int LOCAL_JVIA = 0;
+    /**
+    * La valeur de cette constante est {@value}.
+    */
+    public final static int LOCAL_IAVJ = 42;
     /**
     * La valeur de cette constante est {@value}.
     */
@@ -167,6 +172,10 @@ public class FabriqueArbitre {
                     return new Local(prop, type, difficulte, plateau,nom1,nom2);
                 return new Local(prop, type, difficulte,nom1,nom2);
             case LOCAL_JVIA:
+                if(b)
+                    return new Local(prop, type, difficulte | difficulte2, plateau,nom1,"Ordinateur");
+                return new Local(prop, type, difficulte | difficulte2,nom1,"Ordinateur");
+           case LOCAL_IAVJ:
                 if(b)
                     return new Local(prop, type, difficulte | difficulte2, plateau,nom1,"Ordinateur");
                 return new Local(prop, type, difficulte | difficulte2,nom1,"Ordinateur");
@@ -320,4 +329,17 @@ public class FabriqueArbitre {
         Chargeur.init(prop);
     }
 
+    public static void setBonus(int ins, boolean b){
+        switch(ins){
+            case Insecte.CLOP:
+                clop=b;
+                break;
+            case Insecte.MOUS:
+                mous=b;
+                break;
+            case Insecte.COCC:
+                cocc=b;
+                break;
+        }
+    }
 }
