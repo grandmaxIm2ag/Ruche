@@ -7,6 +7,7 @@ package ruche;
 
 //http://www.redblobgames.com/grids/hexagons/
 
+import Joueurs.Ordinateur;
 import Modele.Arbitres.*;
 import Vue.Interface;
 import java.io.File;
@@ -22,8 +23,10 @@ import java.util.Properties;
 public class Ruche {
 
     /**
+     * 
      * @param args the command line arguments
-     * @throws java.io.FileNotFoundException
+     * @throws FileNotFoundException
+     * @throws IOException 
      */
     public static void main(String[] args) throws FileNotFoundException, IOException {
         // TODO code application logic here
@@ -37,10 +40,13 @@ public class Ruche {
             new FileOutputStream(sauv).close();
         }
         Properties p = Configuration.proprietes();
-        Interface it = new Interface();
-        FabriqueArbitre.init(p);
-        Interface.creer(args);
-        Interface.goFin("Coucou", Arbitre.GAGNE);
+        
+        TestIA t=new TestIA(p,Ordinateur.FACILE_ALEATOIRE,Ordinateur.FACILE_ALEATOIRE,100);
+        t.simulation();
+        //Interface it = new Interface();
+        //FabriqueArbitre.init(p);
+        //Interface.creer(args);
+        //Interface.goFin("Coucou", Arbitre.GAGNE);
     }
     
 }

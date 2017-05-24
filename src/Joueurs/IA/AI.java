@@ -7,13 +7,18 @@ package Joueurs.IA;
 
 import Joueurs.Ordinateur;
 import Modele.Arbitres.*;
+import Modele.Coup;
+import Modele.Plateau;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
  * @author hadjadjl
  */
 public abstract class AI {
-
+    
+    public Map<Plateau, Integer> configurations;
     /**
      *
      */
@@ -38,7 +43,7 @@ public abstract class AI {
     /**
      *
      */
-        protected Heuristique heurs;
+    protected Heuristique heurs;
 
     /**
      *
@@ -69,7 +74,15 @@ public abstract class AI {
         this.heurs = heuristicFunction;
         this.searchDepth = searchDepth;
         this.maxTimeInMillis = maxTimeInMillis;
+        configurations = new HashMap();
+    }   
         
+    public boolean existConfig(Plateau p){
+        return heurs.configurations.get(p)!=null;
     }
     
+    public Coup nextmove(){
+        start = System.currentTimeMillis();
+        return null;
+    }
 }

@@ -34,7 +34,6 @@ public class TestCanvas extends AnimationTimer{
      *
      */
     public void draw(){
-        System.out.println("coucou");
         GraphicsContext gc = c.getGraphicsContext2D();
         gc.setFill(Color.WHITESMOKE);
         gc.fillRect(0, 0, 500, 500);
