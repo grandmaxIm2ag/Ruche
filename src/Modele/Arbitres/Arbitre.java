@@ -21,6 +21,7 @@ import Vue.PaneToken;
 import Vue.Pointeur;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Scanner;
@@ -89,7 +90,7 @@ public abstract class Arbitre {
     Insecte initClopDepl;
     int initDepot;
     
-    ArrayList<Integer> configurations;
+    HashMap<Integer, Integer> configurations;
     
     /**
      *
@@ -117,7 +118,7 @@ public abstract class Arbitre {
         nom1 = n1;
         nom2 = n2;
         
-        configurations = new ArrayList();
+        configurations = new HashMap();
     }
     
     /**
@@ -751,6 +752,7 @@ public abstract class Arbitre {
                 }
                 joue(o.coup(this, coups));
         }
+        etat = ATTENTE_COUP;
     }
     /*
     @Override

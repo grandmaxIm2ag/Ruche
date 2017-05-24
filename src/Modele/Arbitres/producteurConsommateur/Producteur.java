@@ -28,7 +28,7 @@ public class Producteur implements Runnable{
         boolean b = true;
         while(b){
             String l = actions[Arbitre.J1].extraire();
-            System.err.println("test:"+l);
+            System.out.println("extrait :"+l);
             if(!"".equals(l)){
                 b &= !(l.substring(1).equals("Fin")||l.substring(1).equals("Abandon"));
                 out.println(l);

@@ -110,6 +110,7 @@ public class ReseauClient extends ArbitreReseau{
             
             joueurs[J1] = new Humain(true, prop, tabPieces, J1, nom1);
             joueurs[J2] = new Humain(true, prop, tabPieces2, J2, nom2);
+            
             etat = INITIALISATION;
             go();
         }catch(UnknownHostException e1){
@@ -133,6 +134,7 @@ public class ReseauClient extends ArbitreReseau{
 
     @Override
     public void maj(long t){
+        
         try {
             if(!actions[J2].estVide()){
                 String line = actions[J2].extraire();
@@ -146,6 +148,7 @@ public class ReseauClient extends ArbitreReseau{
                         aFaire.add(new Deplacement(J2,line));
                         break;
                     case DEPOT:
+                        System.out.println("coucou "+etat);
                         aFaire.add(new Depot(J2,line));
                     case PARTIE:
                         if(line.equals("Abandon" )){

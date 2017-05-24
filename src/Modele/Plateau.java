@@ -650,7 +650,9 @@ public class Plateau extends Composant {
         str+="graphe"+"\n";
         for(Map.Entry<Point,List<Point>> entry2 : voisins.entrySet()) {
             Iterator<Point> it = entry2.getValue().iterator();
-            String tmp = it.next().toString();
+            String tmp="";
+            if(it.hasNext())
+                tmp = it.next().toString();
             while(it.hasNext()){
                 tmp+=":"+it.next().toString();
             }

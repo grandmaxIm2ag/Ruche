@@ -101,6 +101,7 @@ public abstract class ArbitreReseau extends Arbitre{
                 actions[J1].inserer(DEPOT+d.toString());
             }
             System.err.println("1- Dépot effectué "+d);
+            System.out.println(plateau.toString());
         }else if(nbCoup[jCourant]==0){
             if(plateau.premierPionValide(d)){
                 joueurs[jCourant].jouer(d.type());
@@ -155,11 +156,17 @@ public abstract class ArbitreReseau extends Arbitre{
         }else if(plateau.estEncerclee((jCourant+1)%2)){
             etat=FIN;
             Interface.goFin(joueurs[jCourant].nom(), PERDU);
-        }else if(configurations.contains(plateau.hashCode())){
+        }else if(configurations.containsKey(plateau.hashCode()) && configurations.get(plateau.hashCode())>2 ){
             etat=FIN;
+            //System.out.println(configurations.toString()+" "+plateau.hashCode());
             Interface.goFin(nom1, NUL);
+            System.err.println("Match nul");
         }else{
-            configurations.add(plateau.hashCode());
+            if(configurations.containsKey(plateau.hashCode()))
+                configurations.put(plateau.hashCode(), configurations.get(plateau.hashCode())+1 );
+            else
+                configurations.put(plateau.hashCode(), 1 );
+            
             jCourant = ++jCourant % 2;
             plateau.setJoueur(jCourant);
             List<Coup[]> tab = new LinkedList();

@@ -180,13 +180,16 @@ public class Local extends Arbitre{
         }else if(plateau.estEncerclee((jCourant+1)%2)){
             etat=FIN;
             Interface.goFin(joueurs[jCourant].nom(), PERDU);
-        }else if(configurations.contains(plateau.hashCode())){
+        }else if(configurations.containsKey(plateau.hashCode()) && configurations.get(plateau.hashCode())>2 ){
             etat=FIN;
             //System.out.println(configurations.toString()+" "+plateau.hashCode());
             Interface.goFin(nom1, NUL);
             System.err.println("Match nul");
         }else{
-            configurations.add(plateau.hashCode());
+            if(configurations.containsKey(plateau.hashCode()))
+                configurations.put(plateau.hashCode(), configurations.get(plateau.hashCode())+1 );
+            else
+                configurations.put(plateau.hashCode(), 1 );
             
             etat = ATTENTE_COUP;
             PaneToken.getInstance(this).update();
