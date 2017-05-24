@@ -80,7 +80,9 @@ import static javafx.scene.input.DataFormat.URL;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.SwipeEvent;
 import javafx.scene.input.TouchEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 //import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 //import java.net.URL;
@@ -179,9 +181,9 @@ public class Interface extends Application {
         goNewGame();
         FabriqueArbitre.initChargeur();
         goConfig();
-        goReseau();
-        goTest();    
+        goReseau();   
         goDidacticiel();
+        goTest(); 
         //goPartie();
         stage.show();
     }
@@ -670,11 +672,17 @@ public class Interface extends Application {
     public static void goDidacticiel(){
         VBox centerBox = new VBox();
         StackPane centerStack = new StackPane();
+        GridPane centerGrid = new GridPane();
         VBox insideBox = new VBox();
         Rectangle centerRect = new Rectangle();
         VBox rectBox = new VBox();
         rectBox.getChildren().add(centerRect);
         rectBox.setAlignment(Pos.CENTER);
+        centerRect.setOpacity(0.25);
+        centerBox.setPadding(new Insets(0, 0, 20, 0));
+        centerBox.setAlignment(Pos.TOP_CENTER);
+        centerGrid.setHgap(10);
+        centerGrid.setVgap(10);
         centerRect.widthProperty().bind(insideBox.widthProperty());
         centerRect.heightProperty().bind(insideBox.heightProperty());
         centerRect.setArcWidth(20);
@@ -685,21 +693,57 @@ public class Interface extends Application {
         insideBox.setAlignment(Pos.CENTER);
         DropShadow shadow = new DropShadow();
         centerRect.setEffect(shadow);
+
+        centerGrid.setAlignment(Pos.CENTER);
         
-        
-        StackPane paneIm = new StackPane();
-        Slide pres = new Slide();
-        paneIm.getChildren().add(pres.pane());
-        Button suiv = new Button("Suivant");
-        suiv.setOnAction(new EventHandler<ActionEvent>() {
-            @Override public void handle(ActionEvent e) {
-                pres.next();
+        Button prev = new Button("précédent");
+        Button btBEG = new Button();
+        btBEG.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Icone/next.png"))), CornerRadii.EMPTY, Insets.EMPTY)));
+        Slide s = new Slide();
+        btBEG.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                if(!s.next()){
+                    btBEG.setDisable(true);
+                }
+                prev.setDisable(false);
             }
-        });
+        } );
         
-        centerStack.getChildren().addAll(rectBox);//, insideBox);
-        insideBox.getChildren().addAll(/*paneIm,*/ suiv);
+        
+        prev.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                if(!s.previous()){
+                    prev.setDisable(true);
+                }
+                btBEG.setDisable(false);
+            }
+        } );
+        
+        prev.setDisable(true);
+        final Region region = new Region(); 
+        region.setStyle("-fx-background-color: gold; -fx-border-color: goldenrod;"); 
+        region.setPrefSize(100, 100); 
+        AnchorPane.setLeftAnchor(region, 10.0); 
+        AnchorPane.setBottomAnchor(region, 10.0);
+        
+        btBEG.setMinWidth(90);
+        btBEG.setMaxWidth(90);
+        prev.setMinWidth(90);
+        prev.setMaxWidth(90);
+
         centerBox.getChildren().add(centerStack);
+        centerStack.getChildren().addAll(rectBox, insideBox);//centerGrid);
+        Label lNG = new Label("Didacticiel");
+        lNG.setTextFill(Color.WHITE);
+        final AnchorPane root2 = new AnchorPane(); 
+        root2.getChildren().setAll(btBEG, region);
+        
+        HBox buttons = new HBox();
+        buttons.setAlignment(Pos.CENTER);
+        buttons.getChildren().addAll(prev, btBEG);
+        insideBox.getChildren().addAll(lNG,s.pane(), buttons);
         didacBox = centerBox;
     }
     /**

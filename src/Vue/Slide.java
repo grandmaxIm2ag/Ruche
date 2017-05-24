@@ -11,7 +11,9 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.paint.Color;
 
 /**
  *
@@ -23,7 +25,7 @@ public class Slide {
     List<ImageView> slides;
     ImageView currentImage;
     Label currentRegle;
-    AnchorPane pane;
+    BorderPane pane;
     String[] regles;
     
     public Slide(){
@@ -44,24 +46,50 @@ public class Slide {
         regles = r;
         currentRegle = new Label();
         
-        pane = new AnchorPane();
+        pane = new BorderPane();
         slides = new ArrayList();
         for(int i=1; i<12; i++)
             slides.add(i-1, new ImageView(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Didacticielle/Diapo"+i+".png"))));
         currentRegle.setText(regles[index]);
         currentImage=slides.get(index);
+        
+        currentRegle.setMaxWidth(90);
+        currentRegle.setWrapText(true);
+        currentRegle.setTextFill(Color.WHITE);
+        
         majPane();
     }
     
-    public void next(){
-        index = ++index%slides.size();
+    public boolean next(){
+        index = ++index;
+         if(index >= slides.size()){
+            index=slides.size()-1;
+            return false;
+        }
         currentImage = slides.get(index);
         currentRegle.setText(regles[index]);
         majPane();
+        return true;
+    }
+    public boolean previous(){
+        index--;
+        
+        if(index < 0){
+            index=0;
+            return false;
+        }
+            
+        System.out.println(index);
+        currentImage = slides.get(index);
+        currentRegle.setText(regles[index]);
+        majPane();
+        
+        return true;
     }
     
     public void majPane(){
-        pane.setLeftAnchor(currentImage,10.0);
+        pane.setCenter(currentImage);
+        pane.setLeft(currentRegle);
     }
     
     public Pane pane(){
