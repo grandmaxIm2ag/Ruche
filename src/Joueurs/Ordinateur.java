@@ -109,8 +109,8 @@ public class Ordinateur extends Joueur{
                 return IA_Middle2(a, d);//return heuristiqueSurUnSeulCoup(a, d);
             case MOYEN:
                 return IA_Middle(a, d);
-            case 3:
-                return null;   
+            case DIFFICILE:
+                return IA_Hard(a, d);   
             default:        
                 return null;
         }
