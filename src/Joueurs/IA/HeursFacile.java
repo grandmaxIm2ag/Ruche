@@ -50,7 +50,7 @@ public class HeursFacile extends Heuristique{
             heurs=heurs-2;
         }
         heurs = heurs + me.nbLiberteesReine(p, me.numJ()) - me.nbLiberteesReine(p, me.numAdversaire());
-        configurations.put(p, heurs);
+        configurations.put(p.hashCode(), heurs);
         return heurs;
     }
     
@@ -88,7 +88,7 @@ public class HeursFacile extends Heuristique{
             heurs=heurs-2;
         }
         heurs = heurs + me.nbLiberteesReine(a.m, me.numJ()) - me.nbLiberteesReine(a.m, me.numAdversaire());
-        configurations.put(a.m, heurs);
+        configurations.put(a.m.hashCode(), heurs);
         return heurs;
     }
 }

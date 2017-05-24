@@ -17,7 +17,7 @@ import java.util.Map;
  * @author hadjadjl
  */
 public abstract class Heuristique {
-    Map<Plateau, Integer> configurations;
+    Map<Integer, Integer> configurations;
     int heurs;
     Coup Cjouer;
     
@@ -26,7 +26,7 @@ public abstract class Heuristique {
         heurs = 0;
     }
     
-    public void SetConf(Map<Plateau, Integer> conf){
+    public void SetConf(Map<Integer, Integer> conf){
         configurations = conf;
     }
     

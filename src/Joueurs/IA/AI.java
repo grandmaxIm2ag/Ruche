@@ -18,7 +18,7 @@ import java.util.Map;
  */
 public abstract class AI {
     
-    public Map<Plateau, Integer> configurations;
+    public Map<Integer, Integer> configurations;
     /**
      *
      */

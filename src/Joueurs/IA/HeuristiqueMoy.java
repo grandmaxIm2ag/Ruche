@@ -112,7 +112,7 @@ public class HeuristiqueMoy extends Heuristique {
         heurs = 10*( otherHexesFilledAroundOpposingQueen - meHexesFilledAroundOpposingQueen)
                /* + 2*(mePossibleDepl - otherPossibleDepl)*/
                 + 1*(meTokensOnBoard - otherTokensOnBoard);
-        configurations.put(p, heurs);
+        configurations.put(p.hashCode(), heurs);
         return heurs;
     }
     
@@ -157,7 +157,7 @@ public class HeuristiqueMoy extends Heuristique {
                 + 2*(mePossibleDepl - otherPossibleDepl) 
                 + (meTokensOnBoard - otherTokensOnBoard)
                 + (meFreeTokensOnBoard - otherFreeTokensOnBoard);
-        configurations.put(a.m, heurs);
+        configurations.put(a.m.hashCode(), heurs);
         
         if(j instanceof Depot)
             heurs+= a.GetValue(((Depot) j).type());

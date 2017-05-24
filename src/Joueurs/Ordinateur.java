@@ -75,7 +75,7 @@ public class Ordinateur extends Joueur{
             case FACILE_ALEATOIRE:
                 return coupALEATOIRE_3(a, d);
             case FACILE_HEURISTIQUE:
-                return IA_Middle2(a, d);//return heuristiqueSurUnSeulCoup(a, d);
+                /*return IA_Middle2(a, d);*/return heuristiqueSurUnSeulCoup(a, d);
             case MOYEN:
                 return IA_Middle(a, d);
             case DIFFICILE:
