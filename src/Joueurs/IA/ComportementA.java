@@ -3,69 +3,44 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
 package Joueurs.IA;
 
 import Joueurs.Ordinateur;
-import Modele.Arbitres.Arbitre;
 import Modele.Coup;
+
 /**
  *
- * @author hadjadjl
+ * @author lies
  */
-public class AlphaBeta extends AI {
+public class ComportementA implements Runnable{
+    Emulateur emu;
+    Heuristique heurs;
+    int me;
+    int searchDepth;
+    HeurPartage h;
+    int idx;
+    Coup[] coups;
+    Coup cm;
+    boolean min;
     
-    Emulateur em;
-    Coup[] cps;
- //   int[] max_poids;
-   // int[] min_poids;
-    /**
-     *
-     * @param me
-     * @param a
-     * @param heuristicFunction
-     * @param searchDepth
-     * @param maxTimeInMillis
-     * @param cp
-     */
-    public AlphaBeta(Ordinateur me, Arbitre a, Heuristique heuristicFunction, int searchDepth, int maxTimeInMillis, Coup[] cp) {
-        super(me, a, heuristicFunction, searchDepth, maxTimeInMillis);
-        cps = cp;
-        em = new Emulateur(a);
-        heurs.SetConf(configurations);
-   /*     min_poids = new int[searchDepth];
-        max_poids = new int[searchDepth];
-        for(int i=0;i<searchDepth;i++){
-            min_poids[i] = AI.MAX;
-            max_poids[i] = AI.MIN;
-        }*/
+    public ComportementA(boolean b, int i, int pronf, HeurPartage h2, Coup[] d2, int joueur, Heuristique h3, Emulateur m, Coup cm){
+        emu = m;
+        idx = i;
+        searchDepth = pronf;
+        h = h2;
+        coups = d2;
+        min = b;
+        me = joueur;
+        heurs = h3;
+        this.cm = cm;
     }
     
     
-    @Override
-     public Coup nextmove(){
-        start = System.currentTimeMillis(); 
-
-        int meilleur_coup = 0;  
-        int max_poids =AI.MIN;
-       for(int i = 0; i < cps.length ;i++){
-            em.joue(cps[i]);
-            Coup [] cpt = em.PossibleMoves();
-            if(cpt != null && cpt.length != 0){
-                int hr = Min(em.clone(),1, cpt ,cps[i],max_poids,AI.MAX);
-                if(hr > max_poids){
-                    max_poids = hr;
-                    meilleur_coup = i;      
-                }
-            }
-            em.precedent();
-        }
-        return cps[meilleur_coup];
-    }
-    
-    public int Max(Emulateur emu,int profondeur, Coup[] d, Coup cp,int alpha,int beta){
+   public int Max(Emulateur emu,int profondeur, Coup[] d, Coup cp,int alpha,int beta){
         System.out.println("appel max : "+(profondeur));
         if(searchDepth - profondeur <= 0)
-            return heurs.EvalPlateau(emu, d, me,cp);
+            return heurs.EvalPlateau(emu, d,(Ordinateur)emu.joueurs[me], cp);
         int max_poids = AI.MIN;
         for(int i=0;i < d.length;i++){
                 System.out.println("max "+i+" "+d[i]);
@@ -87,7 +62,7 @@ public class AlphaBeta extends AI {
     public int Min(Emulateur emu,int profondeur, Coup[] d,Coup cp,int alpha,int beta){
         System.out.println("appel min : "+ profondeur);
         if(searchDepth - profondeur <= 0)
-            return heurs.EvalPlateau(emu, d, me,cp);
+            return heurs.EvalPlateau(emu, d, (Ordinateur)emu.joueurs[me],cp);
         int min_poids = AI.MAX;
         for(int i=0;i < d.length ;i++){      
                 System.out.println("min "+i+" "+d[i]);
@@ -104,5 +79,17 @@ public class AlphaBeta extends AI {
                 emu.precedent();
             }
         return min_poids;
+    }
+    
+
+    @Override
+    public void run() {
+        //System.out.println(idx+" commence");
+        if(min){
+            h.ajout(idx, Min(emu,1, coups,cm,h.value(),AI.MAX));
+        }else{
+            h.ajout(idx, Max(emu,1, coups,cm,h.value(),AI.MAX));
+        }
+        //System.out.println(idx+" fini");
     }
 }

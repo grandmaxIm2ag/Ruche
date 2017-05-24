@@ -10,6 +10,7 @@ import Modele.Arbitres.*;
 import Modele.Case;
 import Modele.Coup;
 import Modele.Depot;
+import Modele.Insecte;
 import Modele.Plateau;
 import Modele.Point;
 import java.util.List;
@@ -137,10 +138,14 @@ public class HeuristiqueV2 extends Heuristique {
         int otherTokensOnBoard = freeBugs(a.m,me.numAdversaire());
         int HexesFilledAroundOpposingQueen = me.nbLiberteesReine(a.m, me.numAdversaire());
 
-        heurs = 100*( HexesFilledAroundMyQueen - HexesFilledAroundOpposingQueen)
-                + 2*(mePossibleDepl - otherPossibleDepl)
+        heurs = ( 50*HexesFilledAroundMyQueen - 100*HexesFilledAroundOpposingQueen)
+               + (mePossibleDepl - otherPossibleDepl)
                 + 2*(meTokensOnBoard - otherTokensOnBoard);
         
+        if(a.m.reine(me.numJ())!=null && (a.m.matrice().get(a.m.reine(me.numJ())).tete().joueur()!=me.numJ() || a.m.matrice().get(a.m.reine(me.numJ())).tete().type()!=Insecte.REINE ))
+            heurs-=1000;
+        if(a.m.reine(me.numAdversaire())!=null && (a.m.matrice().get(a.m.reine(me.numAdversaire())).tete().joueur()!=me.numAdversaire() || a.m.matrice().get(a.m.reine(me.numAdversaire())).tete().type()!=Insecte.REINE ))
+            heurs+=1000;
         if(j instanceof Depot)
             heurs+= a.GetValue(((Depot) j).type());
          

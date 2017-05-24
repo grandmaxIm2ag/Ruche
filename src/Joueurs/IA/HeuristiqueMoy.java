@@ -19,7 +19,7 @@ import java.util.Map;
  *
  * @author hadjadjl
  */
-public class HeuristiqueV1 extends Heuristique {
+public class HeuristiqueMoy extends Heuristique {
     
     private int freeBugs(Plateau m,int numJoueur) {
         int fr=0;

@@ -43,4 +43,8 @@ public class HeurPartage {
     public int indCoup(){
         return aJouer;
     }
+    
+    public int value(){
+        return value;
+    }
 }
