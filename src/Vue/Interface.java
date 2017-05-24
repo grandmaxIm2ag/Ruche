@@ -220,7 +220,7 @@ public class Interface extends Application {
         
         topBox.setPadding(new Insets(20, 10, 20, 10));
         topBox.setSpacing(10);
-        //topBox.getChildren().addAll(title());
+        topBox.getChildren().addAll(title());
         root.setTop(topBox);
         final Tab tabNG = new Tab("New Game"); 
         tabNG.setContent(ngBox);
