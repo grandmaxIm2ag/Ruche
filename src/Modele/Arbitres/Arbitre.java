@@ -751,6 +751,7 @@ public abstract class Arbitre {
                 }
                 joue(o.coup(this, coups));
         }
+        etat = ATTENTE_COUP;
     }
     /*
     @Override

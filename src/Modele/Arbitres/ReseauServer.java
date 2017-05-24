@@ -144,6 +144,8 @@ public class ReseauServer extends ArbitreReseau{
         nom2 = actions[J2].extraire();
         actions[J1].inserer(nom1);
         
+        System.out.println(nom2);
+        
         joueurs[J2].setNom(nom2);
         etat = INITIALISATION;
 //go();

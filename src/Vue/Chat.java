@@ -83,6 +83,8 @@ public class Chat {
             } else
                 disc.hide();
             hide = !disc.isShowing();
+            disc.setX(Interface.scene.getWindow().getWidth()+Interface.scene.getWindow().getX()-disc.getWidth());
+            disc.setY(Interface.scene.getWindow().getY()+Interface.scene.getWindow().getHeight()-disc.getHeight());
         });
         
         Button hide = new Button("Envoyer");

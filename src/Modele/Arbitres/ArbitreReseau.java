@@ -101,6 +101,7 @@ public abstract class ArbitreReseau extends Arbitre{
                 actions[J1].inserer(DEPOT+d.toString());
             }
             System.err.println("1- Dépot effectué "+d);
+            System.out.println(plateau.toString());
         }else if(nbCoup[jCourant]==0){
             if(plateau.premierPionValide(d)){
                 joueurs[jCourant].jouer(d.type());

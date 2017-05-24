@@ -33,6 +33,7 @@ public class Consommateur implements Runnable {
             while(b){
                 try {
                     String li = in.readLine();
+                    System.out.println("insert :"+li);
                     b &= li!=null;
                     if(b)
                         actions[Arbitre.J2].inserer(li);
