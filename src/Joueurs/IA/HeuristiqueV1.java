@@ -9,6 +9,7 @@ import Joueurs.Ordinateur;
 import Modele.Arbitres.*;
 import Modele.Case;
 import Modele.Coup;
+import Modele.Depot;
 import Modele.Plateau;
 import Modele.Point;
 import java.util.List;
@@ -28,6 +29,16 @@ public class HeuristiqueV1 extends Heuristique {
                    dep = m.deplacementPossible(entry.getValue().tete());
                    if(dep !=null && !dep.isEmpty())
                         fr++;
+            }
+        }
+        return fr;   
+    }
+    
+    private int Bugs(Plateau m,int numJoueur) {
+        int fr=0;
+        for(Map.Entry<Point,Case> entry : m.matrice.entrySet()) {
+            if(entry.getValue().utilise() && entry.getValue().tete().joueur() == numJoueur) {
+                fr++;
             }
         }
         return fr;   
@@ -68,7 +79,7 @@ public class HeuristiqueV1 extends Heuristique {
     }
     
     @Override
-    public int EvalPlateau(Arbitre a, Coup[] d, Plateau p, Ordinateur me) {
+    public int EvalPlateau(Arbitre a, Coup[] d, Plateau p, Ordinateur me, Coup j) {
         
         // Un null est considérer comme une défaite
         Boolean meWon = p.estEncerclee(me.numAdversaire());
@@ -106,8 +117,7 @@ public class HeuristiqueV1 extends Heuristique {
     }
     
     @Override
-    public int EvalPlateau(Emulateur a, Coup[] d, Ordinateur me) {
-        
+    public int EvalPlateau(Emulateur a, Coup[] d, Ordinateur me,Coup j) {
         // Un null est considérer comme une défaite
         Boolean meWon = a.m.estEncerclee(me.numAdversaire());
         Boolean otherWon = a.m.estEncerclee(me.numJ());
@@ -130,17 +140,27 @@ public class HeuristiqueV1 extends Heuristique {
         }
         heurs = 0;
         int mePossibleDepl = d.length;
-        int meTokensOnBoard = freeBugs(a.m,me.numJ());
-        int meHexesFilledAroundOpposingQueen = me.nbLiberteesReine(a.m, me.numAdversaire());
+        int meFreeTokensOnBoard = freeBugs(a.m,me.numJ());
+        int meTokensOnBoard = Bugs(a.m,me.numJ());
+        int HexesFilledAroundMyQueen = me.nbLiberteesReine(a.m, me.numJ());
         
         int otherPossibleDepl = depl(a,a.m,me.numAdversaire());
-        int otherTokensOnBoard = freeBugs(a.m,me.numAdversaire());
-        int otherHexesFilledAroundOpposingQueen = me.nbLiberteesReine(a.m, me.numJ());
-
-        heurs = 10*( otherHexesFilledAroundOpposingQueen - meHexesFilledAroundOpposingQueen)
-                + 2*(mePossibleDepl - otherPossibleDepl)
-                + 1*(meTokensOnBoard - otherTokensOnBoard);
+        int otherFreeTokensOnBoard = freeBugs(a.m,me.numAdversaire());
+        int otherTokensOnBoard = Bugs(a.m,me.numAdversaire());
+        int HexesFilledAroundOpposingQueen = me.nbLiberteesReine(a.m, me.numAdversaire());
+        
+       /* System.out.println("Reine adverse :"+HexesFilledAroundOpposingQueen);
+        System.out.println("Ma Reine :"+HexesFilledAroundMyQueen);
+        System.out.println("Mes pieces :"+meFreeTokensOnBoard);
+        System.out.println("pieces adverses :"+otherFreeTokensOnBoard);*/
+        heurs = 10*(HexesFilledAroundMyQueen - HexesFilledAroundOpposingQueen)
+                + 2*(mePossibleDepl - otherPossibleDepl) 
+                + (meTokensOnBoard - otherTokensOnBoard)
+                + (meFreeTokensOnBoard - otherFreeTokensOnBoard);
         configurations.put(a.m, heurs);
+        
+        if(j instanceof Depot)
+            heurs+= a.GetValue(((Depot) j).type());
         return heurs;
     }
 }

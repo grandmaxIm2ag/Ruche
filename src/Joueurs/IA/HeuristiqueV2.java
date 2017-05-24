@@ -9,6 +9,7 @@ import Joueurs.Ordinateur;
 import Modele.Arbitres.*;
 import Modele.Case;
 import Modele.Coup;
+import Modele.Depot;
 import Modele.Plateau;
 import Modele.Point;
 import java.util.List;
@@ -70,13 +71,12 @@ public class HeuristiqueV2 extends Heuristique {
     }
     
     @Override
-    public int EvalPlateau(Arbitre a, Coup[] d, Plateau p, Ordinateur me) {
+    public int EvalPlateau(Arbitre a, Coup[] d, Plateau p, Ordinateur me,Coup j) {
         
         // Un null est considérer comme une défaite
         Boolean meWon = p.estEncerclee(me.numAdversaire());
         Boolean otherWon = p.estEncerclee(me.numJ());
-        
-        
+             
         if ( meWon && otherWon) {
             if (me.numJ() == a.jCourant()) {
                 return AI.MIN + 5;
@@ -94,31 +94,30 @@ public class HeuristiqueV2 extends Heuristique {
         heurs = 0;
         int mePossibleDepl = d.length;
         int meTokensOnBoard = freeBugs(p,me.numJ());
-        int meHexesFilledAroundOpposingQueen = me.nbLiberteesReine(p, me.numAdversaire());
+        int HexesFilledAroundMyQueen = me.nbLiberteesReine(p, me.numJ());
         
         int otherPossibleDepl = depl(a,p,me.numAdversaire());
         int otherTokensOnBoard = freeBugs(p,me.numAdversaire());
-        int otherHexesFilledAroundOpposingQueen = me.nbLiberteesReine(p, me.numJ());
+        int HexesFilledAroundOpposingQueen = me.nbLiberteesReine(p, me.numAdversaire());
 
-        heurs = 10*( otherHexesFilledAroundOpposingQueen - meHexesFilledAroundOpposingQueen)
-                /*+ 2*(mePossibleDepl - otherPossibleDepl)*/
+        heurs = 10*( HexesFilledAroundMyQueen - HexesFilledAroundOpposingQueen)
+                +  (mePossibleDepl - otherPossibleDepl)
                 + 1*(meTokensOnBoard - otherTokensOnBoard);
         configurations.put(p, heurs);
         return heurs;
     }
     
     @Override
-    public int EvalPlateau(Emulateur a, Coup[] d, Ordinateur me) {
+    public int EvalPlateau(Emulateur a, Coup[] d, Ordinateur me,Coup j) {
         
         // Un null est considérer comme une défaite
         Boolean meWon = a.m.estEncerclee(me.numAdversaire());
         Boolean otherWon = a.m.estEncerclee(me.numJ());
-        
-        
+               
         if ( meWon && otherWon) {
             if (me.numJ() == a.jCourant()) {
                 return AI.MIN + 5;
-            }  else {
+            } else {
                 return AI.MAX - 5;
             }
         } else if (meWon) {
@@ -132,15 +131,19 @@ public class HeuristiqueV2 extends Heuristique {
         heurs = 0;
         int mePossibleDepl = d.length;
         int meTokensOnBoard = freeBugs(a.m,me.numJ());
-        int meHexesFilledAroundOpposingQueen = me.nbLiberteesReine(a.m, me.numAdversaire());
+        int HexesFilledAroundMyQueen = me.nbLiberteesReine(a.m, me.numJ());
         
         int otherPossibleDepl = depl(a,a.m,me.numAdversaire());
         int otherTokensOnBoard = freeBugs(a.m,me.numAdversaire());
-        int otherHexesFilledAroundOpposingQueen = me.nbLiberteesReine(a.m, me.numJ());
+        int HexesFilledAroundOpposingQueen = me.nbLiberteesReine(a.m, me.numAdversaire());
 
-        heurs = 7*( otherHexesFilledAroundOpposingQueen - meHexesFilledAroundOpposingQueen)
+        heurs = 100*( HexesFilledAroundMyQueen - HexesFilledAroundOpposingQueen)
                 + 2*(mePossibleDepl - otherPossibleDepl)
-                + 1*(meTokensOnBoard - otherTokensOnBoard);
+                + 2*(meTokensOnBoard - otherTokensOnBoard);
+        
+        if(j instanceof Depot)
+            heurs+= a.GetValue(((Depot) j).type());
+         
         configurations.put(a.m, heurs);
         return heurs;
     }

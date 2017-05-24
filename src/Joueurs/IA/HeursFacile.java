@@ -17,7 +17,7 @@ import Modele.Plateau;
 public class HeursFacile extends Heuristique{
     
     @Override
-    public int EvalPlateau(Arbitre a, Coup[] d, Plateau p, Ordinateur me) {
+    public int EvalPlateau(Arbitre a, Coup[] d, Plateau p, Ordinateur me, Coup j) {
         
         // Un null est considérer comme une défaite
         Boolean meWon = p.estEncerclee(me.numAdversaire());
@@ -55,7 +55,7 @@ public class HeursFacile extends Heuristique{
     }
     
     @Override
-    public int EvalPlateau(Emulateur a, Coup[] d, Ordinateur me) {
+    public int EvalPlateau(Emulateur a, Coup[] d, Ordinateur me, Coup j) {
         
         // Un null est considérer comme une défaite
         Boolean meWon = a.m.estEncerclee(me.numAdversaire());

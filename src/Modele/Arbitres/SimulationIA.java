@@ -56,7 +56,7 @@ public class SimulationIA extends Arbitre {
             tabPieces2[i]=tabPieces[i];
         
         joueurs[J1] = new Ordinateur(true,Ordinateur.DIFFICILE, prop, tabPieces,J1,null);
-        joueurs[J2] = new Ordinateur(true,Ordinateur.FACILE_ALEATOIRE, prop, tabPieces2,J2,null);
+        joueurs[J2] = new Ordinateur(true,Ordinateur.MOYEN, prop, tabPieces2,J2,null);
         
         go();
     }
@@ -181,20 +181,19 @@ public class SimulationIA extends Arbitre {
             nbCoup[jCourant]++;
             refaire.clear();
             historique.add(d);
-            System.err.println("1- Dépot effectué par "+jCourant+" "+d);
+            System.err.println(jCourant + " - 1st Dépot effectué "+d);
             etat=JOUE_EN_COURS;
         }else if(nbCoup[jCourant]==0 && jCourant == J2){
             if(plateau.premierPionValide(d)){
-            joueurs[jCourant].jouer(d.type());
+                joueurs[jCourant].jouer(d.type());
                 deposePion(d);
                 nbCoup[jCourant]++;
                 refaire.clear();
                 historique.add(d);
-                joueurs[jCourant].jouer(d.type());
-                System.err.println("2- Dépot effectué "+d);
+                System.err.println(jCourant + " - 1st Dépot effectué "+d);
                 etat=JOUE_EN_COURS;
             }else{
-                System.err.println("Depot impossible");
+                System.err.println(jCourant + " - Depot invalide");
             }
         }else if(deposePionValide(d) && joueurs[jCourant].pion(d.type())>0){
             
@@ -203,11 +202,11 @@ public class SimulationIA extends Arbitre {
             nbCoup[jCourant]++;
             refaire.clear();
             historique.add(d);
-           // System.err.println("3- Depot effectué "+d);
+            System.err.println(jCourant + " - Dépot effectué "+d);
             etat=JOUE_EN_COURS;
             
         }else{
-            System.err.println("Depot impossible");
+            System.err.println(jCourant + " - Depot impossible "+d);
         }
     }
 }
