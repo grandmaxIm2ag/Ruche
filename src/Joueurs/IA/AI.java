@@ -9,6 +9,7 @@ import Joueurs.Ordinateur;
 import Modele.Arbitres.*;
 import Modele.Coup;
 import Modele.Plateau;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -73,7 +74,7 @@ public abstract class AI {
         this.heurs = heuristicFunction;
         this.searchDepth = searchDepth;
         this.maxTimeInMillis = maxTimeInMillis;
-        
+        configurations = new HashMap();
     }   
         
     public boolean existConfig(Plateau p){

@@ -6,6 +6,8 @@
 package Joueurs;
 
 import Joueurs.IA.AI;
+import Joueurs.IA.AlphaBeta;
+import Joueurs.IA.Emulateur;
 import Joueurs.IA.HeuristiqueV1;
 import Joueurs.IA.HeuristiqueV2;
 import Joueurs.IA.MinMax;
@@ -71,7 +73,6 @@ public class Ordinateur extends Joueur{
         GRAINE=(long)System.nanoTime();
         System.out.println("Joueur "+j+" GRAINE: "+GRAINE);///////////////////////////////////////////////////////////////////////////////
         r= new Random(GRAINE);
-
         configurations = new HashMap();
     }
     
@@ -104,7 +105,7 @@ public class Ordinateur extends Joueur{
             case FACILE_ALEATOIRE:
                 return coupALEATOIRE_3(a, d);
             case FACILE_HEURISTIQUE:
-                return heuristiqueSurUnSeulCoup(a, d);
+                return IA_Middle2(a, d);//return heuristiqueSurUnSeulCoup(a, d);
             case MOYEN:
                 return IA_Middle(a, d);
             case 3:
@@ -183,21 +184,13 @@ public class Ordinateur extends Joueur{
             HeuristiqueV1 heurs = new HeuristiqueV1();
             //find the best move for the heuristic
             ArrayList<Coup> res=new ArrayList();
-            Plateau tmp;
+            Emulateur em = new Emulateur(a);
             int max = AI.MIN;
             int EvalBoard;
             
             for(int i=0;i<d.length;i=i+1){
-                tmp=a.plateau().clone();
-                    
-                if(d[i] instanceof Depot){
-                    tmp.deposePion((Depot)d[i]);
-                }else if(d[i] instanceof Deplacement){
-                    tmp.deplacePion((Deplacement)d[i]);
-                }else{
-                    continue;
-                }      
-                EvalBoard = heurs.EvalPlateau(a, d, tmp, this);
+                em.joue(d[i]);
+                EvalBoard = heurs.EvalPlateau(em, em.PossibleMoves(), this,d[i]);
                 if(EvalBoard == max){
                     //Add to results
                     res.add(d[i]);
@@ -206,6 +199,38 @@ public class Ordinateur extends Joueur{
                     res.clear();
                     res.add(d[i]);
                 }
+                em.precedent();
+            }   
+            //return a random move from res
+            int choice= r.nextInt(res.size());
+            //System.out.println(res.get(choice));
+                return res.get(choice);
+        }
+    }
+    
+    public Coup IA_Middle2(Arbitre a, Coup[] d){
+        if(d==null || d.length<= 0)
+            return null;
+        else{
+            HeuristiqueV2 heurs = new HeuristiqueV2();
+            //find the best move for the heuristic
+            ArrayList<Coup> res=new ArrayList();
+            Emulateur em = new Emulateur(a);
+            int max = AI.MIN;
+            int EvalBoard;
+            
+            for(int i=0;i<d.length;i=i+1){
+                em.joue(d[i]);
+                EvalBoard = heurs.EvalPlateau(em, em.PossibleMoves(), this,d[i]);
+                if(EvalBoard == max){
+                    //Add to results
+                    res.add(d[i]);
+                }else if(EvalBoard>max){
+                    max = EvalBoard;
+                    res.clear();
+                    res.add(d[i]);
+                }
+                em.precedent();
             }   
             //return a random move from res
             int choice= r.nextInt(res.size());
@@ -218,8 +243,9 @@ public class Ordinateur extends Joueur{
             return null;
         
         HeuristiqueV2 heurs = new HeuristiqueV2();
-        //MinMaxConcurent mx = new MinMaxConcurent(this,a,heurs,2, System.nanoTime(),d);
-        MinMax mx = new MinMax(this,a,heurs,2, 0,d);
+        //MinMaxConcurent mx = new MinMaxConcurent(this,a,heurs,2,0,d);
+        //MinMax mx = new MinMax(this,a,heurs,2,0,d);
+        AlphaBeta mx = new AlphaBeta(this,a,heurs,2, 0,d);
         /* Affichage des coups possibles.
         System.out.println("Appel nextmove avec les coups:");
         for(int k = 0; k < d.length;k++)
@@ -269,8 +295,9 @@ public class Ordinateur extends Joueur{
     public int nbLiberteesReine(Plateau p, int joueur){
         //compter les voisins
         if(p.reine(joueur)==null || p.voisins().get(p.reine(joueur))==null){
-            return 6;
+            return 0;
         }
+      //  p.afficheGraphe(p.voisins());
         return 6-p.voisins().get(p.reine(joueur)).size();
     }
     

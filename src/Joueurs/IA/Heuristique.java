@@ -19,7 +19,7 @@ import java.util.Map;
 public abstract class Heuristique {
     Map<Plateau, Integer> configurations;
     int heurs;
-    
+    Coup Cjouer;
     
     public Heuristique(){
         configurations = new HashMap();
@@ -30,11 +30,11 @@ public abstract class Heuristique {
         configurations = conf;
     }
     
-    public int EvalPlateau(Arbitre a, Coup[] d, Plateau p, Ordinateur me){
+    public int EvalPlateau(Arbitre a, Coup[] d, Plateau p, Ordinateur me,Coup j){
         return 0;
     }
     
-    public int EvalPlateau(Emulateur a, Coup[] d, Ordinateur me){
+    public int EvalPlateau(Emulateur a, Coup[] d, Ordinateur me,Coup j){
         return 0;
     }
 }

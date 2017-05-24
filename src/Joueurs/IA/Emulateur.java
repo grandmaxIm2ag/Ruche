@@ -14,12 +14,12 @@ import Modele.Coup;
 import Modele.Deplacement;
 import Modele.Depot;
 import Modele.FabriqueInsecte;
+import Modele.Insecte;
 import Modele.Plateau;
 import Modele.Point;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Stack;
 
 /**
@@ -34,8 +34,6 @@ public class Emulateur {
     Joueur[] joueurs;
     Stack<Coup> historique;
     int jCourant;
-    Map<Plateau, Integer> configMin;
-    Map<Plateau, Integer> configMax;
     
     public Emulateur(Arbitre tmp){
         joueurs = new Joueur[2];
@@ -51,6 +49,32 @@ public class Emulateur {
         temps_ecoule = 0;
     }
     
+    public Plateau getPlateau(){
+        return m;
+    }
+    
+    public int GetValue(int type){
+        switch(type){
+            case Insecte.REINE:
+                return -100;
+            case Insecte.ARAI:
+                return 0;
+            case Insecte.CLOP:
+                return 0;
+            case Insecte.COCC:
+                return 0;
+            case Insecte.FOUR:
+                return 0;
+            case Insecte.MOUS:
+                return 0;
+            case Insecte.SAUT:
+                return 0;
+            case Insecte.SCAR:
+                return 0;
+        }
+        return -1;
+    }
+
     public Emulateur( int[] nbCp, Joueur[] jr,int jC,Plateau pl,Stack<Coup> hist ){
         
         joueurs = new Joueur[2];
@@ -170,12 +194,7 @@ public class Emulateur {
             }
         return coups;
     }
-    
-    public void SetConf(Map<Plateau, Integer> conf){
-        conf.putAll(configMin);
-        conf.putAll(configMax);
-    }
-    
+
     @Override
     public Emulateur clone(){
         Emulateur mm = new Emulateur(nbCoup, joueurs,jCourant,m,historique );

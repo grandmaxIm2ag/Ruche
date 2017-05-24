@@ -186,13 +186,12 @@ public class SimulationIA extends Arbitre {
             etat=JOUE_EN_COURS;
         }else if(nbCoup[jCourant]==0 && jCourant == J2){
             if(plateau.premierPionValide(d)){
-            joueurs[jCourant].jouer(d.type());
+                joueurs[jCourant].jouer(d.type());
                 deposePion(d);
                 nbCoup[jCourant]++;
                 refaire.clear();
                 historique.add(d);
-                joueurs[jCourant].jouer(d.type());
-                //System.err.println("2- Dépot effectué "+d);
+                System.err.println(jCourant + " - 1st Dépot effectué "+d);
                 etat=JOUE_EN_COURS;
             }else{
                 //System.err.println("Depot impossible");
