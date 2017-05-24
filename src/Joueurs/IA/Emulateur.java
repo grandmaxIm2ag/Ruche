@@ -17,7 +17,6 @@ import Modele.FabriqueInsecte;
 import Modele.Insecte;
 import Modele.Plateau;
 import Modele.Point;
-import Vue.Interface;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -42,9 +41,7 @@ public class Emulateur {
         nbCoup[0] = tmp.nbcoups(0);
         nbCoup[1] = tmp.nbcoups(1);
         joueurs[0] = tmp.joueur(0).clone();
-        
         joueurs[1] = tmp.joueur(1).clone();
-        
         jCourant = tmp.jCourant();
         m = tmp.plateau().clone();
         historique = (Stack<Coup>) tmp.historique().clone();

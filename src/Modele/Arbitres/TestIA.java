@@ -116,7 +116,7 @@ public class TestIA extends Arbitre{
             sommeCoups=sommeCoups+nbCoupsJouesJ1[i];
         }
         resultatMoyenne="J1:"+nbVicJ1+" (diff:"+difficulteJ1+"), J2:"+nbVicJ2+" (diff:"+difficulteJ2+"), NUL:"+nbNul+
-                ", nbCoupsMoy:"+sommeCoups/nbSimulations+", tempsMoy:"+sommeTemps/nbSimulations+"(en nanosec), nbSimulations:"+nbSimulations;
+                ", nbCoupsMoy:"+sommeCoups/nbSimulations+", tempsMoy:"+(sommeTemps/nbSimulations)+"(en nanosec), nbSimulations:"+nbSimulations;
             }
             
     

@@ -41,12 +41,12 @@ public class Ruche {
         }
         Properties p = Configuration.proprietes();
         
-        //TestIA t=new TestIA(p,Ordinateur.MOYEN,Ordinateur.FACILE_HEURISTIQUE,1000);
-        //t.simulation();
-        Interface it = new Interface();
-        FabriqueArbitre.init(p);
-        Interface.creer(args);
-        Interface.goFin("Coucou", Arbitre.GAGNE);
+        TestIA t=new TestIA(p,Ordinateur.FACILE_ALEATOIRE,Ordinateur.FACILE_ALEATOIRE,100);
+        t.simulation();
+        //Interface it = new Interface();
+        //FabriqueArbitre.init(p);
+        //Interface.creer(args);
+        //Interface.goFin("Coucou", Arbitre.GAGNE);
     }
     
 }
