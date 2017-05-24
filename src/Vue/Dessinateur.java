@@ -98,7 +98,7 @@ public class Dessinateur extends Visiteur{
                         gc.strokePolygon(coords[0], coords[1], 6);
                 }
         } else
-            gc.fillPolygon(coords[0], coords[1], 6);
+            gc.strokePolygon(coords[0], coords[1], 6);
         gc.setStroke(Color.BLACK);
         if (c.utilise() && c.estpointe() && !c.insectes().empty() && (c.tete().classement() > 1)) {
                 gc.setFill(Color.WHITESMOKE);

@@ -53,8 +53,8 @@ public class NewGameHandler implements EventHandler<ActionEvent> {
             if (cbJ1.getSelectionModel().getSelectedIndex() == 0 && cbJ2.getSelectionModel().getSelectedIndex() == 0) {
                 pass = false;
                 FabriqueArbitre.initType(FabriqueArbitre.LOCAL_JVJ);
-                FabriqueArbitre.initN1(tfJ1.getText());
-                FabriqueArbitre.initN2(tfJ2.getText());
+                FabriqueArbitre.initN1((tfJ1.getText()).isEmpty() ? "Joueur 1" : tfJ1.getText());
+                FabriqueArbitre.initN2((tfJ2.getText()).isEmpty() ? "Joueur 2" : tfJ2.getText());
                 Interface.nouvelArbitre();
             }
             if (cbJ1.getSelectionModel().getSelectedIndex() != 0) {

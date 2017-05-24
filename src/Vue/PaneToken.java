@@ -47,7 +47,7 @@ public class PaneToken {
     static Label nomAdv;
     private static String colorJ1;
     private static String colorJ2;
-    private static final String [] colorString = {"hotpink", "limegreen", "whitesmoke", "orangered", "steelblue", "darkgoldenrod", "darkmagenta", "mediumblue", "maroon"};
+    private static final String [] colorString = {"hotpink", "limegreen", "whitesmoke", "orangered", "steelblue", "darkgoldenrod", "magenta", "mediumblue", "maroon"};
     
     private PaneToken (Arbitre arbitre) {
         this.arbitre = arbitre;

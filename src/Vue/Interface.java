@@ -308,14 +308,20 @@ public class Interface extends Application {
         root.setBottom(box);
         Image imageUndo = new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Icone/left.png"));
         Button btPrec = new Button();
-        btPrec.setGraphic(new ImageView(imageUndo));
+        btPrec.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Icone/left.png"))), CornerRadii.EMPTY, Insets.EMPTY)));
+        btPrec.setMinWidth(50);
+        btPrec.setMinHeight(50);
         Image imageDo = new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Icone/droite.png"));
         Button btSuiv = new Button();
-        btSuiv.setGraphic(new ImageView(imageDo));
+        btSuiv.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Icone/droite.png"))), CornerRadii.EMPTY, Insets.EMPTY)));
+        btSuiv.setMinWidth(50);
+        btSuiv.setMinHeight(50);
         Image imagePause = new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Icone/play.png"));
         Button btPause = new Button();
 
-        btPause.setGraphic(new ImageView(imagePause));
+        btPause.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Icone/menu.png"))), CornerRadii.EMPTY, Insets.EMPTY)));
+        btPause.setMinWidth(50);
+        btPause.setMinHeight(50);
         
         Button btSave = new Button("Sauvegarder");
         Button btMenu = new Button("Menu principal");
@@ -333,6 +339,8 @@ public class Interface extends Application {
         Button btHelp = new Button();
         btHelp.setOnAction(new Bouton(Bouton.BOUTON_AIDE, arbitre));
         btHelp.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Icone/help.png"))), CornerRadii.EMPTY, Insets.EMPTY)));
+        btHelp.setMinWidth(50);
+        btHelp.setMinHeight(50);
 
         GridPane bPion = new GridPane();
         bPion.setHgap(10);
@@ -353,7 +361,7 @@ public class Interface extends Application {
         if(arbitre instanceof ArbitreReseau)
             box.getChildren().addAll(btPause, Chat.creer((ArbitreReseau)arbitre,arbitre.joueur(Arbitre.J1).nom() , stage));
         else
-            box.getChildren().addAll(btPrec, btPause, btSuiv/*, btSave, btMenu*/);
+            box.getChildren().addAll(btPrec, btPause, btHelp, btSuiv/*, btSave, btMenu*/);
 
         c.setOnMouseMoved(new Souris(arbitre, Souris.SOURIS_BOUGEE, c));
         c.setOnMouseClicked(new Souris(arbitre, Souris.SOURIS_CLIQUEE, c));
@@ -473,6 +481,9 @@ public class Interface extends Application {
         
         TextField tfJ1 = new TextField();
         TextField tfJ2 = new TextField();
+        
+        tfJ1.setPromptText("Joueur 1");
+        tfJ2.setPromptText("Joueur 2");
         
         cbJ1.setOnAction(new EventHandler<ActionEvent> () {
             @Override
@@ -1217,11 +1228,11 @@ public class Interface extends Application {
         PaneToken.reset();
     }
     
-    public static void setColorP1 (int color) {
+    public static void setColorP2 (int color) {
         colorP1 = color;
     }    
     
-    public static void setColorP2 (int color) {
+    public static void setColorP1 (int color) {
         colorP2 = color;
     }    
     
