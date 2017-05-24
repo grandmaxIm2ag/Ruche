@@ -155,7 +155,7 @@ public abstract class ArbitreReseau extends Arbitre{
         }else if(plateau.estEncerclee((jCourant+1)%2)){
             etat=FIN;
             Interface.goFin(joueurs[jCourant].nom(), PERDU);
-        }else if(configurations.containsKey(plateau.hashCode()) && configurations.get(plateau.hashCode())>=2 ){
+        }else if(configurations.containsKey(plateau.hashCode()) && configurations.get(plateau.hashCode())>2 ){
             etat=FIN;
             //System.out.println(configurations.toString()+" "+plateau.hashCode());
             Interface.goFin(nom1, NUL);
