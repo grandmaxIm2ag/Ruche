@@ -276,6 +276,15 @@ public class Plateau extends Composant {
         if(yMax < d.destination.y())
             yMax=(int) d.destination.y();
         
+        
+        
+        if(Math.abs(xMin)+Math.abs(xMax)>= l*0.9){
+            l *= 1.5;
+        }
+        if(Math.abs(yMin)+Math.abs(yMax)>= h*0.9){
+            h *= 1.5;
+        }
+        
         Case c = matrice.get(d.source());
         Insecte e = c.retirePion();
         Case c2;
@@ -296,6 +305,11 @@ public class Plateau extends Composant {
             matrice.remove(c.position());
         }
         majGraphe(d);
+        
+        xMin=(int) newLim(true, true);
+        xMax=(int) newLim(true, false);
+        yMin=(int) newLim(false, true);
+        yMax=(int) newLim(false, false);
     }
     
     /**
@@ -411,6 +425,13 @@ public class Plateau extends Composant {
             yMin=(int) d.destination.y();
         if(yMax < d.destination.y())
             yMax=(int) d.destination.y();
+        
+        if(Math.abs(xMin)+Math.abs(xMax)>= l*0.9){
+            l *= 1.15;
+        }
+        if(Math.abs(yMin)+Math.abs(yMax)>= h*0.9){
+            h *= 1.15;
+        }
         
         majGraphe(d);
     }
@@ -930,8 +951,6 @@ public class Plateau extends Composant {
             }
             nouv.put(p,c);
         });
-        
-        
         return nouv.hashCode();
     }
     
@@ -982,5 +1001,36 @@ public class Plateau extends Composant {
     
     public List<Case> aide () {
         return aide;
+    }
+    
+    public double newLim(boolean x, boolean min){
+        double tmp;
+        if(min)
+            tmp = Double.MAX_VALUE;
+        else
+            tmp = Double.MIN_VALUE;
+        
+        if(x){
+            if(min){
+                for(Point item : utilises)
+                    if(tmp >= item.x())
+                        tmp = item.x();
+            }else{
+                for(Point item : utilises)
+                    if(tmp <= item.x())
+                        tmp = item.x();
+            }
+        }else{
+            if(min){
+                for(Point item : utilises)
+                    if(tmp >= item.y())
+                        tmp = item.y();
+            }else{
+                for(Point item : utilises)
+                    if(tmp <= item.y())
+                        tmp = item.y();
+            }
+        }
+        return tmp;
     }
 }

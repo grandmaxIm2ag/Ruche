@@ -23,15 +23,18 @@ import ruche.Reglage;
  * @author grandmax
  */
 public class SimulationIA extends Arbitre {
-
+    int diff1;
+    int diff2;
     /**
      *
      * @param p
      * @param d
      */
-    public SimulationIA(Properties p, int d,String n1, String n2 ) {
+    public SimulationIA(Properties p, int diff1, int diff2,String n1, String n2 ) {
         super(p, n1, n2);
-        difficulte = d;
+        //difficulte = d;
+        this.diff1 = diff1;
+        this.diff2 = diff2;
     }
     
     /**
@@ -54,11 +57,8 @@ public class SimulationIA extends Arbitre {
         for(int i=0; i<tabPieces2.length; i++)
             tabPieces2[i]=tabPieces[i];
         
-        
-        //joueurs[J1] = new Ordinateur(true,Ordinateur.FACILE_HEURISTIQUE, prop, tabPieces,J1, nom1,27229901424504L);
-        //joueurs[J2] = new Ordinateur(true,Ordinateur.FACILE_HEURISTIQUE, prop, tabPieces2,J2, nom2,27229901443397L);
-        joueurs[J1] = new Ordinateur(true,difficulte, prop, tabPieces,J1, nom1);
-        joueurs[J2] = new Ordinateur(true,difficulte, prop, tabPieces2,J2, nom2);
+        joueurs[J1] = new Ordinateur(true,diff1, prop, tabPieces,J1, nom1);
+        joueurs[J2] = new Ordinateur(true,diff2, prop, tabPieces2,J2, nom2);
         
         go();
     }
@@ -67,6 +67,7 @@ public class SimulationIA extends Arbitre {
      *
      */
     public void go(){
+        configurations.clear();
         Interface.goPartie();
         if(joueurs[J1] instanceof Ordinateur){
             Ordinateur o = (Ordinateur) joueurs[J1];
@@ -104,12 +105,21 @@ public class SimulationIA extends Arbitre {
      */
     @Override
     public void prochainJoueur() {
-        jCourant = ++jCourant % 2;
-
+        etat = ATTENTE_COUP;
+        PaneToken.getInstance(this).update();
         if(plateau.estEncerclee(jCourant)){
             etat=FIN;
-            System.err.println(jCourant+" à perdu");
+            Interface.goFin(joueurs[jCourant].nom(), GAGNE);
+        }else if(plateau.estEncerclee((jCourant+1)%2)){
+            etat=FIN;
+            Interface.goFin(joueurs[jCourant].nom(), PERDU);
+        }else if(configurations.contains(plateau.hashCode())){
+            etat=FIN;
+            Interface.goFin(nom1, NUL);
         }else{
+            configurations.add(plateau.hashCode());
+            jCourant = ++jCourant % 2;
+            plateau.setJoueur(jCourant);
             List<Coup[]> tab = new LinkedList();
             for(int i=0; i<joueurs[jCourant].pions().length; i++){
                 if(joueurs[jCourant].pions()[i]!=0){
@@ -143,7 +153,7 @@ public class SimulationIA extends Arbitre {
                 prochainJoueur();
             }else if(precAucun && aucun){
                 etat=FIN;
-                System.err.println("Match nul");
+                Interface.goFin(nom1, NUL);
             }else{
                 if(joueurs[jCourant] instanceof Ordinateur){
                     Ordinateur o = (Ordinateur) joueurs[jCourant];

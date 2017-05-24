@@ -78,11 +78,11 @@ public class Local extends Arbitre{
         switch(type){
             case FabriqueArbitre.LOCAL_JVJ:
                 joueurs[J1] = new Humain(true, prop, tabPieces, J1, nom1);
-                joueurs[J2] = new Humain(true, prop, tabPieces2, J2, nom2);
+                joueurs[J2] = new Humain(false, prop, tabPieces2, J2, nom2);
                 break;
             case FabriqueArbitre.LOCAL_JVIA:
                 joueurs[J1] = new Humain(true, prop, tabPieces,  J1, nom1);
-                joueurs[J2] = new Ordinateur(true,difficulte, prop, tabPieces2,  J2, nom2);
+                joueurs[J2] = new Ordinateur(false,Ordinateur.MOYEN, prop, tabPieces2,  J2, nom2);
                 break;
         }
         
@@ -178,17 +178,16 @@ public class Local extends Arbitre{
             Interface.goFin(joueurs[jCourant].nom(), PERDU);
         }else if(configurations.contains(plateau.hashCode())){
             etat=FIN;
-            //System.err.println("Match nul");
+            //System.out.println(configurations.toString()+" "+plateau.hashCode());
+            Interface.goFin(nom1, NUL);
+            System.err.println("Match nul");
         }else{
             configurations.add(plateau.hashCode());
-            //System.err.println(plateau.hashCode());
             
             etat = ATTENTE_COUP;
             PaneToken.getInstance(this).update();
             jCourant = ++jCourant % 2;
             plateau.setJoueur(jCourant);
-            //configurations.add(plateau.hashCode());
-            //System.err.println(plateau.hashCode());
             List<Coup[]> tab = new LinkedList();
             for(int i=0; i<joueurs[jCourant].pions().length; i++){
                 if(joueurs[jCourant].pions()[i]!=0){
@@ -218,7 +217,6 @@ public class Local extends Arbitre{
                 }
                  i+=j;
             }
-            System.out.println(aucun);
             aucun = (coups == null || coups.length<=0);
             if(aucun){
                 prochainJoueur();
