@@ -27,9 +27,11 @@ import static Vue.Dessinateur.c;
 import java.io.InputStream;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Stack;
 import javafx.geometry.Insets;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
@@ -51,7 +53,8 @@ public class Pointeur extends Visiteur {
     private boolean depl = false;
     public Popup popup;
     public boolean initPopup;
-    
+    private static final Color [] colorTable = {Color.HOTPINK, Color.LIMEGREEN, Color.WHITESMOKE, Color.ORANGERED, Color.STEELBLUE, Color.DARKGOLDENROD, Color.DARKMAGENTA, Color.MEDIUMBLUE, Color.MAROON};
+
     /**
      *
      * @param c
@@ -126,22 +129,25 @@ public class Pointeur extends Visiteur {
                 //i(c.insectes().)
                 if (c.utilise() && c.tete().classement() > 1) {
                     //popup = new Popup();
-                    Rectangle rect = new Rectangle(125,125);
+                    Rectangle rect = new Rectangle(125 + 50 * (c.insectes().size()-1),125 + 50 * (c.insectes().size()-1));
                     //rect.setWidth(100*c.tete().classement() + 12.5*c.tete().classement());
-                    //rect.setArcWidth(20);
-                    //rect.setArcHeight(20);
-                    rect.setFill(Color.WHITESMOKE);
+                    rect.setArcWidth(20);
+                    rect.setArcHeight(20);
+                    rect.setFill(Color.BLACK);
+                    rect.setOpacity(0.25);
+                    rect.setEffect(new DropShadow());
                     StackPane stack = new StackPane();
                     HBox box = new HBox();
                     box.setPadding(new Insets(12.5,12.5,12.5,12.5));
                     box.setSpacing(12.5);
                     //Canvas canvas = print(c.tete());
                     box.getChildren().clear();
-                    for (Object ins : c.insectes()) {
-                        box.getChildren().add(print (((Insecte) ins)));
-                    }
+                    //for (Object ins : c.insectes()) {
+                        //box.getChildren().add(print (((Insecte) ins)));
+                        box.getChildren().add(popupCanvas(c.insectes()));
+                    //}
                     //rect.widthProperty().bind(box.widthProperty());
-                    rect.setWidth(12.5*(c.tete().classement()+1) + 100 * c.tete().classement());
+                    //rect.setWidth(12.5*(c.tete().classement()+1) + 100 * c.tete().classement());
                     stack.getChildren().addAll(rect, box);
                     popup.getContent().addAll(rect, box);
                     
@@ -168,10 +174,12 @@ public class Pointeur extends Visiteur {
                             return true;
                         } else {
                             PaneToken.getInstance().uncheck();
-                            if (arbitre.getInitClopDepl() == null)
-                                arbitre.joue(new Deplacement(arbitre.jCourant(), arbitre.initDeplacement().position(), c.position()));
-                            else 
+                            if (arbitre.getInitClopDepl() == null) {
+                                arbitre.coupSouris(new Deplacement(arbitre.jCourant(), arbitre.initDeplacement().position(), c.position()));
+                            }
+                            else {
                                 arbitre.joue(new Deplacement(arbitre.jCourant(), arbitre.getInitClopDepl().position(), c.position()));
+                            }
                             arbitre.reinitDepl();
                             depl = false;
                             return true;
@@ -179,6 +187,7 @@ public class Pointeur extends Visiteur {
 
                     } else if (arbitre.initDeplacement()!=null && arbitre.initDeplacement().position().equals(c.position())) {
                         depl = false;
+                        arbitre.reinitDepl();
                         return true;
                     } else if (arbitre.initDeplacement() instanceof Cloporte) {
                         Coup[] coups = arbitre.deplacementPossible(arbitre.initDeplacement());
@@ -208,6 +217,20 @@ public class Pointeur extends Visiteur {
         
         return false;
     }
+    
+    private Canvas popupCanvas (Stack<Insecte> stack) {
+        double l = (100 + 50 * (stack.size()-1));//*Interface.py(1);
+        double h = 100 + 50 * (stack.size()-1);
+        Canvas c = new Canvas (l, h);
+        GraphicsContext gc = c.getGraphicsContext2D();
+        double [][] coords;
+        int i = 0;for (Insecte ins : stack) {
+            print (ins, 50+i*50, 50*stack.size()-i*50, gc);
+            i++;
+        }
+        return c;
+    }
+    
     
     /**
      *
@@ -275,6 +298,33 @@ public class Pointeur extends Visiteur {
         Image img = img(i);
         gc.drawImage(img,50-(img.getWidth()/2), 50-(img.getHeight()/2));
         return canvas;
+    }
+    
+    public void print (Insecte i, double x, double y, GraphicsContext gc) {
+        //Canvas canvas = new Canvas (100,100);
+        //GraphicsContext gc = canvas.getGraphicsContext2D();
+        double [][] coords = Interface.hex_corner(x, y, 50);
+        Color couleur = getColor(i.joueur());
+        gc.setFill(couleur);
+        gc.fillPolygon(coords[0], coords[1], 6);
+        gc.strokePolygon(coords[0], coords[1], 6);
+        Image img = img(i);
+        gc.drawImage(img,x-(img.getWidth()/2), y-(img.getHeight()/2));
+        //return c;//
+    }
+    
+    private Color getColor (int p) {
+        int c = 0;
+        switch (p) {
+            case 0:
+                c = Interface.getColorP1();
+                break;
+            case 1:
+                c = Interface.getColorP2();
+                break;
+            default:
+        }
+        return colorTable[c];
     }
     
     private Image img (Insecte i) {

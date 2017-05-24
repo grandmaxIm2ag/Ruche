@@ -5,6 +5,7 @@
  */
 package Vue;
 
+import Controleur.AideListener;
 import Controleur.Bouton;
 import Controleur.ButtonToken;
 import Controleur.TokenListener;
@@ -47,7 +48,8 @@ public class PaneToken {
     static Label nomAdv;
     private static String colorJ1;
     private static String colorJ2;
-    private static final String [] colorString = {"hotpink", "limegreen", "whitesmoke", "orangered", "steelblue", "darkgoldenrod", "darkmagenta", "midnightblue", "maroon"};
+    AideListener al;
+    private static final String [] colorString = {"hotpink", "limegreen", "whitesmoke", "orangered", "steelblue", "darkgoldenrod", "magenta", "mediumblue", "maroon"};
     
     private PaneToken (Arbitre arbitre) {
         this.arbitre = arbitre;
@@ -108,6 +110,8 @@ public class PaneToken {
                 b[i][j].selectedProperty().addListener(new TokenListener(b[i][j], i, j));
             }
         }
+        //al = new AideListener(b, arbitre);
+        //arbitre.plateau().attachAide(al);
     }
     
     /**
@@ -284,20 +288,21 @@ public class PaneToken {
         
         rightGrid.add(lWoudlose, 0, 8);
         rightGrid.add(bWoodlouse, 1, 8);
-        
+        /*
         Image imageHelp = new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Icone/help.png"));
         Button btHelp = new Button();
         btHelp.setOnAction(new Bouton(Bouton.BOUTON_AIDE, arbitre));
         btHelp.setGraphic(new ImageView(imageHelp));
-        
+        *
         rightGrid.add(btHelp, 1, 9);
-        
+        */
+        /*
         Image imageAbd = new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Icone/white.png"));
         Button btAbd = new Button();
         btAbd.setGraphic(new ImageView(imageAbd));
         
         rightGrid.add(btAbd, 0,9);
-        
+        */
         l[0][0] = lBee;
         l[0][1] = lBeetle;
         l[0][2] = lGrasshopper;
@@ -452,13 +457,6 @@ public class PaneToken {
         bMoskito.setOnAction(new ButtonToken(ButtonToken.MOSKITO_BUTTON, lBee, arbitre.joueur(1), arbitre));
         bWoodlouse.setOnAction(new ButtonToken(ButtonToken.WOODLOUSE_BUTTON, lBee, arbitre.joueur(1), arbitre));
         
-        Image imageHelp = new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Icone/help.png"));
-        Button btHelp = new Button();
-        btHelp.setOnAction(new Bouton(Bouton.BOUTON_AIDE, arbitre));
-        btHelp.setGraphic(new ImageView(imageHelp));
-        Image imageAbd = new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Icone/white.png"));
-        Button btAbd = new Button();
-        btAbd.setGraphic(new ImageView(imageAbd));
         
         nomAdv.setText(arbitre.joueur(Arbitre.J2).nom() );
         nomAdv.setTextFill(Color.WHITE);
@@ -488,9 +486,6 @@ public class PaneToken {
         
         leftGrid.add(lWoudlose, 0, 8);
         leftGrid.add(bWoodlouse, 1, 8);
-        
-        leftGrid.add(btHelp, 0, 9);
-        leftGrid.add(btAbd, 1, 9);
         
         l[1][0] = lBee;
         l[1][1] = lBeetle;
@@ -541,6 +536,38 @@ public class PaneToken {
             default:
         }
         
+    }
+    
+    public void setHelpBackground (ToggleButton b, int i, int j) {
+        String s = "";
+        switch (j) {
+            case 0:
+                s = "bee";
+                break;
+            case 1:
+                s = "beetle";
+                break;
+            case 2:
+                s = "grasshopper";
+                break;
+            case 3:
+                s = "ant";
+                break;
+            case 4:
+                s = "spider";
+                break;
+            case 5:
+                s = "ladybug";
+                break;
+            case 6:
+                s = "moskito";
+                break;
+            case 7:
+                s = "woodlouse";
+                break;
+            default:
+        }
+        b.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Boutons/" + s + "_red.png"))), CornerRadii.EMPTY, Insets.EMPTY)));
     }
     
     public void setDefaultBackground (ToggleButton b, int i, int j) {

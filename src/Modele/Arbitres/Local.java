@@ -84,6 +84,10 @@ public class Local extends Arbitre{
                 joueurs[J1] = new Humain(true, prop, tabPieces,  J1, nom1);
                 joueurs[J2] = new Ordinateur(false,Ordinateur.MOYEN, prop, tabPieces2,  J2, nom2);
                 break;
+            case FabriqueArbitre.LOCAL_IAVJ:
+                joueurs[J2] = new Humain(true, prop, tabPieces,  J2, nom2);
+                joueurs[J1] = new Ordinateur(false,Ordinateur.MOYEN, prop, tabPieces2,  J1, nom1);
+                break;
         }
         
         if(chargement)
@@ -176,13 +180,16 @@ public class Local extends Arbitre{
         }else if(plateau.estEncerclee((jCourant+1)%2)){
             etat=FIN;
             Interface.goFin(joueurs[jCourant].nom(), PERDU);
-        }else if(configurations.contains(plateau.hashCode())){
+        }else if(configurations.containsKey(plateau.hashCode()) && configurations.get(plateau.hashCode())>2 ){
             etat=FIN;
             //System.out.println(configurations.toString()+" "+plateau.hashCode());
             Interface.goFin(nom1, NUL);
             System.err.println("Match nul");
         }else{
-            configurations.add(plateau.hashCode());
+            if(configurations.containsKey(plateau.hashCode()))
+                configurations.put(plateau.hashCode(), configurations.get(plateau.hashCode())+1 );
+            else
+                configurations.put(plateau.hashCode(), 1 );
             
             etat = ATTENTE_COUP;
             PaneToken.getInstance(this).update();

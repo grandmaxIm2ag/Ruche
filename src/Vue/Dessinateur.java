@@ -25,6 +25,7 @@ import Modele.Visiteur;
 import static Vue.Interface.hex_corner;
 import java.io.InputStream;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
@@ -46,7 +47,7 @@ public class Dessinateur extends Visiteur{
     Etendeur etendeur;
     GraphicsContext gc;
     Arbitre arbitre;
-    private static final Color [] colorTable = {Color.HOTPINK, Color.LIMEGREEN, Color.WHITESMOKE, Color.ORANGERED, Color.STEELBLUE, Color.DARKGOLDENROD, Color.DARKMAGENTA, Color.MIDNIGHTBLUE, Color.MAROON};
+    private static final Color [] colorTable = {Color.HOTPINK, Color.LIMEGREEN, Color.WHITESMOKE, Color.ORANGERED, Color.STEELBLUE, Color.DARKGOLDENROD, Color.DARKMAGENTA, Color.MEDIUMBLUE, Color.MAROON};
     
     Dessinateur (Canvas c, Arbitre a) {
         this.c = c;
@@ -77,7 +78,7 @@ public class Dessinateur extends Visiteur{
      */
     @Override
     public boolean visite (Case c) {
-        System.out.println(c);
+        //System.out.println(c);
         etendeur.fixeComposant(c);
         double [][] coords = Interface.hex_corner(etendeur.x(), etendeur.y(), etendeur.h()/2);
         if (c.estpointe()) {
@@ -98,7 +99,7 @@ public class Dessinateur extends Visiteur{
                         gc.strokePolygon(coords[0], coords[1], 6);
                 }
         } else
-            gc.fillPolygon(coords[0], coords[1], 6);
+            gc.strokePolygon(coords[0], coords[1], 6);
         gc.setStroke(Color.BLACK);
         if (c.utilise() && c.estpointe() && !c.insectes().empty() && (c.tete().classement() > 1)) {
                 gc.setFill(Color.WHITESMOKE);
@@ -133,6 +134,7 @@ public class Dessinateur extends Visiteur{
         image =  ClassLoader.getSystemClassLoader().getResourceAsStream("Images/bee.png");
         Image img = new Image(image,((etendeur.h()/2)*1.75),((etendeur.h()/2)*1.75),true, true);
         gc.drawImage(img,etendeur.x()-(img.getWidth()/2), etendeur.y()-(img.getHeight()/2));
+        focus(i, gc, coords);
         return false;
     }
     
@@ -159,6 +161,7 @@ public class Dessinateur extends Visiteur{
             gc.setFill(Color.WHITE);
             gc.fillText(Integer.toString(i.classement()), coords[0][3], coords[1][3]+etendeur.h()/4);
         }
+        focus(i, gc, coords);
         return false;
     }
     
@@ -185,6 +188,7 @@ public class Dessinateur extends Visiteur{
             gc.setFill(Color.WHITE);
             gc.fillText(Integer.toString(i.classement()), coords[0][3], coords[1][3]+etendeur.h()/4);
         }
+        focus(i, gc, coords);
         return false;
     }
     
@@ -211,6 +215,7 @@ public class Dessinateur extends Visiteur{
             gc.setFill(Color.WHITE);
             gc.fillText(Integer.toString(i.classement()), coords[0][3], coords[1][3]+etendeur.h()/4);
         }
+        focus(i, gc, coords);
         return false;
     }
     
@@ -232,6 +237,7 @@ public class Dessinateur extends Visiteur{
         image =  ClassLoader.getSystemClassLoader().getResourceAsStream("Images/woodlouse.png");
         Image img = new Image(image,((etendeur.h()/2)*1.75),((etendeur.h()/2)*1.75),true, true);
         gc.drawImage(img,etendeur.x()-(img.getWidth()/2), etendeur.y()-(img.getHeight()/2));
+        focus(i, gc, coords);
         return false;
     }
     
@@ -253,6 +259,7 @@ public class Dessinateur extends Visiteur{
         image =  ClassLoader.getSystemClassLoader().getResourceAsStream("Images/ant.png");
         Image img = new Image(image,((etendeur.h()/2)*1.75),((etendeur.h()/2)*1.75),true, true);
         gc.drawImage(img,etendeur.x()-(img.getWidth()/2), etendeur.y()-(img.getHeight()/2));
+        focus(i, gc, coords);
         return false;
     }
     
@@ -274,6 +281,7 @@ public class Dessinateur extends Visiteur{
         image =  ClassLoader.getSystemClassLoader().getResourceAsStream("Images/spider.png");
         Image img = new Image(image,((etendeur.h()/2)*1.75),((etendeur.h()/2)*1.75),true, true);
         gc.drawImage(img,etendeur.x()-(img.getWidth()/2), etendeur.y()-(img.getHeight()/2));
+        focus(i, gc, coords);
         return false;
     }
     
@@ -295,6 +303,7 @@ public class Dessinateur extends Visiteur{
         image =  ClassLoader.getSystemClassLoader().getResourceAsStream("Images/grasshopper.png");
         Image img = new Image(image,((etendeur.h()/2)*1.75),((etendeur.h()/2)*1.75),true, true);
         gc.drawImage(img,etendeur.x()-(img.getWidth()/2), etendeur.y()-(img.getHeight()/2));
+        focus(i, gc, coords);
         return false;
     }
     
@@ -457,5 +466,22 @@ public class Dessinateur extends Visiteur{
             default:
         }
         return colorTable[c];
+    }
+    
+    private void focus (Insecte i, GraphicsContext gc, double[][] coords) {
+        if (arbitre.initDeplacement() instanceof Cloporte) {
+                        List<Coup> coups = arbitre.plateau().deplacementPossible(arbitre.initDeplacement());
+                        for (Coup coup : coups) {
+                            Deplacement deplacement = (Deplacement) coup;
+                            if (deplacement.source().equals(i.position()) && !arbitre.initDeplacement().equals(i)) {
+                                gc.setStroke(Color.RED);
+                                gc.setLineWidth(5);
+                                gc.strokePolygon(coords[0], coords[1], 6);
+                                gc.setStroke(Color.BLACK);
+                                gc.setLineWidth(1);
+                            }
+                        }
+                        
+                    }
     }
 }

@@ -6,6 +6,7 @@
  */
 package Modele;
 
+import Controleur.AideListener;
 import Modele.Arbitres.Arbitre;
 import Vue.Pointeur;
 import java.util.ArrayList;
@@ -14,6 +15,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import javafx.beans.property.IntegerProperty;
 import ruche.Reglage;
 
 /**
@@ -130,6 +132,7 @@ public class Plateau extends Composant {
     int xMin, yMin, xMax, yMax;
     Properties prop;
     int jCourant;
+    IntegerProperty depotAide;
     
     /**
      *
@@ -793,7 +796,7 @@ public class Plateau extends Composant {
             else
                 b = estConnexe(e);
         
-        if(b){
+        if(b || e.type()==Insecte.CLOP){
             Coup[] cp = matrice.get(e.position()).tete().deplacementValide(this.clone());
 
             for (Coup cp1 : cp) {
@@ -802,6 +805,18 @@ public class Plateau extends Composant {
                     c.add(d);
                 }
             }
+            if(!b){
+                List<Coup> valide = new ArrayList();
+                for(Coup item : c){
+                    if(item instanceof Deplacement){
+                        Deplacement item2 =(Deplacement)item;
+                        if(!item2.source().equals(e.position()))
+                            valide.add(item2);
+                    }
+                }
+                return valide;
+            }
+            
             return c;
         }
         return null;
@@ -1032,5 +1047,17 @@ public class Plateau extends Composant {
             }
         }
         return tmp;
+    }
+    
+    public void setDepotAide (int i) {
+        depotAide.setValue(i);
+    }
+    
+    public int getDepotAide () {
+        return depotAide.getValue();
+    }
+    
+    public void attachAide (AideListener al) {
+        //depotAide.addListener(al);
     }
 }
