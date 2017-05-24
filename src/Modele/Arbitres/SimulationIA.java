@@ -55,7 +55,7 @@ public class SimulationIA extends Arbitre {
         for(int i=0; i<tabPieces2.length; i++)
             tabPieces2[i]=tabPieces[i];
         
-        joueurs[J1] = new Ordinateur(true,Ordinateur.DIFFICILE, prop, tabPieces,J1,null);
+        joueurs[J1] = new Ordinateur(true,Ordinateur.FACILE_ALEATOIRE, prop, tabPieces,J1,null);
         joueurs[J2] = new Ordinateur(true,Ordinateur.MOYEN, prop, tabPieces2,J2,null);
         
         go();

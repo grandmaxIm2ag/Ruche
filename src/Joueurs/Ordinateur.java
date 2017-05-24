@@ -7,8 +7,9 @@ package Joueurs;
 
 import Joueurs.IA.AI;
 import Joueurs.IA.AlphaBeta;
+import Joueurs.IA.AlphaBetaConcurent;
 import Joueurs.IA.Emulateur;
-import Joueurs.IA.HeuristiqueV1;
+import Joueurs.IA.HeuristiqueMoy;
 import Joueurs.IA.HeuristiqueV2;
 import Joueurs.IA.MinMax;
 import Joueurs.IA.MinMaxConcurent;
@@ -141,7 +142,7 @@ public class Ordinateur extends Joueur{
         if(d==null || d.length<= 0)
             return null;
         else{
-            HeuristiqueV2 heurs = new HeuristiqueV2();
+            HeuristiqueMoy heurs = new HeuristiqueMoy();
             //find the best move for the heuristic
             ArrayList<Coup> res=new ArrayList();
             Emulateur em = new Emulateur(a);
@@ -207,6 +208,7 @@ public class Ordinateur extends Joueur{
         //MinMaxConcurent mx = new MinMaxConcurent(this,a,heurs,2,0,d);
         //MinMax mx = new MinMax(this,a,heurs,2,0,d);
         AlphaBeta mx = new AlphaBeta(this,a,heurs,3, 0,d);
+        //AlphaBetaConcurent mx = new AlphaBetaConcurent(this,a,heurs,3, 0,d);
         /* Affichage des coups possibles.
         System.out.println("Appel nextmove avec les coups:");
         for(int k = 0; k < d.length;k++)
