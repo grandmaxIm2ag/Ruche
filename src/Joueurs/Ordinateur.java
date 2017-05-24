@@ -309,7 +309,7 @@ public class Ordinateur extends Joueur{
      * @return vrai ssi: aucune pièce n'est posée au dessus de la reine du joueur d'indice "joueur" et 
      * que la reine peut se déplacer sur une case voisine, faux sinon
      */
-    private boolean reineLibre(Plateau p, int joueur, Coup[] c){
+    public boolean reineLibre(Plateau p, int joueur, Coup[] c){
         if(p.reine(joueur)==null){
             return true;
         }
@@ -338,5 +338,11 @@ public class Ordinateur extends Joueur{
             return 0;
         }
     }
+    
+     @Override
+    public Ordinateur clone(){
+        Ordinateur jH = new Ordinateur(main,difficulte,  prop, tabPieces.clone(), numJoueur, nom);    
+        return jH;
+}
     
 }//fin de la classe
