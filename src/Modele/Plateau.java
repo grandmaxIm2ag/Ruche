@@ -8,6 +8,7 @@ package Modele;
 
 import Controleur.AideListener;
 import Modele.Arbitres.Arbitre;
+import Vue.PaneToken;
 import Vue.Pointeur;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -132,7 +133,7 @@ public class Plateau extends Composant {
     int xMin, yMin, xMax, yMax;
     Properties prop;
     int jCourant;
-    IntegerProperty depotAide;
+    int depotAide;
     
     /**
      *
@@ -153,6 +154,7 @@ public class Plateau extends Composant {
         xMin=0; xMax = 0; yMin=0; yMax=0;
         jCourant = Arbitre.J1;
         aide= new ArrayList();
+        
     }
     
     /**
@@ -1045,14 +1047,13 @@ public class Plateau extends Composant {
     }
     
     public void setDepotAide (int i) {
-        depotAide.setValue(i);
+        depotAide = i;
+        (PaneToken.getInstance()).uncheck();
+        (PaneToken.getInstance()).setHelpBackground(this.jCourant, i);
     }
     
     public int getDepotAide () {
-        return depotAide.getValue();
+        return depotAide;
     }
     
-    public void attachAide (AideListener al) {
-        //depotAide.addListener(al);
-    }
 }

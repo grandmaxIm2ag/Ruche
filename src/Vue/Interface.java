@@ -246,6 +246,23 @@ public class Interface extends Application {
         //tabPane
         tabPane.getStylesheets().add("Style/Style.css");
         root.setCenter(tabPane);
+        VBox bottom = new VBox();
+        bottom.setAlignment(Pos.CENTER);
+        bottom.setPadding(new Insets(20,20,20,20));
+        Button btClose = new Button ();
+        btClose.setOnAction(new EventHandler<ActionEvent> () {
+            @Override
+            public void handle(ActionEvent event) {
+                System.exit(0);
+            }
+        });
+        
+        btClose.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Icone/close.png"))), CornerRadii.EMPTY, Insets.EMPTY)));
+        btClose.setMinWidth(50);
+        btClose.setMinHeight(50);
+        
+        bottom.getChildren().add(btClose);
+        root.setBottom(bottom);
     }
 
     /**

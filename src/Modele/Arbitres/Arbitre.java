@@ -551,6 +551,7 @@ public abstract class Arbitre {
                 plateau.clearAide();
                 if((Interface.pointeur().event().getEventType() == MouseEvent.MOUSE_CLICKED) && (etat == AIDE)){
                     etat = ATTENTE_COUP;
+                    plateau.setDepotAide(-1);
                     aide = false;
                 }
             Interface.pointeur().traiter();

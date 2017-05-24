@@ -110,8 +110,7 @@ public class PaneToken {
                 b[i][j].selectedProperty().addListener(new TokenListener(b[i][j], i, j));
             }
         }
-        //al = new AideListener(b, arbitre);
-        //arbitre.plateau().attachAide(al);
+        al = new AideListener(b, arbitre);
     }
     
     /**
@@ -538,36 +537,39 @@ public class PaneToken {
         
     }
     
-    public void setHelpBackground (ToggleButton b, int i, int j) {
-        String s = "";
-        switch (j) {
-            case 0:
-                s = "bee";
-                break;
-            case 1:
-                s = "beetle";
-                break;
-            case 2:
-                s = "grasshopper";
-                break;
-            case 3:
-                s = "ant";
-                break;
-            case 4:
-                s = "spider";
-                break;
-            case 5:
-                s = "ladybug";
-                break;
-            case 6:
-                s = "moskito";
-                break;
-            case 7:
-                s = "woodlouse";
-                break;
-            default:
+    public void setHelpBackground (int i, int j) {
+        if (j >= 0 && j < 8) {
+            ToggleButton b = this.b[i][j];
+            String s = "";
+            switch (j) {
+                case 0:
+                    s = "bee";
+                    break;
+                case 1:
+                    s = "beetle";
+                    break;
+                case 2:
+                    s = "grasshopper";
+                    break;
+                case 3:
+                    s = "ant";
+                    break;
+                case 4:
+                    s = "spider";
+                    break;
+                case 5:
+                    s = "ladybug";
+                    break;
+                case 6:
+                    s = "moskito";
+                    break;
+                case 7:
+                    s = "woodlouse";
+                    break;
+                default:
+            }
+            b.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Boutons/" + s + "_rouge.png"))), CornerRadii.EMPTY, Insets.EMPTY)));
         }
-        b.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Boutons/" + s + "_red.png"))), CornerRadii.EMPTY, Insets.EMPTY)));
     }
     
     public void setDefaultBackground (ToggleButton b, int i, int j) {
