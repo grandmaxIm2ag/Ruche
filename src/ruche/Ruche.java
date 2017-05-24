@@ -40,12 +40,12 @@ public class Ruche {
             new FileOutputStream(sauv).close();
         }
         Properties p = Configuration.proprietes();
-        /*
-        TestIA t=new TestIA(p,Ordinateur.FACILE_ALEATOIRE,Ordinateur.FACILE_ALEATOIRE,10);
-        t.simulation();*/
-        Interface it = new Interface();
+        
+        Apprentissage t=new Apprentissage(p);
+        t.apprentissageHeuristique();
+        /*Interface it = new Interface();
         FabriqueArbitre.init(p);
-        Interface.creer(args);
+        Interface.creer(args);*/
         //Interface.goFin("Coucou", Arbitre.GAGNE);
     }
     
