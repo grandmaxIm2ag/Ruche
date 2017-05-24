@@ -15,6 +15,7 @@ import Modele.Depot;
 import Modele.FabriqueInsecte;
 import Modele.Insecte;
 import Modele.Point;
+import Vue.Interface;
 import Vue.PaneToken;
 import java.io.BufferedReader;
 import java.io.PrintWriter;

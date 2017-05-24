@@ -12,6 +12,7 @@ import static Modele.Arbitres.Arbitre.J2;
 import static Modele.Arbitres.Arbitre.JOUE_EN_COURS;
 import Modele.Arbitres.producteurConsommateur.Consommateur;
 import Modele.Arbitres.producteurConsommateur.Producteur;
+import Modele.Coup;
 import Modele.Deplacement;
 import Modele.Depot;
 import Modele.Point;

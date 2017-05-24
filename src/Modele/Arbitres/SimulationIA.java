@@ -12,6 +12,7 @@ import Modele.Depot;
 import Modele.FabriqueInsecte;
 import Modele.Point;
 import Vue.Interface;
+import Vue.PaneToken;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -201,10 +202,10 @@ public class SimulationIA extends Arbitre {
                 nbCoup[jCourant]++;
                 refaire.clear();
                 historique.add(d);
-                System.err.println(jCourant + " - 1st Dépot effectué "+d);
+                //System.err.println(jCourant + " - 1st Dépot effectué "+d);
                 etat=JOUE_EN_COURS;
             }else{
-                //System.err.println("Depot impossible");
+                System.err.println("Depot impossible");
             }
         }else if(deposePionValide(d) && joueurs[jCourant].pion(d.type())>0){
             
@@ -217,7 +218,7 @@ public class SimulationIA extends Arbitre {
             etat=JOUE_EN_COURS;
             
         }else{
-            //System.err.println("Depot impossible");
+            System.err.println("Depot impossible");
         }
     }
 }

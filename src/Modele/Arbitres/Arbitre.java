@@ -274,7 +274,7 @@ public abstract class Arbitre {
         if(!historique.isEmpty()){
             configurations.remove(configurations.size()-1);
             Coup c = historique.pop();
-            System.out.println(c+" "+(c==null));
+            //System.out.println(c+" "+(c==null));
             refaire.push(c);
             if(c instanceof Deplacement){
                 Deplacement d = (Deplacement) c;
@@ -284,10 +284,10 @@ public abstract class Arbitre {
                 Depot d = (Depot) c;
                 plateau.retirerPion(d.destination());
                 nbCoup[d.joueur()]--;
-                joueurs[d.joueur()].addPion(d.type());
+                joueurs[d.joueur()].pred(d.type());
             }
         }else{
-            System.err.println("Aucun coup précedent");
+            //System.err.println("Aucun coup précedent");
         }
         PaneToken.getInstance(this).update();
         jCourant = (jCourant+1)%2;
@@ -300,7 +300,7 @@ public abstract class Arbitre {
     public void refaire(){
         if(!refaire.isEmpty()){
             Coup c = refaire.pop();
-            System.out.println(c+" "+(c==null));
+            //System.out.println(c+" "+(c==null));
             historique.push(c);
             joue(c);
         }else{
@@ -331,7 +331,6 @@ public abstract class Arbitre {
         String[] str = Chargeur.joueur();
         joueurs[J1].nom = str[J1].split("=")[0];
         String[] str2 = str[J1].split("=")[1].split(":");
-        //System.err.println(Arrays.toString(str2));
         int[] tab = new int[str2.length];
         for(int i=0; i<str2.length; i++)
             tab[i]=Integer.parseInt(str2[i]);
@@ -656,7 +655,7 @@ public abstract class Arbitre {
     public void dispo(int ins){
         initClopDepl = null;
         Coup[] c = depotPossible(jCourant, ins);
-        System.out.println(jCourant+" "+ins+" "+Arrays.toString(c));
+        //System.out.println(jCourant+" "+ins+" "+Arrays.toString(c));
         List<Case> l = new ArrayList();
         for(int i=0; c!=null && i<c.length; i++){
             Case c2 = new Case(c[i].destination().x(), c[i].destination().y(), 1, 1);
