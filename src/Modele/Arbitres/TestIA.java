@@ -177,14 +177,23 @@ public class TestIA extends Arbitre{
         if(plateau.estEncerclee(jCourant)){
             etat=FIN;
             victorieux=++jCourant % 2;
-        }else if(configurations.contains(plateau.hashCode())){
+        }else if(plateau.estEncerclee((jCourant+1)%2)){
+            etat=FIN;
+            victorieux=jCourant;
+        }else if(configurations.containsKey(plateau.hashCode()) && configurations.get(plateau.hashCode())>2 ){
             etat=FIN;
             System.err.println("Match nul");
             victorieux=-1;
         }else{
-            configurations.add(plateau.hashCode());
+            if(configurations.containsKey(plateau.hashCode())){
+                configurations.put(plateau.hashCode(), configurations.get(plateau.hashCode())+1 );
+            }else{
+                configurations.put(plateau.hashCode(), 1 );
+            }
             jCourant = ++jCourant % 2;
+            plateau.setJoueur(jCourant);
             List<Coup[]> tab = new LinkedList();
+            
             for(int i=0; i<joueurs[jCourant].pions().length; i++){
                 if(joueurs[jCourant].pions()[i]!=0){
                     Coup[] tmp = depotPossible(jCourant, i);
@@ -215,7 +224,7 @@ public class TestIA extends Arbitre{
             }
             aucun = coups == null || coups.length<=0;
             if(aucun){
-                etat=JOUE_EN_COURS;
+                prochainJoueur();
             }else if(precAucun && aucun){
                 etat=FIN;
                 victorieux=-1;
