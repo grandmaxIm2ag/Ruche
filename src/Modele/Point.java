@@ -27,7 +27,7 @@ public class Point implements Comparable {
      * @param m
      */
     public Point(String m){
-        System.out.println(m);
+        //System.out.println(m);
         String tmp[] = m.split(",");
         int x = (int)Double.parseDouble(tmp[0].substring(1));
         int y = (int)Double.parseDouble(tmp[1].substring(0, tmp[1].length()-1));

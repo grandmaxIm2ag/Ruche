@@ -5,7 +5,6 @@
  */
 package Modele.Arbitres;
 
-import Joueurs.Humain;
 import Joueurs.Ordinateur;
 import Modele.Coup;
 import Modele.Deplacement;
@@ -140,7 +139,6 @@ public class SimulationIA extends Arbitre {
             while(it.hasNext())
                 taille+=it.next().length;
             it = tab.iterator();
-            System.out.println(nbCoup[J1]+" "+nbCoup[J2]);
             coups = new Coup[taille];
             int i=0;
             while(it.hasNext()){
@@ -178,7 +176,7 @@ public class SimulationIA extends Arbitre {
                 nbCoup[jCourant]++;
                 refaire.clear();
                 historique.add(d);
-                System.err.println(d+" déplacement effectué par "+jCourant);
+                //System.err.println(d+" déplacement effectué par "+jCourant);
                 etat=JOUE_EN_COURS;
          
     }
@@ -195,17 +193,16 @@ public class SimulationIA extends Arbitre {
             nbCoup[jCourant]++;
             refaire.clear();
             historique.add(d);
-            System.err.println("1- Dépot effectué par "+jCourant+" "+d);
+            //System.err.println("1- Dépot effectué par "+jCourant+" "+d);
             etat=JOUE_EN_COURS;
         }else if(nbCoup[jCourant]==0 && jCourant == J2){
             if(plateau.premierPionValide(d)){
-            joueurs[jCourant].jouer(d.type());
+                joueurs[jCourant].jouer(d.type());
                 deposePion(d);
                 nbCoup[jCourant]++;
                 refaire.clear();
                 historique.add(d);
-                joueurs[jCourant].jouer(d.type());
-                System.err.println("2- Dépot effectué "+d);
+                //System.err.println(jCourant + " - 1st Dépot effectué "+d);
                 etat=JOUE_EN_COURS;
             }else{
                 System.err.println("Depot impossible");
@@ -217,7 +214,7 @@ public class SimulationIA extends Arbitre {
             nbCoup[jCourant]++;
             refaire.clear();
             historique.add(d);
-            System.err.println("3- Dépot effectué "+d);
+            //System.err.println("3- Dépot effectué "+d);
             etat=JOUE_EN_COURS;
             
         }else{

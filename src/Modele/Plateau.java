@@ -263,6 +263,7 @@ public class Plateau extends Composant {
      * @param d
      */
     public void deplacePion(Deplacement d){
+
         if(matrice.get(d.source()).tete().position().equals(reines[d.joueur()]) && matrice.get(d.source()).tete().type()==Insecte.REINE)
             reines[d.joueur()] = d.destination();
         
@@ -331,7 +332,7 @@ public class Plateau extends Composant {
      * @param source
      */
     public void majGraphe(Point source){
-        if(matrice.get(source)==null){
+        if(!matrice.containsKey(source)){
            voisins.remove(source);
            utilises.remove(source);
            for(Map.Entry<Point, List<Point> >  entry : voisins.entrySet()){
@@ -645,7 +646,7 @@ public class Plateau extends Composant {
         str+="graphe"+"\n";
         for(Map.Entry<Point,List<Point>> entry2 : voisins.entrySet()) {
             Iterator<Point> it = entry2.getValue().iterator();
-            String tmp = it.next().toString();
+            String tmp = /*it.next().toString()*/"";
             while(it.hasNext()){
                 tmp+=":"+it.next().toString();
             }
@@ -712,7 +713,7 @@ public class Plateau extends Composant {
                             ))
                         b = true;
                 
-                if(!b && !b2){
+                if(b && !b2){
                     RechercheConcurente rc = new RechercheConcurente(clone(), c2, e.clone());
                     threads.add(new Thread(rc));
                 }else if(b && !b2){
@@ -859,6 +860,8 @@ public class Plateau extends Composant {
      */
     public void retirerPion(Point pos){
         Case c = matrice.get(pos);
+        if(c.tete().type()==Insecte.REINE)
+            reines[c.tete().joueur()]=null;
         c.retirePion();
         if(!c.utilise()){
             matrice.remove(c.position());
@@ -867,6 +870,8 @@ public class Plateau extends Composant {
         }else{
             matrice.put(pos, c);
         }
+        
+        majGraphe(pos);
     }
     
     /**
