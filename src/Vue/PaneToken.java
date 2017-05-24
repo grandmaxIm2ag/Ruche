@@ -5,6 +5,7 @@
  */
 package Vue;
 
+import Controleur.AideListener;
 import Controleur.Bouton;
 import Controleur.ButtonToken;
 import Controleur.TokenListener;
@@ -47,6 +48,7 @@ public class PaneToken {
     static Label nomAdv;
     private static String colorJ1;
     private static String colorJ2;
+    AideListener al;
     private static final String [] colorString = {"hotpink", "limegreen", "whitesmoke", "orangered", "steelblue", "darkgoldenrod", "magenta", "mediumblue", "maroon"};
     
     private PaneToken (Arbitre arbitre) {
@@ -108,6 +110,8 @@ public class PaneToken {
                 b[i][j].selectedProperty().addListener(new TokenListener(b[i][j], i, j));
             }
         }
+        //al = new AideListener(b, arbitre);
+        //arbitre.plateau().attachAide(al);
     }
     
     /**
@@ -532,6 +536,38 @@ public class PaneToken {
             default:
         }
         
+    }
+    
+    public void setHelpBackground (ToggleButton b, int i, int j) {
+        String s = "";
+        switch (j) {
+            case 0:
+                s = "bee";
+                break;
+            case 1:
+                s = "beetle";
+                break;
+            case 2:
+                s = "grasshopper";
+                break;
+            case 3:
+                s = "ant";
+                break;
+            case 4:
+                s = "spider";
+                break;
+            case 5:
+                s = "ladybug";
+                break;
+            case 6:
+                s = "moskito";
+                break;
+            case 7:
+                s = "woodlouse";
+                break;
+            default:
+        }
+        b.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Boutons/" + s + "_red.png"))), CornerRadii.EMPTY, Insets.EMPTY)));
     }
     
     public void setDefaultBackground (ToggleButton b, int i, int j) {

@@ -25,6 +25,7 @@ import Modele.Visiteur;
 import static Vue.Interface.hex_corner;
 import java.io.InputStream;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
@@ -77,7 +78,7 @@ public class Dessinateur extends Visiteur{
      */
     @Override
     public boolean visite (Case c) {
-        System.out.println(c);
+        //System.out.println(c);
         etendeur.fixeComposant(c);
         double [][] coords = Interface.hex_corner(etendeur.x(), etendeur.y(), etendeur.h()/2);
         //if (c.estpointe()) {
@@ -469,7 +470,7 @@ public class Dessinateur extends Visiteur{
     
     private void focus (Insecte i, GraphicsContext gc, double[][] coords) {
         if (arbitre.initDeplacement() instanceof Cloporte) {
-                        Coup[] coups = arbitre.deplacementPossible(arbitre.initDeplacement());
+                        List<Coup> coups = arbitre.plateau().deplacementPossible(arbitre.initDeplacement());
                         for (Coup coup : coups) {
                             Deplacement deplacement = (Deplacement) coup;
                             if (deplacement.source().equals(i.position()) && !arbitre.initDeplacement().equals(i)) {

@@ -429,6 +429,7 @@ public abstract class Arbitre {
         etat = AIDE;
         temps_ecoule = 0;
         plateauAide = plateau.clone();
+        plateau.setDepotAide(-1);
         Ordinateur o = new Ordinateur(true,Ordinateur.FACILE_HEURISTIQUE , prop, Arrays.copyOf(joueurs[jCourant].pions(), joueurs[jCourant].pions().length) ,  jCourant, nom2);
         
         List<Coup[]> tab = new LinkedList();
@@ -462,8 +463,10 @@ public abstract class Arbitre {
         Coup c = o.coup(this, coups);
         if(c instanceof Deplacement)
             plateauAide.deplacePion((Deplacement)c);
-        else
+        else {
             plateauAide.deposePion((Depot)c);
+            plateauAide.setDepotAide(((Depot) c).type());
+        }
     }
 
     /**

@@ -22,6 +22,7 @@ import Modele.Arbitres.*;
 import Joueurs.Joueur;
 import Joueurs.Ordinateur;
 import Modele.Chargeur;
+import Modele.Insecte;
 import Modele.Point;
 import Son.SoundEngine;
 import java.io.File;
@@ -140,13 +141,14 @@ public class Interface extends Application {
     static Arbitre arbitre;
     static BorderPane root;
     static Scene scene;
-    final static boolean fullScreen = false;
+    static boolean fullScreen = false;
     final static boolean soundEnabled = true;
     static VBox ngBox;
     static VBox loadBox;
     static VBox configBox;
     static VBox reseauBox;
     static VBox didacBox;
+    static TabPane tabPane;
     static String[] args2;
     public static Stage stage;
     static Stage dialogConn;
@@ -237,7 +239,7 @@ public class Interface extends Application {
         final Tab tabDic = new Tab("Didacticiel");
         tabDic.setClosable(false);
         tabDic.setContent(didacBox);
-        TabPane tabPane = new TabPane(); 
+        tabPane = new TabPane(); 
         tabPane.getTabs().setAll(tabNG, tabLD, tabCFG, tabRes, tabDic);
         tabPane.setPadding(new Insets(0, 20, 0, 20));
         
@@ -590,10 +592,14 @@ public class Interface extends Application {
         cbJ1.setOnAction(new EventHandler<ActionEvent> () {
             @Override
             public void handle(ActionEvent event) {
-                if (cbJ1.getSelectionModel().getSelectedIndex() > 0)
+                if (cbJ1.getSelectionModel().getSelectedIndex() > 0){
+                    FabriqueArbitre.setInit(Choix.CHOIX_MODE,FabriqueArbitre.RESEAU_CLIENT);
                     host.setDisable(false);
-                else
+                }
+                else{
                     host.setDisable(true);
+                    FabriqueArbitre.setInit(Choix.CHOIX_MODE,FabriqueArbitre.RESEAU_SERVER);
+                }
             }
             
         });
@@ -614,7 +620,7 @@ public class Interface extends Application {
 
         btBEG.setMinWidth(150);
 
-        btBEG.setOnAction(new BoutonCommencer(tfJ1, tfJ2, host));
+        btBEG.setOnAction(new NewGameHandler(cbJ1, null, tfJ1, host));
 
         centerBox.getChildren().add(centerStack);
         centerStack.getChildren().addAll(rectBox, insideBox);//centerGrid);
@@ -841,7 +847,22 @@ public class Interface extends Application {
         sMusique.setMajorTickUnit(20);
 
         CheckBox cFC = new CheckBox();
-
+        
+        if(fullScreen){
+            cFC.setSelected(true);
+        }
+        cFC.setOnAction((event) -> {
+            stage.setFullScreen(cFC.isSelected());
+            
+            fullScreen = cFC.isSelected();
+            if(!fullScreen){
+                goConfig();
+                goTest();
+                tabPane.getSelectionModel().select(2);
+            }
+        });
+        //
+        
         Label lSon = new Label("Son");
         Label lMusique = new Label("Musique");
         Label lFullScreen = new Label("Plein Ecran");
@@ -910,7 +931,15 @@ public class Interface extends Application {
         Image imgCo = new Image(imageCo, ((80) * 0.80), ((80) * 0.80), true, true);
         gc.drawImage(imgCo, 40 - (imgCo.getWidth() / 2), 40 - (imgCo.getHeight() / 2));
         CheckBox cbCocc = new CheckBox();
-
+        cbCocc.setOnAction((event) -> {
+            FabriqueArbitre.setBonus(Insecte.COCC, cbCocc.isSelected());
+        });
+        cbClop.setOnAction((event) -> {
+            FabriqueArbitre.setBonus(Insecte.CLOP, cbClop.isSelected());
+        });
+        cbMoskito.setOnAction((event) -> {
+            FabriqueArbitre.setBonus(Insecte.MOUS, cbMoskito.isSelected());
+        });
         bMoskito.getChildren().addAll(cMoskito, cbMoskito);
         bClop.getChildren().addAll(cClop, cbClop);
         bCocc.getChildren().addAll(cCocc, cbCocc);
