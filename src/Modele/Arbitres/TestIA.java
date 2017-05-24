@@ -57,7 +57,7 @@ public class TestIA extends Arbitre{
             tempsParties= new long[nbSimulations];
             nbCoupsJouesJ1= new int[nbSimulations];
             victoires=new int[nbSimulations];
-            nom="Ressources/Simulations/"+d1+"_"+d2+"_"+nbSimulations+".csv";
+            nom="Ressources/Simulations/"+d1+"_"+d2+"__"+nbSimulations+".csv";
             File f = new File(nom);
             f.createNewFile();
             bdd = new PrintWriter(f);

@@ -40,6 +40,7 @@ public class Ruche {
             new FileOutputStream(sauv).close();
         }
         Properties p = Configuration.proprietes();
+        
         //TestIA t=new TestIA(p,Ordinateur.MOYEN,Ordinateur.FACILE_HEURISTIQUE,1000);
         //t.simulation();
         Interface it = new Interface();
