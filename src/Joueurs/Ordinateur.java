@@ -141,7 +141,7 @@ public class Ordinateur extends Joueur{
         if(d==null || d.length<= 0)
             return null;
         else{
-            HeuristiqueV1 heurs = new HeuristiqueV1();
+            HeuristiqueV2 heurs = new HeuristiqueV2();
             //find the best move for the heuristic
             ArrayList<Coup> res=new ArrayList();
             Emulateur em = new Emulateur(a);
@@ -206,7 +206,7 @@ public class Ordinateur extends Joueur{
         HeuristiqueV2 heurs = new HeuristiqueV2();
         //MinMaxConcurent mx = new MinMaxConcurent(this,a,heurs,2,0,d);
         //MinMax mx = new MinMax(this,a,heurs,2,0,d);
-        AlphaBeta mx = new AlphaBeta(this,a,heurs,2, 0,d);
+        AlphaBeta mx = new AlphaBeta(this,a,heurs,3, 0,d);
         /* Affichage des coups possibles.
         System.out.println("Appel nextmove avec les coups:");
         for(int k = 0; k < d.length;k++)

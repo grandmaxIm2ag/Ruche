@@ -16,8 +16,8 @@ public class AlphaBeta extends AI {
     
     Emulateur em;
     Coup[] cps;
-    int[] max_poids;
-    int[] min_poids;
+ //   int[] max_poids;
+   // int[] min_poids;
     /**
      *
      * @param me
@@ -32,12 +32,12 @@ public class AlphaBeta extends AI {
         cps = cp;
         em = new Emulateur(a);
         heurs.SetConf(configurations);
-        min_poids = new int[searchDepth];
+   /*     min_poids = new int[searchDepth];
         max_poids = new int[searchDepth];
         for(int i=0;i<searchDepth;i++){
             min_poids[i] = AI.MAX;
             max_poids[i] = AI.MIN;
-        }
+        }*/
     }
     
     
@@ -45,15 +45,15 @@ public class AlphaBeta extends AI {
      public Coup nextmove(){
         start = System.currentTimeMillis(); 
 
-        int meilleur_coup = 0;   
-        
-        for(int i = 0; i < cps.length;i++){
+        int meilleur_coup = 0;  
+        int max_poids =AI.MIN;
+       for(int i = 0; i < cps.length ;i++){
             em.joue(cps[i]);
             Coup [] cpt = em.PossibleMoves();
             if(cpt != null && cpt.length != 0){
-                int hr = Min(em,1, cpt ,cps[i]);
-                if(hr > max_poids[0]){
-                    max_poids[0] = hr;
+                int hr = Min(em.clone(),1, cpt ,cps[i],max_poids,AI.MAX);
+                if(hr > max_poids){
+                    max_poids = hr;
                     meilleur_coup = i;      
                 }
             }
@@ -62,47 +62,47 @@ public class AlphaBeta extends AI {
         return cps[meilleur_coup];
     }
     
-    public int Max(Emulateur emu,int profondeur, Coup[] d, Coup cp){
+    public int Max(Emulateur emu,int profondeur, Coup[] d, Coup cp,int alpha,int beta){
         System.out.println("appel max : "+(profondeur));
         if(searchDepth - profondeur <= 0)
             return heurs.EvalPlateau(emu, d, me,cp);
-        profondeur++;
+        int max_poids = AI.MIN;
         for(int i=0;i < d.length;i++){
-            if(min_poids[profondeur-2] >= max_poids[profondeur-1]){
                 System.out.println("max "+i+" "+d[i]);
                 emu.joue(d[i]);
                 Coup [] cpt = emu.PossibleMoves();
                 if(cpt != null && cpt.length != 0){
-                    int tmp = Min(emu,profondeur, cpt,d[i]);
-                    if(tmp > max_poids[profondeur-1]){
-                        max_poids[profondeur-1] = tmp;
+                    int tmp = Min(emu.clone(),profondeur+1, cpt,d[i],Math.max(max_poids, alpha),beta);
+                    if(tmp > max_poids){
+                        max_poids = tmp;
                     }
+                    if(max_poids >= beta) /* Coupure Beta */
+                        return max_poids;
                 }
                 emu.precedent();
             }
-        }
-        return max_poids[profondeur-1];
+        return max_poids;
     }
     
-    public int Min(Emulateur emu,int profondeur, Coup[] d,Coup cp){
+    public int Min(Emulateur emu,int profondeur, Coup[] d,Coup cp,int alpha,int beta){
         System.out.println("appel min : "+ profondeur);
         if(searchDepth - profondeur <= 0)
             return heurs.EvalPlateau(emu, d, me,cp);
-        profondeur++;
-        for(int i=0;i < d.length;i++){      
-            if(max_poids[profondeur-2] <= min_poids[profondeur-1]){ 
+        int min_poids = AI.MAX;
+        for(int i=0;i < d.length ;i++){      
                 System.out.println("min "+i+" "+d[i]);
                 emu.joue(d[i]);
                 Coup [] cpt = emu.PossibleMoves();
                 if(cpt != null && cpt.length != 0){
-                    int tmp = Max(emu,profondeur,cpt,d[i]);
-                    if(tmp < min_poids[profondeur-1]){
-                        min_poids[profondeur-1] = tmp;
+                    int tmp = Max(emu.clone(),profondeur+1,cpt,d[i],alpha,Math.min(min_poids, beta));
+                    if(tmp < min_poids){
+                        min_poids = tmp;
                     }
+                    if(alpha >= min_poids) /* Coupure Alpha */
+                        return min_poids;
                 }
                 emu.precedent();
             }
-        }
-        return min_poids[profondeur-1];
+        return min_poids;
     }
 }
