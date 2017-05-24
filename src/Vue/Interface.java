@@ -29,8 +29,12 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
+import java.util.Queue;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.animation.RotateTransition;
@@ -140,6 +144,7 @@ public class Interface extends Application {
     static VBox loadBox;
     static VBox configBox;
     static VBox reseauBox;
+    static VBox didacBox;
     static String[] args2;
     public static Stage stage;
     static Stage dialogConn;
@@ -174,7 +179,9 @@ public class Interface extends Application {
         goNewGame();
         FabriqueArbitre.initChargeur();
         goConfig();
-        goTest();       
+        goReseau();
+        goTest();    
+        goDidacticiel();
         //goPartie();
         stage.show();
     }
@@ -188,7 +195,6 @@ public class Interface extends Application {
         root = new BorderPane();
         root.getChildren().add(new ImageView(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/fond.jpg"))));
         FabriqueArbitre.initType(FabriqueArbitre.LOCAL_JVJ);
-        args2=args;
         //dialogConn = new Dialog<>();
         launch(args);
 
@@ -223,8 +229,14 @@ public class Interface extends Application {
         final Tab tabCFG = new Tab("Preferences");
         tabCFG.setClosable(false);
         tabCFG.setContent(configBox);
+        final Tab tabRes = new Tab("Partie en ligne");
+        tabRes.setClosable(false);
+        tabRes.setContent(reseauBox);
+        final Tab tabDic = new Tab("Didacticiel");
+        tabDic.setClosable(false);
+        tabDic.setContent(didacBox);
         TabPane tabPane = new TabPane(); 
-        tabPane.getTabs().setAll(tabNG, tabLD, tabCFG);
+        tabPane.getTabs().setAll(tabNG, tabLD, tabCFG, tabRes, tabDic);
         tabPane.setPadding(new Insets(0, 20, 0, 20));
         
         //tabPane
@@ -550,17 +562,36 @@ public class Interface extends Application {
         TextField host = new TextField();
         host.setPromptText("IP du joueur à rejoindre");
 
-        tfJ2.setDisable(true);
-
+        host.setDisable(true);
+        ChoiceBox cbJ1 = new ChoiceBox();
+        
+        String[] t = {"Héberger une partie en ligne", "Rejoindre un hôte"};
+        cbJ1.getItems().addAll((Object[])t);
+        cbJ1.setMaxWidth(500);
+         cbJ1.getSelectionModel().select(0);
+        
+        cbJ1.setOnAction(new EventHandler<ActionEvent> () {
+            @Override
+            public void handle(ActionEvent event) {
+                if (cbJ1.getSelectionModel().getSelectedIndex() > 0)
+                    host.setDisable(false);
+                else
+                    host.setDisable(true);
+            }
+            
+        });
+        
+        
         // Pour ajouter les boutons de couleur
         ColorChoice cc = ColorChoice.getInstance();
-
-        centerGrid.add(tfJ1, 0, 2);
-        centerGrid.add(tfJ2, 2, 2);
+        
+        centerGrid.add(cbJ1, 0, 2);
+        centerGrid.add(tfJ1, 0, 4);
+        centerGrid.add(host, 2, 4);
         // pour mettre les gridpane dans le menu
-        centerGrid.add(cc.getPlayer2(), 0, 4);
+        /*centerGrid.add(cc.getPlayer2(), 0, 4);
         centerGrid.add(cc.getPlayer1(), 2, 4);
-        centerGrid.setAlignment(Pos.CENTER);
+        */centerGrid.setAlignment(Pos.CENTER);
 
         Button btBEG = new Button("Commencer");
 
@@ -636,6 +667,41 @@ public class Interface extends Application {
         loadBox = centerBox;
     }
 
+    public static void goDidacticiel(){
+        VBox centerBox = new VBox();
+        StackPane centerStack = new StackPane();
+        VBox insideBox = new VBox();
+        Rectangle centerRect = new Rectangle();
+        VBox rectBox = new VBox();
+        rectBox.getChildren().add(centerRect);
+        rectBox.setAlignment(Pos.CENTER);
+        centerRect.widthProperty().bind(insideBox.widthProperty());
+        centerRect.heightProperty().bind(insideBox.heightProperty());
+        centerRect.setArcWidth(20);
+        centerRect.setArcHeight(20);
+        centerRect.setFill(Color.BLACK);
+        insideBox.setPadding(new Insets(70, 30, 70, 30));
+        insideBox.setSpacing(30);
+        insideBox.setAlignment(Pos.CENTER);
+        DropShadow shadow = new DropShadow();
+        centerRect.setEffect(shadow);
+        
+        
+        StackPane paneIm = new StackPane();
+        Slide pres = new Slide();
+        paneIm.getChildren().add(pres.pane());
+        Button suiv = new Button("Suivant");
+        suiv.setOnAction(new EventHandler<ActionEvent>() {
+            @Override public void handle(ActionEvent e) {
+                pres.next();
+            }
+        });
+        
+        centerStack.getChildren().addAll(rectBox);//, insideBox);
+        insideBox.getChildren().addAll(/*paneIm,*/ suiv);
+        centerBox.getChildren().add(centerStack);
+        didacBox = centerBox;
+    }
     /**
      *
      * @param x
@@ -1118,4 +1184,5 @@ public class Interface extends Application {
     public static int getColorP2 () {
         return colorP2;
     }
+    
 }
