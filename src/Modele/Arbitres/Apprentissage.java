@@ -16,6 +16,7 @@ import Modele.Coup;
 import Modele.Deplacement;
 import Modele.Depot;
 import Modele.FabriqueInsecte;
+import Modele.Plateau;
 import Modele.Point;
 import java.io.File;
 import java.io.IOException;
@@ -41,22 +42,36 @@ public class Apprentissage extends Arbitre{
     int nbSimulations;
     HashMap<Integer, Integer> hDiff;
     HashMap<Integer, Integer> hMoy;
+    HashMap<Integer, Coup> hashCoup;
+    
+    boolean heur;
     /**
      * 
      * @param p
      */
     public Apprentissage(Properties p){
         super (p, "", "");
-        nbSimulations = 100;
+        nbSimulations = 1;
         hDiff = new HashMap();
         hMoy = new HashMap();
         difficile = new HeuristiqueV2();
         moyen = new HeuristiqueMoy();
+        heur = true;
+    }
+    
+    public Apprentissage(Properties p, int d){
+        super (p, "", "");
+        nbSimulations = 1;
+        hashCoup = new HashMap();
+        difficile = new HeuristiqueV2();
+        moyen = new HeuristiqueMoy();
+        difficulte = d;
+        heur = false;
     }
     
     public void apprentissageHeuristique(){
         try {
-            for(int i=0;i<nbSimulations;i=i+1){
+            for(int i=0;i<nbSimulations;i++){
                 System.err.println("Nouvelle Partie "+i);
                 configurations.clear();
                 simulation2();
@@ -80,6 +95,24 @@ public class Apprentissage extends Arbitre{
         }
     }
     
+    public void apprentissageCoup(){
+        try {
+            for(int i=0; i<nbSimulations; i++){
+                System.err.println("Nouvelle Partie "+i);
+                configurations.clear();
+                simulation2();
+            }
+            File f = new File("Ressources/Simulations/Apprentissage/coups"+difficulte);
+            f.createNewFile();
+            bdd = new PrintWriter(f);
+            for(Map.Entry<Integer, Coup> entry : hashCoup.entrySet() ){
+                bdd.println(entry.getKey()+"::"+entry.getValue());
+            }
+            bdd.close();
+        } catch (IOException ex) {
+            Logger.getLogger(Apprentissage.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
             
     
     @Override
@@ -97,9 +130,13 @@ public class Apprentissage extends Arbitre{
         int[] tabPieces2 = new int[8];
         System.arraycopy(tabPieces, 0, tabPieces2, 0, tabPieces2.length);
         
-        joueurs[J1] = new Ordinateur(true,Ordinateur.FACILE_ALEATOIRE, prop, tabPieces, J1, "");
-        joueurs[J2] = new Ordinateur(true,Ordinateur.FACILE_ALEATOIRE, prop, tabPieces2, J2, "");
-        
+        if(heur){
+            joueurs[J1] = new Ordinateur(true,Ordinateur.FACILE_ALEATOIRE, prop, tabPieces, J1, "");
+            joueurs[J2] = new Ordinateur(true,Ordinateur.FACILE_ALEATOIRE, prop, tabPieces2, J2, "");
+        }else{
+            joueurs[J1] = new Ordinateur(true,difficulte, prop, tabPieces, J1, "");
+            joueurs[J2] = new Ordinateur(true,difficulte, prop, tabPieces2, J2, "");
+        }
         go();
     }
     
@@ -189,12 +226,21 @@ public class Apprentissage extends Arbitre{
             }else if(precAucun && aucun){
                 etat=FIN;
             }else{
-                hDiff.put(plateau.hashCode(),difficile.EvalPlateau(this, coups, plateau, (Ordinateur)joueurs[jCourant] , null) );
-                hMoy.put(plateau.hashCode() ,moyen.EvalPlateau(this, coups, plateau, (Ordinateur)joueurs[jCourant], null) );
+                if(heur){
+                    hDiff.put(plateau.hashCode(),difficile.EvalPlateau(this, coups, plateau, (Ordinateur)joueurs[jCourant] , null) );
+                    hMoy.put(plateau.hashCode() ,moyen.EvalPlateau(this, coups, plateau, (Ordinateur)joueurs[jCourant], null) );
+                }
                 if(joueurs[jCourant] instanceof Ordinateur){
                     Ordinateur o = (Ordinateur) joueurs[jCourant];
                     precAucun = aucun;
-                    joue(o.coup(this, coups));
+                    if(heur || plateau.reine(jCourant)==null)
+                        joue(o.coup(this, coups));
+                    else{
+                        Coup c = o.coup(this, coups);
+                        //System.out.println(c+" "+translateConcreteToAbstract(c, jCourant, plateau)+" "+translateAbstractToConcrete(translateConcreteToAbstract(c, jCourant, plateau), jCourant, plateau) );
+                        hashCoup.put(plateau.hashCode(),translateConcreteToAbstract(c, jCourant, plateau));
+                        joue(c);
+                    }
                 }
             }
         }
@@ -268,5 +314,56 @@ public class Apprentissage extends Arbitre{
             }
             
         }
+    }
+    
+    public static Coup translateAbstractToConcrete(Coup c, int j, Plateau p){
+        if(c instanceof Deplacement){
+            Deplacement d = (Deplacement) c;
+            Point reference = p.reine(j);
+            int diffX = (int)reference.x();
+            int diffY = (int)reference.y();
+            List<Point> r = d.route(); 
+            Point newSrc = new Point(r.get(0).x()+diffX, r.get(0).y()+diffY );
+            Point newSuiv = new Point(r.get(1).x()+diffX, r.get(1).y()+diffY );
+            Deplacement res = new Deplacement(d.joueur(), newSrc, newSuiv );
+            for(int i=2; i<r.size(); i++){
+                res.add(new Point(r.get(i).x()+diffX, r.get(i).y()+diffY) );
+            }
+            
+            return res;
+        }else if(c instanceof Depot){
+            Depot d = (Depot) c;
+            Point reference = p.reine(j);
+            int diffX = (int)reference.x();
+            int diffY = (int)reference.y();
+            Point newDest = new Point(d.destination().x()+diffX, d.destination().y()+diffY );
+            return new Depot(d.joueur(),d.type(), newDest );
+        }
+        return null;
+    }
+    
+    public static Coup translateConcreteToAbstract(Coup c, int j, Plateau p){
+        if(c instanceof Deplacement){
+            Deplacement d = (Deplacement) c;
+            Point reference = p.reine(j);
+            int diffX = (int) -reference.x();
+            int diffY = (int) -reference.y();
+            List<Point> r = d.route(); 
+            Point newSrc = new Point(r.get(0).x()+diffX, r.get(0).y()+diffY );
+            Point newSuiv = new Point(r.get(1).x()+diffX, r.get(1).y()+diffY );
+            Deplacement res = new Deplacement(d.joueur(), newSrc, newSuiv );
+            for(int i=2; i<r.size(); i++){
+                res.add(new Point(r.get(i).x()+diffX, r.get(i).y()+diffY) );
+            }
+            return res;
+        }else if(c instanceof Depot){
+            Depot d = (Depot) c;
+            Point reference = p.reine(j);
+            int diffX = (int)-reference.x();
+            int diffY = (int)-reference.y();
+            Point newDest = new Point(d.destination().x()+diffX, d.destination().y()+diffY );
+            return new Depot(d.joueur(),d.type(), newDest );
+        }
+        return null;
     }
 }

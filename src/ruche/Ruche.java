@@ -41,8 +41,8 @@ public class Ruche {
         }
         Properties p = Configuration.proprietes();
         
-        Apprentissage t=new Apprentissage(p);
-        t.apprentissageHeuristique();
+        Apprentissage t=new Apprentissage(p, Ordinateur.MOYEN);
+        t.apprentissageCoup();
         /*Interface it = new Interface();
         FabriqueArbitre.init(p);
         Interface.creer(args);*/
