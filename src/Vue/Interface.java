@@ -77,6 +77,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.input.SwipeEvent;
 import javafx.scene.input.TouchEvent;
 import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
 //import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 //import java.net.URL;
@@ -315,6 +316,10 @@ public class Interface extends Application {
         btSave.setOnAction(new Bouton(Bouton.BOUTON_SAUVEGARDER, arbitre));
         btMenu.setOnAction(new Bouton(Bouton.BOUTON_MENU, arbitre));
         btPause.setOnAction(new Bouton(Bouton.BOUTON_PAUSE, arbitre));
+        
+        Button btHelp = new Button();
+        btHelp.setOnAction(new Bouton(Bouton.BOUTON_AIDE, arbitre));
+        btHelp.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Icone/help.png"))), CornerRadii.EMPTY, Insets.EMPTY)));
 
         GridPane bPion = new GridPane();
         bPion.setHgap(10);

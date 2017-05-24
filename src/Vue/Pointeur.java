@@ -168,10 +168,12 @@ public class Pointeur extends Visiteur {
                             return true;
                         } else {
                             PaneToken.getInstance().uncheck();
-                            if (arbitre.getInitClopDepl() == null)
-                                arbitre.joue(new Deplacement(arbitre.jCourant(), arbitre.initDeplacement().position(), c.position()));
-                            else 
+                            if (arbitre.getInitClopDepl() == null) {
+                                arbitre.coupSouris(new Deplacement(arbitre.jCourant(), arbitre.initDeplacement().position(), c.position()));
+                            }
+                            else {
                                 arbitre.joue(new Deplacement(arbitre.jCourant(), arbitre.getInitClopDepl().position(), c.position()));
+                            }
                             arbitre.reinitDepl();
                             depl = false;
                             return true;
@@ -179,6 +181,7 @@ public class Pointeur extends Visiteur {
 
                     } else if (arbitre.initDeplacement()!=null && arbitre.initDeplacement().position().equals(c.position())) {
                         depl = false;
+                        arbitre.reinitDepl();
                         return true;
                     } else if (arbitre.initDeplacement() instanceof Cloporte) {
                         Coup[] coups = arbitre.deplacementPossible(arbitre.initDeplacement());

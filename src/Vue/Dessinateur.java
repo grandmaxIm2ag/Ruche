@@ -46,7 +46,7 @@ public class Dessinateur extends Visiteur{
     Etendeur etendeur;
     GraphicsContext gc;
     Arbitre arbitre;
-    private static final Color [] colorTable = {Color.HOTPINK, Color.LIMEGREEN, Color.WHITESMOKE, Color.ORANGERED, Color.STEELBLUE, Color.DARKGOLDENROD, Color.DARKMAGENTA, Color.MIDNIGHTBLUE, Color.MAROON};
+    private static final Color [] colorTable = {Color.HOTPINK, Color.LIMEGREEN, Color.WHITESMOKE, Color.ORANGERED, Color.STEELBLUE, Color.DARKGOLDENROD, Color.DARKMAGENTA, Color.MEDIUMBLUE, Color.MAROON};
     
     Dessinateur (Canvas c, Arbitre a) {
         this.c = c;
@@ -133,6 +133,7 @@ public class Dessinateur extends Visiteur{
         image =  ClassLoader.getSystemClassLoader().getResourceAsStream("Images/bee.png");
         Image img = new Image(image,((etendeur.h()/2)*1.75),((etendeur.h()/2)*1.75),true, true);
         gc.drawImage(img,etendeur.x()-(img.getWidth()/2), etendeur.y()-(img.getHeight()/2));
+        focus(i, gc, coords);
         return false;
     }
     
@@ -159,6 +160,7 @@ public class Dessinateur extends Visiteur{
             gc.setFill(Color.WHITE);
             gc.fillText(Integer.toString(i.classement()), coords[0][3], coords[1][3]+etendeur.h()/4);
         }
+        focus(i, gc, coords);
         return false;
     }
     
@@ -185,6 +187,7 @@ public class Dessinateur extends Visiteur{
             gc.setFill(Color.WHITE);
             gc.fillText(Integer.toString(i.classement()), coords[0][3], coords[1][3]+etendeur.h()/4);
         }
+        focus(i, gc, coords);
         return false;
     }
     
@@ -211,6 +214,7 @@ public class Dessinateur extends Visiteur{
             gc.setFill(Color.WHITE);
             gc.fillText(Integer.toString(i.classement()), coords[0][3], coords[1][3]+etendeur.h()/4);
         }
+        focus(i, gc, coords);
         return false;
     }
     
@@ -232,6 +236,7 @@ public class Dessinateur extends Visiteur{
         image =  ClassLoader.getSystemClassLoader().getResourceAsStream("Images/woodlouse.png");
         Image img = new Image(image,((etendeur.h()/2)*1.75),((etendeur.h()/2)*1.75),true, true);
         gc.drawImage(img,etendeur.x()-(img.getWidth()/2), etendeur.y()-(img.getHeight()/2));
+        focus(i, gc, coords);
         return false;
     }
     
@@ -253,6 +258,7 @@ public class Dessinateur extends Visiteur{
         image =  ClassLoader.getSystemClassLoader().getResourceAsStream("Images/ant.png");
         Image img = new Image(image,((etendeur.h()/2)*1.75),((etendeur.h()/2)*1.75),true, true);
         gc.drawImage(img,etendeur.x()-(img.getWidth()/2), etendeur.y()-(img.getHeight()/2));
+        focus(i, gc, coords);
         return false;
     }
     
@@ -274,6 +280,7 @@ public class Dessinateur extends Visiteur{
         image =  ClassLoader.getSystemClassLoader().getResourceAsStream("Images/spider.png");
         Image img = new Image(image,((etendeur.h()/2)*1.75),((etendeur.h()/2)*1.75),true, true);
         gc.drawImage(img,etendeur.x()-(img.getWidth()/2), etendeur.y()-(img.getHeight()/2));
+        focus(i, gc, coords);
         return false;
     }
     
@@ -295,6 +302,7 @@ public class Dessinateur extends Visiteur{
         image =  ClassLoader.getSystemClassLoader().getResourceAsStream("Images/grasshopper.png");
         Image img = new Image(image,((etendeur.h()/2)*1.75),((etendeur.h()/2)*1.75),true, true);
         gc.drawImage(img,etendeur.x()-(img.getWidth()/2), etendeur.y()-(img.getHeight()/2));
+        focus(i, gc, coords);
         return false;
     }
     
@@ -457,5 +465,22 @@ public class Dessinateur extends Visiteur{
             default:
         }
         return colorTable[c];
+    }
+    
+    private void focus (Insecte i, GraphicsContext gc, double[][] coords) {
+        if (arbitre.initDeplacement() instanceof Cloporte) {
+                        Coup[] coups = arbitre.deplacementPossible(arbitre.initDeplacement());
+                        for (Coup coup : coups) {
+                            Deplacement deplacement = (Deplacement) coup;
+                            if (deplacement.source().equals(i.position()) && !arbitre.initDeplacement().equals(i)) {
+                                gc.setStroke(Color.RED);
+                                gc.setLineWidth(5);
+                                gc.strokePolygon(coords[0], coords[1], 6);
+                                gc.setStroke(Color.BLACK);
+                                gc.setLineWidth(1);
+                            }
+                        }
+                        
+                    }
     }
 }

@@ -83,7 +83,7 @@ public class ColorChoice {
                             b[k][i][j].setStyle("-fx-base: darkmagenta;");
                             break;
                         case 7:
-                            b[k][i][j].setStyle("-fx-base: midnightblue;");
+                            b[k][i][j].setStyle("-fx-base: mediumblue;");
                             break;
                         case 8:
                             b[k][i][j].setStyle("-fx-base: maroon;");

@@ -751,4 +751,19 @@ public abstract class Arbitre {
     /*
     @Override
     public abstract Arbitre clone();*/
+    
+    public void coupSouris(Deplacement d){
+        Deplacement res;
+        for(int i=0; i<coups.length; i++){
+            if(coups[i] instanceof Deplacement){
+                Deplacement tmp = (Deplacement) coups[i];
+                if(tmp.equals(d)){
+                    res = tmp.clone();
+                    joue(res);
+                    break;
+                }
+            }
+        }
+        
+    }
 }

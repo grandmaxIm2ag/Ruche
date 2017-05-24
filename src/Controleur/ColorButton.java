@@ -23,7 +23,7 @@ public class ColorButton implements EventHandler<ActionEvent> {
     public static final int STEELBLUE = 5;
     public static final int DARKGOLDENROD = 6;
     public static final int DARKMAGENTA = 7;
-    public static final int MIDNIGHTBLUE = 8;
+    public static final int MEDIUMBLUE = 8;
     public static final int MAROON = 9;
     
     private final int color;
