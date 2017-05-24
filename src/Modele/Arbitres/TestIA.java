@@ -7,6 +7,10 @@ package Modele.Arbitres;
 
 import Joueurs.*;
 import Modele.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.PrintWriter;
 
 import ruche.Reglage;
 
@@ -14,6 +18,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**Classe de test pour les IA: /!/utiliser en lancant simulation (pas init)*/
 public class TestIA extends Arbitre{
@@ -29,8 +35,10 @@ public class TestIA extends Arbitre{
     int victorieux;
     
     String nom;
-    String resultatsBrut;
+    //String resultatsBrut;
     String resultatMoyenne;
+    
+    PrintWriter bdd;
     
     
     /**
@@ -42,19 +50,26 @@ public class TestIA extends Arbitre{
      */
     public TestIA(Properties p, int d1, int d2, int simulations){
         super (p, "", "");
-        difficulteJ1=d1;
-        difficulteJ2=d2;
-        nbSimulations=simulations;
-        tempsParties= new long[nbSimulations];
-        nbCoupsJouesJ1= new int[nbSimulations];
-        victoires=new int[nbSimulations];
-        nom=d1+"::"+d2+"_"+nbSimulations;
+        try {
+            difficulteJ1=d1;
+            difficulteJ2=d2;
+            nbSimulations=simulations;
+            tempsParties= new long[nbSimulations];
+            nbCoupsJouesJ1= new int[nbSimulations];
+            victoires=new int[nbSimulations];
+            nom="Ressources/Simulations/"+d1+"::"+d2+"_"+nbSimulations+".csv";
+            File f = new File(nom);
+            f.createNewFile();
+            bdd = new PrintWriter(f);
+        } catch (IOException ex) {
+            Logger.getLogger(TestIA.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     public int[] simulation(){
         long debutPartie;
         long finPartie;
-        String res="";
+        String res;
         for(int i=0;i<nbSimulations;i=i+1){
             System.err.println("Nouvelle Partie "+i);
             configurations.clear();
@@ -64,18 +79,20 @@ public class TestIA extends Arbitre{
             nbCoupsJouesJ1[i]=nbCoup[0];
             finPartie=System.nanoTime();
             tempsParties[i]=finPartie-debutPartie;
-            
+            res = "";
             if(victorieux==-1){
-                res=res+"EGALITE, nbCoups:"+nbCoup[0];
+                res=res+"-1;"+difficulteJ1+";"+difficulteJ2+";"+nbCoup[0];
             }else if(victorieux==0){
-                res=res+"VICTOIRE J1, difficulte:"+difficulteJ1+", nbCoups:"+nbCoup[0];
+                res=res+"1;"+difficulteJ1+";"+difficulteJ2+";"+nbCoup[0];
             }else{
-                res=res+"VICTOIRE J2, difficulte:"+difficulteJ2+", nbCoups:"+nbCoup[1];
+                res=res+"2;"+difficulteJ1+";"+difficulteJ2+";"+nbCoup[1];
             }
-            res=res+", temps:"+tempsParties[i]+"(en nanosec)\n";
+            res=res+";"+tempsParties[i];
+            bdd.println(res);
         }
-        resultatsBrut=res;
-        System.out.println(resultatsBrut);
+        //resultatsBrut=res;
+        bdd.close();
+        //System.out.println(resultatsBrut);
         calcul();
         System.out.println(resultatMoyenne);
         return victoires;
@@ -269,9 +286,9 @@ public class TestIA extends Arbitre{
      * 
      * @return le descriptif de toutes les parties
      */
-    public String resultatsBrut(){
+   /* public String resultatsBrut(){
         return resultatsBrut;
-    }
+    }*/
     
     /**
      * 

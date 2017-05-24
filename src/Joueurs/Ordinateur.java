@@ -91,7 +91,7 @@ public class Ordinateur extends Joueur{
         super(m, p, tabP, j, n);
         difficulte = d;
         r= new Random(graine);
-        System.out.println("Joueur "+j+" GRAINE: "+graine);
+        //System.out.println("Joueur "+j+" GRAINE: "+graine);
         configurations = new HashMap();
     }
     
@@ -340,7 +340,7 @@ public class Ordinateur extends Joueur{
     
      @Override
     public Ordinateur clone(){
-        Ordinateur jH = new Ordinateur(main,difficulte,  prop, tabPieces.clone(), numJoueur, nom);    
+        Ordinateur jH = new Ordinateur(main, difficulte,  prop, tabPieces.clone(), numJoueur, nom, GRAINE);    
         return jH;
 }
     
