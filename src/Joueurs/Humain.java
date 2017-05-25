@@ -24,4 +24,11 @@ public class Humain extends Joueur{
         super(m, p, tabP, j, n);
     }
     
+     @Override
+    public Humain clone(){
+        super.clone();
+        Humain jH = new Humain(main, prop, tabPieces.clone(), numJoueur, nom);    
+        return jH;
+    }
+    
 }

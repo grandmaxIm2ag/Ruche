@@ -655,8 +655,15 @@ public class Interface extends Application {
         lNG.setTextFill(Color.WHITE);
         lNG.setFont(new Font(22));
         ChoiceBox cbMOD = new ChoiceBox();
-        ListView<String> list = new ListView<>();
-        list.getItems().addAll(Arrays.asList(plateaux));
+        ListView<Text> list = new ListView<>();
+        
+        for(int i=0; i<plateaux.length; i++){
+            Text t = new Text();
+            t.setFont(Font.font ("Courier", 12));
+            t.setText(plateaux[i]);
+            list.getItems().add(i,t);
+        }
+        //
         list.setOnMouseClicked(new SourisListe( CHOIX_PLATEAU, list));
         
         list.setMaxWidth(500);

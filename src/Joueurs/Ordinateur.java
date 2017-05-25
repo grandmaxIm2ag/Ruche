@@ -344,6 +344,6 @@ public class Ordinateur extends Joueur{
     public Ordinateur clone(){
         Ordinateur jH = new Ordinateur(main, difficulte,  prop, tabPieces.clone(), numJoueur, nom, GRAINE);    
         return jH;
-}
+    }
     
 }//fin de la classe

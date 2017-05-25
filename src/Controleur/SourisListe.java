@@ -9,6 +9,7 @@ import Modele.Arbitres.FabriqueArbitre;
 import javafx.event.EventHandler;
 import javafx.scene.control.ListView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.text.Text;
 
 /**
  *
@@ -17,16 +18,16 @@ import javafx.scene.input.MouseEvent;
 public class SourisListe implements EventHandler<MouseEvent>{
     int value;
     FabriqueArbitre fabrique;
-    ListView<String> list;
+    ListView<Text> list;
     
-    public SourisListe(int v, ListView<String> l){
+    public SourisListe(int v, ListView<Text> l){
         value = v;
         list=l;
     }
 
     @Override
     public void handle(MouseEvent t) {
-        FabriqueArbitre.initP(list.getSelectionModel().getSelectedItem().split(" ")[0]);
+        FabriqueArbitre.initP(list.getSelectionModel().getSelectedItem().getText().split(" ")[0]);
     }
     
     
