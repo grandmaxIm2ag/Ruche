@@ -60,16 +60,16 @@ public class Chargeur {
                         case FabriqueArbitre.LOCAL_JVIA:
                             switch(Integer.parseInt(str[2])){
                                 case Ordinateur.FACILE_ALEATOIRE:
-                                    format[i] = String.format("%s%s%-20s %-20s",plateaux1, " ", str[1], "Très Facile");
+                                    format[i] = String.format("%-12s %-12s %-12s",plateaux1, str[1], "Très Facile");
                                     break;
                                 case Ordinateur.FACILE_HEURISTIQUE:
-                                    format[i] = String.format("%s|%-20s %-20s",plateaux1, str[1], "Facile");
+                                    format[i] = String.format("%-12s %-12s %-12s",plateaux1, str[1], "Facile");
                                     break;
                                 case Ordinateur.MOYEN:
-                                    format[i] = String.format("%s|%-20s %-20s",plateaux1, str[1], "Moyen");
+                                    format[i] = String.format("%-12s %-12s %-12s",plateaux1, str[1], "Moyen");
                                     break;
                                 case Ordinateur.DIFFICILE:
-                                    format[i] = String.format("%s|%-20s %-20s",plateaux1, str[1], "Difficile");
+                                    format[i] = String.format("%-12s %-12s %-12s",plateaux1, str[1], "Difficile");
                                     break;
 
                             }

@@ -15,3 +15,8 @@ and open the template in the editor.
 .popup-background {
     -fx-opacity: 0;
 }
+
+#charge{
+    -fx-font: "Courier";
+    -fx-font-size: 12;
+}

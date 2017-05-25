@@ -7,6 +7,7 @@ package Controleur;
 
 import Modele.Arbitres.FabriqueArbitre;
 import javafx.event.EventHandler;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Text;
@@ -18,9 +19,9 @@ import javafx.scene.text.Text;
 public class SourisListe implements EventHandler<MouseEvent>{
     int value;
     FabriqueArbitre fabrique;
-    ListView<Text> list;
+    ListView<Label> list;
     
-    public SourisListe(int v, ListView<Text> l){
+    public SourisListe(int v, ListView<Label> l){
         value = v;
         list=l;
     }

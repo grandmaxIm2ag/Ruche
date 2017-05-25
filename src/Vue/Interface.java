@@ -132,6 +132,7 @@ public class Interface extends Application {
         } else {
             scene = new Scene(root, 1000, 750);
         }
+        scene.getStylesheets().add("style/style.css");
         stage.setScene(scene);
         try {
             if (soundEnabled)
@@ -655,13 +656,14 @@ public class Interface extends Application {
         lNG.setTextFill(Color.WHITE);
         lNG.setFont(new Font(22));
         ChoiceBox cbMOD = new ChoiceBox();
-        ListView<Text> list = new ListView<>();
+        ListView<Label> list = new ListView<>();
+        list.setId("charge");
         
         for(int i=0; i<plateaux.length; i++){
-            Text t = new Text();
-            t.setFont(Font.font ("Courier", 12));
-            t.setText(plateaux[i]);
-            list.getItems().add(i,t);
+            Label t = new Label();
+            t.setFont(Font.font("Courier", 12));
+            t.setText("Hoefler Text");
+            list.getItems().add(t);
         }
         //
         list.setOnMouseClicked(new SourisListe( CHOIX_PLATEAU, list));
