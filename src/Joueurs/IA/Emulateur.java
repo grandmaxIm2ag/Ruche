@@ -53,6 +53,10 @@ public class Emulateur {
         return m;
     }
     
+    public void next(){
+        jCourant++;
+    }
+    
     public int GetValue(int type){
         switch(type){
             case Insecte.REINE:
@@ -96,7 +100,7 @@ public class Emulateur {
         else if(d instanceof Depot)
             joue((Depot)d);
         else
-            System.err.println("Coup Inconnu "+d);
+            System.err.println("EMU  "+"Coup Inconnu "+d);
         jCourant = ++jCourant % 2;
     }
     
@@ -104,7 +108,7 @@ public class Emulateur {
                 historique.add(d);
                 nbCoup[jCourant]++;
                 m.deplacePion(d);
-               // System.err.println(d+" déplacement effectué par "+jCourant);     
+             //   System.err.println("EMU  "+d+" déplacement effectué par "+jCourant);     
     }
 
     public void joue(Depot d){
@@ -113,7 +117,7 @@ public class Emulateur {
             m.premierPion(FabriqueInsecte.creer(d.type(), jCourant, new Point(0,0)));
             nbCoup[jCourant]++;
             historique.add(d);
-           // System.err.println(jCourant + " - 1st Dépot effectué "+d);
+           // System.err.println("EMU  "+jCourant + " - 1st Dépot effectué "+d);
         }else if(nbCoup[jCourant]==0 && jCourant == J2){
             if(m.premierPionValide(d)){
                 joueurs[jCourant].jouer(d.type());
@@ -121,18 +125,18 @@ public class Emulateur {
                 nbCoup[jCourant]++;
                 historique.add(d);
                 joueurs[jCourant].jouer(d.type());
-               // System.err.println(jCourant + " - 1st Dépot effectué "+d);
+              //  System.err.println("EMU  "+jCourant + " - 1st Dépot effectué "+d);
             }else{
-                System.err.println(jCourant + " - Depot invalide");
+                System.err.println("EMU  "+jCourant + " - Depot invalide");
             }
         }else if(m.deposePionValide(d) && joueurs[jCourant].pion(d.type())>0){          
             joueurs[jCourant].jouer(d.type());
             m.deposePion(d);
             nbCoup[jCourant]++;
             historique.add(d);
-          //  System.err.println(jCourant + " - Dépot effectué "+d);
+           // System.err.println("EMU  "+jCourant + " - Dépot effectué "+d);
         }else{
-          //  System.err.println(jCourant + " - Depot impossible "+d);
+            System.err.println("EMU  "+jCourant + " - Depot impossible "+d);
         }
     }
     
@@ -150,7 +154,7 @@ public class Emulateur {
                 joueurs[jCourant].pred(d.type());
             }
         }else{
-            System.err.println("Aucun coup précedent");
+            System.err.println("EMU  "+"Aucun coup précedent");
         }
     }
     

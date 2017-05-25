@@ -21,18 +21,31 @@ import java.util.Map;
  * @author hadjadjl
  */
 public class HeuristiqueV2 extends Heuristique {
+    int mePossibleDepl;
+    int meTokensOnBoard;
+    int HexesFilledAroundMyQueen;
     
-    private int freeBugs(Plateau m,int numJoueur) {
-        int fr=0;
+    int otherPossibleDepl;
+    int otherTokensOnBoard;
+    int HexesFilledAroundOpposingQueen;   
+    
+    private void freeBugs(Plateau m, Ordinateur me) {
         List<Coup> dep = null;
+        List<Coup> depa = null;
         for(Map.Entry<Point,Case> entry : m.matrice.entrySet()) {
-            if(entry.getValue().utilise() && entry.getValue().tete().joueur() == numJoueur) {
+            
+            if(entry.getValue().utilise() && entry.getValue().tete().joueur() == me.numJ()) {
                    dep = m.deplacementPossible(entry.getValue().tete());
                    if(dep !=null && !dep.isEmpty())
-                        fr++;
+                        meTokensOnBoard++;
             }
-        }
-        return fr;   
+            
+            if(entry.getValue().utilise() && entry.getValue().tete().joueur() == me.numAdversaire()) {
+                   depa = m.deplacementPossible(entry.getValue().tete());
+                   if(depa !=null && !depa.isEmpty())
+                        otherTokensOnBoard++;
+            }
+        }   
     }
     
     private int depl(Arbitre a, Plateau m, int numJoueur) {
@@ -71,6 +84,21 @@ public class HeuristiqueV2 extends Heuristique {
         return dpl;
     }
     
+    
+    public void nbLiberteesReine(Plateau p, Ordinateur me){
+        if(p.reine(me.numJ())==null || p.voisins().get(p.reine(me.numJ()))==null){
+            HexesFilledAroundMyQueen = 0;
+        }else{    
+            HexesFilledAroundMyQueen = 6-p.voisins().get(p.reine(me.numJ())).size();
+        }
+        
+        if(p.reine(me.numAdversaire())==null || p.voisins().get(p.reine(me.numAdversaire()))==null){
+            HexesFilledAroundOpposingQueen = 0;
+        }else{    
+            HexesFilledAroundOpposingQueen = 6-p.voisins().get(p.reine(me.numAdversaire())).size();
+        }
+    }
+    
     @Override
     public int EvalPlateau(Arbitre a, Coup[] d, Plateau p, Ordinateur me,Coup j) {
         
@@ -89,17 +117,22 @@ public class HeuristiqueV2 extends Heuristique {
         } else if(otherWon) {
             return AI.MIN;
         }
+        
         if(configurations.get(p)!=null){
             return configurations.get(p);
         } 
-        heurs = 0;
-        int mePossibleDepl = d.length;
-        int meTokensOnBoard = freeBugs(p,me.numJ());
-        int HexesFilledAroundMyQueen = me.nbLiberteesReine(p, me.numJ());
         
-        int otherPossibleDepl = depl(a,p,me.numAdversaire());
-        int otherTokensOnBoard = freeBugs(p,me.numAdversaire());
-        int HexesFilledAroundOpposingQueen = me.nbLiberteesReine(p, me.numAdversaire());
+        mePossibleDepl = d.length;
+        meTokensOnBoard = 0;
+        HexesFilledAroundMyQueen = 0;
+    
+        otherPossibleDepl = depl(a,p,me.numAdversaire());
+        otherTokensOnBoard = 0;
+        HexesFilledAroundOpposingQueen = 0; 
+        heurs = 0;
+        
+        nbLiberteesReine(p, me);
+        freeBugs(p, me);
 
         heurs = 10*( HexesFilledAroundMyQueen - HexesFilledAroundOpposingQueen)
                 +  (mePossibleDepl - otherPossibleDepl)
@@ -129,15 +162,19 @@ public class HeuristiqueV2 extends Heuristique {
         if(configurations.get(a.m)!=null){
             return configurations.get(a.m);
         } 
-        heurs = 0;
-        int mePossibleDepl = d.length;
-        int meTokensOnBoard = freeBugs(a.m,me.numJ());
-        int HexesFilledAroundMyQueen = me.nbLiberteesReine(a.m, me.numJ());
         
-        int otherPossibleDepl = depl(a,a.m,me.numAdversaire());
-        int otherTokensOnBoard = freeBugs(a.m,me.numAdversaire());
-        int HexesFilledAroundOpposingQueen = me.nbLiberteesReine(a.m, me.numAdversaire());
-
+        mePossibleDepl = d.length;
+        meTokensOnBoard = 0;
+        HexesFilledAroundMyQueen = 0;
+    
+        otherPossibleDepl = depl(a,a.m,me.numAdversaire());
+        otherTokensOnBoard = 0;
+        HexesFilledAroundOpposingQueen = 0; 
+        heurs = 0;
+        
+        nbLiberteesReine(a.m, me);
+        freeBugs(a.m, me);
+        
         heurs = ( 50*HexesFilledAroundMyQueen - 100*HexesFilledAroundOpposingQueen)
                + (mePossibleDepl - otherPossibleDepl)
                 + 2*(meTokensOnBoard - otherTokensOnBoard);

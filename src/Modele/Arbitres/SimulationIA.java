@@ -64,6 +64,7 @@ public class SimulationIA extends Arbitre {
     /**
      *
      */
+    @Override
     public void go(){
         Interface.goPartie();
         if(joueurs[J1] instanceof Ordinateur){

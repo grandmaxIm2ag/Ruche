@@ -16,8 +16,6 @@ public class AlphaBeta extends AI {
     
     Emulateur em;
     Coup[] cps;
- //   int[] max_poids;
-   // int[] min_poids;
     /**
      *
      * @param me
@@ -32,12 +30,6 @@ public class AlphaBeta extends AI {
         cps = cp;
         em = new Emulateur(a);
         heurs.SetConf(configurations);
-   /*     min_poids = new int[searchDepth];
-        max_poids = new int[searchDepth];
-        for(int i=0;i<searchDepth;i++){
-            min_poids[i] = AI.MAX;
-            max_poids[i] = AI.MIN;
-        }*/
     }
     
     
@@ -48,16 +40,17 @@ public class AlphaBeta extends AI {
         int meilleur_coup = 0;  
         int max_poids =AI.MIN;
        for(int i = 0; i < cps.length ;i++){
-            em.joue(cps[i]);
-            Coup [] cpt = em.PossibleMoves();
+            System.out.println("d["+i+"] = "+cps[i]);
+            Emulateur m = em.clone();
+            m.joue(cps[i]);
+            Coup [] cpt = m.PossibleMoves();
             if(cpt != null && cpt.length != 0){
-                int hr = Min(em.clone(),1, cpt ,cps[i],max_poids,AI.MAX);
+                int hr = Min(m,1, cpt ,cps[i],max_poids,AI.MAX);
                 if(hr > max_poids){
                     max_poids = hr;
                     meilleur_coup = i;      
                 }
             }
-            em.precedent();
         }
         return cps[meilleur_coup];
     }
@@ -69,17 +62,17 @@ public class AlphaBeta extends AI {
         int max_poids = AI.MIN;
         for(int i=0;i < d.length;i++){
                 System.out.println("max "+i+" "+d[i]);
-                emu.joue(d[i]);
-                Coup [] cpt = emu.PossibleMoves();
+                Emulateur m = emu.clone();
+                m.joue(d[i]);
+                Coup [] cpt = m.PossibleMoves();
                 if(cpt != null && cpt.length != 0){
-                    int tmp = Min(emu.clone(),profondeur+1, cpt,d[i],Math.max(max_poids, alpha),beta);
+                    int tmp = Min(m,profondeur+1, cpt,d[i],Math.max(max_poids, alpha),beta);
                     if(tmp > max_poids){
                         max_poids = tmp;
                     }
                     if(max_poids >= beta) /* Coupure Beta */
                         return max_poids;
                 }
-                emu.precedent();
             }
         return max_poids;
     }
@@ -91,17 +84,18 @@ public class AlphaBeta extends AI {
         int min_poids = AI.MAX;
         for(int i=0;i < d.length ;i++){      
                 System.out.println("min "+i+" "+d[i]);
-                emu.joue(d[i]);
-                Coup [] cpt = emu.PossibleMoves();
+                Emulateur m = emu.clone();
+                m.joue(d[i]);
+                Coup [] cpt = m.PossibleMoves();
                 if(cpt != null && cpt.length != 0){
-                    int tmp = Max(emu.clone(),profondeur+1,cpt,d[i],alpha,Math.min(min_poids, beta));
+                    int tmp = Max(m,profondeur+1,cpt,d[i],alpha,Math.min(min_poids, beta));
                     if(tmp < min_poids){
                         min_poids = tmp;
                     }
                     if(alpha >= min_poids) /* Coupure Alpha */
                         return min_poids;
                 }
-                emu.precedent();
+                //emu.precedent();
             }
         return min_poids;
     }

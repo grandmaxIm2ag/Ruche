@@ -44,16 +44,19 @@ public class AlphaBetaConcurent extends AI {
         HeurPartage h = new HeurPartage(false);
         
         for(int i = 0; i < cps.length;i++){
-            em.joue(cps[i]);
-            Coup [] cpt = em.PossibleMoves();       
-            threads[i] = new Thread(new Comportement(false, i, searchDepth, h ,cpt,am, heurs, em.clone()));
+            Emulateur m = em.clone();
+            m.joue(cps[i]);
+            Coup [] cpt = m.PossibleMoves();       
+            threads[i] = new Thread(new ComportementA(false, i, searchDepth, h ,cpt,am, heurs, em, cps[i]));
             threads[i].start();
+        }
+        
+        for(int i = 0; i < cps.length;i++){
             try {
                 threads[i].join();
             } catch (InterruptedException ex) {
                 Logger.getLogger(MinMaxConcurent.class.getName()).log(Level.SEVERE, null, ex);
             }
-            em.precedent();
         }
        // System.out.println(threads.length+" threads créés");
         boolean b = true;
