@@ -168,7 +168,7 @@ public class Interface extends Application {
             scene = new Scene(root);
             stage.setFullScreen(true);
         } else {
-            scene = new Scene(root, 1000, 750);
+            scene = new Scene(root, 1000, 850);
         }
         stage.setScene(scene);
         try {

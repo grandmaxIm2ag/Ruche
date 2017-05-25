@@ -157,6 +157,7 @@ public class PaneToken {
         rightGrid.setHgap(30);
         rightGrid.setVgap(20);
         rightGrid.setEffect(rightBlur);
+        rightGrid.setAlignment(Pos.CENTER);
         
         ToggleGroup group = new ToggleGroup();
         
@@ -344,6 +345,7 @@ public class PaneToken {
         leftGrid.setHgap(30);
         leftGrid.setVgap(20);
         leftGrid.setEffect(leftBlur);
+        leftGrid.setAlignment(Pos.CENTER);
         
         ToggleGroup group = new ToggleGroup();
         

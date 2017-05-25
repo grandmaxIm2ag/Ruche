@@ -148,8 +148,10 @@ public class Pointeur extends Visiteur {
                     //}
                     //rect.widthProperty().bind(box.widthProperty());
                     //rect.setWidth(12.5*(c.tete().classement()+1) + 100 * c.tete().classement());
-                    stack.getChildren().addAll(rect, box);
-                    popup.getContent().addAll(rect, box);
+                    if (!popup.isShowing()) {
+                        stack.getChildren().addAll(rect, box);
+                        popup.getContent().addAll(rect, box);
+                    }
                     
                     popup.setX(me.getScreenX()-rect.widthProperty().doubleValue()/2);
                     popup.setY(me.getScreenY()-rect.getHeight()-100);
