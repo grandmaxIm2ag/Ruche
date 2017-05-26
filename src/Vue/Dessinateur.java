@@ -154,6 +154,7 @@ public class Dessinateur extends Visiteur{
         gc.fillPolygon(coords[0], coords[1], 6);
         InputStream image = null;
         image =  ClassLoader.getSystemClassLoader().getResourceAsStream("Images/beetle.png");
+        System.gc();
         Image img = new Image(image,((etendeur.h()/2)*1.5),((etendeur.h()/2)*1.5),true, true);
         gc.drawImage(img,etendeur.x()-(img.getWidth()/2), etendeur.y()-(img.getHeight()/2));
         if (i.classement() > 1) {

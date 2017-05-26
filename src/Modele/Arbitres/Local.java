@@ -132,7 +132,7 @@ public class Local extends Arbitre{
             nbCoup[jCourant]++;
             refaire.clear();
             historique.add(d);
-            //System.err.println("1- Dépot effectué "+d);
+            System.err.println("1- Dépot effectué "+d);
             prochainJoueur();
         }else if(nbCoup[jCourant]==0 && jCourant == J2){
             if(plateau.premierPionValide(d)){
@@ -141,10 +141,10 @@ public class Local extends Arbitre{
                 nbCoup[jCourant]++;
                 refaire.clear();
                 historique.add(d);
-                //System.err.println("2- Dépot effectué "+d);
+                System.err.println("2- Dépot effectué "+d);
                 prochainJoueur();
             }else{
-                //System.err.println("Depot impossible");
+                System.err.println("Depot impossible 1");
             }
         }else if(deposePionValide(d) && joueurs[jCourant].pion(d.type())>0){
             
@@ -154,13 +154,13 @@ public class Local extends Arbitre{
                 nbCoup[jCourant]++;
                 refaire.clear();
                 historique.add(d);
-                //System.err.println("3- Dépot effectué "+d);
+                System.err.println("3- Dépot effectué "+d);
                 prochainJoueur();
             }else{
                 System.err.println("Vous devez déposé une reine "+jCourant);
             }
         }else{
-            //System.err.println("Depot impossible");
+            System.err.println("Depot impossible 2");
         }
         
         
@@ -190,8 +190,10 @@ public class Local extends Arbitre{
             else
                 configurations.put(plateau.hashCode(), 1 );
             
+            if(!chargement)
+                PaneToken.getInstance(this).update();
             etat = ATTENTE_COUP;
-            PaneToken.getInstance(this).update();
+            
             jCourant = ++jCourant % 2;
             plateau.setJoueur(jCourant);
             List<Coup[]> tab = new LinkedList();

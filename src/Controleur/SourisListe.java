@@ -30,7 +30,11 @@ public class SourisListe implements EventHandler<MouseEvent>{
 
     @Override
     public void handle(MouseEvent t) {
-        FabriqueArbitre.initP(list.getSelectionModel().getSelectedItem().getNom());
+        try{
+            FabriqueArbitre.initP(list.getSelectionModel().getSelectedItem().getNom());
+            FabriqueArbitre.initType(list.getSelectionModel().getSelectedItem().getType());
+        }catch(NullPointerException e){
+        }
     }
     
     

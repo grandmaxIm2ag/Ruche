@@ -675,7 +675,7 @@ public class Interface extends Application {
                 list.getItems().add(plateaux[i]);
             }
         else
-            btBEG.setDisable(true);
+            btBEG.setDisable(false);
         
         //
         list.setOnMouseClicked(new SourisListe( CHOIX_PLATEAU, list));

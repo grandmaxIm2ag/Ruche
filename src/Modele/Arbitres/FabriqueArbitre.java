@@ -163,7 +163,6 @@ public class FabriqueArbitre {
      *  
      */
     public static Arbitre nouveau(){
-        System.out.println(plateau+" "+Arrays.toString(plateaux) );
         boolean b = plateau != null && !plateau.equals("(none)");
         initConf();
         switch(type){
@@ -224,10 +223,11 @@ public class FabriqueArbitre {
      * @see FabriqueArbitre#plateau
      */
     public static void initP(String p){
-        if(Chargeur.sauvegardes().containsKey(p)){
-            plateau=p;
+        /*if(Chargeur.sauvegardes().containsKey(p)){
+            
             type = Integer.parseInt(Chargeur.sauvegardes().get(p).propriete().split("::")[0]);
-        }
+        }*/
+        plateau=p;
         
     }
     

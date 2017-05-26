@@ -270,8 +270,6 @@ public abstract class Arbitre {
      *
      */
     public void precedent(){
-        
-        
         if(!historique.isEmpty()){
             configurations.remove(configurations.size()-1);
             Coup c = historique.pop();
@@ -287,11 +285,12 @@ public abstract class Arbitre {
                 nbCoup[d.joueur()]--;
                 joueurs[d.joueur()].pred(d.type());
             }
+            PaneToken.getInstance(this).update();
+            jCourant = (jCourant+1)%2;
         }else{
-            //System.err.println("Aucun coup précedent");
+            System.err.println("Aucun coup précedent");
         }
-        PaneToken.getInstance(this).update();
-        jCourant = (jCourant+1)%2;
+        
         
     }
 
@@ -322,8 +321,8 @@ public abstract class Arbitre {
      * @param plateau
      */
     public void charger(String plateau){
-        //Chargeur.init(prop);
-        Chargeur.charger(plateau);
+        Chargeur.charger(plateau, this.plateau);
+        etat = -2;
         type = Chargeur.type();
         difficulte = Chargeur.difficulte();
         historique = Chargeur.historique();
@@ -343,9 +342,11 @@ public abstract class Arbitre {
             tab[i]=Integer.parseInt(str2[i]);
             System.out.println(str2[i]);
         }
+        nbCoup = Chargeur.nbCourant();
         joueurs[J2].setPieces(tab);
         jCourant = Chargeur.jCourant();
-
+        System.out.println("Ici : "+jCourant);
+        chargement=false;
     }
 
     /**
@@ -354,26 +355,19 @@ public abstract class Arbitre {
      */
     public void sauvegarder(String nomSauv){
         String sauv = "";
-        Sauvegarde sauvegarde = new Sauvegarde(nomSauv, joueurs[J1].nom(), joueurs[J2].nom());
+        
         switch(type){
             case FabriqueArbitre.LOCAL_JVJ:
-                sauvegarde.setPropriete(type);
+                sauv = type+"::"+joueurs[J1].nom()+"::"+joueurs[J2].nom()+"\n";
                 break;
             case FabriqueArbitre.LOCAL_JVIA:
-                Ordinateur o = (Ordinateur)joueurs[J2];
-                sauvegarde.setPropriete(type, o.diff());
-                break;
-            case FabriqueArbitre.LOCAL_IAVJ:
-                Ordinateur o2 = (Ordinateur)joueurs[J1];
-                sauvegarde.setPropriete(type, o2.diff());
+                sauv = type+"::"+joueurs[J1].nom()+"::"+difficulte+"\n";
                 break;
             case FabriqueArbitre.SIMULATION:
-                Ordinateur o3 = (Ordinateur)joueurs[J1];
-                Ordinateur o4 = (Ordinateur)joueurs[J2];
-                sauvegarde.setPropriete(type, o3.diff(), o4.diff());
+                sauv = type+"::"+difficulte+"\n";
                 break;
         }
-        sauv += type+":"+difficulte+":"+nbCoup[J1]+":"+nbCoup[J2]+":"+jCourant+"\n";
+        sauv += type+":"+difficulte+":"+nbCoup[J1]+":"+nbCoup[J1]+":"+jCourant+"\n";
         sauv += joueurs[J1]+"\n";
         sauv += joueurs[J2]+"\n";
         sauv += plateau.toString();
@@ -394,7 +388,7 @@ public abstract class Arbitre {
         }
         while(!tmp.isEmpty())
             refaire.push(tmp.pop());
-        /*
+        
         try{
             File f = new File("Sauvegardes/"+nomSauv);
             f.createNewFile();
@@ -406,11 +400,10 @@ public abstract class Arbitre {
             System.err.println("Impossible de sauvegarder, fichier introuvable "+nomSauv);
         }catch(IOException e){
             System.err.println("Impossible de sauvegarder "+nomSauv);
-        }*/
-        System.out.println(sauv);
-        sauvegarde.setDonne(sauv);
+        }
+        
         String str = "";
-        /*
+        
         try{
             Scanner fr =new Scanner(new FileInputStream("Sauvegardes/Sauvegarde"));
             str = fr.nextLine();
@@ -426,9 +419,7 @@ public abstract class Arbitre {
         }catch(IOException e){
             System.err.println("Echec de la sauvegarde "+e);
         }
-        */
-        Chargeur.add(nomSauv,sauvegarde);
-        Chargeur.sauver();
+        
         FabriqueArbitre.initChargeur();
     }
     
@@ -712,8 +703,6 @@ public abstract class Arbitre {
                 Case c2 = new Case(c1.destination().x(), c1.destination().y(), 1, 1);
                 c2.jouable();
                 l.add(c2);
-                //if(ins instanceof Cloporte)
-                    //System.out.println(c1+"!!!!!!!!!!!!!!!!"+ins.position());
                 plateau.setAide(l);
             }
         
@@ -771,7 +760,6 @@ public abstract class Arbitre {
                 }
                 joue(o.coup(this, coups));
         }
-        System.out.println(plateau);
         etat = ATTENTE_COUP;
     }
     

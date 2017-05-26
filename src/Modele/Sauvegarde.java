@@ -24,9 +24,9 @@ public class Sauvegarde {
     int diff1;
     int diff2;
     
-    public Sauvegarde(String n, String j1, String j2, String c){
+    public Sauvegarde(String n, String j1, String j2, int c){
         this(n,j1,j2);
-        donnee=c;
+        type=c;
     }
     public Sauvegarde(String n, String j1, String j2){
         nom=n; joueur1=j1; joueur2=j2;sauver = true;
@@ -48,10 +48,6 @@ public class Sauvegarde {
     
     public String getDonnee(){
         return donnee;
-    }
-    
-    public void detruire(){
-        sauver=false;
     }
     
     public void setPropriete(int t){
@@ -131,5 +127,9 @@ public class Sauvegarde {
     
     public void setDonne(String c){
         donnee=c;
+    }
+    
+    public int getType(){
+        return type;
     }
 }
