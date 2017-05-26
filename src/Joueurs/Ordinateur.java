@@ -73,7 +73,7 @@ public class Ordinateur extends Joueur{
     public Coup coup(Arbitre a, Coup[] d){
         switch(difficulte){
             case FACILE_ALEATOIRE:
-                return coupALEATOIRE_3(a, d);
+                return coupALEATOIRE_3(d);
             case FACILE_HEURISTIQUE:
                 /*return IA_Middle2(a, d);*/return heuristiqueSurUnSeulCoup(a, d);
             case MOYEN:
@@ -86,8 +86,8 @@ public class Ordinateur extends Joueur{
     }
 
     //renvoie un coup aléatoire parmi le tableau d des coups possibles
-    //a arbitre de la partie, d tableau des coups possibles
-    public Coup coupALEATOIRE_3(Arbitre a, Coup[] d){
+    //d tableau des coups possibles
+    public Coup coupALEATOIRE_3(Coup[] d){
         int choix2 = r.nextInt(d.length);
         return d[choix2];
     }
@@ -136,7 +136,7 @@ public class Ordinateur extends Joueur{
     
     //renvoie un coup parmi le tableau d des coups possibles en choississant parmi les coups 
     //d'heuristique plus élevée
-    //utilise l'heuristique de HEURISTIQUEV1
+    //utilise l'heuristique de HEURISTIQUEMOY
     //a arbitre de la partie, d tableau des coups possibles
     public Coup IA_Middle(Arbitre a, Coup[] d){
         if(d==null || d.length<= 0)
@@ -164,8 +164,7 @@ public class Ordinateur extends Joueur{
             }   
             //return a random move from res
             int choice= r.nextInt(res.size());
-            //System.out.println(res.get(choice));
-                return res.get(choice);
+            return res.get(choice);
         }
     }
     
@@ -205,9 +204,9 @@ public class Ordinateur extends Joueur{
             return null;
         HeuristiqueV2 heurs = new HeuristiqueV2();
         //MinMaxConcurent mx = new MinMaxConcurent(this,a,heurs,2,0,d);
-        //MinMax mx = new MinMax(this,a,heurs,2,0,d);
-        AlphaBeta mx = new AlphaBeta(this,a,heurs,4, 0,d);
-      //  AlphaBetaConcurent mx = new AlphaBetaConcurent(this,a,heurs,5, 0,d);
+      //  MinMax mx = new MinMax(this,a,heurs,3,0,d);
+        AlphaBeta mx = new AlphaBeta(this,a,heurs,3, 0,d);
+       // AlphaBetaConcurent mx = new AlphaBetaConcurent(this,a,heurs,3, 0,d);
         /* Affichage des coups possibles.
         System.out.println("Appel nextmove avec les coups:");
         for(int k = 0; k < d.length;k++)

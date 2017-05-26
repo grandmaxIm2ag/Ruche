@@ -39,21 +39,18 @@ public class MinMax extends AI {
         int meilleur_coup = 0;
            
         for(int i = 0; i < cps.length;i++){
-            em.joue(cps[i]);
-            Coup [] cpt = em.PossibleMoves();
-            if(cpt != null && cpt.length != 0){
-                /* Affichage des coups possibles.
-                for(int k = 0; k < cpt.length;k++)
-                 System.out.print(cpt[k]+"  ");
-                System.out.println(cpt.length);*/
-                 
-                int hr = Min(em/*.clone()*/,1, cpt,cps[i]);
+            Emulateur m = em.clone();
+            m.joue(cps[i]);
+            if(heurs.win(m, me))
+                return cps[i];
+            Coup [] cpt = m.PossibleMoves();
+            if(cpt != null && cpt.length != 0){                
+                int hr = Min(m,1, cpt,cps[i]);
                 if(hr > max_poids){
                     max_poids = hr;
                     meilleur_coup = i;      
                 }
             }
-            em.precedent();
         }
         return cps[meilleur_coup];
     }
@@ -63,18 +60,15 @@ public class MinMax extends AI {
         if(searchDepth - profondeur <= 0)
             return heurs.EvalPlateau(emu, d, me, c);
         int max_poids = AI.MIN;
-        profondeur++;
         for(int i=0;i < d.length;i++){
             //System.out.println("max "+i+" "+d[i]);
-            emu.joue(d[i]);
-            Coup [] cpt = emu.PossibleMoves();
+            Emulateur m = emu.clone();
+            m.joue(d[i]);
+            Coup [] cpt = m.PossibleMoves();
             if(cpt != null && cpt.length != 0){
-                int tmp = Min(emu,profondeur, cpt, d[i]);
-                if(tmp > max_poids){
-                    max_poids = tmp;
-                }
+                int tmp = Min(m,profondeur+1, cpt, d[i]);
+                max_poids = Math.max(max_poids, tmp);
             }
-            emu.precedent();
         }
         return max_poids;
     }
@@ -84,18 +78,15 @@ public class MinMax extends AI {
         if(searchDepth - profondeur <= 0)
             return heurs.EvalPlateau(emu, d, me, c);
         int min_poids = AI.MAX;
-        profondeur++;
         for(int i=0;i < d.length;i++){
             //System.out.println("min "+i+" "+d[i]);
-            emu.joue(d[i]);
-            Coup [] cpt = emu.PossibleMoves();
+            Emulateur m = emu.clone();
+            m.joue(d[i]);
+            Coup [] cpt = m.PossibleMoves();
             if(cpt != null && cpt.length != 0){
-                int tmp = Max(emu,profondeur,cpt,d[i]);
-                if(tmp < min_poids){
-                    min_poids = tmp;
-                }
+                int tmp = Max(m,profondeur+1,cpt,d[i]);
+                min_poids = Math.min(min_poids, tmp);
             }
-            emu.precedent();
         }
         return min_poids;
     }

@@ -37,4 +37,8 @@ public abstract class Heuristique {
     public int EvalPlateau(Emulateur a, Coup[] d, Ordinateur me,Coup j){
         return 0;
     }
+    
+    public boolean win(Emulateur a, Ordinateur me){
+        return a.m.estEncerclee(me.numAdversaire());
+    }
 }

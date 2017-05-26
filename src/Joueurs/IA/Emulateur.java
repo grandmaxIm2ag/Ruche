@@ -68,7 +68,7 @@ public class Emulateur {
             case Insecte.COCC:
                 return 0;
             case Insecte.FOUR:
-                return 0;
+                return -10;
             case Insecte.MOUS:
                 return 0;
             case Insecte.SAUT:
@@ -119,12 +119,11 @@ public class Emulateur {
             historique.add(d);
            // System.err.println("EMU  "+jCourant + " - 1st Dépot effectué "+d);
         }else if(nbCoup[jCourant]==0 && jCourant == J2){
+            joueurs[jCourant].jouer(d.type());
             if(m.premierPionValide(d)){
-                joueurs[jCourant].jouer(d.type());
                 m.deposePion(d);
                 nbCoup[jCourant]++;
                 historique.add(d);
-                joueurs[jCourant].jouer(d.type());
               //  System.err.println("EMU  "+jCourant + " - 1st Dépot effectué "+d);
             }else{
                 System.err.println("EMU  "+jCourant + " - Depot invalide");
@@ -167,6 +166,7 @@ public class Emulateur {
     }
     
     public Coup[] PossibleMoves() {
+        //System.out.println("possible moves for "+jCourant);
         List<Coup[]> tab = new LinkedList();
             for(int i=0; i<joueurs[jCourant].pions().length; i++){
                 if(joueurs[jCourant].pions()[i]!=0){

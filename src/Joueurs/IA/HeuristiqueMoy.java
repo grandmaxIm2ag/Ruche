@@ -10,6 +10,7 @@ import Modele.Arbitres.*;
 import Modele.Case;
 import Modele.Coup;
 import Modele.Depot;
+import Modele.Insecte;
 import Modele.Plateau;
 import Modele.Point;
 import java.util.List;
@@ -153,14 +154,19 @@ public class HeuristiqueMoy extends Heuristique {
         System.out.println("Ma Reine :"+HexesFilledAroundMyQueen);
         System.out.println("Mes pieces :"+meFreeTokensOnBoard);
         System.out.println("pieces adverses :"+otherFreeTokensOnBoard);*/
+       
         heurs = 10*(HexesFilledAroundMyQueen - HexesFilledAroundOpposingQueen)
                 + 2*(mePossibleDepl - otherPossibleDepl) 
                 + (meTokensOnBoard - otherTokensOnBoard)
                 + (meFreeTokensOnBoard - otherFreeTokensOnBoard);
-        configurations.put(a.m.hashCode(), heurs);
         
         if(j instanceof Depot)
-            heurs+= a.GetValue(((Depot) j).type());
+            heurs+= a.GetValue(((Depot) j).type());       
+        if(a.m.reine(me.numJ())!=null && (a.m.matrice().get(a.m.reine(me.numJ())).tete().joueur()!=me.numJ() || a.m.matrice().get(a.m.reine(me.numJ())).tete().type()!=Insecte.REINE ))
+            heurs-=1000;
+        if(a.m.reine(me.numAdversaire())!=null && (a.m.matrice().get(a.m.reine(me.numAdversaire())).tete().joueur()!=me.numAdversaire() || a.m.matrice().get(a.m.reine(me.numAdversaire())).tete().type()!=Insecte.REINE ))
+            heurs+=1000;
+        configurations.put(a.m.hashCode(), heurs);
         return heurs;
     }
 }
