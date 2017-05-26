@@ -36,7 +36,9 @@ public class SimulationIA extends Arbitre {
         //difficulte = d;
         this.diff1 = diff1;
         this.diff2 = diff2;
+        type = FabriqueArbitre.SIMULATION;
     }
+    
     
     /**
      *

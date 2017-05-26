@@ -322,8 +322,8 @@ public abstract class Arbitre {
      * @param plateau
      */
     public void charger(String plateau){
-        Chargeur.init(prop);
-        this.plateau = Chargeur.charger(plateau);
+        //Chargeur.init(prop);
+        Chargeur.charger(plateau);
         type = Chargeur.type();
         difficulte = Chargeur.difficulte();
         historique = Chargeur.historique();
@@ -337,11 +337,14 @@ public abstract class Arbitre {
             tab[i]=Integer.parseInt(str2[i]);
         joueurs[J1].setPieces(tab);
         joueurs[J2].nom = str[J2].split("=")[0];
-        str2 = str[J1].split("=")[1].split(":");
+        str2 = str[J2].split("=")[1].split(":");
         tab = new int[str2.length];
-        for(int i=0; i<str2.length; i++)
+        for(int i=0; i<str2.length; i++){
             tab[i]=Integer.parseInt(str2[i]);
+            System.out.println(str2[i]);
+        }
         joueurs[J2].setPieces(tab);
+        jCourant = Chargeur.jCourant();
 
     }
 
@@ -351,19 +354,26 @@ public abstract class Arbitre {
      */
     public void sauvegarder(String nomSauv){
         String sauv = "";
-        
+        Sauvegarde sauvegarde = new Sauvegarde(nomSauv, joueurs[J1].nom(), joueurs[J2].nom());
         switch(type){
             case FabriqueArbitre.LOCAL_JVJ:
-                sauv = type+"::"+joueurs[J1].nom()+"::"+joueurs[J1].nom()+"\n";
+                sauvegarde.setPropriete(type);
                 break;
             case FabriqueArbitre.LOCAL_JVIA:
-                sauv = type+"::"+joueurs[J1].nom()+"::"+difficulte+"\n";
+                Ordinateur o = (Ordinateur)joueurs[J2];
+                sauvegarde.setPropriete(type, o.diff());
+                break;
+            case FabriqueArbitre.LOCAL_IAVJ:
+                Ordinateur o2 = (Ordinateur)joueurs[J1];
+                sauvegarde.setPropriete(type, o2.diff());
                 break;
             case FabriqueArbitre.SIMULATION:
-                sauv = type+"::"+difficulte+"\n";
+                Ordinateur o3 = (Ordinateur)joueurs[J1];
+                Ordinateur o4 = (Ordinateur)joueurs[J2];
+                sauvegarde.setPropriete(type, o3.diff(), o4.diff());
                 break;
         }
-        sauv += type+":"+difficulte+":"+nbCoup[J1]+":"+nbCoup[J1]+":"+jCourant+"\n";
+        sauv += type+":"+difficulte+":"+nbCoup[J1]+":"+nbCoup[J2]+":"+jCourant+"\n";
         sauv += joueurs[J1]+"\n";
         sauv += joueurs[J2]+"\n";
         sauv += plateau.toString();
@@ -384,7 +394,7 @@ public abstract class Arbitre {
         }
         while(!tmp.isEmpty())
             refaire.push(tmp.pop());
-        
+        /*
         try{
             File f = new File("Sauvegardes/"+nomSauv);
             f.createNewFile();
@@ -396,10 +406,11 @@ public abstract class Arbitre {
             System.err.println("Impossible de sauvegarder, fichier introuvable "+nomSauv);
         }catch(IOException e){
             System.err.println("Impossible de sauvegarder "+nomSauv);
-        }
-        
+        }*/
+        System.out.println(sauv);
+        sauvegarde.setDonne(sauv);
         String str = "";
-        
+        /*
         try{
             Scanner fr =new Scanner(new FileInputStream("Sauvegardes/Sauvegarde"));
             str = fr.nextLine();
@@ -415,7 +426,9 @@ public abstract class Arbitre {
         }catch(IOException e){
             System.err.println("Echec de la sauvegarde "+e);
         }
-        
+        */
+        Chargeur.add(nomSauv,sauvegarde);
+        Chargeur.sauver();
         FabriqueArbitre.initChargeur();
     }
     
@@ -758,6 +771,7 @@ public abstract class Arbitre {
                 }
                 joue(o.coup(this, coups));
         }
+        System.out.println(plateau);
         etat = ATTENTE_COUP;
     }
     

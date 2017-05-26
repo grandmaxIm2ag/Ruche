@@ -437,7 +437,6 @@ public class PaneToken {
         lLadybug.setTextFill(Color.WHITE);
         lMoskito.setTextFill(Color.WHITE);
         lWoudlose.setTextFill(Color.WHITE);
-        
         lBee.setText("" + arbitre.joueur(1).pion(0));
         lBeetle.setText("" + arbitre.joueur(1).pion(1));
         lGrasshopper.setText("" + arbitre.joueur(1).pion(2));

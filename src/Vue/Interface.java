@@ -20,6 +20,7 @@ import javafx.scene.layout.BorderPane;
 import Modele.Arbitres.*;
 import Joueurs.Joueur;
 import Modele.Insecte;
+import Modele.Sauvegarde;
 import Son.SoundEngine;
 import java.io.InputStream;
 import java.util.Arrays;
@@ -45,8 +46,11 @@ import javafx.scene.control.Separator;
 import javafx.scene.control.Slider;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -186,7 +190,7 @@ public class Interface extends Application {
         topBox.setPadding(new Insets(20, 10, 20, 10));
         topBox.setSpacing(10);
         topBox.getChildren().addAll(title());
-        root.setTop(topBox);
+        //root.setTop(topBox);
         final Tab tabNG = new Tab("New Game"); 
         tabNG.setContent(ngBox);
         tabNG.setClosable(false);
@@ -617,7 +621,7 @@ public class Interface extends Application {
     /**
      *
      */
-    public static void goLoadGame(String[] plateaux) {
+    public static void goLoadGame(Sauvegarde[] plateaux) {
         VBox centerBox = new VBox();
         StackPane centerStack = new StackPane();
         GridPane centerGrid = new GridPane();
@@ -656,15 +660,23 @@ public class Interface extends Application {
         lNG.setTextFill(Color.WHITE);
         lNG.setFont(new Font(22));
         ChoiceBox cbMOD = new ChoiceBox();
-        ListView<Label> list = new ListView<>();
-        list.setId("charge");
+        TableView<Sauvegarde> list = new TableView<>();
+        list.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        TableColumn<Sauvegarde, String> partie = new TableColumn("Partie");
+        TableColumn<Sauvegarde, String> j1 = new TableColumn("Joueur 1");
+        TableColumn<Sauvegarde, String> j2 = new TableColumn("Joueur 2");
+        partie.setCellValueFactory(new PropertyValueFactory<>("nom"));
+        j1.setCellValueFactory(new PropertyValueFactory<>("joueur1"));
+        j2.setCellValueFactory(new PropertyValueFactory<>("joueur2"));
+        list.getColumns().setAll(partie, j1, j2);
         
-        for(int i=0; i<plateaux.length; i++){
-            Label t = new Label();
-            t.setFont(Font.font("Courier", 12));
-            t.setText("Hoefler Text");
-            list.getItems().add(t);
-        }
+        if(plateaux.length>0)
+            for(int i=0; i<plateaux.length; i++){
+                list.getItems().add(plateaux[i]);
+            }
+        else
+            btBEG.setDisable(true);
+        
         //
         list.setOnMouseClicked(new SourisListe( CHOIX_PLATEAU, list));
         
@@ -705,7 +717,8 @@ public class Interface extends Application {
 
         centerGrid.setAlignment(Pos.CENTER);
         
-        Button prev = new Button("précédent");
+        Button prev = new Button();
+        prev.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Icone/previous.png"))), CornerRadii.EMPTY, Insets.EMPTY)));
         Button btBEG = new Button();
         btBEG.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Icone/next.png"))), CornerRadii.EMPTY, Insets.EMPTY)));
         Slide s = new Slide();
@@ -1097,9 +1110,7 @@ public class Interface extends Application {
     
     public static void nouvelArbitre(){
         arbitre = FabriqueArbitre.nouveau();
-        System.out.println((arbitre instanceof SimulationIA));
         arbitre.init();
-        System.out.println("Arbitre créé");
     }
     
     public static void goFin(String joueur, int etat){

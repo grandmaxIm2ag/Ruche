@@ -6,9 +6,11 @@
 package Controleur;
 
 import Modele.Arbitres.FabriqueArbitre;
+import Modele.Sauvegarde;
 import javafx.event.EventHandler;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TableView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Text;
 
@@ -19,16 +21,16 @@ import javafx.scene.text.Text;
 public class SourisListe implements EventHandler<MouseEvent>{
     int value;
     FabriqueArbitre fabrique;
-    ListView<Label> list;
+    TableView<Sauvegarde> list;
     
-    public SourisListe(int v, ListView<Label> l){
+    public SourisListe(int v, TableView<Sauvegarde> l){
         value = v;
         list=l;
     }
 
     @Override
     public void handle(MouseEvent t) {
-        FabriqueArbitre.initP(list.getSelectionModel().getSelectedItem().getText().split(" ")[0]);
+        FabriqueArbitre.initP(list.getSelectionModel().getSelectedItem().getNom());
     }
     
     
