@@ -205,7 +205,8 @@ public class ReseauServer extends ArbitreReseau{
                 if(!accept.isAlive()){
                     try {
                         Interface.closeConnexion();
-                        etat = FIN;
+                        if(client==null)
+                            etat = FIN;
                         //Interface.error("Echec d'bergement d'une nouvelle partie", "Aucun joueur ne us a rejoint");
                     } catch (Exception ex) {
                         Logger.getLogger(ReseauServer.class.getName()).log(Level.SEVERE, null, ex);

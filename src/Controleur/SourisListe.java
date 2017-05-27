@@ -33,6 +33,19 @@ public class SourisListe implements EventHandler<MouseEvent>{
         try{
             FabriqueArbitre.initP(list.getSelectionModel().getSelectedItem().getNom());
             FabriqueArbitre.initType(list.getSelectionModel().getSelectedItem().getType());
+            switch(list.getSelectionModel().getSelectedItem().getType()){
+                case FabriqueArbitre.LOCAL_JVIA:
+                    FabriqueArbitre.initDiff(list.getSelectionModel().getSelectedItem().getDiff1());
+                    break;
+                case FabriqueArbitre.LOCAL_IAVJ:
+                    FabriqueArbitre.initDiff(list.getSelectionModel().getSelectedItem().getDiff1());
+                    break;
+                case FabriqueArbitre.SIMULATION:
+                    FabriqueArbitre.initDiff(list.getSelectionModel().getSelectedItem().getDiff1());
+                    FabriqueArbitre.initDiff2(list.getSelectionModel().getSelectedItem().getDiff2());
+                    break;
+
+            }
         }catch(NullPointerException e){
         }
     }

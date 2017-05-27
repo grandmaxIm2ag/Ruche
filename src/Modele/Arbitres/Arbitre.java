@@ -264,7 +264,7 @@ public abstract class Arbitre {
      *
      */
     public void nouvellePartie(){
-        plateau = new Plateau(0,0,Reglage.lis("lPlateau")*2*Reglage.lis("nbPiece"),Reglage.lis("hPlateau")*2*Reglage.lis("nbPiece"),prop);
+        plateau = new Plateau(0,0,Reglage.lis("nbPiece"),Reglage.lis("nbPiece"),prop);
         nbCoup[0]=0; nbCoup[1]=0;
         jCourant = 0;
         chargement = false;
@@ -327,9 +327,10 @@ public abstract class Arbitre {
      */
     public void charger(String plateau){
         Chargeur.charger(plateau, this.plateau);
+        this.plateau.initLime();
+        System.out.println("->"+this.plateau.xMin+" "+this.plateau.yMax+" "+this.plateau.yMin+" "+this.plateau.xMax);
         etat = -2;
         type = Chargeur.type();
-        difficulte = Chargeur.difficulte();
         historique = Chargeur.historique();
         refaire = Chargeur.refaire();
         
@@ -360,7 +361,7 @@ public abstract class Arbitre {
      */
     public void sauvegarder(String nomSauv){
         String sauv = "";
-        
+        System.out.println("passé");
         switch(type){
             case FabriqueArbitre.LOCAL_JVJ:
                 sauv = type+"::"+joueurs[J1].nom()+"::"+joueurs[J2].nom()+"\n";
@@ -368,11 +369,16 @@ public abstract class Arbitre {
             case FabriqueArbitre.LOCAL_JVIA:
                 sauv = type+"::"+joueurs[J1].nom()+"::"+difficulte+"\n";
                 break;
+            case FabriqueArbitre.LOCAL_IAVJ:
+                sauv = type+"::"+difficulte+"::"+joueurs[J2].nom()+"\n";
+                break;
             case FabriqueArbitre.SIMULATION:
-                sauv = type+"::"+difficulte+"\n";
+                Ordinateur o2 = (Ordinateur)joueurs[J2];
+                Ordinateur o1 = (Ordinateur)joueurs[J1];
+                sauv = type+"::"+o1.diff()+"::"+o2.diff()+"\n";
                 break;
         }
-        sauv += type+":"+difficulte+":"+nbCoup[J1]+":"+nbCoup[J1]+":"+jCourant+"\n";
+        sauv += type+":"+nbCoup[J1]+":"+nbCoup[J1]+":"+jCourant+"\n";
         sauv += joueurs[J1]+"\n";
         sauv += joueurs[J2]+"\n";
         sauv += plateau.toString();
@@ -411,13 +417,17 @@ public abstract class Arbitre {
         
         try{
             Scanner fr =new Scanner(new FileInputStream("Sauvegardes/Sauvegarde"));
-            str = fr.nextLine();
-            if(str == null || str.equals("")){
-                str = nomSauv;
+            if(fr.hasNext()){
+                str = fr.nextLine();
+                if(str == null || str.equals("")){
+                    str = nomSauv;
+                }else{
+                    str += (":"+nomSauv);
+                }
+                fr.close();
             }else{
-                str += (":"+nomSauv);
+                str = nomSauv;
             }
-            fr.close();
             PrintWriter writer = new PrintWriter("Sauvegardes/Sauvegarde", "UTF-8");
             writer.print(str);
             writer.close();

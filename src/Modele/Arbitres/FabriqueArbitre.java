@@ -179,6 +179,8 @@ public class FabriqueArbitre {
                     return new Local(prop, type, difficulte | difficulte2, plateau,diff[difficulte | difficulte2],nom2);
                 return new Local(prop, type, difficulte | difficulte2,diff[difficulte | difficulte2],nom2);
             case SIMULATION:
+                if(b)
+                    return new SimulationIA(prop, difficulte, difficulte2,diff[difficulte], diff[difficulte2],plateau);
                 return new SimulationIA(prop, difficulte, difficulte2,diff[difficulte], diff[difficulte2]);
             case RESEAU_CLIENT:
                 return new ReseauClient(prop,nom1,"",ip);

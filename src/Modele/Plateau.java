@@ -11,6 +11,7 @@ import Modele.Arbitres.Arbitre;
 import Vue.PaneToken;
 import Vue.Pointeur;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -130,7 +131,7 @@ public class Plateau extends Composant {
     List<Case> aide;
     Map<Point, List<Point>> voisins;
     
-    int xMin, yMin, xMax, yMax;
+    public int xMin, yMin, xMax, yMax;
     Properties prop;
     int jCourant;
     int depotAide;
@@ -869,6 +870,7 @@ public class Plateau extends Composant {
             int i=0; 
             while(it.hasNext() && i<coups.length)
                 coups[i++]=it.next();
+            
             return coups;
         }
     }
@@ -1053,6 +1055,12 @@ public class Plateau extends Composant {
         return tmp;
     }
     
+    public void initLime(){
+        xMin = (int) newLim(true, true);
+        xMax = (int) newLim(true, false);
+        yMin = (int) newLim(false, true);
+        yMax = (int) newLim(false, false);
+    }
     public void setDepotAide (int i) {
         depotAide = i;
         (PaneToken.getInstance()).uncheck();

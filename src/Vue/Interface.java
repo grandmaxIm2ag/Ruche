@@ -136,7 +136,6 @@ public class Interface extends Application {
         } else {
             scene = new Scene(root, 1000, 750);
         }
-        scene.getStylesheets().add("style/style.css");
         stage.setScene(scene);
         try {
             if (soundEnabled)
@@ -190,7 +189,7 @@ public class Interface extends Application {
         topBox.setPadding(new Insets(20, 10, 20, 10));
         topBox.setSpacing(10);
         topBox.getChildren().addAll(title());
-        //root.setTop(topBox);
+        root.setTop(topBox);
         final Tab tabNG = new Tab("New Game"); 
         tabNG.setContent(ngBox);
         tabNG.setClosable(false);

@@ -28,6 +28,78 @@ public class Sauvegarde {
         this(n,j1,j2);
         type=c;
     }
+    public Sauvegarde(String n, int d1, int d2, int c){
+        nom=n;
+        type=c;
+        diff1 = d1; diff2 = d2;
+        switch(diff2){
+            case Ordinateur.FACILE_HEURISTIQUE:
+                joueur2 = "Facile";
+                break;
+            case Ordinateur.FACILE_ALEATOIRE:
+                joueur2 = "Très Facile";
+                break;
+            case Ordinateur.MOYEN:
+                joueur2 = "Moyen";
+                break;
+            case Ordinateur.DIFFICILE:
+                joueur2 = "Difficile";
+                break;
+        }
+        switch(diff1){
+            case Ordinateur.FACILE_HEURISTIQUE:
+                joueur1 = "Facile";
+                break;
+            case Ordinateur.FACILE_ALEATOIRE:
+                joueur1 = "Très Facile";
+                break;
+            case Ordinateur.MOYEN:
+                joueur1 = "Moyen";
+                break;
+            case Ordinateur.DIFFICILE:
+                joueur1 = "Difficile";
+                break;
+        }
+    }
+    public Sauvegarde(String n, int d1, String d2, int c){
+        nom=n;
+        type=c;
+        diff1 = d1; joueur2 = d2; 
+        if(type==FabriqueArbitre.LOCAL_JVIA){
+            diff1 = d1; joueur2 = d2;
+            switch(diff1){
+                
+                case Ordinateur.FACILE_HEURISTIQUE:
+                    joueur1 = "Facile";
+                    break;
+                case Ordinateur.FACILE_ALEATOIRE:
+                    joueur1 = "Très Facile";
+                    break;
+                case Ordinateur.MOYEN:
+                    joueur1 = "Moyen";
+                    break;
+                case Ordinateur.DIFFICILE:
+                    joueur1 = "Difficile";
+                    break;
+            }
+        }else{
+            diff2 = d1; joueur1 = d2;
+            switch(diff2){
+                case Ordinateur.FACILE_HEURISTIQUE:
+                    joueur2 = "Facile";
+                    break;
+                case Ordinateur.FACILE_ALEATOIRE:
+                    joueur2 = "Très Facile";
+                    break;
+                case Ordinateur.MOYEN:
+                    joueur2 = "Moyen";
+                    break;
+                case Ordinateur.DIFFICILE:
+                    joueur2 = "Difficile";
+                    break;
+            }
+        }
+    }
     public Sauvegarde(String n, String j1, String j2){
         nom=n; joueur1=j1; joueur2=j2;sauver = true;
     }
@@ -131,5 +203,11 @@ public class Sauvegarde {
     
     public int getType(){
         return type;
+    }
+    public int getDiff1(){
+        return diff1;
+    }
+    public int getDiff2(){
+        return diff2;
     }
 }

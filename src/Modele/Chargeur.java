@@ -39,6 +39,7 @@ public class Chargeur {
      * @param p
      */
     public static void init(Properties p){
+        boolean vide = true;
         try{
              input = new Scanner(new FileInputStream("Sauvegardes/Sauvegarde")) ;
              if(input.hasNext()){
@@ -57,34 +58,26 @@ public class Chargeur {
                         case FabriqueArbitre.LOCAL_JVIA:
                             format[i] = new Sauvegarde(plateaux1, str[1], "", Integer.parseInt(str[0]));
                             format[i].setPropriete(Integer.parseInt(str[0]), Integer.parseInt(str[2]));
-/*                          
-                            switch(Integer.parseInt(str[2])){
-                                
-                                case Ordinateur.FACILE_ALEATOIRE:
-                                    break;
-                                case Ordinateur.FACILE_HEURISTIQUE:
-                                    format[i] = new Sauvegarde(plateaux1, str[1], "Facile", Integer.parseInt(str[0]));
-                                    break;
-                                case Ordinateur.MOYEN:
-                                    format[i] = new Sauvegarde(plateaux1, str[1], "Moyen", Integer.parseInt(str[0]));
-                                    break;
-                                case Ordinateur.DIFFICILE:
-                                    format[i] = new Sauvegarde(plateaux1, str[1], "Difficile", Integer.parseInt(str[0]));
-                                    break;
-
-                            }*/
                             break;
-                            case FabriqueArbitre.SIMULATION:
-                                format[i] = new Sauvegarde(plateaux1, "", str[1], Integer.parseInt(str[0]));
-                                break;
+                        case FabriqueArbitre.LOCAL_IAVJ:
+                            format[i] = new Sauvegarde(plateaux1, "", str[2], Integer.parseInt(str[0]));
+                            format[i].setPropriete(Integer.parseInt(str[0]), Integer.parseInt(str[1]));
+                            break;
+                        case FabriqueArbitre.SIMULATION:
+                            format[i] = new Sauvegarde(plateaux1, Integer.parseInt(str[1]), Integer.parseInt(str[2]), Integer.parseInt(str[0]));
+                            break;
 
                         }
 
                }
                Interface.goLoadGame(format);
+               vide = false;
              }
         }catch(FileNotFoundException e){
                  
+        }
+        if(vide){
+            Interface.goLoadGame(new Sauvegarde[0]);
         }
         prop = p;
     }
@@ -103,10 +96,9 @@ public class Chargeur {
         String[] str = input.nextLine().split(":");
         System.out.println(Arrays.toString(str));
         t = Integer.parseInt(str[0]);
-        d = Integer.parseInt(str[1]);
-        n[0] = Integer.parseInt(str[2]);
-        n[1] = Integer.parseInt(str[3]);
-        j = Integer.parseInt(str[4]);
+        n[0] = Integer.parseInt(str[1]);
+        n[1] = Integer.parseInt(str[2]);
+        j = Integer.parseInt(str[3]);
         
         String line = "";
         joueurs[0] = input.nextLine();

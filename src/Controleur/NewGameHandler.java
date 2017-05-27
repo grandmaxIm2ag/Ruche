@@ -48,6 +48,8 @@ public class NewGameHandler implements EventHandler<ActionEvent> {
     @Override
     public void handle(ActionEvent event) {
         //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
+        FabriqueArbitre.initP("(none)");
         boolean pass = true;
         if (cbJ1 != null && cbJ2 != null) {
             if (cbJ1.getSelectionModel().getSelectedIndex() == 0 && cbJ2.getSelectionModel().getSelectedIndex() == 0) {
@@ -85,12 +87,13 @@ public class NewGameHandler implements EventHandler<ActionEvent> {
             if (cbJ1.getSelectionModel().getSelectedIndex() == 0) {
                 pass = false;
                 FabriqueArbitre.initType(FabriqueArbitre.RESEAU_SERVER);
-                FabriqueArbitre.initN1(tfJ1.getText());
+                FabriqueArbitre.initN1(tfJ1.getText().isEmpty() ? "Client" : tfJ1.getText());
                 Interface.nouvelArbitre();
             }else{
                 pass = false;
                 FabriqueArbitre.initType(FabriqueArbitre.RESEAU_CLIENT);
-                FabriqueArbitre.initN1(tfJ1.getText());
+                FabriqueArbitre.initN1(tfJ1.getText().isEmpty() ? "Client" : tfJ1.getText());
+                FabriqueArbitre.initIP(tfJ2.getText().isEmpty() ? "127.0.0.1" : tfJ2.getText());
                 Interface.nouvelArbitre();
             }
         }

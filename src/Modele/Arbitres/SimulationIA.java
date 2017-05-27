@@ -13,6 +13,7 @@ import Modele.FabriqueInsecte;
 import Modele.Point;
 import Vue.Interface;
 import Vue.PaneToken;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -37,6 +38,15 @@ public class SimulationIA extends Arbitre {
         this.diff1 = diff1;
         this.diff2 = diff2;
         type = FabriqueArbitre.SIMULATION;
+    }
+    public SimulationIA(Properties p, int diff1, int diff2,String n1, String n2, String pl) {
+        super(p, n1, n2);
+        //difficulte = d;
+        this.diff1 = diff1;
+        this.diff2 = diff2;
+        type = FabriqueArbitre.SIMULATION;
+        pla = pl;
+        chargement = true;
     }
     
     
@@ -63,6 +73,9 @@ public class SimulationIA extends Arbitre {
         joueurs[J1] = new Ordinateur(true,diff1, prop, tabPieces,J1, nom1);
         joueurs[J2] = new Ordinateur(true,diff2, prop, tabPieces2,J2, nom2);
         
+        if(chargement)
+            charger(pla);
+            
         go();
     }
     
@@ -70,10 +83,11 @@ public class SimulationIA extends Arbitre {
      *
      */
     public void go(){
+        System.out.println(this.plateau);
         configurations.clear();
         Interface.goPartie();
-        if(joueurs[J1] instanceof Ordinateur){
-            Ordinateur o = (Ordinateur) joueurs[J1];
+        if(joueurs[jCourant] instanceof Ordinateur){
+            Ordinateur o = (Ordinateur) joueurs[jCourant];
             List<Coup[]> tab = new LinkedList();
                 for(int i=0; i<joueurs[jCourant].pions().length; i++){
                     if(joueurs[jCourant].pions()[i]!=0){
@@ -94,11 +108,12 @@ public class SimulationIA extends Arbitre {
                     taille+=it.next().length;
                 it = tab.iterator();
                 coups= new Coup[taille];
-                for(int i=0; i<taille;i++){
+                for(int i=0; i<taille && it.hasNext();i++){
                     Coup[] x = it.next();
                     for(int j=0; j<x.length; j++)
                         coups[i+j]=x[j];
                 }
+                System.out.println(Arrays.toString(coups));
                 joue(o.coup(this, coups));
         }
     }
