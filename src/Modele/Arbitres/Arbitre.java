@@ -349,10 +349,10 @@ public abstract class Arbitre {
         }
         nbCoup = Chargeur.nbCourant();
         joueurs[J2].setPieces(tab);
-        jCourant = Chargeur.jCourant();
+        jCourant = (Chargeur.jCourant()+1)%2;
         System.out.println("Ici : "+jCourant);
         chargement=false;
-        List<Coup[]> tab2 = new LinkedList();
+        /*List<Coup[]> tab2 = new LinkedList();
         for(int i=0; i<joueurs[jCourant].pions().length; i++){
             if(joueurs[jCourant].pions()[i]!=0){
                 Coup[] tmp = depotPossible(jCourant, i);
@@ -380,7 +380,7 @@ public abstract class Arbitre {
                 coups[i+j]=x[j];
             }
              i+=j;
-        }
+        }*/
     }
 
     /**

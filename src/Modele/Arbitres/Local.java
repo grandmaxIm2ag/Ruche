@@ -89,8 +89,11 @@ public class Local extends Arbitre{
                 joueurs[J1] = new Ordinateur(false,Ordinateur.MOYEN, prop, tabPieces2,  J1, nom1);
                 break;
         }
-        if(chargement)
+        if(chargement){
             charger(pla);
+            Interface.goPartie();
+            prochainJoueur();
+        }else
         
         go();
     }
