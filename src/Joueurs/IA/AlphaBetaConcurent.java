@@ -46,6 +46,8 @@ public class AlphaBetaConcurent extends AI {
         for(int i = 0; i < cps.length;i++){
             Emulateur m = em.clone();
             m.joue(cps[i]);
+            if(heurs.win(m, me))
+                return cps[i];
             Coup [] cpt = m.PossibleMoves();       
             threads[i] = new Thread(new ComportementA(false, i, searchDepth, h ,cpt,am, heurs, em, cps[i]));
             threads[i].start();

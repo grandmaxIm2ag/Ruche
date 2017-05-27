@@ -5,10 +5,10 @@
  */
 package Vue;
 
-import javafx.stage.Popup;
 import Controleur.Bouton;
 import Controleur.BoutonCommencer;
 import Controleur.Choix;
+import Controleur.NewGameHandler;
 import Controleur.SoundSlider;
 import Controleur.Souris;
 import Controleur.SourisListe;
@@ -19,41 +19,22 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.BorderPane;
 import Modele.Arbitres.*;
 import Joueurs.Joueur;
-import Joueurs.Ordinateur;
-import Modele.Chargeur;
-import Modele.Point;
+import Modele.Insecte;
 import Son.SoundEngine;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
-import java.time.Duration;
 import java.util.Arrays;
 import java.util.Optional;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javafx.animation.RotateTransition;
 import static javafx.application.Application.launch;
-import javafx.beans.binding.Bindings;
 import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.LongProperty;
 import javafx.beans.property.SimpleIntegerProperty;
-import javafx.beans.property.SimpleLongProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.*;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
-import javafx.scene.Group;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonBar;
-import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ChoiceBox;
@@ -66,26 +47,18 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
-import javafx.scene.effect.BlurType;
 import javafx.scene.effect.DropShadow;
-import javafx.scene.effect.GaussianBlur;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import static javafx.scene.input.DataFormat.URL;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.input.SwipeEvent;
-import javafx.scene.input.TouchEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
-//import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
-//import java.net.URL;
-//import javafx.scene.input.DataFormat.URL;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
-import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
@@ -93,10 +66,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
-import javafx.stage.Modality;
 import javafx.stage.StageStyle;
-import javafx.util.Callback;
-import javax.imageio.ImageIO;
 
 /**
  *
@@ -133,15 +103,20 @@ public class Interface extends Application {
     static Arbitre arbitre;
     static BorderPane root;
     static Scene scene;
-    final static boolean fullScreen = false;
+    static boolean fullScreen = false;
     final static boolean soundEnabled = true;
     static VBox ngBox;
     static VBox loadBox;
     static VBox configBox;
+    static VBox reseauBox;
+    static VBox didacBox;
+    static TabPane tabPane;
     static String[] args2;
     public static Stage stage;
     static Stage dialogConn;
     static Animation anim;
+    static int colorP1;
+    static int colorP2;
     /**
      *
      * @param stage
@@ -170,7 +145,9 @@ public class Interface extends Application {
         goNewGame();
         FabriqueArbitre.initChargeur();
         goConfig();
-        goTest();       
+        goReseau();   
+        goDidacticiel();
+        goTest(); 
         //goPartie();
         stage.show();
     }
@@ -184,13 +161,13 @@ public class Interface extends Application {
         root = new BorderPane();
         root.getChildren().add(new ImageView(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/fond.jpg"))));
         FabriqueArbitre.initType(FabriqueArbitre.LOCAL_JVJ);
-        args2=args;
         //dialogConn = new Dialog<>();
         launch(args);
 
     }
     
     public static void goTest () {
+        FabriqueArbitre.init();
         Rectangle rleft = new Rectangle(100,100);
         rleft.widthProperty().bind(scene.widthProperty().divide(10));
         rleft.setOpacity(0);
@@ -207,7 +184,7 @@ public class Interface extends Application {
         
         topBox.setPadding(new Insets(20, 10, 20, 10));
         topBox.setSpacing(10);
-        //topBox.getChildren().addAll(title());
+        topBox.getChildren().addAll(title());
         root.setTop(topBox);
         final Tab tabNG = new Tab("New Game"); 
         tabNG.setContent(ngBox);
@@ -218,13 +195,36 @@ public class Interface extends Application {
         final Tab tabCFG = new Tab("Preferences");
         tabCFG.setClosable(false);
         tabCFG.setContent(configBox);
-        TabPane tabPane = new TabPane(); 
-        tabPane.getTabs().setAll(tabNG, tabLD, tabCFG);
+        final Tab tabRes = new Tab("Partie en ligne");
+        tabRes.setClosable(false);
+        tabRes.setContent(reseauBox);
+        final Tab tabDic = new Tab("Didacticiel");
+        tabDic.setClosable(false);
+        tabDic.setContent(didacBox);
+        tabPane = new TabPane(); 
+        tabPane.getTabs().setAll(tabNG, tabLD, tabCFG, tabRes, tabDic);
         tabPane.setPadding(new Insets(0, 20, 0, 20));
         
         //tabPane
         tabPane.getStylesheets().add("Style/Style.css");
         root.setCenter(tabPane);
+        VBox bottom = new VBox();
+        bottom.setAlignment(Pos.CENTER);
+        bottom.setPadding(new Insets(20,20,20,20));
+        Button btClose = new Button ();
+        btClose.setOnAction(new EventHandler<ActionEvent> () {
+            @Override
+            public void handle(ActionEvent event) {
+                System.exit(0);
+            }
+        });
+        
+        btClose.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Icone/close.png"))), CornerRadii.EMPTY, Insets.EMPTY)));
+        btClose.setMinWidth(50);
+        btClose.setMinHeight(50);
+        
+        bottom.getChildren().add(btClose);
+        root.setBottom(bottom);
     }
 
     /**
@@ -289,14 +289,20 @@ public class Interface extends Application {
         root.setBottom(box);
         Image imageUndo = new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Icone/left.png"));
         Button btPrec = new Button();
-        btPrec.setGraphic(new ImageView(imageUndo));
+        btPrec.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Icone/left.png"))), CornerRadii.EMPTY, Insets.EMPTY)));
+        btPrec.setMinWidth(50);
+        btPrec.setMinHeight(50);
         Image imageDo = new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Icone/droite.png"));
         Button btSuiv = new Button();
-        btSuiv.setGraphic(new ImageView(imageDo));
+        btSuiv.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Icone/droite.png"))), CornerRadii.EMPTY, Insets.EMPTY)));
+        btSuiv.setMinWidth(50);
+        btSuiv.setMinHeight(50);
         Image imagePause = new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Icone/play.png"));
         Button btPause = new Button();
 
-        btPause.setGraphic(new ImageView(imagePause));
+        btPause.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Icone/menu.png"))), CornerRadii.EMPTY, Insets.EMPTY)));
+        btPause.setMinWidth(50);
+        btPause.setMinHeight(50);
         
         Button btSave = new Button("Sauvegarder");
         Button btMenu = new Button("Menu principal");
@@ -310,6 +316,12 @@ public class Interface extends Application {
         btSave.setOnAction(new Bouton(Bouton.BOUTON_SAUVEGARDER, arbitre));
         btMenu.setOnAction(new Bouton(Bouton.BOUTON_MENU, arbitre));
         btPause.setOnAction(new Bouton(Bouton.BOUTON_PAUSE, arbitre));
+        
+        Button btHelp = new Button();
+        btHelp.setOnAction(new Bouton(Bouton.BOUTON_AIDE, arbitre));
+        btHelp.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Icone/help.png"))), CornerRadii.EMPTY, Insets.EMPTY)));
+        btHelp.setMinWidth(50);
+        btHelp.setMinHeight(50);
 
         GridPane bPion = new GridPane();
         bPion.setHgap(10);
@@ -330,13 +342,14 @@ public class Interface extends Application {
         if(arbitre instanceof ArbitreReseau)
             box.getChildren().addAll(btPause, Chat.creer((ArbitreReseau)arbitre,arbitre.joueur(Arbitre.J1).nom() , stage));
         else
-            box.getChildren().addAll(btPrec, btPause, btSuiv/*, btSave, btMenu*/);
+            box.getChildren().addAll(btPrec, btPause, btHelp, btSuiv/*, btSave, btMenu*/);
 
         c.setOnMouseMoved(new Souris(arbitre, Souris.SOURIS_BOUGEE, c));
         c.setOnMouseClicked(new Souris(arbitre, Souris.SOURIS_CLIQUEE, c));
 
+      //  if(anim==null)
+            anim = new Animation(arbitre, c, cj1, cj2);
         
-        anim = new Animation(arbitre, c, cj1, cj2);
         anim.start();
         
 
@@ -419,7 +432,6 @@ public class Interface extends Application {
         rectBox.setAlignment(Pos.CENTER);
         centerBox.setPadding(new Insets(0, 0, 20, 0));
         rectBox.getChildren().add(centerRect);
-        //centerRect.setX(centerRect.getX()+20);
         centerRect.setOpacity(0.25);
         centerBox.setPadding(new Insets(0, 0, 20, 0));
         centerBox.setAlignment(Pos.TOP_CENTER);
@@ -436,84 +448,67 @@ public class Interface extends Application {
         DropShadow shadow = new DropShadow();
         centerRect.setEffect(shadow);
 
-        ChoiceBox cbMOD = new ChoiceBox();
-        String[] tmp = FabriqueArbitre.types();
-        for(int i=0; i<tmp.length; i++)
-            cbMOD.getItems().add(tmp[i]);
-        cbMOD.getSelectionModel().selectedIndexProperty().addListener(new Choix( Choix.CHOIX_MODE));
-        ChoiceBox cbDIFF = new ChoiceBox();
-        tmp = FabriqueArbitre.difficultes();
-        for(int i=0; i<tmp.length; i++)
-            cbDIFF.getItems().add(tmp[i]);
-        cbDIFF.getSelectionModel().selectedIndexProperty().addListener(new Choix( Choix.CHOIX_DIFFICULTE));
-        cbMOD.getSelectionModel().selectFirst();
-        cbDIFF.getSelectionModel().selectFirst();
-
-        cbMOD.setMinWidth(200);
-        cbDIFF.setMinWidth(200);
-
+        ChoiceBox cbJ1 = new ChoiceBox();
+        ChoiceBox cbJ2 = new ChoiceBox();
+        
+        cbJ1.getItems().addAll((Object[]) NewGameHandler.DIFFICULTEES);
+        cbJ2.getItems().addAll((Object[]) NewGameHandler.DIFFICULTEES);
+        
+        cbJ1.getSelectionModel().select(0);
+        cbJ2.getSelectionModel().select(0);
+        
+        cbJ1.setMaxWidth(500);
+        cbJ2.setMaxWidth(500);
+        
         TextField tfJ1 = new TextField();
-        tfJ1.setPromptText("Nom joueur 1");
         TextField tfJ2 = new TextField();
-        tfJ2.setPromptText("Nom joueur 2");
-        TextField host = new TextField();
-        host.setPromptText("IP du joueur à rejoindre");
-
-        tfJ2.setDisable(true);
-
-        cbMOD.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
-
+        
+        tfJ1.setPromptText("Joueur 1");
+        tfJ2.setPromptText("Joueur 2");
+        
+        cbJ1.setOnAction(new EventHandler<ActionEvent> () {
             @Override
-            public void changed(ObservableValue ov, Number value, Number newValue) {
-                switch(newValue.intValue()){
-                    case FabriqueArbitre.LOCAL_JVJ:
-                        if( !centerGrid.getChildren().contains(tfJ2) )
-                            centerGrid.add(tfJ2, 2, 2);
-                        tfJ2.setDisable(true);
-                        break;
-                    case FabriqueArbitre.LOCAL_JVIA:
-                        if( !centerGrid.getChildren().contains(tfJ2) )
-                            centerGrid.add(tfJ2, 2, 2);
-                        tfJ2.setDisable(false);
-                        break;
-                    case FabriqueArbitre.SIMULATION:
-                        if( !centerGrid.getChildren().contains(tfJ2) )
-                            centerGrid.add(tfJ2, 2, 2);
-                        tfJ2.setDisable(false);
-                        break;
-                    case FabriqueArbitre.RESEAU_SERVER:
-                        if( !centerGrid.getChildren().contains(tfJ2) )
-                            centerGrid.add(tfJ2, 2, 2);
-                        tfJ2.setDisable(false);
-                        break;
-                    case FabriqueArbitre.RESEAU_CLIENT:
-                        if( !centerGrid.getChildren().contains(host) )
-                            centerGrid.add(host, 2, 2);
-                        host.setDisable(false);
-                        break;
-                    default:
-                        break;
-                }
+            public void handle(ActionEvent event) {
+                if (cbJ1.getSelectionModel().getSelectedIndex() > 0)
+                    tfJ1.setDisable(true);
+                else
+                    tfJ1.setDisable(false);
             }
+            
         });
+        
+        cbJ2.setOnAction(new EventHandler<ActionEvent> () {
+            @Override
+            public void handle(ActionEvent event) {
+                if (cbJ2.getSelectionModel().getSelectedIndex() > 0)
+                    tfJ2.setDisable(true);
+                else
+                    tfJ2.setDisable(false);
+            }
+            
+        });
+        
+        
         // Pour ajouter les boutons de couleur
         ColorChoice cc = ColorChoice.getInstance();
 
-        centerGrid.add(cbMOD, 0, 0);
-        centerGrid.add(cbDIFF, 2, 0);
+        centerGrid.add(cbJ1, 0, 0);
+        centerGrid.add(cbJ2, 2, 0);
         centerGrid.add(tfJ1, 0, 2);
         centerGrid.add(tfJ2, 2, 2);
         // pour mettre les gridpane dans le menu
-        centerGrid.add(cc.getPlayer1(), 0, 4);
-        centerGrid.add(cc.getPlayer2(), 2, 4);
+        centerGrid.add(cc.getPlayer2(), 0, 4);
+        centerGrid.add(cc.getPlayer1(), 2, 4);
         centerGrid.setAlignment(Pos.CENTER);
 
         Button btBEG = new Button("Commencer");
 
         btBEG.setMinWidth(150);
 
-        btBEG.setOnAction(new BoutonCommencer(tfJ1, tfJ2, host));
+        //btBEG.setOnAction(new BoutonCommencer(tfJ1, tfJ2, cbJ1, cbJ2 fabrique));
 
+        btBEG.setOnAction(new NewGameHandler (cbJ1, cbJ2, tfJ1, tfJ2));
+        
         centerBox.getChildren().add(centerStack);
         centerStack.getChildren().addAll(rectBox, insideBox);//centerGrid);
         Label lNG = new Label("Nouvelle Partie");
@@ -523,12 +518,99 @@ public class Interface extends Application {
         Label lTest = new Label ();
         lTest.setMaxWidth(300);
         lTest.setWrapText(true);
-        lTest.setText("bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla ");
         
         insideBox.getChildren().addAll(lNG, centerGrid, btBEG, lTest);
 
         //root.setCenter(centerBox);
         ngBox = centerBox;
+    }
+    
+    public static void goReseau () {
+        VBox centerBox = new VBox();
+        StackPane centerStack = new StackPane();
+        GridPane centerGrid = new GridPane();
+        VBox insideBox = new VBox();
+        Rectangle centerRect = new Rectangle();
+        VBox rectBox = new VBox();
+        rectBox.setAlignment(Pos.CENTER);
+        centerBox.setPadding(new Insets(0, 0, 20, 0));
+        rectBox.getChildren().add(centerRect);
+        centerRect.setOpacity(0.25);
+        centerBox.setPadding(new Insets(0, 0, 20, 0));
+        centerBox.setAlignment(Pos.TOP_CENTER);
+        centerGrid.setHgap(10);
+        centerGrid.setVgap(10);
+        centerRect.widthProperty().bind(insideBox.widthProperty());
+        centerRect.heightProperty().bind(insideBox.heightProperty());
+        centerRect.setArcWidth(20);
+        centerRect.setArcHeight(20);
+        centerRect.setFill(Color.BLACK);
+        insideBox.setPadding(new Insets(70, 30, 70, 30));
+        insideBox.setSpacing(30);
+        insideBox.setAlignment(Pos.CENTER);
+        DropShadow shadow = new DropShadow();
+        centerRect.setEffect(shadow);
+
+        
+
+        TextField tfJ1 = new TextField();
+        tfJ1.setPromptText("Nom joueur 1");
+        TextField tfJ2 = new TextField();
+        tfJ2.setPromptText("Nom joueur 2");
+        TextField host = new TextField();
+        host.setPromptText("IP du joueur à rejoindre");
+
+        host.setDisable(true);
+        ChoiceBox cbJ1 = new ChoiceBox();
+        
+        String[] t = {"Héberger une partie en ligne", "Rejoindre un hôte"};
+        cbJ1.getItems().addAll((Object[])t);
+        cbJ1.setMaxWidth(500);
+         cbJ1.getSelectionModel().select(0);
+        
+        cbJ1.setOnAction(new EventHandler<ActionEvent> () {
+            @Override
+            public void handle(ActionEvent event) {
+                if (cbJ1.getSelectionModel().getSelectedIndex() > 0){
+                    FabriqueArbitre.setInit(Choix.CHOIX_MODE,FabriqueArbitre.RESEAU_CLIENT);
+                    host.setDisable(false);
+                }
+                else{
+                    host.setDisable(true);
+                    FabriqueArbitre.setInit(Choix.CHOIX_MODE,FabriqueArbitre.RESEAU_SERVER);
+                }
+            }
+            
+        });
+        
+        
+        // Pour ajouter les boutons de couleur
+        ColorChoice cc = ColorChoice.getInstance();
+        
+        centerGrid.add(cbJ1, 0, 2);
+        centerGrid.add(tfJ1, 0, 4);
+        centerGrid.add(host, 2, 4);
+        // pour mettre les gridpane dans le menu
+        /*centerGrid.add(cc.getPlayer2(), 0, 4);
+        centerGrid.add(cc.getPlayer1(), 2, 4);
+        */centerGrid.setAlignment(Pos.CENTER);
+
+        Button btBEG = new Button("Commencer");
+
+        btBEG.setMinWidth(150);
+
+        btBEG.setOnAction(new NewGameHandler(cbJ1, null, tfJ1, host));
+
+        centerBox.getChildren().add(centerStack);
+        centerStack.getChildren().addAll(rectBox, insideBox);//centerGrid);
+        Label lNG = new Label("Nouvelle Partie");
+        lNG.setTextFill(Color.WHITE);
+        lNG.setFont(new Font(22));
+        
+        insideBox.getChildren().addAll(lNG, centerGrid, btBEG);//, lTest);
+
+        //root.setCenter(centerBox);
+        reseauBox = centerBox;
     }
 
     /**
@@ -587,6 +669,83 @@ public class Interface extends Application {
         loadBox = centerBox;
     }
 
+    public static void goDidacticiel(){
+        VBox centerBox = new VBox();
+        StackPane centerStack = new StackPane();
+        GridPane centerGrid = new GridPane();
+        VBox insideBox = new VBox();
+        Rectangle centerRect = new Rectangle();
+        VBox rectBox = new VBox();
+        rectBox.getChildren().add(centerRect);
+        rectBox.setAlignment(Pos.CENTER);
+        centerRect.setOpacity(0.25);
+        centerBox.setPadding(new Insets(0, 0, 20, 0));
+        centerBox.setAlignment(Pos.TOP_CENTER);
+        centerGrid.setHgap(10);
+        centerGrid.setVgap(10);
+        centerRect.widthProperty().bind(insideBox.widthProperty());
+        centerRect.heightProperty().bind(insideBox.heightProperty());
+        centerRect.setArcWidth(20);
+        centerRect.setArcHeight(20);
+        centerRect.setFill(Color.BLACK);
+        insideBox.setPadding(new Insets(70, 30, 70, 30));
+        insideBox.setSpacing(30);
+        insideBox.setAlignment(Pos.CENTER);
+        DropShadow shadow = new DropShadow();
+        centerRect.setEffect(shadow);
+
+        centerGrid.setAlignment(Pos.CENTER);
+        
+        Button prev = new Button("précédent");
+        Button btBEG = new Button();
+        btBEG.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Icone/next.png"))), CornerRadii.EMPTY, Insets.EMPTY)));
+        Slide s = new Slide();
+        btBEG.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                if(!s.next()){
+                    btBEG.setDisable(true);
+                }
+                prev.setDisable(false);
+            }
+        } );
+        
+        
+        prev.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                if(!s.previous()){
+                    prev.setDisable(true);
+                }
+                btBEG.setDisable(false);
+            }
+        } );
+        
+        prev.setDisable(true);
+        final Region region = new Region(); 
+        region.setStyle("-fx-background-color: gold; -fx-border-color: goldenrod;"); 
+        region.setPrefSize(100, 100); 
+        AnchorPane.setLeftAnchor(region, 10.0); 
+        AnchorPane.setBottomAnchor(region, 10.0);
+        
+        btBEG.setMinWidth(90);
+        btBEG.setMaxWidth(90);
+        prev.setMinWidth(90);
+        prev.setMaxWidth(90);
+
+        centerBox.getChildren().add(centerStack);
+        centerStack.getChildren().addAll(rectBox, insideBox);//centerGrid);
+        Label lNG = new Label("Didacticiel");
+        lNG.setTextFill(Color.WHITE);
+        final AnchorPane root2 = new AnchorPane(); 
+        root2.getChildren().setAll(btBEG, region);
+        
+        HBox buttons = new HBox();
+        buttons.setAlignment(Pos.CENTER);
+        buttons.getChildren().addAll(prev, btBEG);
+        insideBox.getChildren().addAll(lNG,s.pane(), buttons);
+        didacBox = centerBox;
+    }
     /**
      *
      * @param x
@@ -667,7 +826,22 @@ public class Interface extends Application {
         sMusique.setMajorTickUnit(20);
 
         CheckBox cFC = new CheckBox();
-
+        
+        if(fullScreen){
+            cFC.setSelected(true);
+        }
+        cFC.setOnAction((event) -> {
+            stage.setFullScreen(cFC.isSelected());
+            
+            fullScreen = cFC.isSelected();
+            if(!fullScreen){
+                goConfig();
+                goTest();
+                tabPane.getSelectionModel().select(2);
+            }
+        });
+        //
+        
         Label lSon = new Label("Son");
         Label lMusique = new Label("Musique");
         Label lFullScreen = new Label("Plein Ecran");
@@ -736,7 +910,15 @@ public class Interface extends Application {
         Image imgCo = new Image(imageCo, ((80) * 0.80), ((80) * 0.80), true, true);
         gc.drawImage(imgCo, 40 - (imgCo.getWidth() / 2), 40 - (imgCo.getHeight() / 2));
         CheckBox cbCocc = new CheckBox();
-
+        cbCocc.setOnAction((event) -> {
+            FabriqueArbitre.setBonus(Insecte.COCC, cbCocc.isSelected());
+        });
+        cbClop.setOnAction((event) -> {
+            FabriqueArbitre.setBonus(Insecte.CLOP, cbClop.isSelected());
+        });
+        cbMoskito.setOnAction((event) -> {
+            FabriqueArbitre.setBonus(Insecte.MOUS, cbMoskito.isSelected());
+        });
         bMoskito.getChildren().addAll(cMoskito, cbMoskito);
         bClop.getChildren().addAll(cClop, cbClop);
         bCocc.getChildren().addAll(cCocc, cbCocc);
@@ -906,6 +1088,7 @@ public class Interface extends Application {
     
     public static void nouvelArbitre(){
         arbitre = FabriqueArbitre.nouveau();
+        System.out.println((arbitre instanceof SimulationIA));
         arbitre.init();
         System.out.println("Arbitre créé");
     }
@@ -1037,7 +1220,7 @@ public class Interface extends Application {
 	dialogConn.setScene(dialog);
 	
 	bnOK.setOnAction((e)-> {
-                arbitre.setEtat(Arbitre.FIN);
+                arbitre.setEtat(ReseauServer.ANNUL);
 		dialogConn.close();
                 
 	});
@@ -1048,7 +1231,25 @@ public class Interface extends Application {
     }
     
     public static void fin(){
+        System.gc();
         anim.stop();
+        PaneToken.reset();
+    }
+    
+    public static void setColorP2 (int color) {
+        colorP1 = color;
+    }    
+    
+    public static void setColorP1 (int color) {
+        colorP2 = color;
+    }    
+    
+    public static int getColorP1 () {
+        return colorP1;
+    }
+    
+    public static int getColorP2 () {
+        return colorP2;
     }
     
 }

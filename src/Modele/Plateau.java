@@ -6,7 +6,9 @@
  */
 package Modele;
 
+import Controleur.AideListener;
 import Modele.Arbitres.Arbitre;
+import Vue.PaneToken;
 import Vue.Pointeur;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,6 +16,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import javafx.beans.property.IntegerProperty;
 import ruche.Reglage;
 
 /**
@@ -130,6 +133,7 @@ public class Plateau extends Composant {
     int xMin, yMin, xMax, yMax;
     Properties prop;
     int jCourant;
+    int depotAide;
     
     /**
      *
@@ -150,6 +154,7 @@ public class Plateau extends Composant {
         xMin=0; xMax = 0; yMin=0; yMax=0;
         jCourant = Arbitre.J1;
         aide= new ArrayList();
+        
     }
     
     /**
@@ -276,6 +281,15 @@ public class Plateau extends Composant {
         if(yMax < d.destination.y())
             yMax=(int) d.destination.y();
         
+        
+        
+        if(Math.abs(xMin)+Math.abs(xMax)>= l*0.9){
+            l *= 1.5;
+        }
+        if(Math.abs(yMin)+Math.abs(yMax)>= h*0.9){
+            h *= 1.5;
+        }
+        
         Case c = matrice.get(d.source());
         Insecte e = c.retirePion();
         Case c2;
@@ -296,6 +310,11 @@ public class Plateau extends Composant {
             matrice.remove(c.position());
         }
         majGraphe(d);
+        
+        xMin=(int) newLim(true, true);
+        xMax=(int) newLim(true, false);
+        yMin=(int) newLim(false, true);
+        yMax=(int) newLim(false, false);
     }
     
     /**
@@ -411,6 +430,13 @@ public class Plateau extends Composant {
             yMin=(int) d.destination.y();
         if(yMax < d.destination.y())
             yMax=(int) d.destination.y();
+        
+        if(Math.abs(xMin)+Math.abs(xMax)>= l*0.9){
+            l *= 1.15;
+        }
+        if(Math.abs(yMin)+Math.abs(yMax)>= h*0.9){
+            h *= 1.15;
+        }
         
         majGraphe(d);
     }
@@ -625,7 +651,9 @@ public class Plateau extends Composant {
         str+="graphe"+"\n";
         for(Map.Entry<Point,List<Point>> entry2 : voisins.entrySet()) {
             Iterator<Point> it = entry2.getValue().iterator();
-            String tmp = /*it.next().toString()*/"";
+            String tmp="";
+            if(it.hasNext())
+                tmp = it.next().toString();
             while(it.hasNext()){
                 tmp+=":"+it.next().toString();
             }
@@ -772,7 +800,7 @@ public class Plateau extends Composant {
             else
                 b = estConnexe(e);
         
-        if(b){
+        if(b || e.type()==Insecte.CLOP){
             Coup[] cp = matrice.get(e.position()).tete().deplacementValide(this.clone());
 
             for (Coup cp1 : cp) {
@@ -781,6 +809,18 @@ public class Plateau extends Composant {
                     c.add(d);
                 }
             }
+            if(!b){
+                List<Coup> valide = new ArrayList();
+                for(Coup item : c){
+                    if(item instanceof Deplacement){
+                        Deplacement item2 =(Deplacement)item;
+                        if(!item2.source().equals(e.position()))
+                            valide.add(item2);
+                    }
+                }
+                return valide;
+            }
+            
             return c;
         }
         return null;
@@ -930,8 +970,6 @@ public class Plateau extends Composant {
             }
             nouv.put(p,c);
         });
-        
-        
         return nouv.hashCode();
     }
     
@@ -983,4 +1021,46 @@ public class Plateau extends Composant {
     public List<Case> aide () {
         return aide;
     }
+    
+    public double newLim(boolean x, boolean min){
+        double tmp;
+        if(min)
+            tmp = Double.MAX_VALUE;
+        else
+            tmp = Double.MIN_VALUE;
+        
+        if(x){
+            if(min){
+                for(Point item : utilises)
+                    if(tmp >= item.x())
+                        tmp = item.x();
+            }else{
+                for(Point item : utilises)
+                    if(tmp <= item.x())
+                        tmp = item.x();
+            }
+        }else{
+            if(min){
+                for(Point item : utilises)
+                    if(tmp >= item.y())
+                        tmp = item.y();
+            }else{
+                for(Point item : utilises)
+                    if(tmp <= item.y())
+                        tmp = item.y();
+            }
+        }
+        return tmp;
+    }
+    
+    public void setDepotAide (int i) {
+        depotAide = i;
+        (PaneToken.getInstance()).uncheck();
+        (PaneToken.getInstance()).setHelpBackground(this.jCourant, i);
+    }
+    
+    public int getDepotAide () {
+        return depotAide;
+    }
+    
 }

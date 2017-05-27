@@ -21,6 +21,7 @@ import Vue.PaneToken;
 import Vue.Pointeur;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Scanner;
@@ -89,7 +90,7 @@ public abstract class Arbitre {
     Insecte initClopDepl;
     int initDepot;
     
-    ArrayList<Integer> configurations;
+    HashMap<Integer, Integer> configurations;
     
     /**
      *
@@ -102,7 +103,7 @@ public abstract class Arbitre {
         jCourant = J1;
         historique = new Stack();
         refaire = new Stack();
-        plateau = new Plateau(0,0,Reglage.lis("lPlateau")*2*Reglage.lis("nbPiece"),Reglage.lis("hPlateau")*2*Reglage.lis("nbPiece"),p);
+        plateau = new Plateau(0,0,Reglage.lis("lPlateau")*Reglage.lis("nbPiece"),Reglage.lis("hPlateau")*Reglage.lis("nbPiece"),p);
         
         chargeur = new Chargeur();
         
@@ -117,7 +118,7 @@ public abstract class Arbitre {
         nom1 = n1;
         nom2 = n2;
         
-        configurations = new ArrayList();
+        configurations = new HashMap();
     }
     
     /**
@@ -133,23 +134,6 @@ public abstract class Arbitre {
         return plateau;
     }
 
-    /**
-     *
-     * @return
-     */
-    public Stack<Coup> historique(){
-        return historique;
-    }
-    
-    /**
-     *
-     * @param joueur
-     * @return
-     */
-    public int nbcoups(int joueur){
-        return nbCoup[joueur];
-    }
-    
     /**
      *
      * @param i
@@ -178,7 +162,7 @@ public abstract class Arbitre {
         for (Coup deplacement : deplacements) {
             b |= d.equals(deplacement);
         }
- 
+        
         return b;
     }
 
@@ -255,8 +239,8 @@ public abstract class Arbitre {
             joue((Deplacement)d);
         else if(d instanceof Depot)
             joue((Depot)d);
-        else
-            System.err.println("Coup Inconnu "+d);
+        //else
+            //System.err.println("Coup Inconnu "+d);
     }
     
     /**
@@ -286,20 +270,29 @@ public abstract class Arbitre {
      *
      */
     public void precedent(){
+        
+        
         if(!historique.isEmpty()){
             configurations.remove(configurations.size()-1);
             Coup c = historique.pop();
+            //System.out.println(c+" "+(c==null));
             refaire.push(c);
             if(c instanceof Deplacement){
                 Deplacement d = (Deplacement) c;
                 plateau.deplacePion(new Deplacement(d.joueur(),d.destination(), d.source()));
+                nbCoup[d.joueur()]--;
             }else if(c instanceof Depot){
                 Depot d = (Depot) c;
                 plateau.retirerPion(d.destination());
+                nbCoup[d.joueur()]--;
+                joueurs[d.joueur()].pred(d.type());
             }
         }else{
-            System.err.println("Aucun coup précedent");
+            //System.err.println("Aucun coup précedent");
         }
+        PaneToken.getInstance(this).update();
+        jCourant = (jCourant+1)%2;
+        
     }
 
     /**
@@ -308,13 +301,9 @@ public abstract class Arbitre {
     public void refaire(){
         if(!refaire.isEmpty()){
             Coup c = refaire.pop();
+            //System.out.println(c+" "+(c==null));
             historique.push(c);
-            if(c instanceof Depot)
-                plateau.deposePion((Depot)c );
-            else{
-                Deplacement d = (Deplacement) c;
-                plateau.deplacePion(d);
-            }
+            joue(c);
         }else{
             System.out.println("Aucun coup à refaire");
         }
@@ -343,7 +332,6 @@ public abstract class Arbitre {
         String[] str = Chargeur.joueur();
         joueurs[J1].nom = str[J1].split("=")[0];
         String[] str2 = str[J1].split("=")[1].split(":");
-        System.err.println(Arrays.toString(str2));
         int[] tab = new int[str2.length];
         for(int i=0; i<str2.length; i++)
             tab[i]=Integer.parseInt(str2[i]);
@@ -425,7 +413,7 @@ public abstract class Arbitre {
             writer.print(str);
             writer.close();
         }catch(IOException e){
-            System.err.println("Echec de la saucegarde "+e);
+            System.err.println("Echec de la sauvegarde "+e);
         }
         
         FabriqueArbitre.initChargeur();
@@ -441,6 +429,7 @@ public abstract class Arbitre {
         etat = AIDE;
         temps_ecoule = 0;
         plateauAide = plateau.clone();
+        plateau.setDepotAide(-1);
         Ordinateur o = new Ordinateur(true,Ordinateur.FACILE_HEURISTIQUE , prop, Arrays.copyOf(joueurs[jCourant].pions(), joueurs[jCourant].pions().length) ,  jCourant, nom2);
         
         List<Coup[]> tab = new LinkedList();
@@ -459,7 +448,7 @@ public abstract class Arbitre {
         while(it.hasNext())
             taille+=it.next().length;
         it = tab.iterator();
-        System.out.println(nbCoup[J1]+" "+nbCoup[J2]);
+        //System.out.println(nbCoup[J1]+" "+nbCoup[J2]);
         coups = new Coup[taille];
         int i=0;
         while(it.hasNext()){
@@ -474,8 +463,10 @@ public abstract class Arbitre {
         Coup c = o.coup(this, coups);
         if(c instanceof Deplacement)
             plateauAide.deplacePion((Deplacement)c);
-        else
+        else {
             plateauAide.deposePion((Depot)c);
+            plateauAide.setDepotAide(((Depot) c).type());
+        }
     }
 
     /**
@@ -488,7 +479,7 @@ public abstract class Arbitre {
             return plateau.accept(dessinateur);
         }
         else{
-            System.err.println("Ici");
+            //System.err.println("Ici");
             return plateauAide.accept(dessinateur);
         }
            
@@ -552,12 +543,15 @@ public abstract class Arbitre {
      * @param t
      */
     public void maj(long t){
+        //System.gc();
         if(Interface.pointeur().event()!=null){
             boolean b = this.accept(Interface.pointeur());
+            //System.out.println(b);
             if(b)
                 plateau.clearAide();
-                if(Interface.pointeur().event().getEventType() == MouseEvent.MOUSE_CLICKED && etat == AIDE){
+                if((Interface.pointeur().event().getEventType() == MouseEvent.MOUSE_CLICKED) && (etat == AIDE)){
                     etat = ATTENTE_COUP;
+                    plateau.setDepotAide(-1);
                     aide = false;
                 }
             Interface.pointeur().traiter();
@@ -579,9 +573,7 @@ public abstract class Arbitre {
             case JOUE_EN_COURS:
                 temps_ecoule+=nouv;
                 if(temps_ecoule>=100000000){
-                    System.out.println("Joue déplacement "+enCours);
                     temps_ecoule=0;
-                    System.out.println(enCours);
                     if(enCours!=null){
                         
                         plateau.deplacePion(enCours);
@@ -626,6 +618,13 @@ public abstract class Arbitre {
                     Coup c1 = c.pop();
                     historique.push(c1);
                     b &= tmp[i]==null || tmp[i].equals(c1);
+                    if(c1 instanceof Depot){
+                        Depot d = (Depot)c1;
+                        tmp[i] = new Depot(d.joueur(), d.type(), d.destination());
+                    }else{
+                        Deplacement d = (Deplacement)c1;
+                        tmp[i] = new Deplacement(d.joueur(), d.source(), d.destination());
+                    }
                     i = ++i % 4;
                 }
             }
@@ -661,6 +660,7 @@ public abstract class Arbitre {
     public void dispo(int ins){
         initClopDepl = null;
         Coup[] c = depotPossible(jCourant, ins);
+        //System.out.println(jCourant+" "+ins+" "+Arrays.toString(c));
         List<Case> l = new ArrayList();
         for(int i=0; c!=null && i<c.length; i++){
             Case c2 = new Case(c[i].destination().x(), c[i].destination().y(), 1, 1);
@@ -699,8 +699,8 @@ public abstract class Arbitre {
                 Case c2 = new Case(c1.destination().x(), c1.destination().y(), 1, 1);
                 c2.jouable();
                 l.add(c2);
-                if(ins instanceof Cloporte)
-                    System.out.println(c1+"!!!!!!!!!!!!!!!!"+ins.position());
+                //if(ins instanceof Cloporte)
+                    //System.out.println(c1+"!!!!!!!!!!!!!!!!"+ins.position());
                 plateau.setAide(l);
             }
         
@@ -727,7 +727,63 @@ public abstract class Arbitre {
      *
      */
     public void go(){
+        configurations.clear();
         Interface.goPartie();
+        if(joueurs[J1] instanceof Ordinateur){
+            Ordinateur o = (Ordinateur) joueurs[J1];
+            List<Coup[]> tab = new LinkedList();
+                for(int i=0; i<joueurs[jCourant].pions().length; i++){
+                    if(joueurs[jCourant].pions()[i]!=0){
+                        Coup[] tmp = depotPossible(jCourant, i);
+                        if(tmp!=null)
+                            tab.add(tmp);
+                    }
+                        
+                }
+                   
+                Coup[] tmp;
+                if((tmp=deplacementPossible(jCourant))!=null)
+                    tab.add(tmp);
+
+                int taille= 0;
+                Iterator<Coup[]> it = tab.iterator();
+                while(it.hasNext())
+                    taille+=it.next().length;
+                it = tab.iterator();
+                coups= new Coup[taille];
+                for(int i=0; i<taille;i++){
+                    Coup[] x = it.next();
+                    for(int j=0; j<x.length; j++)
+                        coups[i+j]=x[j];
+                }
+                joue(o.coup(this, coups));
+        }
         etat = ATTENTE_COUP;
+    }
+    
+    public Stack<Coup> historique(){
+        return historique;
+    }
+    
+    public int nbcoups(int j){
+        return nbCoup[j];
+    }
+    /*
+    @Override
+    public abstract Arbitre clone();*/
+    
+    public void coupSouris(Deplacement d){
+        Deplacement res;
+        for(int i=0; i<coups.length; i++){
+            if(coups[i] instanceof Deplacement){
+                Deplacement tmp = (Deplacement) coups[i];
+                if(tmp.equals(d)){
+                    res = tmp.clone();
+                    joue(res);
+                    break;
+                }
+            }
+        }
+        
     }
 }

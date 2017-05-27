@@ -5,11 +5,11 @@
  */
 package Vue;
 
+import Controleur.ColorButton;
 import javafx.geometry.Insets;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.GridPane;
-import javafx.scene.paint.Color;
 
 /**
  *
@@ -62,31 +62,31 @@ public class ColorChoice {
                     b[k][i][j].setMinHeight(50);
                     switch (i*3+j) {
                         case 0:
-                            b[k][i][j].setStyle("-fx-base: green;");
+                            b[k][i][j].setStyle("-fx-base: hotpink;");
                             break;
                         case 1:
-                            b[k][i][j].setStyle("-fx-base: cornflowerblue;");
+                            b[k][i][j].setStyle("-fx-base:limegreen;");
                             break;
                         case 2:
-                            b[k][i][j].setStyle("-fx-base: blueviolet;");
+                            b[k][i][j].setStyle("-fx-base: whitesmoke;");
                             break;
                         case 3:
-                            b[k][i][j].setStyle("-fx-base: chocolate;");
+                            b[k][i][j].setStyle("-fx-base: orangered;");
                             break;
                         case 4:
-                            b[k][i][j].setStyle("-fx-base: fuchsia;");
+                            b[k][i][j].setStyle("-fx-base: steelblue;");
                             break;
                         case 5:
-                            b[k][i][j].setStyle("-fx-base: gold;");
+                            b[k][i][j].setStyle("-fx-base: darkgoldenrod;");
                             break;
                         case 6:
-                            b[k][i][j].setStyle("-fx-base: lightcoral;");
+                            b[k][i][j].setStyle("-fx-base: darkmagenta;");
                             break;
                         case 7:
-                            b[k][i][j].setStyle("-fx-base: mediumaquamarine;");
+                            b[k][i][j].setStyle("-fx-base: mediumblue;");
                             break;
                         case 8:
-                            b[k][i][j].setStyle("-fx-base: plum;");
+                            b[k][i][j].setStyle("-fx-base: maroon;");
                             break;
                         default:
                     }
@@ -94,16 +94,35 @@ public class ColorChoice {
                         case 0:
                             player1.add(b[k][i][j], i, j);
                             b[k][i][j].setToggleGroup(g1);
+                            b[k][i][j].setOnAction(new ColorButton(i, j, k));
                             break;
                         case 1:
                             player2.add(b[k][i][j], i, j);
                             b[k][i][j].setToggleGroup(g2);
+                            b[k][i][j].setOnAction(new ColorButton(i, j, k));
                             break;
                         default:
                     }
                 }
             }
         }
+        b[0][0][0].setSelected(true);
+        b[1][1][0].setSelected(true);
+        b[1][0][0].setDisable(true);
+        b[0][1][0].setDisable(true);
+        Interface.setColorP1(0);
+        Interface.setColorP1(3);
+        
+    }
+    
+    public ToggleButton[][][] getTable () {
+        return b;
+    }
+    
+    public void enable (int k) {
+            for (int i = 0; i < 3; i++) 
+                for (int j = 0; j < 3; j++) 
+                    b[k][i][j].setDisable(false);
     }
     
 }

@@ -15,11 +15,9 @@ import Modele.Depot;
 import Modele.FabriqueInsecte;
 import Modele.Insecte;
 import Modele.Point;
-import Vue.Chat;
 import Vue.Interface;
 import Vue.PaneToken;
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -27,9 +25,7 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Queue;
 import java.util.concurrent.LinkedBlockingQueue;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javafx.scene.input.MouseEvent;
+
 
 /**
  *
@@ -75,7 +71,7 @@ public abstract class ArbitreReseau extends Arbitre{
                 if(jCourant == J1){
                     actions[J1].inserer(DEPLACEMENT+d.toString());
                 }
-                System.err.println(d+" déplacement effectué "+enCours);
+                //System.err.println(d+" déplacement effectué "+enCours);
             //}else{
                 //System.err.println("Deplacement impossible "+d);
             //}
@@ -101,6 +97,7 @@ public abstract class ArbitreReseau extends Arbitre{
                 actions[J1].inserer(DEPOT+d.toString());
             }
             System.err.println("1- Dépot effectué "+d);
+            System.out.println(plateau.toString());
         }else if(nbCoup[jCourant]==0){
             if(plateau.premierPionValide(d)){
                 joueurs[jCourant].jouer(d.type());
@@ -109,12 +106,12 @@ public abstract class ArbitreReseau extends Arbitre{
                 refaire.clear();
                 historique.add(d);
                 etat=A_JOUER;
-                System.err.println("2- Dépot effectué "+d);
+                //System.err.println("2- Dépot effectué "+d);
                 if(jCourant == J1){
                     actions[J1].inserer(DEPOT+d.toString());
                 }
             }else{
-                System.err.println("Depot impossible");
+                //System.err.println("Depot impossible");
             }
         }else if(deposePionValide(d) && joueurs[jCourant].pion(d.type())>0){
             
@@ -125,7 +122,7 @@ public abstract class ArbitreReseau extends Arbitre{
                 etat=A_JOUER;
                 refaire.clear();
                 historique.add(d);
-                System.err.println("3- Dépot effectué "+d);
+                //System.err.println("3- Dépot effectué "+d);
                 if(jCourant == J1){
                     actions[J1].inserer(DEPOT+d.toString());
                 }
@@ -133,7 +130,7 @@ public abstract class ArbitreReseau extends Arbitre{
                 System.err.println("Vous devez déposé une reine "+jCourant);
             }
         }else{
-            System.err.println("Depot impossible");
+            //System.err.println("Depot impossible");
         }
         
         
@@ -147,12 +144,27 @@ public abstract class ArbitreReseau extends Arbitre{
     public void prochainJoueur() {
         etat = ATTENTE_COUP;
         PaneToken.getInstance(this).update();
-        jCourant = ++jCourant % 2;
+        
 
         if(plateau.estEncerclee(jCourant)){
             etat=FIN;
-            System.err.println(jCourant+" à perdu");
+            Interface.goFin(joueurs[jCourant].nom(), GAGNE);
+        }else if(plateau.estEncerclee((jCourant+1)%2)){
+            etat=FIN;
+            Interface.goFin(joueurs[jCourant].nom(), PERDU);
+        }else if(configurations.containsKey(plateau.hashCode()) && configurations.get(plateau.hashCode())>2 ){
+            etat=FIN;
+            //System.out.println(configurations.toString()+" "+plateau.hashCode());
+            Interface.goFin(nom1, NUL);
+            System.err.println("Match nul");
         }else{
+            if(configurations.containsKey(plateau.hashCode()))
+                configurations.put(plateau.hashCode(), configurations.get(plateau.hashCode())+1 );
+            else
+                configurations.put(plateau.hashCode(), 1 );
+            
+            jCourant = ++jCourant % 2;
+            plateau.setJoueur(jCourant);
             List<Coup[]> tab = new LinkedList();
             for(int i=0; i<joueurs[jCourant].pions().length; i++){
                 if(joueurs[jCourant].pions()[i]!=0){
@@ -187,7 +199,7 @@ public abstract class ArbitreReseau extends Arbitre{
                 prochainJoueur();
             }else if(precAucun && aucun){
                 etat=FIN;
-                System.err.println("Match nul");
+                Interface.goFin(nom1, NUL);
             }else{
                 
             }

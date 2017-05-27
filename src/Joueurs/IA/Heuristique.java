@@ -41,4 +41,8 @@ public abstract class Heuristique {
     public boolean win(Emulateur a, Ordinateur me){
         return a.m.estEncerclee(me.numAdversaire());
     }
+    
+    public int distance(Emulateur a, Ordinateur me){
+        return 0;
+    }
 }

@@ -78,11 +78,15 @@ public class Local extends Arbitre{
         switch(type){
             case FabriqueArbitre.LOCAL_JVJ:
                 joueurs[J1] = new Humain(true, prop, tabPieces, J1, nom1);
-                joueurs[J2] = new Humain(true, prop, tabPieces2, J2, nom2);
+                joueurs[J2] = new Humain(false, prop, tabPieces2, J2, nom2);
                 break;
             case FabriqueArbitre.LOCAL_JVIA:
                 joueurs[J1] = new Humain(true, prop, tabPieces,  J1, nom1);
-                joueurs[J2] = new Ordinateur(true,difficulte, prop, tabPieces2,  J2, nom2);
+                joueurs[J2] = new Ordinateur(false,difficulte, prop, tabPieces2,  J2, nom2);
+                break;
+            case FabriqueArbitre.LOCAL_IAVJ:
+                joueurs[J2] = new Humain(true, prop, tabPieces,  J2, nom2);
+                joueurs[J1] = new Ordinateur(false,difficulte, prop, tabPieces2,  J1, nom1);
                 break;
         }
         
@@ -98,7 +102,6 @@ public class Local extends Arbitre{
      */
     @Override
     public void joue(Deplacement d){
-        System.out.println ("J'ai fait caca ici aussi :x" + d);
         if(plateau().reine(jCourant)!=null){
                 //if(deplacePionValide(d)){
                 enCoursIt = d.route().iterator();
@@ -108,7 +111,7 @@ public class Local extends Arbitre{
                 historique.add(d);
                 etat = JOUE_EN_COURS;
                 temps_ecoule=0;
-                System.err.println(d+" déplacement effectué "+enCours);
+                //System.err.println(d+" déplacement effectué "+enCours);
             //}else{
                 //System.err.println("Deplacement impossible "+d);
             //}
@@ -123,7 +126,6 @@ public class Local extends Arbitre{
      */
     @Override
     public void joue(Depot d){
-        System.err.println("caca" + d.joueur());
         if(nbCoup[jCourant]==0 && jCourant == J1){
             joueurs[d.joueur()].jouer(d.type());
             plateau.premierPion(FabriqueInsecte.creer(d.type(), jCourant, new Point(0,0)));
@@ -131,7 +133,7 @@ public class Local extends Arbitre{
             nbCoup[jCourant]++;
             refaire.clear();
             historique.add(d);
-            System.err.println("1- Dépot effectué "+d);
+            //System.err.println("1- Dépot effectué "+d);
             prochainJoueur();
         }else if(nbCoup[jCourant]==0 && jCourant == J2){
             if(plateau.premierPionValide(d)){
@@ -140,10 +142,10 @@ public class Local extends Arbitre{
                 nbCoup[jCourant]++;
                 refaire.clear();
                 historique.add(d);
-                System.err.println("2- Dépot effectué "+d);
+                //System.err.println("2- Dépot effectué "+d);
                 prochainJoueur();
             }else{
-                System.err.println("Depot impossible");
+                //System.err.println("Depot impossible");
             }
         }else if(deposePionValide(d) && joueurs[jCourant].pion(d.type())>0){
             
@@ -153,13 +155,13 @@ public class Local extends Arbitre{
                 nbCoup[jCourant]++;
                 refaire.clear();
                 historique.add(d);
-                System.err.println("3- Dépot effectué "+d);
+                //System.err.println("3- Dépot effectué "+d);
                 prochainJoueur();
             }else{
                 System.err.println("Vous devez déposé une reine "+jCourant);
             }
         }else{
-            System.err.println("Depot impossible");
+            //System.err.println("Depot impossible");
         }
         
         
@@ -178,20 +180,21 @@ public class Local extends Arbitre{
         }else if(plateau.estEncerclee((jCourant+1)%2)){
             etat=FIN;
             Interface.goFin(joueurs[jCourant].nom(), PERDU);
-        }else if(configurations.contains(plateau.hashCode())){
+        }else if(configurations.containsKey(plateau.hashCode()) && configurations.get(plateau.hashCode())>2 ){
             etat=FIN;
-            System.out.println(configurations.toString()+" "+plateau.hashCode());
+            //System.out.println(configurations.toString()+" "+plateau.hashCode());
+            Interface.goFin(nom1, NUL);
             System.err.println("Match nul");
         }else{
-            configurations.add(plateau.hashCode());
-            //System.err.println(plateau.hashCode());
+            if(configurations.containsKey(plateau.hashCode()))
+                configurations.put(plateau.hashCode(), configurations.get(plateau.hashCode())+1 );
+            else
+                configurations.put(plateau.hashCode(), 1 );
             
             etat = ATTENTE_COUP;
             PaneToken.getInstance(this).update();
             jCourant = ++jCourant % 2;
             plateau.setJoueur(jCourant);
-            //configurations.add(plateau.hashCode());
-            //System.err.println(plateau.hashCode());
             List<Coup[]> tab = new LinkedList();
             for(int i=0; i<joueurs[jCourant].pions().length; i++){
                 if(joueurs[jCourant].pions()[i]!=0){
@@ -210,7 +213,7 @@ public class Local extends Arbitre{
             while(it.hasNext())
                 taille+=it.next().length;
             it = tab.iterator();
-            System.out.println(nbCoup[J1]+" "+nbCoup[J2]);
+            //System.out.println(nbCoup[J1]+" "+nbCoup[J2]);
             coups = new Coup[taille];
             int i=0;
             while(it.hasNext()){
@@ -221,7 +224,6 @@ public class Local extends Arbitre{
                 }
                  i+=j;
             }
-            System.out.println(aucun);
             aucun = (coups == null || coups.length<=0);
             if(aucun){
                 prochainJoueur();

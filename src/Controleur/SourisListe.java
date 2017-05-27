@@ -27,6 +27,7 @@ public class SourisListe implements EventHandler<MouseEvent>{
     @Override
     public void handle(MouseEvent t) {
         FabriqueArbitre.initP(list.getSelectionModel().getSelectedItem().split(" ")[0]);
+        FabriqueArbitre.initType(0);
     }
     
     

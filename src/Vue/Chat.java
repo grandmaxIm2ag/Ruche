@@ -17,10 +17,14 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.ImagePattern;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
 
@@ -74,15 +78,21 @@ public class Chat {
         chat.setAlwaysOnTop(true);
         
         show = new Button();
-        show.setGraphic(new ImageView(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Icone/chat.png"))));
+        show.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Icone/chat.png"))), CornerRadii.EMPTY, Insets.EMPTY)));
+        show.setMaxWidth(50);
+        show.setMaxHeight(50);
+        show.setMinWidth(50);
+        show.setMinHeight(50);
         show.setOnAction((ActionEvent event) -> {
             hide = !disc.isShowing();
             if (!disc.isShowing()) {
                 disc.show(s);
-                show.setGraphic(new ImageView(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Icone/chat.png"))));
+                show.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Icone/chat.png"))), CornerRadii.EMPTY, Insets.EMPTY)));
             } else
                 disc.hide();
             hide = !disc.isShowing();
+            disc.setX(Interface.scene.getWindow().getWidth()+Interface.scene.getWindow().getX()-disc.getWidth());
+            disc.setY(Interface.scene.getWindow().getY()+Interface.scene.getWindow().getHeight()-disc.getHeight());
         });
         
         Button hide = new Button("Envoyer");
@@ -104,6 +114,6 @@ public class Chat {
         board.getItems().add(b.getBulle());
         lastName = nom;
         if(hide)
-            show.setGraphic(new ImageView(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Icone/help.png"))));
+            show.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Icone/newMessage.png"))), CornerRadii.EMPTY, Insets.EMPTY)));
     }
 }

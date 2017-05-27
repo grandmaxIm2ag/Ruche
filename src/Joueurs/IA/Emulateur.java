@@ -119,8 +119,8 @@ public class Emulateur {
             historique.add(d);
            // System.err.println("EMU  "+jCourant + " - 1st Dépot effectué "+d);
         }else if(nbCoup[jCourant]==0 && jCourant == J2){
-            joueurs[jCourant].jouer(d.type());
             if(m.premierPionValide(d)){
+                joueurs[jCourant].jouer(d.type());
                 m.deposePion(d);
                 nbCoup[jCourant]++;
                 historique.add(d);

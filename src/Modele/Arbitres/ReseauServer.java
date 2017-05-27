@@ -50,6 +50,7 @@ import ruche.Reglage;
  * @author maxence
  */
 public class ReseauServer extends ArbitreReseau{
+    public static final int ANNUL = 7;
     private int port;
     private ServerSocket serverSocket;
     Socket client;
@@ -102,11 +103,10 @@ public class ReseauServer extends ArbitreReseau{
             joueurs[J2] = new Humain(true, prop, tabPieces2, J2, nom2);
         
             Interface.connexion();
-            System.out.println("Coucou");
             Interface.goPartie();
             etat = INITIALISATION;
         }catch(Exception e){
-            System.err.println(e);
+            System.err.println("Erreur init reseaux"+e);
             etat = FIN;
         }
         
@@ -119,7 +119,7 @@ public class ReseauServer extends ArbitreReseau{
     public void annul() {
         try{
             serverSocket.close();
-            Interface.error("Youpi", "Ca marche");
+            Interface.goTest();
         }catch(IOException e){
             System.out.println("Bug ???");
         }
@@ -143,6 +143,8 @@ public class ReseauServer extends ArbitreReseau{
             
         nom2 = actions[J2].extraire();
         actions[J1].inserer(nom1);
+        
+        System.out.println(nom2);
         
         joueurs[J2].setNom(nom2);
         etat = INITIALISATION;
@@ -188,6 +190,10 @@ public class ReseauServer extends ArbitreReseau{
         long nouv = t-temps;
         temps=t;
         switch(etat){
+            case ANNUL:
+                annul();
+                Interface.fin();
+                break;
             case AIDE:
                 temps_ecoule+=nouv;
                 if(temps_ecoule>=1000000000){
@@ -197,15 +203,20 @@ public class ReseauServer extends ArbitreReseau{
                 break;
             case INITIALISATION:
                 if(!accept.isAlive()){
-                    Interface.closeConnexion();
-                    //Chat.writeMessage("Test", joueurs[J2].nom());
-                    etat = ATTENTE_COUP;
+            try {
+                Interface.closeConnexion();
+            } catch (Exception ex) {
+                Logger.getLogger(ReseauServer.class.getName()).log(Level.SEVERE, null, ex);
+            }
                 }
                 break;
             case ATTENTE_COUP:
                 if(jCourant == J2){
-                    if(!aFaire.isEmpty())
-                        joue(aFaire.poll());
+                    if(!aFaire.isEmpty()){
+                        Coup c = aFaire.poll();
+                        System.out.println(c+" "+(c==null));
+                        joue(c);
+                    }
                 }else{
                     if(nbCoup[J1]==0)
                         PaneToken.getInstance(this).update();
@@ -214,7 +225,7 @@ public class ReseauServer extends ArbitreReseau{
             case JOUE_EN_COURS:
                 temps_ecoule+=nouv;
                 if(temps_ecoule>=100000000){
-                    System.out.println("Joue déplacement "+enCours);
+                    //System.out.println("Joue déplacement "+enCours);
                     temps_ecoule=0;
                     if(enCours!=null){
                         plateau.deplacePion(enCours);
@@ -239,28 +250,25 @@ public class ReseauServer extends ArbitreReseau{
                 plateau.clearAide();
                 break;
             case FIN:
-                Interface.fin();
+                //Interface.fin();
                 try{
-                    serverSocket.close();
-                    System.out.println(accept.isAlive());
+                    if(client!=null)
+                        client.close();
+                    
                 }catch(IOException e){
                     
                 }
                 
+                /*
                 if(in != null && out!=null){
-                    System.out.println("Fini");
                     actions[J1].inserer("Fin");
-
-                    
                     out.close();
-
                     try {
                         in.close();
                     } catch (IOException ex) {
                         Logger.getLogger(ReseauServer.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                }
-                Interface.goTest();
+                }*/
                 
                 break;
         }

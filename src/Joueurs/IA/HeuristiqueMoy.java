@@ -149,16 +149,11 @@ public class HeuristiqueMoy extends Heuristique {
         int otherFreeTokensOnBoard = freeBugs(a.m,me.numAdversaire());
         int otherTokensOnBoard = Bugs(a.m,me.numAdversaire());
         int HexesFilledAroundOpposingQueen = me.nbLiberteesReine(a.m, me.numAdversaire());
-        
-       /* System.out.println("Reine adverse :"+HexesFilledAroundOpposingQueen);
-        System.out.println("Ma Reine :"+HexesFilledAroundMyQueen);
-        System.out.println("Mes pieces :"+meFreeTokensOnBoard);
-        System.out.println("pieces adverses :"+otherFreeTokensOnBoard);*/
        
-        heurs = 10*(HexesFilledAroundMyQueen - HexesFilledAroundOpposingQueen)
-                + 2*(mePossibleDepl - otherPossibleDepl) 
-                + (meTokensOnBoard - otherTokensOnBoard)
-                + (meFreeTokensOnBoard - otherFreeTokensOnBoard);
+        heurs = (50*HexesFilledAroundMyQueen - 100*HexesFilledAroundOpposingQueen)
+                + (mePossibleDepl - otherPossibleDepl) 
+                + 2*(meTokensOnBoard - otherTokensOnBoard)
+               /* + (meFreeTokensOnBoard - otherFreeTokensOnBoard)*/;
         
         if(j instanceof Depot)
             heurs+= a.GetValue(((Depot) j).type());       

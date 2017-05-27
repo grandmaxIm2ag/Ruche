@@ -59,8 +59,10 @@ public class MainTest {
         tf.test();
         TestPlateau tp = new TestPlateau(prop);
         tp.test();
-        TestFabriqueArbitre ta = new TestFabriqueArbitre(prop);
-        ta.test();
+        //TestFabriqueArbitre ta = new TestFabriqueArbitre(prop);
+        //ta.test();
+        TestTranslate tt = new TestTranslate();
+        tt.test();
     }
     
     

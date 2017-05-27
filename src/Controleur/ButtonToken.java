@@ -118,7 +118,7 @@ public class ButtonToken implements EventHandler<ActionEvent> {
                     ((ToggleButton) e.getSource()).setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Boutons/" + s + "_grey.png"))), CornerRadii.EMPTY, Insets.EMPTY)));
                 } else {
                     arbitre.plateau().clearAide();
-                    ((ToggleButton) e.getSource()).setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Boutons/"+s+"_red.png"))), CornerRadii.EMPTY, Insets.EMPTY)));
+                    //((ToggleButton) e.getSource()).setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Boutons/"+s+"_red.png"))), CornerRadii.EMPTY, Insets.EMPTY)));
                 }
                 //break;
             //default:
