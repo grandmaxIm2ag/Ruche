@@ -328,7 +328,7 @@ public abstract class Arbitre {
     public void charger(String plateau){
         Chargeur.charger(plateau, this.plateau);
         this.plateau.initLime();
-        System.out.println("->"+this.plateau.xMin+" "+this.plateau.yMax+" "+this.plateau.yMin+" "+this.plateau.xMax);
+        //System.out.println("->"+this.plateau.xMin+" "+this.plateau.yMax+" "+this.plateau.yMin+" "+this.plateau.xMax);
         type = Chargeur.type();
         historique = Chargeur.historique();
         refaire = Chargeur.refaire();
@@ -352,6 +352,35 @@ public abstract class Arbitre {
         jCourant = Chargeur.jCourant();
         System.out.println("Ici : "+jCourant);
         chargement=false;
+        List<Coup[]> tab2 = new LinkedList();
+        for(int i=0; i<joueurs[jCourant].pions().length; i++){
+            if(joueurs[jCourant].pions()[i]!=0){
+                Coup[] tmp = depotPossible(jCourant, i);
+                if(tmp!=null)
+                    tab2.add(tmp);
+            }
+        }
+
+        Coup[] tmp;
+        if((tmp=deplacementPossible(jCourant))!=null)
+            tab2.add(tmp);
+
+        int taille= 0;
+        Iterator<Coup[]> it = tab2.iterator();
+        while(it.hasNext())
+            taille+=it.next().length;
+        it = tab2.iterator();
+        //System.out.println(nbCoup[J1]+" "+nbCoup[J2]);
+        coups = new Coup[taille];
+        int i=0;
+        while(it.hasNext()){
+            Coup[] x = it.next();
+            int j;
+            for(j=0; j<x.length; j++){
+                coups[i+j]=x[j];
+            }
+             i+=j;
+        }
     }
 
     /**
@@ -790,12 +819,13 @@ public abstract class Arbitre {
     public abstract Arbitre clone();*/
     
     public void coupSouris(Deplacement d){
+        
         Deplacement res;
         for(int i=0; i<coups.length; i++){
             if(coups[i] instanceof Deplacement){
-                Deplacement tmp = (Deplacement) coups[i];
-                if(tmp.equals(d)){
-                    res = tmp.clone();
+                Deplacement tmp2 = (Deplacement) coups[i];
+                if(tmp2.equals(d)){
+                    res = tmp2.clone();
                     joue(res);
                     break;
                 }
