@@ -23,37 +23,37 @@ public class TestFabriqueArbitre {
      * @param p
      */
     public TestFabriqueArbitre(Properties p) {
-        fab = new FabriqueArbitre(p);
+        FabriqueArbitre.init(p);
     }
     
     /**
      *
      */
     public void testFabrique(){
-        fab.initType(FabriqueArbitre.LOCAL_JVJ);
-        a = fab.nouveau();
+        FabriqueArbitre.initType(FabriqueArbitre.LOCAL_JVJ);
+        a = FabriqueArbitre.nouveau();
         assertTrue(a instanceof Local);
-        fab.initType(FabriqueArbitre.LOCAL_JVIA);
-        a = fab.nouveau();
+        FabriqueArbitre.initType(FabriqueArbitre.LOCAL_JVIA);
+        a = FabriqueArbitre.nouveau();
         assertTrue(a instanceof Local);
-        fab.initType(FabriqueArbitre.SIMULATION);
-        a = fab.nouveau();
+        FabriqueArbitre.initType(FabriqueArbitre.SIMULATION);
+        a = FabriqueArbitre.nouveau();
         assertTrue(a instanceof SimulationIA);
-        fab.initType(FabriqueArbitre.RESEAU_CLIENT);
-        a = fab.nouveau();
+        FabriqueArbitre.initType(FabriqueArbitre.RESEAU_CLIENT);
+        a = FabriqueArbitre.nouveau();
         assertTrue(a instanceof ReseauClient);
-        fab.initType(FabriqueArbitre.RESEAU_SERVER);
-        a = fab.nouveau();
+        FabriqueArbitre.initType(FabriqueArbitre.RESEAU_SERVER);
+        a = FabriqueArbitre.nouveau();
         assertTrue(a instanceof ReseauServer);
         
         
-        fab.initType(FabriqueArbitre.LOCAL_JVIA);
-        fab.initDiff(2);
-        a = fab.nouveau();
+        FabriqueArbitre.initType(FabriqueArbitre.LOCAL_JVIA);
+        FabriqueArbitre.initDiff(2);
+        a = FabriqueArbitre.nouveau();
         assertTrue(a.difficulte()==2);
-        fab.initDiff(5);
-        a = fab.nouveau();
-        assertTrue(a.difficulte()==5);
+        FabriqueArbitre.initDiff(3);
+        a = FabriqueArbitre.nouveau();
+        assertTrue(a.difficulte()==3);
     }
     
     /**

@@ -16,6 +16,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Properties;
 import java.util.Scanner;
 import ruche.Configuration;
@@ -108,7 +109,6 @@ public class FabriqueArbitre {
      */
     public static void init(Properties p){
         prop = p;
-        
         difficulte = Ordinateur.MOYEN;
         diff = new String[4];
         diff[Ordinateur.FACILE_ALEATOIRE] = "Très Facile";
@@ -163,7 +163,6 @@ public class FabriqueArbitre {
      *  
      */
     public static Arbitre nouveau(){
-        System.out.println(plateau+" "+Arrays.toString(plateaux) );
         boolean b = plateau != null && !plateau.equals("(none)");
         initConf();
         switch(type){
@@ -173,14 +172,16 @@ public class FabriqueArbitre {
                 return new Local(prop, type, difficulte,nom1,nom2);
             case LOCAL_JVIA:
                 if(b)
-                    return new Local(prop, type, difficulte | difficulte2, plateau,nom1,"Ordinateur");
-                return new Local(prop, type, difficulte | difficulte2,nom1,"Ordinateur");
+                    return new Local(prop, type, difficulte | difficulte2, plateau,nom1,diff[difficulte | difficulte2]);
+                return new Local(prop, type, difficulte | difficulte2,nom1,diff[difficulte | difficulte2]);
            case LOCAL_IAVJ:
                 if(b)
-                    return new Local(prop, type, difficulte | difficulte2, plateau,nom1,"Ordinateur");
-                return new Local(prop, type, difficulte | difficulte2,nom1,"Ordinateur");
+                    return new Local(prop, type, difficulte | difficulte2, plateau,diff[difficulte | difficulte2],nom2);
+                return new Local(prop, type, difficulte | difficulte2,diff[difficulte | difficulte2],nom2);
             case SIMULATION:
-                return new SimulationIA(prop, difficulte, difficulte2,nom1,nom2);
+                if(b)
+                    return new SimulationIA(prop, difficulte, difficulte2,diff[difficulte], diff[difficulte2],plateau);
+                return new SimulationIA(prop, difficulte, difficulte2,diff[difficulte], diff[difficulte2]);
             case RESEAU_CLIENT:
                 return new ReseauClient(prop,nom1,"",ip);
             case RESEAU_SERVER:
@@ -224,8 +225,12 @@ public class FabriqueArbitre {
      * @see FabriqueArbitre#plateau
      */
     public static void initP(String p){
-        
+        /*if(Chargeur.sauvegardes().containsKey(p)){
+            
+            type = Integer.parseInt(Chargeur.sauvegardes().get(p).propriete().split("::")[0]);
+        }*/
         plateau=p;
+        
     }
     
     public static void initN1(String p){
@@ -323,6 +328,7 @@ public class FabriqueArbitre {
     
     public static void initIP(String p){
         ip = p;
+        
     }
     
     public static void initChargeur(){

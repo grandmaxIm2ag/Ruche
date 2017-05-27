@@ -43,8 +43,6 @@ public class MainTest {
         tco.test();
         TestMoustique tm = new TestMoustique();
         tm.test();
-        TestCloporte cloporte = new TestCloporte();
-        cloporte.test();
     }
 
     /**

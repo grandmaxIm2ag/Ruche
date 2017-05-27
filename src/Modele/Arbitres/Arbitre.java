@@ -49,6 +49,10 @@ public abstract class Arbitre {
     final static int A_JOUER = 2;
     public final static int FIN = 3;
     final static int AIDE = 4;
+    final static int PAUSE = 5;
+    
+    boolean pause;
+    int precEtat;
     
     public final static int GAGNE = 0;
     public final static int PERDU = 1;
@@ -98,6 +102,7 @@ public abstract class Arbitre {
      */
     public Arbitre(Properties p, String n1, String n2){
         Reglage.init(p);
+        pause = false;
         prop = p;
         joueurs = new Joueur[2];
         jCourant = J1;
@@ -239,8 +244,8 @@ public abstract class Arbitre {
             joue((Deplacement)d);
         else if(d instanceof Depot)
             joue((Depot)d);
-        else
-            System.err.println("Coup Inconnu "+d);
+        //else
+            //System.err.println("Coup Inconnu "+d);
     }
     
     /**
@@ -259,7 +264,7 @@ public abstract class Arbitre {
      *
      */
     public void nouvellePartie(){
-        plateau = new Plateau(0,0,Reglage.lis("lPlateau")*2*Reglage.lis("nbPiece"),Reglage.lis("hPlateau")*2*Reglage.lis("nbPiece"),prop);
+        plateau = new Plateau(0,0,Reglage.lis("nbPiece"),Reglage.lis("nbPiece"),prop);
         nbCoup[0]=0; nbCoup[1]=0;
         jCourant = 0;
         chargement = false;
@@ -270,12 +275,10 @@ public abstract class Arbitre {
      *
      */
     public void precedent(){
-        
-        
         if(!historique.isEmpty()){
             configurations.remove(configurations.size()-1);
             Coup c = historique.pop();
-            System.out.println(c+" "+(c==null));
+            //System.out.println(c+" "+(c==null));
             refaire.push(c);
             if(c instanceof Deplacement){
                 Deplacement d = (Deplacement) c;
@@ -285,13 +288,14 @@ public abstract class Arbitre {
                 Depot d = (Depot) c;
                 plateau.retirerPion(d.destination());
                 nbCoup[d.joueur()]--;
-                joueurs[d.joueur()].addPion(d.type());
+//                joueurs[d.joueur()].pred(d.type());
             }
+            PaneToken.getInstance(this).update();
+            jCourant = (jCourant+1)%2;
         }else{
             System.err.println("Aucun coup précedent");
         }
-        PaneToken.getInstance(this).update();
-        jCourant = (jCourant+1)%2;
+        
         
     }
 
@@ -301,7 +305,7 @@ public abstract class Arbitre {
     public void refaire(){
         if(!refaire.isEmpty()){
             Coup c = refaire.pop();
-            System.out.println(c+" "+(c==null));
+            //System.out.println(c+" "+(c==null));
             historique.push(c);
             joue(c);
         }else{
@@ -322,28 +326,32 @@ public abstract class Arbitre {
      * @param plateau
      */
     public void charger(String plateau){
-        Chargeur.init(prop);
-        this.plateau = Chargeur.charger(plateau);
+        Chargeur.charger(plateau, this.plateau);
+        this.plateau.initLime();
+        System.out.println("->"+this.plateau.xMin+" "+this.plateau.yMax+" "+this.plateau.yMin+" "+this.plateau.xMax);
         type = Chargeur.type();
-        difficulte = Chargeur.difficulte();
         historique = Chargeur.historique();
         refaire = Chargeur.refaire();
         
         String[] str = Chargeur.joueur();
         joueurs[J1].nom = str[J1].split("=")[0];
         String[] str2 = str[J1].split("=")[1].split(":");
-        System.err.println(Arrays.toString(str2));
         int[] tab = new int[str2.length];
         for(int i=0; i<str2.length; i++)
             tab[i]=Integer.parseInt(str2[i]);
         joueurs[J1].setPieces(tab);
         joueurs[J2].nom = str[J2].split("=")[0];
-        str2 = str[J1].split("=")[1].split(":");
+        str2 = str[J2].split("=")[1].split(":");
         tab = new int[str2.length];
-        for(int i=0; i<str2.length; i++)
+        for(int i=0; i<str2.length; i++){
             tab[i]=Integer.parseInt(str2[i]);
+            System.out.println(str2[i]);
+        }
+        nbCoup = Chargeur.nbCourant();
         joueurs[J2].setPieces(tab);
-
+        jCourant = Chargeur.jCourant();
+        System.out.println("Ici : "+jCourant);
+        chargement=false;
     }
 
     /**
@@ -352,19 +360,24 @@ public abstract class Arbitre {
      */
     public void sauvegarder(String nomSauv){
         String sauv = "";
-        
+        System.out.println("passé");
         switch(type){
             case FabriqueArbitre.LOCAL_JVJ:
-                sauv = type+"::"+joueurs[J1].nom()+"::"+joueurs[J1].nom()+"\n";
+                sauv = type+"::"+joueurs[J1].nom()+"::"+joueurs[J2].nom()+"\n";
                 break;
             case FabriqueArbitre.LOCAL_JVIA:
                 sauv = type+"::"+joueurs[J1].nom()+"::"+difficulte+"\n";
                 break;
+            case FabriqueArbitre.LOCAL_IAVJ:
+                sauv = type+"::"+difficulte+"::"+joueurs[J2].nom()+"\n";
+                break;
             case FabriqueArbitre.SIMULATION:
-                sauv = type+"::"+difficulte+"\n";
+                Ordinateur o2 = (Ordinateur)joueurs[J2];
+                Ordinateur o1 = (Ordinateur)joueurs[J1];
+//                sauv = type+"::"+o1.diff()+"::"+o2.diff()+"\n";
                 break;
         }
-        sauv += type+":"+difficulte+":"+nbCoup[J1]+":"+nbCoup[J1]+":"+jCourant+"\n";
+        sauv += type+":"+nbCoup[J1]+":"+nbCoup[J1]+":"+jCourant+"\n";
         sauv += joueurs[J1]+"\n";
         sauv += joueurs[J2]+"\n";
         sauv += plateau.toString();
@@ -403,18 +416,22 @@ public abstract class Arbitre {
         
         try{
             Scanner fr =new Scanner(new FileInputStream("Sauvegardes/Sauvegarde"));
-            str = fr.nextLine();
-            if(str == null || str.equals("")){
-                str = nomSauv;
+            if(fr.hasNext()){
+                str = fr.nextLine();
+                if(str == null || str.equals("")){
+                    str = nomSauv;
+                }else{
+                    str += (":"+nomSauv);
+                }
+                fr.close();
             }else{
-                str += (":"+nomSauv);
+                str = nomSauv;
             }
-            fr.close();
             PrintWriter writer = new PrintWriter("Sauvegardes/Sauvegarde", "UTF-8");
             writer.print(str);
             writer.close();
         }catch(IOException e){
-            System.err.println("Echec de la saucegarde "+e);
+            System.err.println("Echec de la sauvegarde "+e);
         }
         
         FabriqueArbitre.initChargeur();
@@ -449,7 +466,7 @@ public abstract class Arbitre {
         while(it.hasNext())
             taille+=it.next().length;
         it = tab.iterator();
-        System.out.println(nbCoup[J1]+" "+nbCoup[J2]);
+        //System.out.println(nbCoup[J1]+" "+nbCoup[J2]);
         coups = new Coup[taille];
         int i=0;
         while(it.hasNext()){
@@ -480,7 +497,7 @@ public abstract class Arbitre {
             return plateau.accept(dessinateur);
         }
         else{
-            System.err.println("Ici");
+            //System.err.println("Ici");
             return plateauAide.accept(dessinateur);
         }
            
@@ -570,7 +587,8 @@ public abstract class Arbitre {
             case ATTENTE_COUP:
                 aide = false;
                 break;
-            
+            case PAUSE:
+                break;
             case JOUE_EN_COURS:
                 temps_ecoule+=nouv;
                 if(temps_ecoule>=100000000){
@@ -619,6 +637,13 @@ public abstract class Arbitre {
                     Coup c1 = c.pop();
                     historique.push(c1);
                     b &= tmp[i]==null || tmp[i].equals(c1);
+                    if(c1 instanceof Depot){
+                        Depot d = (Depot)c1;
+                        tmp[i] = new Depot(d.joueur(), d.type(), d.destination());
+                    }else{
+                        Deplacement d = (Deplacement)c1;
+                        tmp[i] = new Deplacement(d.joueur(), d.source(), d.destination());
+                    }
                     i = ++i % 4;
                 }
             }
@@ -654,7 +679,7 @@ public abstract class Arbitre {
     public void dispo(int ins){
         initClopDepl = null;
         Coup[] c = depotPossible(jCourant, ins);
-        System.out.println(jCourant+" "+ins+" "+Arrays.toString(c));
+        //System.out.println(jCourant+" "+ins+" "+Arrays.toString(c));
         List<Case> l = new ArrayList();
         for(int i=0; c!=null && i<c.length; i++){
             Case c2 = new Case(c[i].destination().x(), c[i].destination().y(), 1, 1);
@@ -693,8 +718,6 @@ public abstract class Arbitre {
                 Case c2 = new Case(c1.destination().x(), c1.destination().y(), 1, 1);
                 c2.jouable();
                 l.add(c2);
-                if(ins instanceof Cloporte)
-                    System.out.println(c1+"!!!!!!!!!!!!!!!!"+ins.position());
                 plateau.setAide(l);
             }
         
@@ -754,6 +777,14 @@ public abstract class Arbitre {
         }
         etat = ATTENTE_COUP;
     }
+    
+    public Stack<Coup> historique(){
+        return historique;
+    }
+    
+    public int nbcoups(int j){
+        return nbCoup[j];
+    }
     /*
     @Override
     public abstract Arbitre clone();*/
@@ -771,5 +802,16 @@ public abstract class Arbitre {
             }
         }
         
+    }
+    
+    public void pause(){
+        if(pause){
+            etat = precEtat;
+        }else{
+            precEtat = etat;
+            etat = PAUSE;
+        }
+        pause = !pause;
+            
     }
 }

@@ -89,7 +89,6 @@ public class Local extends Arbitre{
                 joueurs[J1] = new Ordinateur(false,Ordinateur.MOYEN, prop, tabPieces2,  J1, nom1);
                 break;
         }
-        
         if(chargement)
             charger(pla);
         
@@ -111,7 +110,7 @@ public class Local extends Arbitre{
                 historique.add(d);
                 etat = JOUE_EN_COURS;
                 temps_ecoule=0;
-                System.err.println(d+" déplacement effectué "+enCours);
+                //System.err.println(d+" déplacement effectué "+enCours);
             //}else{
                 //System.err.println("Deplacement impossible "+d);
             //}
@@ -145,7 +144,7 @@ public class Local extends Arbitre{
                 System.err.println("2- Dépot effectué "+d);
                 prochainJoueur();
             }else{
-                System.err.println("Depot impossible");
+                System.err.println("Depot impossible 1");
             }
         }else if(deposePionValide(d) && joueurs[jCourant].pion(d.type())>0){
             
@@ -161,7 +160,7 @@ public class Local extends Arbitre{
                 System.err.println("Vous devez déposé une reine "+jCourant);
             }
         }else{
-            System.err.println("Depot impossible");
+            System.err.println("Depot impossible 2");
         }
         
         
@@ -176,14 +175,24 @@ public class Local extends Arbitre{
         
         if(plateau.estEncerclee(jCourant)){
             etat=FIN;
-            Interface.goFin(joueurs[jCourant].nom(), GAGNE);
+            if(joueurs[jCourant] instanceof Humain && joueurs[(jCourant+1)%2] instanceof Ordinateur)
+                Interface.dialogFin("Vous avez perdu");
+            else if(joueurs[jCourant] instanceof Ordinateur && joueurs[(jCourant+1)%2] instanceof Humain)
+                Interface.dialogFin("Vous avez Gagne");
+            else
+                Interface.dialogFin(joueurs[jCourant]+" a battu "+joueurs[(jCourant+1)%2]);
         }else if(plateau.estEncerclee((jCourant+1)%2)){
             etat=FIN;
-            Interface.goFin(joueurs[jCourant].nom(), PERDU);
+            if(joueurs[jCourant] instanceof Humain && joueurs[(jCourant+1)%2] instanceof Ordinateur)
+                Interface.dialogFin("Vous avez Gagné");
+            else if(joueurs[jCourant] instanceof Ordinateur && joueurs[(jCourant+1)%2] instanceof Humain)
+                Interface.dialogFin("Vous avez Perdu");
+            else
+                Interface.dialogFin(joueurs[(jCourant+1)%2]+" a battu "+joueurs[jCourant]);
         }else if(configurations.containsKey(plateau.hashCode()) && configurations.get(plateau.hashCode())>2 ){
             etat=FIN;
             //System.out.println(configurations.toString()+" "+plateau.hashCode());
-            Interface.goFin(nom1, NUL);
+            Interface.dialogFin("Match Nul");
             System.err.println("Match nul");
         }else{
             if(configurations.containsKey(plateau.hashCode()))
@@ -191,8 +200,10 @@ public class Local extends Arbitre{
             else
                 configurations.put(plateau.hashCode(), 1 );
             
+            if(!chargement)
+                PaneToken.getInstance(this).update();
             etat = ATTENTE_COUP;
-            PaneToken.getInstance(this).update();
+            
             jCourant = ++jCourant % 2;
             plateau.setJoueur(jCourant);
             List<Coup[]> tab = new LinkedList();

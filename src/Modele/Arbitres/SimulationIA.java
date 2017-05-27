@@ -5,7 +5,6 @@
  */
 package Modele.Arbitres;
 
-import Joueurs.Humain;
 import Joueurs.Ordinateur;
 import Modele.Coup;
 import Modele.Deplacement;
@@ -14,6 +13,7 @@ import Modele.FabriqueInsecte;
 import Modele.Point;
 import Vue.Interface;
 import Vue.PaneToken;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -37,7 +37,18 @@ public class SimulationIA extends Arbitre {
         //difficulte = d;
         this.diff1 = diff1;
         this.diff2 = diff2;
+        type = FabriqueArbitre.SIMULATION;
     }
+    public SimulationIA(Properties p, int diff1, int diff2,String n1, String n2, String pl) {
+        super(p, n1, n2);
+        //difficulte = d;
+        this.diff1 = diff1;
+        this.diff2 = diff2;
+        type = FabriqueArbitre.SIMULATION;
+        pla = pl;
+        chargement = true;
+    }
+    
     
     /**
      *
@@ -62,6 +73,9 @@ public class SimulationIA extends Arbitre {
         joueurs[J1] = new Ordinateur(true,diff1, prop, tabPieces,J1, nom1);
         joueurs[J2] = new Ordinateur(true,diff2, prop, tabPieces2,J2, nom2);
         
+        if(chargement)
+            charger(pla);
+            
         go();
     }
     
@@ -69,10 +83,11 @@ public class SimulationIA extends Arbitre {
      *
      */
     public void go(){
+        System.out.println(this.plateau);
         configurations.clear();
         Interface.goPartie();
-        if(joueurs[J1] instanceof Ordinateur){
-            Ordinateur o = (Ordinateur) joueurs[J1];
+        if(joueurs[jCourant] instanceof Ordinateur){
+            Ordinateur o = (Ordinateur) joueurs[jCourant];
             List<Coup[]> tab = new LinkedList();
                 for(int i=0; i<joueurs[jCourant].pions().length; i++){
                     if(joueurs[jCourant].pions()[i]!=0){
@@ -93,11 +108,12 @@ public class SimulationIA extends Arbitre {
                     taille+=it.next().length;
                 it = tab.iterator();
                 coups= new Coup[taille];
-                for(int i=0; i<taille;i++){
+                for(int i=0; i<taille && it.hasNext();i++){
                     Coup[] x = it.next();
                     for(int j=0; j<x.length; j++)
                         coups[i+j]=x[j];
                 }
+                System.out.println(Arrays.toString(coups));
                 joue(o.coup(this, coups));
         }
     }
@@ -111,14 +127,14 @@ public class SimulationIA extends Arbitre {
         PaneToken.getInstance(this).update();
         if(plateau.estEncerclee(jCourant)){
             etat=FIN;
-            Interface.goFin(joueurs[jCourant].nom(), GAGNE);
+            Interface.dialogFin(joueurs[(jCourant+1)%2]+" a battu "+joueurs[jCourant]);
         }else if(plateau.estEncerclee((jCourant+1)%2)){
             etat=FIN;
-            Interface.goFin(joueurs[jCourant].nom(), PERDU);
+            Interface.dialogFin(joueurs[jCourant]+" a battu "+joueurs[(jCourant+1)%2]);
         }else if(configurations.containsKey(plateau.hashCode()) && configurations.get(plateau.hashCode())>2 ){
             etat=FIN;
             //System.out.println(configurations.toString()+" "+plateau.hashCode());
-            Interface.goFin(nom1, NUL);
+            Interface.dialogFin(joueurs[jCourant]+" a battu "+joueurs[(jCourant+1)%2]);
             System.err.println("Match nul");
         }else{
             if(configurations.containsKey(plateau.hashCode()))
@@ -146,7 +162,6 @@ public class SimulationIA extends Arbitre {
             while(it.hasNext())
                 taille+=it.next().length;
             it = tab.iterator();
-            System.out.println(nbCoup[J1]+" "+nbCoup[J2]);
             coups = new Coup[taille];
             int i=0;
             while(it.hasNext()){
@@ -184,7 +199,7 @@ public class SimulationIA extends Arbitre {
                 nbCoup[jCourant]++;
                 refaire.clear();
                 historique.add(d);
-                System.err.println(d+" déplacement effectué par "+jCourant);
+                //System.err.println(d+" déplacement effectué par "+jCourant);
                 etat=JOUE_EN_COURS;
          
     }
@@ -201,17 +216,16 @@ public class SimulationIA extends Arbitre {
             nbCoup[jCourant]++;
             refaire.clear();
             historique.add(d);
-            System.err.println("1- Dépot effectué par "+jCourant+" "+d);
+            //System.err.println("1- Dépot effectué par "+jCourant+" "+d);
             etat=JOUE_EN_COURS;
         }else if(nbCoup[jCourant]==0 && jCourant == J2){
             if(plateau.premierPionValide(d)){
-            joueurs[jCourant].jouer(d.type());
+                joueurs[jCourant].jouer(d.type());
                 deposePion(d);
                 nbCoup[jCourant]++;
                 refaire.clear();
                 historique.add(d);
-                joueurs[jCourant].jouer(d.type());
-                System.err.println("2- Dépot effectué "+d);
+                //System.err.println(jCourant + " - 1st Dépot effectué "+d);
                 etat=JOUE_EN_COURS;
             }else{
                 System.err.println("Depot impossible");
@@ -223,7 +237,7 @@ public class SimulationIA extends Arbitre {
             nbCoup[jCourant]++;
             refaire.clear();
             historique.add(d);
-            System.err.println("3- Dépot effectué "+d);
+            //System.err.println("3- Dépot effectué "+d);
             etat=JOUE_EN_COURS;
             
         }else{

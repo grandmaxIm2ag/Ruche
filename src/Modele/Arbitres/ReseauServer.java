@@ -106,7 +106,7 @@ public class ReseauServer extends ArbitreReseau{
             Interface.goPartie();
             etat = INITIALISATION;
         }catch(Exception e){
-            System.err.println(e);
+            System.err.println("Erreur init reseaux"+e);
             etat = FIN;
         }
         
@@ -203,11 +203,14 @@ public class ReseauServer extends ArbitreReseau{
                 break;
             case INITIALISATION:
                 if(!accept.isAlive()){
-            try {
-                Interface.closeConnexion();
-            } catch (Exception ex) {
-                Logger.getLogger(ReseauServer.class.getName()).log(Level.SEVERE, null, ex);
-            }
+                    try {
+                        Interface.closeConnexion();
+                        if(client==null)
+                            etat = FIN;
+                        //Interface.error("Echec d'bergement d'une nouvelle partie", "Aucun joueur ne us a rejoint");
+                    } catch (Exception ex) {
+                        Logger.getLogger(ReseauServer.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
                 break;
             case ATTENTE_COUP:
@@ -225,7 +228,7 @@ public class ReseauServer extends ArbitreReseau{
             case JOUE_EN_COURS:
                 temps_ecoule+=nouv;
                 if(temps_ecoule>=100000000){
-                    System.out.println("Joue déplacement "+enCours);
+                    //System.out.println("Joue déplacement "+enCours);
                     temps_ecoule=0;
                     if(enCours!=null){
                         plateau.deplacePion(enCours);
@@ -250,10 +253,16 @@ public class ReseauServer extends ArbitreReseau{
                 plateau.clearAide();
                 break;
             case FIN:
-                //Interface.fin();
                 try{
                     if(client!=null)
                         client.close();
+                    else{
+                        Interface.fin();
+                        Interface.goTest();
+                        Interface.error("Echec d'hébergement de partie", "Aucun joueur ne vous a rejoint");
+                        
+                    }
+                    serverSocket.close();
                     
                 }catch(IOException e){
                     

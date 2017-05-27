@@ -12,6 +12,7 @@ import Modele.Deplacement;
 import Modele.FabriqueInsecte;
 import Modele.Fourmie;
 import Modele.Insecte;
+import Modele.Plateau;
 import Modele.Point;
 import static TestModel.TestFourmie.appartient;
 import java.util.HashMap;
@@ -41,26 +42,26 @@ public class TestCoccinelle {
     }
     
     void deplacement1(){
-        Map<Point, Case> plateau = new HashMap();
+        Plateau plateau = new Plateau(0,0,0,0,null);
         Case c = new Case(f.position().x(), f.position().y(), Reglage.lis("lCase"), Reglage.lis("hCase"));
         c.deposePion(f);
-        plateau.put(c.position(), c);
-        Coup[] d = new Coup[0];/*
+        plateau.matrice.put(c.position(), c);
+        Coup[] d = new Coup[0];
         Coup[] d2 = f.deplacementValide(plateau);
         assertEquals( d.length, d2.length);
- */   }
+    }
     
     void deplacement2(){
-        Map<Point, Case> plateau = new HashMap();
+        Plateau plateau = new Plateau(0,0,0,0,null);
         Case c = new Case(f.position().x(), f.position().y(), Reglage.lis("lCase"), Reglage.lis("hCase"));
         c.deposePion(f);
-        plateau.put(c.position(), c);
+        plateau.matrice.put(c.position(), c);
         Case c1 = new Case(3, 1, Reglage.lis("lCase"), Reglage.lis("hCase"));
         c1.deposePion(FabriqueInsecte.creer(Insecte.REINE, 0, new Point(3,1)));
-        plateau.put(c1.position(), c1);
+        plateau.matrice.put(c1.position(), c1);
         Case c2 = new Case(3, 2, Reglage.lis("lCase"), Reglage.lis("hCase"));
         c2.deposePion(FabriqueInsecte.creer(Insecte.REINE, 0, new Point(3,2)));
-        plateau.put(c2.position(), c2);
+        plateau.matrice.put(c2.position(), c2);
         
         Coup[] d = {
             new Deplacement(0,"(2.0,2.0)->(3.0,1.0)->(3.0,2.0)->(4.0,2.0)"),
@@ -71,12 +72,12 @@ public class TestCoccinelle {
             new Deplacement(0, "(2.0,2.0)->(3.0,2.0)->(3.0,1.0)->(4.0,0.0)"),
             new Deplacement(0, "(2.0,2.0)->(3.0,2.0)->(3.0,1.0)->(3.0,0.0)"),
             new Deplacement(0, "(2.0,2.0)->(3.0,2.0)->(3.0,1.0)->(2.0,1.0)")
-        };/*
+        };
         Coup[] d2 = f.deplacementValide(plateau);
         assertEquals( d.length, d2.length);
         for(int i=0; i<d.length; i++){
             assertTrue(appartient(d2, d[i]));
-        }*/
+        }
     }
     
     /**

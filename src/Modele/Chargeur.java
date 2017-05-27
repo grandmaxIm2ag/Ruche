@@ -12,11 +12,14 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
 import java.util.Scanner;
 import java.util.Stack;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import ruche.Reglage;
 
 /**
@@ -31,71 +34,50 @@ public class Chargeur {
     static int[] n = {0,0};
     static String[] joueurs = {"null", "null"};
     static Stack<Coup> h, r, r2;
-    static HashMap<String, String> propSauvegarde;
-    static HashMap<String, String> sauvegardes;
-    
     /**
      *
      * @param p
      */
     public static void init(Properties p){
+        boolean vide = true;
         try{
              input = new Scanner(new FileInputStream("Sauvegardes/Sauvegarde")) ;
              if(input.hasNext()){
                 String[] plateaux = input.nextLine().split(":");
-                String[] format = new String[plateaux.length];
+                Sauvegarde[] format = new Sauvegarde[plateaux.length];
                 input.close();
-                propSauvegarde = new HashMap();
-                sauvegardes = new HashMap();
                 for (int i=0; i<plateaux.length; i++) {
                     String plateaux1 = plateaux[i];
                     input = new Scanner(new FileInputStream("Sauvegardes/"+plateaux1)) ;
                     String pl = input.nextLine();
                     String[] str = pl.split("::");
-
                     switch(Integer.parseInt(str[0])){
                         case FabriqueArbitre.LOCAL_JVJ:
-                            format[i] = String.format("%12s %12s %12s",plateaux1, str[2], str[3]);
+                            format[i] = new Sauvegarde(plateaux1, str[1], str[2],Integer.parseInt(str[0]));
                             break;
                         case FabriqueArbitre.LOCAL_JVIA:
-                            switch(Integer.parseInt(str[2])){
-                                case Ordinateur.FACILE_ALEATOIRE:
-                                    format[i] = String.format("%s%s%-20s %-20s",plateaux1, " ", str[1], "Très Facile");
-                                    break;
-                                case Ordinateur.FACILE_HEURISTIQUE:
-                                    format[i] = String.format("%s|%-20s %-20s",plateaux1, str[1], "Facile");
-                                    break;
-                                case Ordinateur.MOYEN:
-                                    format[i] = String.format("%s|%-20s %-20s",plateaux1, str[1], "Moyen");
-                                    break;
-                                case Ordinateur.DIFFICILE:
-                                    format[i] = String.format("%s|%-20s %-20s",plateaux1, str[1], "Difficile");
-                                    break;
-
-                            }
+                            format[i] = new Sauvegarde(plateaux1, str[1], "", Integer.parseInt(str[0]));
+                            format[i].setPropriete(Integer.parseInt(str[0]), Integer.parseInt(str[2]));
+                            break;
+                        case FabriqueArbitre.LOCAL_IAVJ:
+                            format[i] = new Sauvegarde(plateaux1, "", str[2], Integer.parseInt(str[0]));
+                            format[i].setPropriete(Integer.parseInt(str[0]), Integer.parseInt(str[1]));
                             break;
                         case FabriqueArbitre.SIMULATION:
-
+                            format[i] = new Sauvegarde(plateaux1, Integer.parseInt(str[1]), Integer.parseInt(str[2]), Integer.parseInt(str[0]));
                             break;
 
-                    }
-
-                   sauvegardes.put(plateaux1, pl);
-                   String sauv = "";
-                   while(input.hasNext()){
-                       pl = input.nextLine();
-                       if(input.hasNext())
-                           sauv += (pl+"\n");
-                       else
-                           sauv+=pl;
-                   }
-                   sauvegardes.put(plateaux1, sauv);
+                        }
 
                }
                Interface.goLoadGame(format);
+               vide = false;
              }
         }catch(FileNotFoundException e){
                  
+        }
+        if(vide){
+            Interface.goLoadGame(new Sauvegarde[0]);
         }
         prop = p;
     }
@@ -104,39 +86,42 @@ public class Chargeur {
      *
      * @return
      */
-    public static Plateau charger(String plateau){
-        Plateau res = new Plateau(0,0,0,0,prop);
-        String[] sauv = sauvegardes.get(plateau).split("\n");
-        String[] str = sauv[0].split(":");
+    public static Plateau charger(String plateau, Plateau res){
+        try {
+            input = new Scanner(new FileInputStream("Sauvegardes/"+plateau));
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Chargeur.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        input.nextLine();
+        String[] str = input.nextLine().split(":");
+        System.out.println(Arrays.toString(str));
         t = Integer.parseInt(str[0]);
-        d = Integer.parseInt(str[1]);
-        n[0] = Integer.parseInt(str[2]);
-        n[1] = Integer.parseInt(str[3]);
-        j = Integer.parseInt(str[4]);
+        n[0] = Integer.parseInt(str[1]);
+        n[1] = Integer.parseInt(str[2]);
+        j = Integer.parseInt(str[3]);
         
         String line = "";
-        joueurs[0] = sauv[1];
-        joueurs[1] = sauv[2];
+        joueurs[0] = input.nextLine();
+        joueurs[1] = input.nextLine();
         
-        line = sauv[3];
-        int k=3;
+        line = input.nextLine();
         boolean p = false, g = false; int r=0;
-        while(k<sauv.length && !line.equals("Historique en cours")){
-            k++;
+        while(input.hasNext() && !line.equals("Historique en cours")){
             if(line.equals("plateau")){
                 p = true;
-                line = sauv[k];
+                line = input.nextLine();
             }else if(line.equals("graphe")){
                 g=true;
                 p =false;
-                line = sauv[k];
+                line = input.nextLine();
             }else if(!p && !g){
                 if(!line.equals("null"))
                     res.setReine(r++, new Point(line));
                 else
                     r++;
-                line = sauv[k];
+                line = input.nextLine();
             }else if(p){
+                System.out.println("\t"+ line.split("_")[1]);
                 Point point = new Point(line.split("_")[0]);
                 str = line.split("_")[1].split(":");
                 Point p2 = new Point(str[0]);
@@ -145,7 +130,7 @@ public class Chargeur {
                     c.deposePion(FabriqueInsecte.creer(str[i]));
                 res.matrice().put(point, c);
                 res.utilises().add(point);
-                line = sauv[k];
+                line = input.nextLine();
             }else if(g){
                 str = line.split(":");
                 Point point = new Point(str[0]);
@@ -153,37 +138,32 @@ public class Chargeur {
                 for(int i=1; i<str.length; i++)
                     lp.add(new Point(str[i]));
                 res.voisins().put(point, lp);
-                line = sauv[k];
+                line = input.nextLine();
             }
         }
         
         h = new Stack();
         Stack<Coup> hBis = new Stack();
-        k++;
-        line = sauv[k];
-        while(k<sauv.length && !line.equals("Refaire en cours")){
-            k++;
+        line = input.nextLine();
+        while(input.hasNext() && !line.equals("Refaire en cours")){
             if(line.charAt(0)=='(')
                 hBis.push(new Deplacement(0,line));
             else
                 hBis.push(new Depot(0,line));
             
-            line = sauv[k];
+            line = input.nextLine();
         }
         while(!hBis.isEmpty())
             h.push(hBis.pop());
         
-        k++;
         r2 = new Stack();
-        while(sauv.length>k){
-            line = sauv[k];
-            k++;
+        while(input.hasNext() ){
             if(line.charAt(0)=='(')
                 hBis.push(new Deplacement(0,line));
             else
                 hBis.push(new Depot(0,line));
             
-//            line = sauv[k];
+            line = input.nextLine();
         }
         while(!hBis.isEmpty())
             r2.push(hBis.pop());

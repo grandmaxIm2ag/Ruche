@@ -11,6 +11,7 @@ import Modele.Arbitres.Arbitre;
 import Vue.PaneToken;
 import Vue.Pointeur;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -130,7 +131,7 @@ public class Plateau extends Composant {
     List<Case> aide;
     Map<Point, List<Point>> voisins;
     
-    int xMin, yMin, xMax, yMax;
+    public int xMin, yMin, xMax, yMax;
     Properties prop;
     int jCourant;
     int depotAide;
@@ -268,6 +269,7 @@ public class Plateau extends Composant {
      * @param d
      */
     public void deplacePion(Deplacement d){
+
         if(matrice.get(d.source()).tete().position().equals(reines[d.joueur()]) && matrice.get(d.source()).tete().type()==Insecte.REINE)
             reines[d.joueur()] = d.destination();
         
@@ -336,7 +338,7 @@ public class Plateau extends Composant {
      * @param source
      */
     public void majGraphe(Point source){
-        if(matrice.get(source)==null){
+        if(!matrice.containsKey(source)){
            voisins.remove(source);
            utilises.remove(source);
            for(Map.Entry<Point, List<Point> >  entry : voisins.entrySet()){
@@ -719,7 +721,7 @@ public class Plateau extends Composant {
                             ))
                         b = true;
                 
-                if(!b && !b2){
+                if(b && !b2){
                     RechercheConcurente rc = new RechercheConcurente(clone(), c2, e.clone());
                     threads.add(new Thread(rc));
                 }else if(b && !b2){
@@ -868,6 +870,7 @@ public class Plateau extends Composant {
             int i=0; 
             while(it.hasNext() && i<coups.length)
                 coups[i++]=it.next();
+            
             return coups;
         }
     }
@@ -878,6 +881,8 @@ public class Plateau extends Composant {
      */
     public void retirerPion(Point pos){
         Case c = matrice.get(pos);
+        if(c.tete().type()==Insecte.REINE)
+            reines[c.tete().joueur()]=null;
         c.retirePion();
         if(!c.utilise()){
             matrice.remove(c.position());
@@ -886,6 +891,8 @@ public class Plateau extends Composant {
         }else{
             matrice.put(pos, c);
         }
+        
+        majGraphe(pos);
     }
     
     /**
@@ -1048,6 +1055,12 @@ public class Plateau extends Composant {
         return tmp;
     }
     
+    public void initLime(){
+        xMin = (int) newLim(true, true);
+        xMax = (int) newLim(true, false);
+        yMin = (int) newLim(false, true);
+        yMax = (int) newLim(false, false);
+    }
     public void setDepotAide (int i) {
         depotAide = i;
         (PaneToken.getInstance()).uncheck();
