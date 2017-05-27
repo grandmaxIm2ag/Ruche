@@ -1062,6 +1062,7 @@ public class Interface extends Application {
         l.setTextFill(Color.RED);
         box.getChildren().add(l);
         Button play = new Button("Continuer");
+        play.setMaxWidth(200);
         play.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
@@ -1072,6 +1073,7 @@ public class Interface extends Application {
 
         box.getChildren().addAll(play);
         Button restart = new Button("Recommencer");
+        restart.setMaxWidth(200);
         restart.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
@@ -1083,12 +1085,15 @@ public class Interface extends Application {
         });
         box.getChildren().addAll(restart);
         Button save = new Button("Sauvegarder");
+        save.setMaxWidth(200);
         save.setOnAction(new Bouton(Bouton.BOUTON_SAUVEGARDER,arbitre) );
         box.getChildren().addAll(save);
         Button saveQuit = new Button("Sauvegarder Quitter");
+        saveQuit.setMaxWidth(200);
         saveQuit.setOnAction(new Bouton(Bouton.BOUTON_SAUVEGARDER_QUITTER,arbitre) );
         box.getChildren().addAll(saveQuit);
         Button menu = new Button("Menu pincipal");
+        menu.setMaxWidth(200);
         menu.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
@@ -1100,6 +1105,7 @@ public class Interface extends Application {
             }
         });
         Button quit = new Button("Quitter");
+        quit.setMaxWidth(200);
         quit.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
