@@ -164,6 +164,7 @@ public class Ordinateur extends Joueur{
             }
             //choix aléatoire
             int choix= r.nextInt(res.size());
+            System.gc();
             return res.get(choix);
         }else{
             return null;
@@ -187,8 +188,9 @@ public class Ordinateur extends Joueur{
             int EvalBoard;
             
             for(int i=0;i<d.length;i=i+1){
-                em.joue(d[i]);
-                EvalBoard = heurs.EvalPlateau(em, em.PossibleMoves(), this,d[i]);
+                Emulateur mp = em.clone();
+                mp.joue(d[i]);
+                EvalBoard = heurs.EvalPlateau(mp, mp.PossibleMoves(), this,d[i]);
                 if(EvalBoard == max){
                     //Add to results
                     res.add(d[i]);
@@ -197,7 +199,6 @@ public class Ordinateur extends Joueur{
                     res.clear();
                     res.add(d[i]);
                 }
-                em.precedent();
             }   
             //return a random move from res
             int choice= r.nextInt(res.size());
@@ -217,8 +218,9 @@ public class Ordinateur extends Joueur{
             int EvalBoard;
             
             for(int i=0;i<d.length;i=i+1){
-                em.joue(d[i]);
-                EvalBoard = heurs.EvalPlateau(em, em.PossibleMoves(), this,d[i]);
+                Emulateur mp = em.clone();
+                mp.joue(d[i]);
+                EvalBoard = heurs.EvalPlateau(mp, mp.PossibleMoves(), this,d[i]);
                 if(EvalBoard == max){
                     //Add to results
                     res.add(d[i]);
@@ -227,11 +229,11 @@ public class Ordinateur extends Joueur{
                     res.clear();
                     res.add(d[i]);
                 }
-                em.precedent();
             }   
             //return a random move from res
             int choice= r.nextInt(res.size());
-                return res.get(choice);
+            System.gc();
+            return res.get(choice);
         }
     }
     
