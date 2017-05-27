@@ -172,12 +172,12 @@ public class FabriqueArbitre {
                 return new Local(prop, type, difficulte,nom1,nom2);
             case LOCAL_JVIA:
                 if(b)
-                    return new Local(prop, type, difficulte | difficulte2, plateau,nom1,"Ordinateur");
-                return new Local(prop, type, difficulte | difficulte2,nom1,"Ordinateur");
+                    return new Local(prop, type, difficulte | difficulte2, plateau,nom1,diff[difficulte | difficulte2]);
+                return new Local(prop, type, difficulte | difficulte2,nom1,diff[difficulte | difficulte2]);
            case LOCAL_IAVJ:
                 if(b)
-                    return new Local(prop, type, difficulte | difficulte2, plateau,"Ordinateur",nom2);
-                return new Local(prop, type, difficulte | difficulte2,"Ordinateur",nom2);
+                    return new Local(prop, type, difficulte | difficulte2, plateau,diff[difficulte | difficulte2],nom2);
+                return new Local(prop, type, difficulte | difficulte2,diff[difficulte | difficulte2],nom2);
             case SIMULATION:
                 return new SimulationIA(prop, difficulte, difficulte2,diff[difficulte], diff[difficulte2]);
             case RESEAU_CLIENT:

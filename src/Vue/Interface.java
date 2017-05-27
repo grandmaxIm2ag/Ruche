@@ -1024,7 +1024,59 @@ public class Interface extends Application {
 
     }
 
+    public static void dialogFin(String s){
+        // Custom dialog
+        Dialog<Boolean> dialog = new Dialog<>();
+        dialog.setTitle("Fin de la Partie");
+        dialog.setResizable(false);
+        dialog.initStyle(StageStyle.UNDECORATED);
 
+        VBox v = new VBox();
+        Text l = new Text(s);
+        v.setAlignment(Pos.CENTER);
+        v.setSpacing(100);
+        // Create layout and add to dialog
+        HBox box = new HBox();
+        v.getChildren().addAll(l,box);
+        box.setSpacing(40);
+        box.setAlignment(Pos.CENTER);
+        dialog.getDialogPane().setContent(v);
+        Button restart = new Button("Recommencer");
+        restart.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                arbitre.nouvellePartie();
+                dialog.setResult(Boolean.TRUE);
+                dialog.close();
+                
+            }
+        });
+        Button menu = new Button("Menu pincipal");
+        menu.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                dialog.setResult(Boolean.TRUE);
+                dialog.close();
+                if(arbitre!=null)
+                    arbitre.abandon();
+                goTest();
+            }
+        });
+        Button quit = new Button("Quitter");
+        quit.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+                quitter();
+            }
+        });
+        
+        
+        //
+        box.getChildren().addAll(restart);
+        box.getChildren().addAll(menu);
+        box.getChildren().addAll(quit);
+        dialog.show();
+    }
     public static void pause(){
         // Custom dialog
         Dialog<Boolean> dialog = new Dialog<>();
@@ -1049,6 +1101,7 @@ public class Interface extends Application {
         play.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent actionEvent) {
+                arbitre.pause();
                 dialog.setResult(Boolean.TRUE);
                 dialog.close();
             }
@@ -1105,7 +1158,7 @@ public class Interface extends Application {
         alert.setTitle("Erreur");
         alert.setHeaderText(s1);
         alert.setContentText(s2);
-        alert.showAndWait();
+        alert.show();
     }
     
     public static void nouvelArbitre(){

@@ -49,6 +49,10 @@ public abstract class Arbitre {
     final static int A_JOUER = 2;
     public final static int FIN = 3;
     final static int AIDE = 4;
+    final static int PAUSE = 5;
+    
+    boolean pause;
+    int precEtat;
     
     public final static int GAGNE = 0;
     public final static int PERDU = 1;
@@ -98,6 +102,7 @@ public abstract class Arbitre {
      */
     public Arbitre(Properties p, String n1, String n2){
         Reglage.init(p);
+        pause = false;
         prop = p;
         joueurs = new Joueur[2];
         jCourant = J1;
@@ -573,7 +578,8 @@ public abstract class Arbitre {
             case ATTENTE_COUP:
                 aide = false;
                 break;
-            
+            case PAUSE:
+                break;
             case JOUE_EN_COURS:
                 temps_ecoule+=nouv;
                 if(temps_ecoule>=100000000){
@@ -787,5 +793,16 @@ public abstract class Arbitre {
             }
         }
         
+    }
+    
+    public void pause(){
+        if(pause){
+            etat = precEtat;
+        }else{
+            precEtat = etat;
+            etat = PAUSE;
+        }
+        pause = !pause;
+            
     }
 }

@@ -112,14 +112,14 @@ public class SimulationIA extends Arbitre {
         PaneToken.getInstance(this).update();
         if(plateau.estEncerclee(jCourant)){
             etat=FIN;
-            Interface.goFin(joueurs[jCourant].nom(), GAGNE);
+            Interface.dialogFin(joueurs[(jCourant+1)%2]+" a battu "+joueurs[jCourant]);
         }else if(plateau.estEncerclee((jCourant+1)%2)){
             etat=FIN;
-            Interface.goFin(joueurs[jCourant].nom(), PERDU);
+            Interface.dialogFin(joueurs[jCourant]+" a battu "+joueurs[(jCourant+1)%2]);
         }else if(configurations.containsKey(plateau.hashCode()) && configurations.get(plateau.hashCode())>2 ){
             etat=FIN;
             //System.out.println(configurations.toString()+" "+plateau.hashCode());
-            Interface.goFin(nom1, NUL);
+            Interface.dialogFin(joueurs[jCourant]+" a battu "+joueurs[(jCourant+1)%2]);
             System.err.println("Match nul");
         }else{
             if(configurations.containsKey(plateau.hashCode()))

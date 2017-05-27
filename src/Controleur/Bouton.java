@@ -139,6 +139,7 @@ public class Bouton implements EventHandler<ActionEvent>{
                 arbitre.refaire();
                 break;
             case BOUTON_PAUSE:
+                arbitre.pause();
                 Interface.pause();
                 break;
             case BOUTON_RECOMMENCER:

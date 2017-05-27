@@ -175,14 +175,24 @@ public class Local extends Arbitre{
         
         if(plateau.estEncerclee(jCourant)){
             etat=FIN;
-            Interface.goFin(joueurs[jCourant].nom(), GAGNE);
+            if(joueurs[jCourant] instanceof Humain && joueurs[(jCourant+1)%2] instanceof Ordinateur)
+                Interface.dialogFin("Vous avez perdu");
+            else if(joueurs[jCourant] instanceof Ordinateur && joueurs[(jCourant+1)%2] instanceof Humain)
+                Interface.dialogFin("Vous avez Gagne");
+            else
+                Interface.dialogFin(joueurs[jCourant]+" a battu "+joueurs[(jCourant+1)%2]);
         }else if(plateau.estEncerclee((jCourant+1)%2)){
             etat=FIN;
-            Interface.goFin(joueurs[jCourant].nom(), PERDU);
+            if(joueurs[jCourant] instanceof Humain && joueurs[(jCourant+1)%2] instanceof Ordinateur)
+                Interface.dialogFin("Vous avez Gagné");
+            else if(joueurs[jCourant] instanceof Ordinateur && joueurs[(jCourant+1)%2] instanceof Humain)
+                Interface.dialogFin("Vous avez Perdu");
+            else
+                Interface.dialogFin(joueurs[(jCourant+1)%2]+" a battu "+joueurs[jCourant]);
         }else if(configurations.containsKey(plateau.hashCode()) && configurations.get(plateau.hashCode())>2 ){
             etat=FIN;
             //System.out.println(configurations.toString()+" "+plateau.hashCode());
-            Interface.goFin(nom1, NUL);
+            Interface.dialogFin("Match Nul");
             System.err.println("Match nul");
         }else{
             if(configurations.containsKey(plateau.hashCode()))
