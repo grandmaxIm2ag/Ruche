@@ -25,8 +25,10 @@ import Modele.Scarabee;
 import Modele.Visiteur;
 import static Vue.Dessinateur.c;
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Stack;
 import javafx.geometry.Insets;
 import javafx.scene.canvas.Canvas;
@@ -167,7 +169,9 @@ public class Pointeur extends Visiteur {
                     popup = new Popup();
                     }
             } else if (me.getEventType() == MouseEvent.MOUSE_CLICKED) {
-
+                
+                
+                
                 if (arbitre.plateau().deplEntame()) {
                     if (c.estJouable()) {
                         if (!depl) {
@@ -191,7 +195,7 @@ public class Pointeur extends Visiteur {
                         depl = false;
                         arbitre.reinitDepl();
                         return true;
-                    } else if (arbitre.initDeplacement() instanceof Cloporte) {
+                    } else if (arbitre.initDeplacement() instanceof Cloporte || (voisinCloporte() && arbitre.initDeplacement() instanceof Moustique) ) {
                         Coup[] coups = arbitre.deplacementPossible(arbitre.initDeplacement());
                         for (Coup coup : coups) {
                             Deplacement deplacement = (Deplacement) coup;
@@ -218,6 +222,17 @@ public class Pointeur extends Visiteur {
     
         
         return false;
+    }
+    
+    
+    public boolean voisinCloporte () {
+        boolean voisinCloporte = false;
+        List<Point> voisins = arbitre.plateau().voisins(arbitre.initDeplacement().position());
+        Map<Point, Case> mat = arbitre.plateau().matrice();
+        for (Point p : voisins) {
+            voisinCloporte |= ((HashMap) mat).get(p) instanceof Cloporte;
+        }
+        return voisinCloporte;
     }
     
     private Canvas popupCanvas (Stack<Insecte> stack) {

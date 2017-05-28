@@ -24,6 +24,7 @@ import Modele.Scarabee;
 import Modele.Visiteur;
 import static Vue.Interface.hex_corner;
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -468,8 +469,18 @@ public class Dessinateur extends Visiteur{
         return colorTable[c];
     }
     
+    public boolean voisinCloporte () {
+        boolean voisinCloporte = false;
+        List<Point> voisins = arbitre.plateau().voisins(arbitre.initDeplacement().position());
+        Map<Point, Case> mat = arbitre.plateau().matrice();
+        for (Point p : voisins) {
+            voisinCloporte |= ((HashMap) mat).get(p) instanceof Cloporte;
+        }
+        return voisinCloporte;
+    }
+    
     private void focus (Insecte i, GraphicsContext gc, double[][] coords) {
-        if (arbitre.initDeplacement() instanceof Cloporte) {
+        if (arbitre.initDeplacement() instanceof Cloporte || (arbitre.initDeplacement() instanceof Moustique && voisinCloporte())) {
                         List<Coup> coups = arbitre.plateau().deplacementPossible(arbitre.initDeplacement());
                         for (Coup coup : coups) {
                             Deplacement deplacement = (Deplacement) coup;
