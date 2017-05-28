@@ -52,7 +52,7 @@ public class SoundEngine {
     private static boolean init () {
         Mixer.Info[] mixInfo = AudioSystem.getMixerInfo();
         try {
-            if (mixInfo[5].toString().equals("Device [plughw:2,0], version 3.16.0-4-amd64"))
+            if (mixInfo.length >= 6 && mixInfo[5].toString().equals("Device [plughw:2,0], version 3.16.0-4-amd64"))
                 //throw new EnzoLaptopParameterException();
                 mixer = AudioSystem.getMixer(mixInfo[5]);
             else 

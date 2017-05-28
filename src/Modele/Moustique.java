@@ -6,6 +6,7 @@
 package Modele;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -70,8 +71,7 @@ public class Moustique extends Insecte{
                     tmp.position().fixe(init.x(), init.y());
 
                     Coup[] co = tmp.deplacementValide(pl);
-                    for(int i=0; i<co.length; i++)
-                        c.add(co[i]);
+                    c.addAll(Arrays.asList(co));
                     
                     voisinCloporte |= (tmp instanceof Cloporte);
 
