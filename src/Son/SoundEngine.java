@@ -74,7 +74,7 @@ public class SoundEngine {
     }
     
     public static void play () {
-        System.err.println ("SoundEngine.play() - Warning - Musique tempraire");
+        //System.err.println ("SoundEngine.play() - Warning - Musique tempraire");
         //play("game_ambient");
         play ("Sunday_s_Child");
     }
@@ -85,6 +85,7 @@ public class SoundEngine {
                 InputStream stream = ClassLoader.getSystemClassLoader().getResourceAsStream("Son/"+filePath+".wav");
                 AudioInputStream audioStream = AudioSystem.getAudioInputStream(stream);
                 clip.open(audioStream);
+                
             } catch (NullPointerException e) {
                 System.err.println("SoundEngine.play() - Error - Wrong music file - " + e.getMessage());
                 //return false;
@@ -93,6 +94,7 @@ public class SoundEngine {
                 //return false;
             }
         clip.start();
+        clip.loop(Clip.LOOP_CONTINUOUSLY);
         return clip.getLevel();
     }
     
