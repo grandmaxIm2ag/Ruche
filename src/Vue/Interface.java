@@ -190,10 +190,10 @@ public class Interface extends Application {
         topBox.setSpacing(10);
         topBox.getChildren().addAll(title());
         root.setTop(topBox);
-        final Tab tabNG = new Tab("New Game"); 
+        final Tab tabNG = new Tab("Nouveau Jeu"); 
         tabNG.setContent(ngBox);
         tabNG.setClosable(false);
-        final Tab tabLD = new Tab("Load Game"); 
+        final Tab tabLD = new Tab("Charger Jeu"); 
         tabLD.setClosable(false);
         tabLD.setContent(loadBox);
         final Tab tabCFG = new Tab("Preferences");

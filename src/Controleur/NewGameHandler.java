@@ -80,7 +80,7 @@ public class NewGameHandler implements EventHandler<ActionEvent> {
                 if (cbJ1.getSelectionModel().getSelectedIndex() == 0)
                     FabriqueArbitre.initN1(tfJ1.getText());
                 else
-                    FabriqueArbitre.initN1(tfJ2.getText());
+                    FabriqueArbitre.initN2(tfJ2.getText());
                 Interface.nouvelArbitre();
             }
         }else if(cbJ2 == null && cbJ1 != null ){
