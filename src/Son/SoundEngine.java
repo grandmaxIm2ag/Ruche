@@ -75,7 +75,8 @@ public class SoundEngine {
     
     public static void play () {
         System.err.println ("SoundEngine.play() - Warning - Musique tempraire");
-        play("game_ambient");
+        //play("game_ambient");
+        play ("Sunday_s_Child");
     }
     
     public static float play(String filePath) {
