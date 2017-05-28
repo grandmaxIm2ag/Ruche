@@ -67,7 +67,7 @@ public abstract class Insecte extends Composant{
     
     int joueur;
     int classement;
-    
+    boolean voisinCloporte;
     /**
      *
      * @param x
@@ -81,6 +81,7 @@ public abstract class Insecte extends Composant{
         joueur = j;
         EST_POINTE = false;
         classement = 0;
+        voisinCloporte=false;
     }
     
     /**
@@ -267,6 +268,10 @@ public abstract class Insecte extends Composant{
     @Override
     public String toString(){
         return "["+type()+"/"+joueur()+"/"+pos+"]";
+    }
+    
+    public boolean voisinCloporte(){
+        return voisinCloporte;
     }
     
    

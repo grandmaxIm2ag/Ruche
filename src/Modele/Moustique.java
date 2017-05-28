@@ -16,7 +16,7 @@ import java.util.Map;
  * @author grandmax
  */
 public class Moustique extends Insecte{
-    boolean voisinCloporte;
+    
     /**
      *
      * @param x
@@ -27,7 +27,7 @@ public class Moustique extends Insecte{
      */
     public Moustique(double x, double y, double larg, double haut, int j) {
         super(x, y, larg, haut,j);
-        voisinCloporte=false;
+        
     }
 
     /**
@@ -86,6 +86,17 @@ public class Moustique extends Insecte{
             }
             return coups;
         }
+    }
+    
+    public boolean aVoisinCloporte(Plateau pl){
+        boolean b = false;
+        
+        for(int i=(int)pos.x()-1; i<=(int)pos.x()+1;i++)
+                for(int j=(int)pos.y()-1; j<=(int)pos.y()+1;j++){
+                    if(!((i==(int)pos.x()-1 && j==(int)pos.y()-1) || (i==(int)pos.x()+1 && j==(int)pos.y()+1) ))
+                        b |= pl.matrice.get(new Point(i,j)) !=null && pl.matrice.get(new Point(i,j)).tete() instanceof Cloporte;
+                }
+        return b;
     }
 
     @Override

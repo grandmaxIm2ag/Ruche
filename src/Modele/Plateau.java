@@ -778,7 +778,7 @@ public class Plateau extends Composant {
         ca.retirePion();
         
         if(!ca.utilise())
-            if(voisins.get(e.position()).size()<2)
+            if(voisins.get(e.position()).size()<2 || voisins.get(e.position()).size()>4)
                 b = true;
             else if(!ca.utilise() && voisins.get(e.position()).size()==2 && 
                     (voisinage(e.position(), NORD) || voisinage(e.position(), SUD) || voisinage(e.position(), SEST)
@@ -818,6 +818,32 @@ public class Plateau extends Composant {
                     }
                 }
                 return valide;
+            }
+            
+            return c;
+        }
+        
+        if(!b && e.type()==Insecte.MOUS){
+            Moustique m = (Moustique) matrice.get(e.position()).tete();
+            if(m.aVoisinCloporte(this)){
+                Coup[] cp = matrice.get(e.position()).tete().deplacementValide(this.clone());
+
+                for (Coup cp1 : cp) {
+                    if (cp1 instanceof Deplacement) {
+                        Deplacement d = (Deplacement) cp1;
+                        c.add(d);
+                    }
+                }
+                List<Coup> valide = new ArrayList();
+                for(Coup item : c){
+                    if(item instanceof Deplacement){
+                        Deplacement item2 =(Deplacement)item;
+                        if(!item2.source().equals(e.position()))
+                            valide.add(item2);
+                    }
+                }
+                return valide;
+
             }
             
             return c;

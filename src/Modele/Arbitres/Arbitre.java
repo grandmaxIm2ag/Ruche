@@ -383,18 +383,6 @@ public abstract class Arbitre {
             sauv += c+"\n";
             tmp.push(c);
         }
-        while(!tmp.isEmpty())
-            historique.push(tmp.pop());
-        while(!tmp.isEmpty())
-            historique.push(tmp.pop());
-        sauv += "****\n";
-        while(!refaire.isEmpty()){
-            Coup c = refaire.pop();
-            sauv += c+"\n";
-            tmp.push(c);
-        }
-        while(!tmp.isEmpty())
-            refaire.push(tmp.pop());
         
         try{
             File f = new File("Sauvegardes/"+nomSauv);
