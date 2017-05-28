@@ -355,4 +355,7 @@ public class Ordinateur extends Joueur{
         return jH;
     }
     
+    public int diff(){
+        return difficulte;
+    }
 }//fin de la classe

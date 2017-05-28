@@ -130,7 +130,7 @@ public class Plateau extends Composant {
     List<Case> aide;
     Map<Point, List<Point>> voisins;
     
-    int xMin, yMin, xMax, yMax;
+    public int xMin, yMin, xMax, yMax;
     Properties prop;
     int jCourant;
     int depotAide;
@@ -268,8 +268,8 @@ public class Plateau extends Composant {
      * @param d
      */
     public void deplacePion(Deplacement d){
-        if(matrice.get(d.source()).tete().position().equals(reines[d.joueur()]) && matrice.get(d.source()).tete().type()==Insecte.REINE)
-            reines[d.joueur()] = d.destination();
+        if(matrice.get(d.source()).tete().type()==Insecte.REINE)
+            reines[matrice.get(d.source()).tete().joueur()] = d.destination();
         
         if(xMin > d.destination.x())
             xMin=(int) d.destination.x();
@@ -878,6 +878,10 @@ public class Plateau extends Composant {
      */
     public void retirerPion(Point pos){
         Case c = matrice.get(pos);
+        Insecte e = c.tete();
+        if(e.type()==Insecte.REINE){
+            reines[e.joueur()]=null;
+        }
         c.retirePion();
         if(!c.utilise()){
             matrice.remove(c.position());

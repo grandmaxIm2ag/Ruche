@@ -348,4 +348,25 @@ public class FabriqueArbitre {
                 break;
         }
     }
+    
+    public static String diff(int idx){
+        return diff[idx];
+    }
+    
+    public static String conf(){
+        String res = "";
+        String tmp;
+        res += (tmp = (clop ? 1+"" : 0+""));
+        res += (tmp = (cocc ? 1+"" : 0+""));
+        res += (tmp = (mous ? 1+"" : 0+""));
+        
+        return res;
+    }
+    
+    public static void newConf(String s){
+        clop = s.charAt(0)=='1';
+        cocc = s.charAt(1)=='1';
+        mous = s.charAt(2)=='1';
+        initConf();
+    }
 }

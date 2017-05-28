@@ -15,7 +15,7 @@ import java.util.Map;
  * @author grandmax
  */
 public class Moustique extends Insecte{
-
+    boolean voisinCloporte;
     /**
      *
      * @param x
@@ -26,6 +26,7 @@ public class Moustique extends Insecte{
      */
     public Moustique(double x, double y, double larg, double haut, int j) {
         super(x, y, larg, haut,j);
+        voisinCloporte=false;
     }
 
     /**
@@ -35,18 +36,19 @@ public class Moustique extends Insecte{
      */
     @Override
     public Coup[] deplacementValide(Plateau pl) {
+        Point init = pos.clone();
         Map<Point, Case> plateau = pl.matrice();
         boolean types[] = new boolean[NB_TYPE];
         for(int i=0; i<types.length; i++ )
             types[i]=false;
         boolean enHaut;
-        Case ca = plateau.get(pos).clone();
+        Case ca = plateau.get(init).clone();
         ca.retirePion();
         enHaut = ca.utilise();
         List<Coup> c = new ArrayList();
         
         if(enHaut){
-            Scarabee scar = new Scarabee(pos.x(), pos.y(), l, h, joueur);
+            Scarabee scar = new Scarabee(init.x(), init.y(), l, h, joueur);
             return scar.deplacementValide(pl);
         }else{
             List<Insecte> voisins = new ArrayList();
@@ -65,11 +67,13 @@ public class Moustique extends Insecte{
                 Insecte tmp = w.next().clone();
                 if(!(tmp instanceof Moustique)){
 
-                    tmp.position().fixe(pos.x(), pos.y());
+                    tmp.position().fixe(init.x(), init.y());
 
                     Coup[] co = tmp.deplacementValide(pl);
                     for(int i=0; i<co.length; i++)
                         c.add(co[i]);
+                    
+                    voisinCloporte |= (tmp instanceof Cloporte);
 
                 }
             }

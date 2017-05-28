@@ -64,10 +64,10 @@ public class Etendeur {
         diffY = c.getHeight()/2;
         }
         
-        if (recalc(c, xMin, xMax, yMin, yMax)) {
+        /*if (recalc(c, xMin, xMax, yMin, yMax)) {
             diffX = c.getWidth()/2 + (-a-A)/2*r*py;
             diffY = c.getHeight()/2 + (-b-B)/2*r;
-        }
+        }*/
         
         /*
         if ((A+1-a)%2 != 0)

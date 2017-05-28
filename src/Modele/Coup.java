@@ -40,4 +40,8 @@ public abstract class Coup {
     public int joueur(){
         return joueur;
     }
+    
+    public void setJoueur(int j){
+        joueur = j;
+    }
 }

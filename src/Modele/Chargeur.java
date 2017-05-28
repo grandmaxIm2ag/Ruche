@@ -30,10 +30,7 @@ public class Chargeur {
     static Scanner input;
     
     static Properties prop;
-    static int t=0, d=0, j=0;
-    static int[] n = {0,0};
     static String[] joueurs = {"null", "null"};
-    static Stack<Coup> h, r, r2;
     /**
      *
      * @param p
@@ -86,121 +83,45 @@ public class Chargeur {
      *
      * @return
      */
-    public static Plateau charger(String plateau, Plateau res){
+    public static Stack<Coup> charger(String plateau){
         try {
             input = new Scanner(new FileInputStream("Sauvegardes/"+plateau));
         } catch (FileNotFoundException ex) {
             Logger.getLogger(Chargeur.class.getName()).log(Level.SEVERE, null, ex);
         }
-        input.nextLine();
-        String[] str = input.nextLine().split(":");
-        System.out.println(Arrays.toString(str));
-        t = Integer.parseInt(str[0]);
-        n[0] = Integer.parseInt(str[1]);
-        n[1] = Integer.parseInt(str[2]);
-        j = Integer.parseInt(str[3]);
-        
-        String line = "";
-        joueurs[0] = input.nextLine();
-        joueurs[1] = input.nextLine();
-        
-        line = input.nextLine();
-        boolean p = false, g = false; int r=0;
-        while(input.hasNext() && !line.equals("Historique en cours")){
-            if(line.equals("plateau")){
-                p = true;
-                line = input.nextLine();
-            }else if(line.equals("graphe")){
-                g=true;
-                p =false;
-                line = input.nextLine();
-            }else if(!p && !g){
-                if(!line.equals("null"))
-                    res.setReine(r++, new Point(line));
-                else
-                    r++;
-                line = input.nextLine();
-            }else if(p){
-                System.out.println("\t"+ line.split("_")[1]);
-                Point point = new Point(line.split("_")[0]);
-                str = line.split("_")[1].split(":");
-                Point p2 = new Point(str[0]);
-                Case c = new Case(p2.x(), p2.y(), Reglage.lis("lCase"),Reglage.lis("hCase") );
-                for(int i=1; i<str.length; i++)
-                    c.deposePion(FabriqueInsecte.creer(str[i]));
-                res.matrice().put(point, c);
-                res.utilises().add(point);
-                line = input.nextLine();
-            }else if(g){
-                str = line.split(":");
-                Point point = new Point(str[0]);
-                List<Point> lp = new ArrayList();
-                for(int i=1; i<str.length; i++)
-                    lp.add(new Point(str[i]));
-                res.voisins().put(point, lp);
-                line = input.nextLine();
-            }
+        String line = input.nextLine();
+        String[] str = line.split("::");
+        switch(Integer.parseInt(str[0])){
+            case FabriqueArbitre.LOCAL_JVJ:
+                joueurs[0]= str[1];
+                joueurs[1]=str[2];
+                break;
+            case FabriqueArbitre.LOCAL_JVIA:
+                joueurs[0]= str[1];
+                joueurs[1]=FabriqueArbitre.diff(Integer.parseInt(str[2]));
+                break;
+            case FabriqueArbitre.LOCAL_IAVJ:
+                joueurs[0]= FabriqueArbitre.diff(Integer.parseInt(str[1]));
+                joueurs[1]=str[2];
+                break;
+            case FabriqueArbitre.SIMULATION:
+                joueurs[0]= FabriqueArbitre.diff(Integer.parseInt(str[1]));
+                joueurs[1]= FabriqueArbitre.diff(Integer.parseInt(str[2]));
+                break;
         }
-        
-        h = new Stack();
+        FabriqueArbitre.newConf(input.nextLine());
         Stack<Coup> hBis = new Stack();
-        line = input.nextLine();
-        while(input.hasNext() && !line.equals("Refaire en cours")){
-            if(line.charAt(0)=='(')
-                hBis.push(new Deplacement(0,line));
-            else
-                hBis.push(new Depot(0,line));
-            
+        while(input.hasNext()){
             line = input.nextLine();
-        }
-        while(!hBis.isEmpty())
-            h.push(hBis.pop());
-        
-        r2 = new Stack();
-        while(input.hasNext() ){
-            if(line.charAt(0)=='(')
+            if(line.charAt(0)=='('){
                 hBis.push(new Deplacement(0,line));
-            else
+            }else{
                 hBis.push(new Depot(0,line));
+            }
             
-            line = input.nextLine();
         }
-        while(!hBis.isEmpty())
-            r2.push(hBis.pop());
-        
-        return res;
-    }
-    
-    /**
-     *
-     * @return
-     */
-    public static int type(){
-        return t;
-    }
-
-    /**
-     *
-     * @return
-     */
-    public static int difficulte(){
-        return d;
-    }
-
-    /**
-     *
-     * @return
-     */
-    public static int jCourant(){
-        return j;
-    }
-
-    /**
-     *
-     * @return
-     */
-    public static int[] nbCourant(){
-        return n;
+         
+        return hBis;
     }
 
     /**
@@ -211,24 +132,4 @@ public class Chargeur {
         return joueurs; 
     }
 
-    /**
-     *
-     * @return
-     */
-    public static Stack<Coup> historique(){
-        return h;
-    }
-
-    /**
-     *
-     * @return
-     */
-    public static Stack<Coup> refaire(){
-        return r2;
-    }
-    
-    public static String propriete(String sauvegarde){
-        
-        return "";
-    }
 }

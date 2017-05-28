@@ -51,7 +51,7 @@ public abstract class Arbitre {
     final static int AIDE = 4;
     final static int PAUSE = 5;
     
-    boolean pause;
+    boolean pause, annulation;
     int precEtat;
     
     public final static int GAGNE = 0;
@@ -109,9 +109,6 @@ public abstract class Arbitre {
         historique = new Stack();
         refaire = new Stack();
         plateau = new Plateau(0,0,Reglage.lis("lPlateau")*Reglage.lis("nbPiece"),Reglage.lis("hPlateau")*Reglage.lis("nbPiece"),p);
-        
-        chargeur = new Chargeur();
-        
         nbCoup = new int[2];
         nbCoup[0]=0; nbCoup[1]=0;
         etat = ATTENTE_COUP;
@@ -119,7 +116,7 @@ public abstract class Arbitre {
         temps = System.nanoTime();
         temps_ecoule = 0;
         precAucun = false;
-        
+        annulation = false;
         nom1 = n1;
         nom2 = n2;
         
@@ -279,6 +276,7 @@ public abstract class Arbitre {
             configurations.remove(configurations.size()-1);
             Coup c = historique.pop();
             //System.out.println(c+" "+(c==null));
+            System.out.println("refaire ins : "+c+" "+refaire.size());
             refaire.push(c);
             if(c instanceof Deplacement){
                 Deplacement d = (Deplacement) c;
@@ -290,6 +288,7 @@ public abstract class Arbitre {
                 nbCoup[d.joueur()]--;
 //                joueurs[d.joueur()].pred(d.type());
             }
+            System.out.println("=>"+nbCoup[jCourant]);
             PaneToken.getInstance(this).update();
             jCourant = (jCourant+1)%2;
         }else{
@@ -307,6 +306,7 @@ public abstract class Arbitre {
             Coup c = refaire.pop();
             //System.out.println(c+" "+(c==null));
             historique.push(c);
+            annulation=true;
             joue(c);
         }else{
             System.out.println("Aucun coup à refaire");
@@ -326,61 +326,31 @@ public abstract class Arbitre {
      * @param plateau
      */
     public void charger(String plateau){
-        Chargeur.charger(plateau, this.plateau);
-        this.plateau.initLime();
-        //System.out.println("->"+this.plateau.xMin+" "+this.plateau.yMax+" "+this.plateau.yMin+" "+this.plateau.xMax);
-        type = Chargeur.type();
-        historique = Chargeur.historique();
-        refaire = Chargeur.refaire();
+        Stack<Coup> tmp = Chargeur.charger(plateau);
+        joueurs[J1].nom=Chargeur.joueur()[J1];
+        joueurs[J2].nom=Chargeur.joueur()[J2];
         
-        String[] str = Chargeur.joueur();
-        joueurs[J1].nom = str[J1].split("=")[0];
-        String[] str2 = str[J1].split("=")[1].split(":");
-        int[] tab = new int[str2.length];
-        for(int i=0; i<str2.length; i++)
-            tab[i]=Integer.parseInt(str2[i]);
-        joueurs[J1].setPieces(tab);
-        joueurs[J2].nom = str[J2].split("=")[0];
-        str2 = str[J2].split("=")[1].split(":");
-        tab = new int[str2.length];
-        for(int i=0; i<str2.length; i++){
-            tab[i]=Integer.parseInt(str2[i]);
-            System.out.println(str2[i]);
+        int[] tabPieces = new int[8];
+        tabPieces[0]=(int)Reglage.lis("nbReine");
+        tabPieces[1]=(int)Reglage.lis("nbScarabee");
+        tabPieces[2]=(int)Reglage.lis("nbSauterelle");
+        tabPieces[3]=(int)Reglage.lis("nbFourmi");
+        tabPieces[4]=(int)Reglage.lis("nbAraignee");
+        tabPieces[5]=(int)Reglage.lis("nbCoccinelle");
+        tabPieces[6]=(int)Reglage.lis("nbMoustique");  
+        tabPieces[7]=(int)Reglage.lis("nbCloporte");
+        
+        joueurs[J1].setPieces(tabPieces);
+        joueurs[J2].setPieces(tabPieces.clone());
+        
+        while(!tmp.isEmpty()){
+            Coup c = tmp.pop();
+            c.setJoueur(jCourant);
+            joue(c);
         }
-        nbCoup = Chargeur.nbCourant();
-        joueurs[J2].setPieces(tab);
-        jCourant = (Chargeur.jCourant()+1)%2;
-        System.out.println("Ici : "+jCourant);
+        
+        
         chargement=false;
-        /*List<Coup[]> tab2 = new LinkedList();
-        for(int i=0; i<joueurs[jCourant].pions().length; i++){
-            if(joueurs[jCourant].pions()[i]!=0){
-                Coup[] tmp = depotPossible(jCourant, i);
-                if(tmp!=null)
-                    tab2.add(tmp);
-            }
-        }
-
-        Coup[] tmp;
-        if((tmp=deplacementPossible(jCourant))!=null)
-            tab2.add(tmp);
-
-        int taille= 0;
-        Iterator<Coup[]> it = tab2.iterator();
-        while(it.hasNext())
-            taille+=it.next().length;
-        it = tab2.iterator();
-        //System.out.println(nbCoup[J1]+" "+nbCoup[J2]);
-        coups = new Coup[taille];
-        int i=0;
-        while(it.hasNext()){
-            Coup[] x = it.next();
-            int j;
-            for(j=0; j<x.length; j++){
-                coups[i+j]=x[j];
-            }
-             i+=j;
-        }*/
     }
 
     /**
@@ -403,14 +373,10 @@ public abstract class Arbitre {
             case FabriqueArbitre.SIMULATION:
                 Ordinateur o2 = (Ordinateur)joueurs[J2];
                 Ordinateur o1 = (Ordinateur)joueurs[J1];
-//                sauv = type+"::"+o1.diff()+"::"+o2.diff()+"\n";
+                sauv = type+"::"+o1.diff()+"::"+o2.diff()+"\n";
                 break;
         }
-        sauv += type+":"+nbCoup[J1]+":"+nbCoup[J1]+":"+jCourant+"\n";
-        sauv += joueurs[J1]+"\n";
-        sauv += joueurs[J2]+"\n";
-        sauv += plateau.toString();
-        sauv += "Historique en cours\n";
+        sauv+=FabriqueArbitre.conf()+"\n";
         Stack<Coup> tmp = new Stack();
         while(!historique.isEmpty()){
             Coup c = historique.pop();
@@ -419,7 +385,9 @@ public abstract class Arbitre {
         }
         while(!tmp.isEmpty())
             historique.push(tmp.pop());
-        sauv += "Refaire en cours\n";
+        while(!tmp.isEmpty())
+            historique.push(tmp.pop());
+        sauv += "****\n";
         while(!refaire.isEmpty()){
             Coup c = refaire.pop();
             sauv += c+"\n";
@@ -775,8 +743,8 @@ public abstract class Arbitre {
     public void go(){
         configurations.clear();
         Interface.goPartie();
-        if(joueurs[J1] instanceof Ordinateur){
-            Ordinateur o = (Ordinateur) joueurs[J1];
+        if(joueurs[jCourant] instanceof Ordinateur){
+            Ordinateur o = (Ordinateur) joueurs[jCourant];
             List<Coup[]> tab = new LinkedList();
                 for(int i=0; i<joueurs[jCourant].pions().length; i++){
                     if(joueurs[jCourant].pions()[i]!=0){
@@ -797,7 +765,7 @@ public abstract class Arbitre {
                     taille+=it.next().length;
                 it = tab.iterator();
                 coups= new Coup[taille];
-                for(int i=0; i<taille;i++){
+                for(int i=0; i<taille && it.hasNext();i++){
                     Coup[] x = it.next();
                     for(int j=0; j<x.length; j++)
                         coups[i+j]=x[j];
@@ -826,6 +794,7 @@ public abstract class Arbitre {
                 Deplacement tmp2 = (Deplacement) coups[i];
                 if(tmp2.equals(d)){
                     res = tmp2.clone();
+                    annulation=false;
                     joue(res);
                     break;
                 }

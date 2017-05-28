@@ -137,4 +137,5 @@ public abstract class Joueur {
     public void pred(int t){
         tabPieces[t]++;
     }
+    
 }

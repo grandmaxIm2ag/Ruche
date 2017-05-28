@@ -82,18 +82,16 @@ public class Local extends Arbitre{
                 break;
             case FabriqueArbitre.LOCAL_JVIA:
                 joueurs[J1] = new Humain(true, prop, tabPieces,  J1, nom1);
-                joueurs[J2] = new Ordinateur(false,Ordinateur.MOYEN, prop, tabPieces2,  J2, nom2);
+                joueurs[J2] = new Ordinateur(false,difficulte, prop, tabPieces2,  J2, nom2);
                 break;
             case FabriqueArbitre.LOCAL_IAVJ:
                 joueurs[J2] = new Humain(true, prop, tabPieces,  J2, nom2);
-                joueurs[J1] = new Ordinateur(false,Ordinateur.MOYEN, prop, tabPieces2,  J1, nom1);
+                joueurs[J1] = new Ordinateur(false,difficulte, prop, tabPieces2,  J1, nom1);
                 break;
         }
         if(chargement){
             charger(pla);
-            Interface.goPartie();
-            prochainJoueur();
-        }else
+        }
         
         go();
     }
@@ -106,14 +104,20 @@ public class Local extends Arbitre{
     public void joue(Deplacement d){
         if(plateau().reine(jCourant)!=null){
                 //if(deplacePionValide(d)){
-                enCoursIt = d.route().iterator();
-                enCours = new Deplacement(d.joueur(), enCoursIt.next(),enCoursIt.next());
                 nbCoup[jCourant]++;
                 refaire.clear();
                 historique.add(d);
                 etat = JOUE_EN_COURS;
                 temps_ecoule=0;
-                //System.err.println(d+" déplacement effectué "+enCours);
+                if(chargement){
+                    plateau.deplacePion(d);
+                    prochainJoueur();
+                }
+                else{
+                    enCoursIt = d.route().iterator();
+                    enCours = new Deplacement(d.joueur(), enCoursIt.next(),enCoursIt.next());
+                }
+                System.err.println(d+" déplacement effectué ");
             //}else{
                 //System.err.println("Deplacement impossible "+d);
             //}
@@ -133,7 +137,8 @@ public class Local extends Arbitre{
             plateau.premierPion(FabriqueInsecte.creer(d.type(), jCourant, new Point(0,0)));
             etat=A_JOUER;
             nbCoup[jCourant]++;
-            refaire.clear();
+            if(!annulation)
+                refaire.clear();
             historique.add(d);
             System.err.println("1- Dépot effectué "+d);
             prochainJoueur();
@@ -155,7 +160,8 @@ public class Local extends Arbitre{
                 joueurs[jCourant].jouer(d.type());
                 deposePion(d);
                 nbCoup[jCourant]++;
-                refaire.clear();
+                if(!annulation)
+                    refaire.clear();
                 historique.add(d);
                 System.err.println("3- Dépot effectué "+d);
                 prochainJoueur();
@@ -175,7 +181,7 @@ public class Local extends Arbitre{
      */
     @Override
     public void prochainJoueur() {
-        
+        System.out.println("prochain");
         if(plateau.estEncerclee(jCourant)){
             etat=FIN;
             if(joueurs[jCourant] instanceof Humain && joueurs[(jCourant+1)%2] instanceof Ordinateur)
@@ -193,6 +199,7 @@ public class Local extends Arbitre{
             else
                 Interface.dialogFin(joueurs[(jCourant+1)%2]+" a battu "+joueurs[jCourant]);
         }else if(configurations.containsKey(plateau.hashCode()) && configurations.get(plateau.hashCode())>2 ){
+            
             etat=FIN;
             //System.out.println(configurations.toString()+" "+plateau.hashCode());
             Interface.dialogFin("Match Nul");
@@ -240,14 +247,12 @@ public class Local extends Arbitre{
             }
             aucun = (coups == null || coups.length<=0);
             if(aucun){
+                System.out.println("coucou");
                 prochainJoueur();
-            }/*else if(precAucun && aucun){
-                etat=FIN;
-                System.err.println("Match nul");
-            }*/else{
-                if(joueurs[jCourant] instanceof Ordinateur){
+            }else{
+                if(joueurs[jCourant] instanceof Ordinateur && !chargement){
                     Ordinateur o = (Ordinateur) joueurs[jCourant];
-                    precAucun = aucun;
+                    annulation=false;
                     joue(o.coup(this, coups));
                 }
             }
