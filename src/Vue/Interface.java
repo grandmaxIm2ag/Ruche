@@ -206,7 +206,7 @@ public class Interface extends Application {
         tabDic.setClosable(false);
         tabDic.setContent(didacBox);
         tabPane = new TabPane(); 
-        tabPane.getTabs().setAll(tabNG, tabLD, tabCFG, tabRes, tabDic);
+        tabPane.getTabs().setAll(tabNG,tabRes , tabLD, tabCFG, tabDic);
         tabPane.setPadding(new Insets(0, 20, 0, 20));
         
         //tabPane
@@ -716,7 +716,9 @@ public class Interface extends Application {
 
         centerGrid.setAlignment(Pos.CENTER);
         
-        Button prev = new Button("précédent");
+        Button prev = new Button();//("précédent");
+        prev.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Icone/prec.png"))), CornerRadii.EMPTY, Insets.EMPTY)));
+        
         Button btBEG = new Button();
         btBEG.setBackground(new Background(new BackgroundFill(new ImagePattern(new Image(ClassLoader.getSystemClassLoader().getResourceAsStream("Images/Icone/next.png"))), CornerRadii.EMPTY, Insets.EMPTY)));
         Slide s = new Slide();
