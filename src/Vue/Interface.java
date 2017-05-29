@@ -1140,14 +1140,18 @@ public class Interface extends Application {
             }
         });
         box.getChildren().addAll(restart);
-        Button save = new Button("Sauvegarder");
-        save.setMaxWidth(200);
-        save.setOnAction(new Bouton(Bouton.BOUTON_SAUVEGARDER,arbitre) );
-        box.getChildren().addAll(save);
-        Button saveQuit = new Button("Sauvegarder Quitter");
-        saveQuit.setMaxWidth(200);
-        saveQuit.setOnAction(new Bouton(Bouton.BOUTON_SAUVEGARDER_QUITTER,arbitre) );
-        box.getChildren().addAll(saveQuit);
+        
+        if (!(arbitre instanceof ReseauClient || arbitre instanceof ReseauServer)) {
+            Button save = new Button("Sauvegarder");
+            save.setMaxWidth(200);
+            save.setOnAction(new Bouton(Bouton.BOUTON_SAUVEGARDER,arbitre) );
+            box.getChildren().addAll(save);
+            Button saveQuit = new Button("Sauvegarder Quitter");
+            saveQuit.setMaxWidth(200);
+            saveQuit.setOnAction(new Bouton(Bouton.BOUTON_SAUVEGARDER_QUITTER,arbitre) );
+            box.getChildren().addAll(saveQuit);
+        }
+        
         Button menu = new Button("Menu pincipal");
         menu.setMaxWidth(200);
         menu.setOnAction(new EventHandler<ActionEvent>() {
