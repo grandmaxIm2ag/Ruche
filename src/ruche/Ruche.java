@@ -40,6 +40,8 @@ public class Ruche {
         // TODO code application logic here
         
         Properties p = Configuration.proprietes();
+        //TestIA t= new TestIA(p,Ordinateur.DIFFICILE,Ordinateur.FACILE_ALEATOIRE,1);
+        //t.simulation();
         
         if(args.length==0){
             File rep = new File("Sauvegardes");

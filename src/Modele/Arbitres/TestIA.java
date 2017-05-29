@@ -91,9 +91,11 @@ public class TestIA extends Arbitre{
             bdd.println(res);
         }
         //resultatsBrut=res;
-        bdd.close();
+        
         //System.out.println(resultatsBrut);
         calcul();
+        bdd.println("\n"+resultatMoyenne);
+        bdd.close();
         System.out.println(resultatMoyenne);
         return victoires;
     }
@@ -115,9 +117,11 @@ public class TestIA extends Arbitre{
             sommeTemps=sommeTemps+tempsParties[i];
             sommeCoups=sommeCoups+nbCoupsJouesJ1[i];
         }
-        resultatMoyenne="J1:"+nbVicJ1+" (diff:"+difficulteJ1+"), J2:"+nbVicJ2+" (diff:"+difficulteJ2+"), NUL:"+nbNul+
+        /*resultatMoyenne="J1:"+nbVicJ1+" (diff:"+difficulteJ1+"), J2:"+nbVicJ2+" (diff:"+difficulteJ2+"), NUL:"+nbNul+
                 ", nbCoupsMoy:"+sommeCoups/nbSimulations+", tempsMoy:"+(sommeTemps/nbSimulations)+"(en nanosec), nbSimulations:"+nbSimulations;
-            }
+            }*/
+        resultatMoyenne="\n\n"+nbNul+";"+nbVicJ1+";"+nbVicJ2+";"+(sommeCoups/nbSimulations)+";"+(sommeTemps/nbSimulations);
+    }
             
     
     @Override
