@@ -84,6 +84,19 @@ public class Moustique extends Insecte{
         }
     }
 
+    
+    public boolean aVoisinCloporte(Plateau pl){
+        boolean b = false;
+        
+        for(int i=(int)pos.x()-1; i<=(int)pos.x()+1;i++)
+                for(int j=(int)pos.y()-1; j<=(int)pos.y()+1;j++){
+                    if(!((i==(int)pos.x()-1 && j==(int)pos.y()-1) || (i==(int)pos.x()+1 && j==(int)pos.y()+1) ))
+                        b |= pl.matrice.get(new Point(i,j)) !=null && pl.matrice.get(new Point(i,j)).tete() instanceof Cloporte;
+                }
+        return b;
+    }
+    
+    
     @Override
     public boolean equals(Object o) {
         if(o instanceof Moustique){

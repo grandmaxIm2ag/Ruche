@@ -480,19 +480,32 @@ public class Dessinateur extends Visiteur{
     }
     
     private void focus (Insecte i, GraphicsContext gc, double[][] coords) {
-        if (arbitre.initDeplacement() instanceof Cloporte || (arbitre.initDeplacement() instanceof Moustique && voisinCloporte())) {
-                        List<Coup> coups = arbitre.plateau().deplacementPossible(arbitre.initDeplacement());
-                        for (Coup coup : coups) {
-                            Deplacement deplacement = (Deplacement) coup;
-                            if (deplacement.source().equals(i.position()) && !arbitre.initDeplacement().equals(i)) {
-                                gc.setStroke(Color.RED);
-                                gc.setLineWidth(5);
-                                gc.strokePolygon(coords[0], coords[1], 6);
-                                gc.setStroke(Color.BLACK);
-                                gc.setLineWidth(1);
-                            }
-                        }
-                        
-                    }
-    }
+        if (arbitre.initDeplacement() instanceof Cloporte || (arbitre.initDeplacement() instanceof Moustique && ((Moustique)arbitre.initDeplacement()).aVoisinCloporte(arbitre.plateau()))) {
+            List<Coup> coups = arbitre.plateau().deplacementPossible(arbitre.initDeplacement());
+            for (Coup coup : coups) {
+                Deplacement deplacement = (Deplacement) coup;
+                if (deplacement.source().equals(i.position()) && !arbitre.initDeplacement().equals(i)) {
+                    gc.setStroke(Color.RED);
+                    gc.setLineWidth(5);
+                    gc.strokePolygon(coords[0], coords[1], 6);
+                    gc.setStroke(Color.BLACK);
+                    gc.setLineWidth(1);
+                }
+            }
+
+        } else if (arbitre.initDeplacement() instanceof Scarabee) {
+            List<Coup> coups = arbitre.plateau().deplacementPossible(arbitre.initDeplacement());
+            HashMap<Point, Case> map = (HashMap) arbitre.plateau().matrice();
+            for (Coup coup : coups) {
+                Deplacement deplacement = (Deplacement) coup;
+                if (map.containsKey(deplacement.destination()) && deplacement.destination().equals(i.position())) {
+                    gc.setStroke(Color.RED);
+                    gc.setLineWidth(5);
+                    gc.strokePolygon(coords[0], coords[1], 6);
+                    gc.setStroke(Color.BLACK);
+                    gc.setLineWidth(1);
+                }
+            }
+        }
+    } 
 }
