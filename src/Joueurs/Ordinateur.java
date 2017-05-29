@@ -82,15 +82,17 @@ public class Ordinateur extends Joueur{
         r= new Random(GRAINE);
         configurations = new HashMap();
         Scanner sc=null;
+        Scanner sp=null;
         if(d==MOYEN){
             sc = new Scanner(ClassLoader.getSystemClassLoader().getResourceAsStream("Simulations/Apprentissage/moyenHeuristique"));
         }else if(d==DIFFICILE){
-            sc = new Scanner(ClassLoader.getSystemClassLoader().getResourceAsStream("Simulations/Apprentissage/difficileHeuristique"));
+            sc = new Scanner(ClassLoader.getSystemClassLoader().getResourceAsStream("Simulations/Apprentissage/difficileHeuristique"));     
         }
         while(sc!=null && sc.hasNext()){
             String[] str = sc.nextLine().split("::");
             configurations.put(Integer.parseInt(str[0]), Integer.parseInt(str[1]));
         }
+        
     }
     
     /**Constructeur
@@ -195,7 +197,7 @@ public class Ordinateur extends Joueur{
             return null;
         else{
             
-            HeuristiqueMoy heurs = new HeuristiqueMoy();
+            HeuristiqueMoy heurs = new HeuristiqueMoy(configurations);
             //find the best move for the heuristic
             ArrayList<Coup> res=new ArrayList();
             Emulateur em = new Emulateur(a);
@@ -228,7 +230,7 @@ public class Ordinateur extends Joueur{
         if(d==null || d.length<= 0)
             return null;
         else{
-            HeuristiqueV2 heurs = new HeuristiqueV2();
+            HeuristiqueV2 heurs = new HeuristiqueV2(configurations);
             //find the best move for the heuristic
             ArrayList<Coup> res=new ArrayList();
             Emulateur em = new Emulateur(a);
@@ -258,10 +260,10 @@ public class Ordinateur extends Joueur{
     public Coup IA_Hard(Arbitre a, Coup[] d){
         if(d==null || d.length<= 0)
             return null;
-        HeuristiqueV2 heurs = new HeuristiqueV2();
+        HeuristiqueV2 heurs = new HeuristiqueV2(configurations);
         //MinMaxConcurent mx = new MinMaxConcurent(this,a,heurs,2,0,d);
       //  MinMax mx = new MinMax(this,a,heurs,3,0,d);
-        AlphaBeta mx = new AlphaBeta(this,a,heurs,4, 0,d);
+        AlphaBeta mx = new AlphaBeta(this,a,heurs,3, 0,d);
         //AlphaBetaConcurent mx = new AlphaBetaConcurent(this,a,heurs,4, 0,d);
         /* Affichage des coups possibles.
         System.out.println("Appel nextmove avec les coups:");
@@ -277,7 +279,7 @@ public class Ordinateur extends Joueur{
         if(d==null || d.length<= 0)
             return null;
         
-        HeuristiqueV2 heurs = new HeuristiqueV2();
+        HeuristiqueV2 heurs = new HeuristiqueV2(null);
         AlphaBeta mx = new AlphaBeta(this,a,heurs,4, 0,d);
         return mx.nextmove();
     }

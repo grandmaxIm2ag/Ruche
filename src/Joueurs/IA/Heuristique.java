@@ -23,8 +23,11 @@ public abstract class Heuristique {
     int heurs;
     Coup Cjouer;
     
-    public Heuristique(){
-        configurations = new HashMap();
+    public Heuristique(Map<Integer, Integer> conf){
+        if(conf == null)
+            configurations = new HashMap();
+        else
+            configurations = conf;
         heurs = 0;
     }
     

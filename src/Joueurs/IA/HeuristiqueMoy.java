@@ -22,6 +22,10 @@ import java.util.Map;
  */
 public class HeuristiqueMoy extends Heuristique {
 
+    public HeuristiqueMoy(Map<Integer, Integer> conf) {
+        super(conf);
+    }
+
     private int freeBugs(Plateau m,int numJoueur) {
         int fr=0;
         List<Coup> dep = null;
@@ -150,7 +154,7 @@ public class HeuristiqueMoy extends Heuristique {
         int otherTokensOnBoard = Bugs(a.m,me.numAdversaire());
         int HexesFilledAroundOpposingQueen = me.nbLiberteesReine(a.m, me.numAdversaire());
        
-        heurs = (50*HexesFilledAroundMyQueen - 100*HexesFilledAroundOpposingQueen)
+        heurs = (60*HexesFilledAroundMyQueen - 100*HexesFilledAroundOpposingQueen)
                 + (mePossibleDepl - otherPossibleDepl) 
                 + 10*(meTokensOnBoard - otherTokensOnBoard)
                /* + (meFreeTokensOnBoard - otherFreeTokensOnBoard)*/;

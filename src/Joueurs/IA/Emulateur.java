@@ -60,7 +60,7 @@ public class Emulateur {
     public int GetValue(int type){
         switch(type){
             case Insecte.REINE:
-                return -10000;
+                return -1000;
             case Insecte.ARAI:
                 return 0;
             case Insecte.CLOP:

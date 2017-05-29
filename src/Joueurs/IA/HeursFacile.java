@@ -9,12 +9,17 @@ import Joueurs.Ordinateur;
 import Modele.Arbitres.Arbitre;
 import Modele.Coup;
 import Modele.Plateau;
+import java.util.Map;
 
 /**
  *
  * @author lies
  */
 public class HeursFacile extends Heuristique{
+
+    public HeursFacile(Map<Integer, Integer> conf) {
+        super(conf);
+    }
     
     @Override
     public int EvalPlateau(Arbitre a, Coup[] d, Plateau p, Ordinateur me, Coup j) {

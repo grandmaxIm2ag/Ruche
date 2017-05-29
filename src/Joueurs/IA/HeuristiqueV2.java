@@ -28,6 +28,10 @@ public class HeuristiqueV2 extends Heuristique {
     int otherPossibleDepl;
     int otherTokensOnBoard;
     int HexesFilledAroundOpposingQueen;   
+
+    public HeuristiqueV2(Map<Integer, Integer> conf) {
+        super(conf);
+    }
     
     private void freeBugs(Plateau m, Ordinateur me) {
         List<Coup> dep = null;

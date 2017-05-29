@@ -61,7 +61,7 @@ public class AlphaBeta extends AI {
             return heurs.EvalPlateau(emu, d, me,cp);
         int max_poids = AI.MIN;
         for(int i=0;i < d.length;i++){
-                System.out.println("max "+i+" "+d[i]);
+               // System.out.println("max "+i+" "+d[i]);
                 Emulateur m = emu.clone();
                 m.joue(d[i]);
                 Coup [] cpt = m.PossibleMoves();

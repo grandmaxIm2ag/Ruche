@@ -55,8 +55,8 @@ public class Apprentissage extends Arbitre{
         nbSimulations = 100;
         hDiff = new HashMap();
         hMoy = new HashMap();
-        difficile = new HeuristiqueV2();
-        moyen = new HeuristiqueMoy();
+        difficile = new HeuristiqueV2(null);
+        moyen = new HeuristiqueMoy(null);
         heur = true;
     }
     
@@ -64,8 +64,8 @@ public class Apprentissage extends Arbitre{
         super (p, "", "");
         nbSimulations = 25;
         hashCoup = new HashMap();
-        difficile = new HeuristiqueV2();
-        moyen = new HeuristiqueMoy();
+        difficile = new HeuristiqueV2(null);
+        moyen = new HeuristiqueMoy(null);
         difficulte = d;
         heur = false;
     }
@@ -106,7 +106,7 @@ public class Apprentissage extends Arbitre{
             File f = new File("Ressources/Simulations/Apprentissage/coups"+difficulte);
             f.createNewFile();
             bdd = new PrintWriter(f);
-            for(Map.Entry<Integer, Coup> entry : hashCoup.entrySet() ){
+            for(Map.Entry<Integer, Coup> entry : hashCoup.entrySet()){
                 bdd.println(entry.getKey()+"::"+entry.getValue());
             }
             bdd.close();
@@ -340,8 +340,7 @@ public class Apprentissage extends Arbitre{
                 case FIN:
                     b = false;
                     break;
-            }
-            
+            }          
         }
     }
     
