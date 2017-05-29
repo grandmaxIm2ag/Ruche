@@ -7,6 +7,7 @@
             <source-roots>
                 <root id="src.Ressources.dir"/>
                 <root id="src.dir"/>
+                <root id="src.Simulations.dir"/>
             </source-roots>
             <test-roots>
                 <root id="test.src.dir"/>

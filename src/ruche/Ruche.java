@@ -61,9 +61,9 @@ public class Ruche {
                 Apprentissage t=new Apprentissage(p);
                 t.apprentissageHeuristique();
                 t=new Apprentissage(p, Ordinateur.MOYEN);
-                t.apprentissageCoup();
+                //t.apprentissageCoup();
                 t=new Apprentissage(p, Ordinateur.DIFFICILE);
-                t.apprentissageCoup();
+                //t.apprentissageCoup();
             }else if((args[0].equals("-a")) && (args[1].equals("-e"))){
                 ConcurrentHashMap<Integer, Coup> app = new ConcurrentHashMap();
                 Thread[] threads = new Thread[50];

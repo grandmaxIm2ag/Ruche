@@ -20,11 +20,15 @@ import Modele.Depot;
 import Modele.Deplacement;
 import Modele.Insecte;
 import Modele.Plateau;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Random;
+import java.util.Scanner;
 
 /**<b>Ordinateur est la classe représentant un joueur de type IA </b>
  * @author UGA L3 Projet Logiciel 2016-2017 groupe 7
@@ -59,7 +63,7 @@ public class Ordinateur extends Joueur{
     Random r;
     
     /** @see ruche.Configuration */
-    Map<Plateau, Integer> configurations;
+    Map<Integer, Integer> configurations;
 
     /**Constructeur
      * Utilise le constructeur de la classe Joueur
@@ -77,6 +81,16 @@ public class Ordinateur extends Joueur{
         System.out.println("Joueur "+j+" GRAINE: "+GRAINE);///////////////////////////////////////////////////////////////////////////////
         r= new Random(GRAINE);
         configurations = new HashMap();
+        Scanner sc=null;
+        if(d==MOYEN){
+            sc = new Scanner(ClassLoader.getSystemClassLoader().getResourceAsStream("Simulations/Apprentissage/moyenHeuristique"));
+        }else if(d==DIFFICILE){
+            sc = new Scanner(getClass().getResourceAsStream("Simulations/Apprentissage/difficileHeuristique"));
+        }
+        while(sc!=null && sc.hasNext()){
+            String[] str = sc.nextLine().split("::");
+            configurations.put(Integer.parseInt(str[0]), Integer.parseInt(str[1]));
+        }
     }
     
     /**Constructeur
@@ -180,6 +194,7 @@ public class Ordinateur extends Joueur{
         if(d==null || d.length<= 0)
             return null;
         else{
+            
             HeuristiqueMoy heurs = new HeuristiqueMoy();
             //find the best move for the heuristic
             ArrayList<Coup> res=new ArrayList();
@@ -190,7 +205,10 @@ public class Ordinateur extends Joueur{
             for(int i=0;i<d.length;i=i+1){
                 Emulateur mp = em.clone();
                 mp.joue(d[i]);
-                EvalBoard = heurs.EvalPlateau(mp, mp.PossibleMoves(), this,d[i]);
+                if(!configurations.containsKey(mp.getPlateau().hashCode()))
+                    EvalBoard = heurs.EvalPlateau(mp, mp.PossibleMoves(), this,d[i]);
+                else
+                    EvalBoard = configurations.get(mp.getPlateau().hashCode());
                 if(EvalBoard == max){
                     //Add to results
                     res.add(d[i]);
@@ -243,8 +261,8 @@ public class Ordinateur extends Joueur{
         HeuristiqueV2 heurs = new HeuristiqueV2();
         //MinMaxConcurent mx = new MinMaxConcurent(this,a,heurs,2,0,d);
       //  MinMax mx = new MinMax(this,a,heurs,3,0,d);
-       // AlphaBeta mx = new AlphaBeta(this,a,heurs,4, 0,d);
-        AlphaBetaConcurent mx = new AlphaBetaConcurent(this,a,heurs,4, 0,d);
+        AlphaBeta mx = new AlphaBeta(this,a,heurs,4, 0,d);
+        //AlphaBetaConcurent mx = new AlphaBetaConcurent(this,a,heurs,4, 0,d);
         /* Affichage des coups possibles.
         System.out.println("Appel nextmove avec les coups:");
         for(int k = 0; k < d.length;k++)
@@ -293,7 +311,7 @@ public class Ordinateur extends Joueur{
             }
             heuristique = heuristique + nbLiberteesReine(p, numJoueur) - nbLiberteesReine(p, numAdversaire());
         }
-        configurations.put(p, heuristique);
+        configurations.put(p.hashCode(), heuristique);
         return heuristique;
     }
     
