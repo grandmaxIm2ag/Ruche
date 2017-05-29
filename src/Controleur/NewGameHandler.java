@@ -63,24 +63,27 @@ public class NewGameHandler implements EventHandler<ActionEvent> {
                 FabriqueArbitre.initDiff(cbJ1.getSelectionModel().getSelectedIndex()-1);
             } else {
                 FabriqueArbitre.initDiff(0);
+                FabriqueArbitre.initN2((tfJ2.getText()).isEmpty() ? "Joueur 2" : tfJ2.getText());
             }
             if (cbJ2.getSelectionModel().getSelectedIndex() != 0) {
                 FabriqueArbitre.initDiff2(cbJ2.getSelectionModel().getSelectedIndex()-1);
             } else {
                 FabriqueArbitre.initDiff2(0);
+                FabriqueArbitre.initN1((tfJ2.getText()).isEmpty() ? "Joueur 1" : tfJ2.getText());
             }
             if (cbJ1.getSelectionModel().getSelectedIndex() != 0 && cbJ2.getSelectionModel().getSelectedIndex() != 0) {
                 FabriqueArbitre.initType(FabriqueArbitre.SIMULATION);
                 Interface.nouvelArbitre();
             }  else if(pass) {
-                if (cbJ2.getSelectionModel().getSelectedIndex() != 0)
+                if (cbJ2.getSelectionModel().getSelectedIndex() != 0) {
                     FabriqueArbitre.initType(FabriqueArbitre.LOCAL_JVIA);
-                else
+                } else {
                     FabriqueArbitre.initType(FabriqueArbitre.LOCAL_IAVJ);
+                }
                 if (cbJ1.getSelectionModel().getSelectedIndex() == 0)
-                    FabriqueArbitre.initN1(tfJ1.getText());
+                    FabriqueArbitre.initN1((tfJ1.getText()).isEmpty() ? "Joueur 1" : tfJ1.getText());
                 else
-                    FabriqueArbitre.initN2(tfJ2.getText());
+                    FabriqueArbitre.initN2((tfJ2.getText()).isEmpty() ? "Joueur 2" : tfJ2.getText());
                 Interface.nouvelArbitre();
             }
         }else if(cbJ2 == null && cbJ1 != null ){
