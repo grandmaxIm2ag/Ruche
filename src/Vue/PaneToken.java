@@ -29,6 +29,7 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
 
 /**
  *
@@ -46,6 +47,8 @@ public class PaneToken {
     GaussianBlur leftBlur;
     GaussianBlur rightBlur;
     static Label nomAdv;
+    static Label nomJoueur;
+    static Label name[];
     private static String colorJ1;
     private static String colorJ2;
     AideListener al;
@@ -55,6 +58,7 @@ public class PaneToken {
         this.arbitre = arbitre;
         l = new Label[2][8];
         b = new ToggleButton[2][8];
+        name = new Label[2];
         leftBlur = new GaussianBlur();
         rightBlur = new GaussianBlur();
         leftBlur.setRadius(0);
@@ -110,6 +114,7 @@ public class PaneToken {
                 b[i][j].selectedProperty().addListener(new TokenListener(b[i][j], i, j));
             }
         }
+        name[1].setDisable(true);
         al = new AideListener(b, arbitre);
     }
     
@@ -242,6 +247,7 @@ public class PaneToken {
         lLadybug.setTextFill(Color.WHITE);
         lMoskito.setTextFill(Color.WHITE);
         lWoudlose.setTextFill(Color.WHITE);
+        lAnt.setTextFill(Color.WHITE);
         lBee.setText("" + arbitre.joueur(1).pion(0));
         lBeetle.setText("" + arbitre.joueur(1).pion(1));
         lGrasshopper.setText("" + arbitre.joueur(1).pion(2));
@@ -260,10 +266,12 @@ public class PaneToken {
         bMoskito.setOnAction(new ButtonToken(ButtonToken.MOSKITO_BUTTON, lBee, arbitre.joueur(1), arbitre));
         bWoodlouse.setOnAction(new ButtonToken(ButtonToken.WOODLOUSE_BUTTON, lBee, arbitre.joueur(1), arbitre));
         
-        Label joueur = new Label(arbitre.joueur(Arbitre.J1).nom() );
-        joueur.setTextFill(Color.WHITE);
+        nomJoueur = new Label(arbitre.joueur(Arbitre.J1).nom() );
+        nomJoueur.setFont(new Font(20));
+        nomJoueur.setTextFill(Color.WHITE);
+        name[0] = nomJoueur;
         
-        rightGrid.add(joueur, 1,0);
+        rightGrid.add(nomJoueur, 1,0);
         
         rightGrid.add(bBee, 0, 1);
         rightGrid.add(lBee, 1, 1);
@@ -460,7 +468,9 @@ public class PaneToken {
         
         
         nomAdv.setText(arbitre.joueur(Arbitre.J2).nom() );
+        nomAdv.setFont(new Font(20));
         nomAdv.setTextFill(Color.WHITE);
+        name[1] = nomAdv;
         
         leftGrid.add(nomAdv, 0,0);
         
@@ -529,9 +539,13 @@ public class PaneToken {
             case 0:
                 //leftBlur.setRadius(10);
                 rightBlur.setRadius(0);
+                name[0].setDisable(true);
+                name[1].setDisable(false);
                 break;
             case 1:
                 leftBlur.setRadius(0);
+                name[1].setDisable(true);
+                name[0].setDisable(false);
                 //rightBlur.setRadius(10);
                 break;
             default:
