@@ -570,7 +570,7 @@ public class PaneToken {
                 leftBlur.setRadius(0);
                 name[1].setDisable(true);
                 name[0].setDisable(false);
-                if (arbitre.joueur(1) instanceof Ordinateur) {
+                if (arbitre.joueur(0) instanceof Ordinateur) {
                     pi[1].setVisible(false);
                     pi[0].setVisible(true);
                 }
