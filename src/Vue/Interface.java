@@ -114,6 +114,7 @@ public class Interface extends Application {
     static VBox configBox;
     static VBox reseauBox;
     static VBox didacBox;
+    static VBox crBox;
     static TabPane tabPane;
     static String[] args2;
     public static Stage stage;
@@ -151,6 +152,7 @@ public class Interface extends Application {
         goConfig();
         goReseau();   
         goDidacticiel();
+        goCredits();
         goTest(); 
         //goPartie();
         stage.show();
@@ -205,8 +207,11 @@ public class Interface extends Application {
         final Tab tabDic = new Tab("Didacticiel");
         tabDic.setClosable(false);
         tabDic.setContent(didacBox);
+        final Tab tabCredit = new Tab("Credits");
+        tabCredit.setClosable(false);
+        tabCredit.setContent(crBox);
         tabPane = new TabPane(); 
-        tabPane.getTabs().setAll(tabNG,tabRes , tabLD, tabCFG, tabDic);
+        tabPane.getTabs().setAll(tabNG,tabRes , tabLD, tabCFG, tabDic, tabCredit);
         tabPane.setPadding(new Insets(0, 20, 0, 20));
         
         //tabPane
@@ -826,10 +831,6 @@ public class Interface extends Application {
 
         centerGrid.setAlignment(Pos.CENTER);
 
-        Slider sSon = new Slider();
-        sSon.setValue(100);
-        sSon.setShowTickMarks(true);
-        sSon.setMajorTickUnit(20);
 
         Slider sMusique = new Slider();
         /*
@@ -859,7 +860,7 @@ public class Interface extends Application {
             if(!fullScreen){
                 goConfig();
                 goTest();
-                tabPane.getSelectionModel().select(2);
+                tabPane.getSelectionModel().select(3);
             }
         });
         //
@@ -876,10 +877,10 @@ public class Interface extends Application {
         lNG.setTextFill(Color.WHITE);
         lNG.setFont(new Font(22));
 
-        centerGrid.add(lSon, 0, 0);
+        //centerGrid.add(lSon, 0, 0);
         centerGrid.add(lMusique, 0, 1);
         centerGrid.add(lFullScreen, 0, 2);
-        centerGrid.add(sSon, 1, 0);
+        //centerGrid.add(sSon, 1, 0);
         centerGrid.add(sMusique, 1, 1);
         centerGrid.add(cFC, 1, 2);
 
@@ -961,47 +962,65 @@ public class Interface extends Application {
      *
      */
     public static void goCredits() {
-        VBox box = new VBox();
-        box.setSpacing(30);
-        box.setPadding(new Insets(20, 10, 20, 10));
-        box.setAlignment(Pos.TOP_CENTER);
-        GridPane grid = new GridPane();
-        grid.setHgap(10);
-        grid.setVgap(20);
-        grid.setAlignment(Pos.TOP_CENTER);
-        Canvas c = titleSect("Credits");
+        VBox centerBox = new VBox();
+        StackPane centerStack = new StackPane();
+        VBox centerGrid = new VBox();
+        VBox insideBox = new VBox();
+        Rectangle centerRect = new Rectangle();
+        VBox rectBox = new VBox();
+        rectBox.setAlignment(Pos.CENTER);
+        centerBox.setPadding(new Insets(0, 0, 20, 0));
+        rectBox.getChildren().add(centerRect);
+        centerRect.setOpacity(0.25);
+        centerBox.setPadding(new Insets(0, 0, 20, 0));
+        centerBox.setAlignment(Pos.TOP_CENTER);
+        centerGrid.setSpacing(10);
+        
+        centerRect.widthProperty().bind(insideBox.widthProperty());
+        centerRect.heightProperty().bind(insideBox.heightProperty());
+        centerRect.setArcWidth(20);
+        centerRect.setArcHeight(20);
+        centerRect.setFill(Color.BLACK);
+        insideBox.setPadding(new Insets(70, 30, 70, 30));
+        insideBox.setSpacing(30);
+        insideBox.setAlignment(Pos.CENTER);
+        DropShadow shadow = new DropShadow();
+        centerRect.setEffect(shadow);
 
-        Label lMoteur = new Label("Moteur");
-        Label lIA = new Label("IA");
-        Label lIHM = new Label("IHM");
-        Label lMax = new Label("Maxence Grand");
-        Label lNarek = new Label("Narek Davtyan");
-        Label lAme = new Label("Amelina Douard");
-        Label lLies = new Label("Lies Hadjadj");
-        Label lLu = new Label("Lucie Muller");
-        Label lEnzo = new Label("Enzo Brignon");
+        Label lDev = new Label ("Dévelopers");
+        lDev.setFont(new Font(20));
+        lDev.setTextFill(Color.WHITE);
+        Label l1 = new Label("Maxence Grand\tEnzo Brignon");
+        l1.setTextFill(Color.WHITE);
+        Label l2 = new Label ("Liel Hadjadj\tNarek Davtyan");
+        l2.setTextFill(Color.WHITE);
+        Label l3 = new Label ("Amelina Douard\tLucie Muller");
+        l3.setTextFill(Color.WHITE);
+        
+        
+        Label lIcones = new Label ("Credit Icones");
+        lIcones.setFont(new Font(20));
+        lIcones.setTextFill(Color.WHITE);
+        
+        Label lMonsieur = new Label("Bryn Taylor on Flat Icon");
+        lMonsieur.setTextFill(Color.WHITE);
+        
+        
+        centerGrid.setAlignment(Pos.CENTER);
+        centerGrid.getChildren().addAll(lDev, l1, l2, l3, lIcones, lMonsieur);
+        
 
-        Button btRetour = new Button("Retour");
 
-        btRetour.setOnAction(new Bouton(Bouton.BOUTON_MENU, arbitre));
+        centerBox.getChildren().add(centerStack);
+        centerStack.getChildren().addAll(rectBox, insideBox);//centerGrid);
+        Label lNG = new Label("Credits");
+        lNG.setTextFill(Color.WHITE);
+        lNG.setFont(new Font(22));
+        
+        insideBox.getChildren().addAll(lNG, centerGrid);
 
-        grid.add(lMoteur, 1, 0);
-        grid.add(lMax, 0, 1);
-        grid.add(lNarek, 2, 1);
-        grid.add(lIA, 1, 2);
-        grid.add(lAme, 0, 3);
-        grid.add(lLies, 2, 3);
-        grid.add(lIHM, 1, 4);
-        grid.add(lEnzo, 0, 5);
-        grid.add(lLu, 2, 5);
-
-        box.getChildren().addAll(c, grid, btRetour);
-
-        root.setCenter(box);
-        root.setRight(new Pane());
-        root.setLeft(new Pane());
-        root.setBottom(new Pane());
-
+        //root.setCenter(centerBox);
+        crBox = centerBox;
     }
 
     /**

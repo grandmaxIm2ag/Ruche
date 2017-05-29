@@ -25,8 +25,10 @@ import Modele.Scarabee;
 import Modele.Visiteur;
 import static Vue.Dessinateur.c;
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Stack;
 import javafx.geometry.Insets;
 import javafx.scene.canvas.Canvas;
@@ -103,6 +105,9 @@ public class Pointeur extends Visiteur {
      */
     @Override
     public boolean visite (Case c) {
+        
+        
+        
         boolean b = true;
         double x1, x2, y1, y2;
         etendeur.fixeComposant(c);
@@ -167,7 +172,9 @@ public class Pointeur extends Visiteur {
                     popup = new Popup();
                     }
             } else if (me.getEventType() == MouseEvent.MOUSE_CLICKED) {
-
+                
+                
+                
                 if (arbitre.plateau().deplEntame()) {
                     if (c.estJouable()) {
                         if (!depl) {
@@ -191,7 +198,11 @@ public class Pointeur extends Visiteur {
                         depl = false;
                         arbitre.reinitDepl();
                         return true;
-                    } else if (arbitre.initDeplacement() instanceof Cloporte) {
+                        
+                    } else if (arbitre.initDeplacement() instanceof Cloporte || (arbitre.initDeplacement() instanceof Moustique && ((Moustique) arbitre.initDeplacement()).aVoisinCloporte(arbitre.plateau())) ) {
+                        System.out.println("arbitre.initDeplacement() instanceof Cloporte || (voisinCloporte() && arbitre.initDeplacement() instanceof Moustique : " + (arbitre.initDeplacement() instanceof Cloporte || (voisinCloporte() && arbitre.initDeplacement() instanceof Moustique)));
+                        System.out.println("arbitre.initDeplacement() instanceof Cloporte : " +(arbitre.initDeplacement() instanceof Cloporte ) + "\nvoisinCloporte() " + (voisinCloporte()) + "\narbitre.initDeplacement() instanceof Moustique : " + (arbitre.initDeplacement() instanceof Moustique));
+                        System.err.println("true");
                         Coup[] coups = arbitre.deplacementPossible(arbitre.initDeplacement());
                         for (Coup coup : coups) {
                             Deplacement deplacement = (Deplacement) coup;
@@ -200,6 +211,9 @@ public class Pointeur extends Visiteur {
                                 arbitre.initClopDepl(c.tete());
                         }
                         
+                    } else {
+                        System.out.println("arbitre.initDeplacement() instanceof Cloporte || (voisinCloporte() && arbitre.initDeplacement() instanceof Moustique : " + (arbitre.initDeplacement() instanceof Cloporte || (voisinCloporte() && arbitre.initDeplacement() instanceof Moustique)));
+                        System.out.println("arbitre.initDeplacement() instanceof Cloporte : " +(arbitre.initDeplacement() instanceof Cloporte ) + "\nvoisinCloporte() " + (voisinCloporte()) + "\narbitre.initDeplacement() instanceof Moustique : " + (arbitre.initDeplacement() instanceof Moustique));
                     }
                 } else if (c.tete().joueur() == arbitre.jCourant()) {
                     
@@ -210,6 +224,7 @@ public class Pointeur extends Visiteur {
                     }*/
                     depl = true;
                 }
+                
             }
         }
             
@@ -218,6 +233,18 @@ public class Pointeur extends Visiteur {
     
         
         return false;
+    }
+    
+    
+    public boolean voisinCloporte () {
+        boolean voisinCloporte = false;
+        List<Point> voisins = arbitre.plateau().voisins(arbitre.initDeplacement().position());
+        Map<Point, Case> mat = arbitre.plateau().matrice();
+        for (Point p : voisins) {
+            voisinCloporte |= ((HashMap) mat).get(p) instanceof Cloporte;
+            System.out.println("voisinCloporte" + voisinCloporte + "\n" + ((HashMap) mat).get(p));
+        }
+        return voisinCloporte;
     }
     
     private Canvas popupCanvas (Stack<Insecte> stack) {

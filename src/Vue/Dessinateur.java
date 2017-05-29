@@ -24,6 +24,7 @@ import Modele.Scarabee;
 import Modele.Visiteur;
 import static Vue.Interface.hex_corner;
 import java.io.InputStream;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -468,20 +469,43 @@ public class Dessinateur extends Visiteur{
         return colorTable[c];
     }
     
-    private void focus (Insecte i, GraphicsContext gc, double[][] coords) {
-        if (arbitre.initDeplacement() instanceof Cloporte) {
-                        List<Coup> coups = arbitre.plateau().deplacementPossible(arbitre.initDeplacement());
-                        for (Coup coup : coups) {
-                            Deplacement deplacement = (Deplacement) coup;
-                            if (deplacement.source().equals(i.position()) && !arbitre.initDeplacement().equals(i)) {
-                                gc.setStroke(Color.RED);
-                                gc.setLineWidth(5);
-                                gc.strokePolygon(coords[0], coords[1], 6);
-                                gc.setStroke(Color.BLACK);
-                                gc.setLineWidth(1);
-                            }
-                        }
-                        
-                    }
+    public boolean voisinCloporte () {
+        boolean voisinCloporte = false;
+        List<Point> voisins = arbitre.plateau().voisins(arbitre.initDeplacement().position());
+        Map<Point, Case> mat = arbitre.plateau().matrice();
+        for (Point p : voisins) {
+            voisinCloporte |= ((HashMap) mat).get(p) instanceof Cloporte;
+        }
+        return voisinCloporte;
     }
+    
+    private void focus (Insecte i, GraphicsContext gc, double[][] coords) {
+        if (arbitre.initDeplacement() instanceof Cloporte || (arbitre.initDeplacement() instanceof Moustique && ((Moustique)arbitre.initDeplacement()).aVoisinCloporte(arbitre.plateau()))) {
+            List<Coup> coups = arbitre.plateau().deplacementPossible(arbitre.initDeplacement());
+            for (Coup coup : coups) {
+                Deplacement deplacement = (Deplacement) coup;
+                if (deplacement.source().equals(i.position()) && !arbitre.initDeplacement().equals(i)) {
+                    gc.setStroke(Color.RED);
+                    gc.setLineWidth(5);
+                    gc.strokePolygon(coords[0], coords[1], 6);
+                    gc.setStroke(Color.BLACK);
+                    gc.setLineWidth(1);
+                }
+            }
+
+        } else if (arbitre.initDeplacement() instanceof Scarabee) {
+            List<Coup> coups = arbitre.plateau().deplacementPossible(arbitre.initDeplacement());
+            HashMap<Point, Case> map = (HashMap) arbitre.plateau().matrice();
+            for (Coup coup : coups) {
+                Deplacement deplacement = (Deplacement) coup;
+                if (map.containsKey(deplacement.destination()) && deplacement.destination().equals(i.position())) {
+                    gc.setStroke(Color.RED);
+                    gc.setLineWidth(5);
+                    gc.strokePolygon(coords[0], coords[1], 6);
+                    gc.setStroke(Color.BLACK);
+                    gc.setLineWidth(1);
+                }
+            }
+        }
+    } 
 }
