@@ -85,7 +85,7 @@ public class Ordinateur extends Joueur{
         if(d==MOYEN){
             sc = new Scanner(ClassLoader.getSystemClassLoader().getResourceAsStream("Simulations/Apprentissage/moyenHeuristique"));
         }else if(d==DIFFICILE){
-            sc = new Scanner(getClass().getResourceAsStream("Simulations/Apprentissage/difficileHeuristique"));
+            sc = new Scanner(ClassLoader.getSystemClassLoader().getResourceAsStream("Simulations/Apprentissage/difficileHeuristique"));
         }
         while(sc!=null && sc.hasNext()){
             String[] str = sc.nextLine().split("::");

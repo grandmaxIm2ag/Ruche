@@ -476,8 +476,10 @@ public class Plateau extends Composant {
         UnionFind uf = new UnionFind(idx);
         
         List<Point> marquer = new ArrayList();
-        for(Map.Entry<Point, List<Point>> entry : v.entrySet()){
+        v.entrySet().stream().map((entry) -> {
             marquer.add(entry.getKey());
+            return entry;
+        }).forEach((entry) -> {
             List<Point> v2 = entry.getValue();
             Iterator<Point> it = v2.iterator();
             while(it.hasNext()){
@@ -485,12 +487,11 @@ public class Plateau extends Composant {
                 if(!marquer.contains(p))
                     uf.union(m.get(entry.getKey()), m.get(p));
             }
-        }
+        });
         
         b = true;
         Point p = u.get(0).clone();
-        for(Point p2 : u)
-            b&=uf.connecter(m.get(p), m.get(p2));
+        b = u.stream().map((p2) -> uf.connecter(m.get(p), m.get(p2))).reduce(b, (accumulator, _item) -> accumulator & _item);
         
         return b;
         

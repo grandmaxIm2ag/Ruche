@@ -18,11 +18,9 @@ import ruche.Reglage;
 import Modele.*;
 import Vue.Interface;
 import Vue.PaneToken;
-import Vue.Pointeur;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Scanner;
 import javafx.scene.input.MouseEvent;
@@ -273,7 +271,8 @@ public abstract class Arbitre {
      */
     public void precedent(){
         if(!historique.isEmpty()){
-            configurations.remove(configurations.size()-1);
+            if(configurations.containsKey(plateau.hashCode()))
+                configurations.put(plateau.hashCode(),configurations.get(plateau.hashCode())-1);
             Coup c = historique.pop();
             //System.out.println(c+" "+(c==null));
             System.out.println("refaire ins : "+c+" "+refaire.size());
@@ -286,7 +285,7 @@ public abstract class Arbitre {
                 Depot d = (Depot) c;
                 plateau.retirerPion(d.destination());
                 nbCoup[d.joueur()]--;
-//                joueurs[d.joueur()].pred(d.type());
+                joueurs[d.joueur()].pred(d.type());
             }
             System.out.println("=>"+nbCoup[jCourant]);
             PaneToken.getInstance(this).update();
@@ -305,7 +304,6 @@ public abstract class Arbitre {
         if(!refaire.isEmpty()){
             Coup c = refaire.pop();
             //System.out.println(c+" "+(c==null));
-            historique.push(c);
             annulation=true;
             joue(c);
         }else{
