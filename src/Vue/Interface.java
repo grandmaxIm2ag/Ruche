@@ -849,10 +849,6 @@ public class Interface extends Application {
 
         centerGrid.setAlignment(Pos.CENTER);
 
-        Slider sSon = new Slider();
-        sSon.setValue(100);
-        sSon.setShowTickMarks(true);
-        sSon.setMajorTickUnit(20);
 
         Slider sMusique = new Slider();
         /*
@@ -882,7 +878,7 @@ public class Interface extends Application {
             if(!fullScreen){
                 goConfig();
                 goTest();
-                tabPane.getSelectionModel().select(2);
+                tabPane.getSelectionModel().select(3);
             }
         });
         //
@@ -899,10 +895,10 @@ public class Interface extends Application {
         lNG.setTextFill(Color.WHITE);
         lNG.setFont(new Font(22));
 
-        centerGrid.add(lSon, 0, 0);
+        //centerGrid.add(lSon, 0, 0);
         centerGrid.add(lMusique, 0, 1);
         centerGrid.add(lFullScreen, 0, 2);
-        centerGrid.add(sSon, 1, 0);
+        //centerGrid.add(sSon, 1, 0);
         centerGrid.add(sMusique, 1, 1);
         centerGrid.add(cFC, 1, 2);
 
