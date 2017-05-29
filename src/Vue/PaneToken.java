@@ -9,11 +9,13 @@ import Controleur.AideListener;
 import Controleur.Bouton;
 import Controleur.ButtonToken;
 import Controleur.TokenListener;
+import Joueurs.Ordinateur;
 import Modele.Arbitres.*;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.effect.DropShadow;
@@ -49,6 +51,7 @@ public class PaneToken {
     static Label nomAdv;
     static Label nomJoueur;
     static Label name[];
+    ProgressIndicator pi[];
     private static String colorJ1;
     private static String colorJ2;
     AideListener al;
@@ -59,6 +62,7 @@ public class PaneToken {
         l = new Label[2][8];
         b = new ToggleButton[2][8];
         name = new Label[2];
+        pi = new ProgressIndicator[2];
         leftBlur = new GaussianBlur();
         rightBlur = new GaussianBlur();
         leftBlur.setRadius(0);
@@ -116,6 +120,10 @@ public class PaneToken {
         }
         name[1].setDisable(true);
         al = new AideListener(b, arbitre);
+        pi[0].setVisible(false);
+        pi[1].setVisible(false);
+        if (arbitre.joueur(arbitre.jCourant()) instanceof Ordinateur)
+            pi[arbitre.jCourant()].setVisible(true);
     }
     
     /**
@@ -272,6 +280,12 @@ public class PaneToken {
         name[0] = nomJoueur;
         
         rightGrid.add(nomJoueur, 1,0);
+        
+        final ProgressIndicator progressIndicator = new ProgressIndicator(); 
+        progressIndicator.setMaxSize(64, 64); 
+        progressIndicator.setProgress(-1); 
+        pi[0] = progressIndicator;
+        rightGrid.add(progressIndicator, 0, 0);
         
         rightGrid.add(bBee, 0, 1);
         rightGrid.add(lBee, 1, 1);
@@ -474,6 +488,12 @@ public class PaneToken {
         
         leftGrid.add(nomAdv, 0,0);
         
+        final ProgressIndicator progressIndicator = new ProgressIndicator(); 
+        progressIndicator.setMaxSize(64, 64); 
+        progressIndicator.setProgress(-1); 
+        pi[1] = progressIndicator;
+        leftGrid.add(progressIndicator, 1, 0);
+        
         leftGrid.add(bBee, 0, 1);
         leftGrid.add(lBee, 1, 1);
         
@@ -541,16 +561,26 @@ public class PaneToken {
                 rightBlur.setRadius(0);
                 name[0].setDisable(true);
                 name[1].setDisable(false);
+                if (arbitre.joueur(1) instanceof Ordinateur) {
+                    pi[0].setVisible(false);
+                    pi[1].setVisible(true);
+                }
                 break;
             case 1:
                 leftBlur.setRadius(0);
                 name[1].setDisable(true);
                 name[0].setDisable(false);
+                if (arbitre.joueur(1) instanceof Ordinateur) {
+                    pi[1].setVisible(false);
+                    pi[0].setVisible(true);
+                }
                 //rightBlur.setRadius(10);
                 break;
             default:
         }
-        
+        if (arbitre.joueur(arbitre.jCourant()) instanceof Ordinateur) {
+            pi[arbitre.jCourant()].setVisible(false);
+        }
     }
     
     public void setHelpBackground (int i, int j) {
