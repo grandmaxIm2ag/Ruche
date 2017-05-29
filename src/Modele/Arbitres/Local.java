@@ -7,7 +7,6 @@ package Modele.Arbitres;
 
 import Joueurs.Humain;
 import Joueurs.Ordinateur;
-import static Modele.Arbitres.Arbitre.AIDE;
 import static Modele.Arbitres.Arbitre.J1;
 import static Modele.Arbitres.Arbitre.J2;
 import Modele.Coup;
@@ -24,7 +23,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
-import javafx.scene.input.MouseEvent;
 import ruche.Reglage;
 
 /**
@@ -32,7 +30,7 @@ import ruche.Reglage;
  * @author maxence
  */
 public class Local extends Arbitre{
-    Depot dEnCours;
+    
     /**
      *
      * @param p
@@ -107,7 +105,8 @@ public class Local extends Arbitre{
         if(plateau().reine(jCourant)!=null){
                 //if(deplacePionValide(d)){
                 nbCoup[jCourant]++;
-                refaire.clear();
+                if(!annulation)
+                    refaire.clear();
                 historique.add(d);
                 etat = JOUE_EN_COURS;
                 temps_ecoule=0;
@@ -136,37 +135,24 @@ public class Local extends Arbitre{
     public void joue(Depot d){
         if(nbCoup[jCourant]==0 && jCourant == J1){
             joueurs[d.joueur()].jouer(d.type());
-            
+            plateau.premierPion(FabriqueInsecte.creer(d.type(), jCourant, new Point(0,0)));
             etat=A_JOUER;
             nbCoup[jCourant]++;
             if(!annulation)
                 refaire.clear();
             historique.add(d);
             System.err.println("1- Dépot effectué "+d);
-            if(chargement){
-                plateau.premierPion(FabriqueInsecte.creer(d.type(), jCourant, new Point(0,0)));
-                prochainJoueur();
-                
-            }else{
-                dEnCours = d;
-                etat = JOUE_EN_COURS;
-            }
+            prochainJoueur();
         }else if(nbCoup[jCourant]==0 && jCourant == J2){
             if(plateau.premierPionValide(d)){
                 joueurs[jCourant].jouer(d.type());
                 deposePion(d);
                 nbCoup[jCourant]++;
-                refaire.clear();
+                if(!annulation)
+                    refaire.clear();
                 historique.add(d);
                 System.err.println("2- Dépot effectué "+d);
-                if(chargement){
-                    deposePion(d);
-                    prochainJoueur();
-                    
-                }else{
-                    dEnCours = d;
-                    etat = JOUE_EN_COURS;
-                }
+                prochainJoueur();
             }else{
                 System.err.println("Depot impossible 1");
             }
@@ -174,19 +160,13 @@ public class Local extends Arbitre{
             
             if((plateau.reine(jCourant)==null && (d.type()==Insecte.REINE || nbCoup[jCourant]<3)) || plateau.reine(jCourant)!=null){
                 joueurs[jCourant].jouer(d.type());
+                deposePion(d);
                 nbCoup[jCourant]++;
                 if(!annulation)
                     refaire.clear();
                 historique.add(d);
                 System.err.println("3- Dépot effectué "+d);
-                if(chargement){
-                    deposePion(d);
-                    prochainJoueur();
-                    
-                }else{
-                    dEnCours = d;
-                    etat = JOUE_EN_COURS;
-                }
+                prochainJoueur();
             }else{
                 System.err.println("Vous devez déposé une reine "+jCourant);
             }
@@ -281,75 +261,5 @@ public class Local extends Arbitre{
         }
     }
 
-    public void maj(long t){
-        //System.gc();
-        if(Interface.pointeur().event()!=null){
-            boolean b = this.accept(Interface.pointeur());
-            //System.out.println(b);
-            if(b)
-                plateau.clearAide();
-                if((Interface.pointeur().event().getEventType() == MouseEvent.MOUSE_CLICKED) && (etat == AIDE)){
-                    etat = ATTENTE_COUP;
-                    plateau.setDepotAide(-1);
-                    aide = false;
-                }
-            Interface.pointeur().traiter();
-        }
-        long nouv = t-temps;
-        temps=t;
-        switch(etat){
-            case AIDE:
-                temps_ecoule+=nouv;
-                if(temps_ecoule>=1000000000){
-                    temps_ecoule=0;
-                    aide = !aide;
-                }
-                break;
-            case ATTENTE_COUP:
-                aide = false;
-                break;
-            case PAUSE:
-                break;
-            case JOUE_EN_COURS:
-                temps_ecoule+=nouv;
-                if(temps_ecoule>=100000000){
-                    temps_ecoule=0;
-                    if(enCours!=null){
-                        
-                        plateau.deplacePion(enCours);
-                        if(!enCoursIt.hasNext()){
-                            enCours = null;
-                            etat=A_JOUER;
-                        }else{
-                            Point p = enCoursIt.next();
-                            Point src = enCours.destination().clone();
-                            enCours = new Deplacement(enCours.joueur(),src, p );
-                        }
-                    }else if(dEnCours !=null){
-                        if(nbCoup[J1]==0 && nbCoup[J1]==0 ){
-                            plateau.premierPion(FabriqueInsecte.creer(dEnCours.type(), dEnCours.joueur(), new Point(0,0) ));
-                        }else{
-                            plateau.deposePion(dEnCours);
-                        }
-                        dEnCours=null;
-                    }else{
-                        enCours = null;
-                        etat=A_JOUER;
-                    }
-                }
-                break;
-            case A_JOUER:
-                prochainJoueur();
-                plateau.setJoueur(jCourant);
-                plateau.clearAide();
-                break;
-            case FIN:
-                Interface.fin();
-                break;
-        }
-    }
-    
-    
-    
     
 }

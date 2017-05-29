@@ -1051,7 +1051,7 @@ public class Interface extends Application {
         dialog.initStyle(StageStyle.UNDECORATED);
 
         VBox v = new VBox();
-        Text l = new Text(s);
+        Label l = new Label(s);
         v.setAlignment(Pos.CENTER);
         v.setSpacing(100);
         // Create layout and add to dialog

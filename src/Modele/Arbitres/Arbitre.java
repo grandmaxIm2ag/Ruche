@@ -303,7 +303,7 @@ public abstract class Arbitre {
     public void refaire(){
         if(!refaire.isEmpty()){
             Coup c = refaire.pop();
-            //System.out.println(c+" "+(c==null));
+            System.out.println(c+" "+refaire.size());
             annulation=true;
             joue(c);
         }else{
