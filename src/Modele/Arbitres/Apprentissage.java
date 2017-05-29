@@ -52,7 +52,7 @@ public class Apprentissage extends Arbitre{
      */
     public Apprentissage(Properties p){
         super (p, "", "");
-        nbSimulations = 500;
+        nbSimulations = 100;
         hDiff = new HashMap();
         hMoy = new HashMap();
         difficile = new HeuristiqueV2();
@@ -62,7 +62,7 @@ public class Apprentissage extends Arbitre{
     
     public Apprentissage(Properties p, int d){
         super (p, "", "");
-        nbSimulations = 75;
+        nbSimulations = 25;
         hashCoup = new HashMap();
         difficile = new HeuristiqueV2();
         moyen = new HeuristiqueMoy();
