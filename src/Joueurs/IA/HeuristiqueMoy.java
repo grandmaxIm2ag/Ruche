@@ -21,7 +21,7 @@ import java.util.Map;
  * @author hadjadjl
  */
 public class HeuristiqueMoy extends Heuristique {
-    
+
     private int freeBugs(Plateau m,int numJoueur) {
         int fr=0;
         List<Coup> dep = null;
@@ -152,7 +152,7 @@ public class HeuristiqueMoy extends Heuristique {
        
         heurs = (50*HexesFilledAroundMyQueen - 100*HexesFilledAroundOpposingQueen)
                 + (mePossibleDepl - otherPossibleDepl) 
-                + 2*(meTokensOnBoard - otherTokensOnBoard)
+                + 10*(meTokensOnBoard - otherTokensOnBoard)
                /* + (meFreeTokensOnBoard - otherFreeTokensOnBoard)*/;
         
         if(j instanceof Depot)
@@ -161,6 +161,7 @@ public class HeuristiqueMoy extends Heuristique {
             heurs-=1000;
         if(a.m.reine(me.numAdversaire())!=null && (a.m.matrice().get(a.m.reine(me.numAdversaire())).tete().joueur()!=me.numAdversaire() || a.m.matrice().get(a.m.reine(me.numAdversaire())).tete().type()!=Insecte.REINE ))
             heurs+=1000;
+            heurs-= 100*EvalCoup(a,me,j);
         configurations.put(a.m.hashCode(), heurs);
         return heurs;
     }

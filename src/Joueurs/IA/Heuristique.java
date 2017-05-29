@@ -8,7 +8,9 @@ package Joueurs.IA;
 import Joueurs.Ordinateur;
 import Modele.Arbitres.Arbitre;
 import Modele.Coup;
+import Modele.Deplacement;
 import Modele.Plateau;
+import Modele.Point;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -42,7 +44,21 @@ public abstract class Heuristique {
         return a.m.estEncerclee(me.numAdversaire());
     }
     
-    public int distance(Emulateur a, Ordinateur me){
+    private int hex_distance(Point a, Point b){
+    return (int) (Math.abs(a.x() - b.x()) 
+           + Math.abs(a.x() + a.y() - b.x() - b.y())
+           + Math.abs(a.y() - b.y()) )/2;
+    }
+    
+    public int EvalCoup(Emulateur a, Ordinateur me, Coup cp){
+        if(cp instanceof Deplacement){
+           Deplacement cm = (Deplacement) cp;
+           Point rVs = a.m.reine(me.numAdversaire());
+           if(rVs != null)
+           return hex_distance(cm.destination(), rVs);
+           else
+               return 0;
+        }       
         return 0;
     }
 }
